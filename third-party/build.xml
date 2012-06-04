@@ -1,0 +1,60 @@
+<project name="third-party" default="#init.m2.repository">
+  <target name="#init.m2.repository" description="Loads third-party libraries into repository">
+    <antcall target="@mvn-instal-3d-party">
+      <param name="file" value="jawin.jar" />
+      <param name="groupID" value="jawin" />
+      <param name="artifactID" value="jawin" />
+      <param name="version" value="2.0-alpha1" />
+    </antcall>
+    <antcall target="@mvn-instal-3d-party">
+      <param name="file" value="Access_JDBC30.jar" />
+      <param name="groupID" value="com.hxtt" />
+      <param name="artifactID" value="access_jdbc30" />
+      <param name="version" value="1.0" />
+    </antcall>
+    <antcall target="@mvn-instal-3d-party">
+      <param name="file" value="jave-1.0.2.jar" />
+      <param name="groupID" value="it.sauronsoftware" />
+      <param name="artifactID" value="jave" />
+      <param name="version" value="1.0.2" />
+    </antcall>
+  </target>
+
+
+  <target name="@mvn">
+    <property name="pom.file" value="pom.xml" />
+<!--    <property name="repository.id" value="collab-${repositoryId}" />
+    <property name="url" value="dav:https://collab.eastbanctech.com/archiva/repository/${repositoryId}" /> -->
+    <property name="mvn.dir" value="${basedir}" />
+    <exec dir="${mvn.dir}" executable="cmd.exe" failonerror="true" osfamily="windows">
+      <arg value="/c" />
+      <arg value="mvn" />
+      <arg line="-f ${pom.file} ${mvn.cmd}" />
+<!--      <arg line="-DrepositoryId=${repository.id} -Durl=${url}" /> -->
+    </exec>
+    <exec dir="${mvn.dir}" executable="mvn" failonerror="true" os="Linux, Mac OS X, SunOS">
+      <arg line="-f ${pom.file} ${mvn.cmd}" />
+    </exec>
+  </target>
+
+  <target name="@mvn-instal-3d-party">
+    <property name="packaging" value="jar" />
+    <property name="generatePom" value="true" />
+    <property name="goal" value="install:install-file" />
+
+    <antcall target="@mvn">
+      <param name="mvn.dir" value="${basedir}" />
+      <param name="mvn.cmd" value="${goal} -Dfile=lib/${file} -DgroupId=${groupID} -DartifactId=${artifactID} -Dversion=${version} -Dpackaging=${packaging} -DgeneratePom=${generatePom} -DcreateChecksum=true" />
+    </antcall>
+    <antcall target="@mvn-install-sources" />
+  </target>
+
+  <target name="@mvn-install-sources" if="file.sources">
+    <property name="goal" value="install:install-file" />
+    <antcall target="@mvn">
+      <param name="mvn.dir" value="${basedir}" />
+      <param name="mvn.cmd" value="${goal} -Dfile=lib/${file.sources} -DgroupId=${groupID} -DartifactId=${artifactID} -Dversion=${version} -Dpackaging=${packaging} -DgeneratePom=false -Dclassifier=sources" />
+    </antcall>
+  </target>
+
+</project>
