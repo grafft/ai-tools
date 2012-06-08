@@ -18,6 +18,74 @@
       <param name="artifactID" value="jave" />
       <param name="version" value="1.0.2" />
     </antcall>
+    <antcall target="@mvn-instal-3d-party">
+      <param name="file" value="jacob.jar" />
+      <param name="groupID" value="com.jacob" />
+      <param name="artifactID" value="jacob" />
+      <param name="version" value="1.17-M2" />
+    </antcall>
+
+    <antcall target="@mvn-instal-3d-party">
+      <param name="file" value="jadex/jadex-platform-standalone-2.1-SNAPSHOT.jar" />
+      <param name="groupID" value="net.sourceforge.jadex" />
+      <param name="artifactID" value="jadex-platform-standalone" />
+      <param name="version" value="2.1-SNAPSHOT" />
+    </antcall>
+    <antcall target="@mvn-instal-3d-party">
+      <param name="file" value="jadex/jadex-applib-bdi-2.1-SNAPSHOT.jar" />
+      <param name="groupID" value="net.sourceforge.jadex" />
+      <param name="artifactID" value="jadex-applib-bdi" />
+      <param name="version" value="2.1-SNAPSHOT" />
+    </antcall>
+    <antcall target="@mvn-instal-3d-party">
+      <param name="file" value="jadex/jadex-kernel-bdi-2.1-SNAPSHOT.jar" />
+      <param name="groupID" value="net.sourceforge.jadex" />
+      <param name="artifactID" value="jadex-kernel-bdi" />
+      <param name="version" value="2.1-SNAPSHOT" />
+    </antcall>
+    <antcall target="@mvn-instal-3d-party">
+      <param name="file" value="jadex/jadex-runtimetools-2.1-SNAPSHOT.jar" />
+      <param name="groupID" value="net.sourceforge.jadex" />
+      <param name="artifactID" value="jadex-runtimetools" />
+      <param name="version" value="2.1-SNAPSHOT" />
+    </antcall>
+    <antcall target="@mvn-instal-3d-party">
+      <param name="file" value="jadex/jadex-applications-bdi-2.1-SNAPSHOT.jar" />
+      <param name="groupID" value="net.sourceforge.jadex" />
+      <param name="artifactID" value="jadex-applications-bdi" />
+      <param name="version" value="2.1-SNAPSHOT" />
+    </antcall>
+    <antcall target="@mvn-instal-3d-party">
+      <param name="file" value="jadex/jadex-commons-2.1-SNAPSHOT.jar" />
+      <param name="groupID" value="net.sourceforge.jadex" />
+      <param name="artifactID" value="jadex-commons" />
+      <param name="version" value="2.1-SNAPSHOT" />
+    </antcall>
+    <antcall target="@mvn-instal-3d-party">
+      <param name="file" value="jadex/jadex-bridge-2.1-SNAPSHOT.jar" />
+      <param name="groupID" value="net.sourceforge.jadex" />
+      <param name="artifactID" value="jadex-bridge" />
+      <param name="version" value="2.1-SNAPSHOT" />
+    </antcall>
+    <antcall target="@mvn-instal-3d-party">
+      <param name="file" value="jadex/jadex-kernel-extension-envsupport-2.1-SNAPSHOT.jar" />
+      <param name="groupID" value="net.sourceforge.jadex" />
+      <param name="artifactID" value="jadex-kernel-extension-envsupport" />
+      <param name="version" value="2.1-SNAPSHOT" />
+    </antcall>
+    <antcall target="@mvn-instal-3d-party">
+      <param name="file" value="jadex/jadex-javaparser-2.1-SNAPSHOT.jar" />
+      <param name="groupID" value="net.sourceforge.jadex" />
+      <param name="artifactID" value="jadex-javaparser" />
+      <param name="version" value="2.1-SNAPSHOT" />
+    </antcall>
+    <antcall target="@mvn-instal-3d-party">
+      <param name="file" value="jadex/jadex-tools-base-2.1-SNAPSHOT.jar" />
+      <param name="groupID" value="net.sourceforge.jadex" />
+      <param name="artifactID" value="jadex-tools-base" />
+      <param name="version" value="2.1-SNAPSHOT" />
+    </antcall>
+
   </target>
 
 
