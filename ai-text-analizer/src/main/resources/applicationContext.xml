@@ -5,6 +5,6 @@
 
     <bean id="wicketApplication" class="ru.isa.ai.psyta.ACMApplication"/>
 
-    <bean id="linguisticAnalizer" class="ru.isa.ai.psyta.service.linguistic.SimpleCommonTextAnalizer"/>
+    <bean id="linguisticAnalizer" class="ru.isa.ai.linguistic.analyzers.WordCountAnalyzer"/>
 
 </beans>

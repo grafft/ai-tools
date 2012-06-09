@@ -22,19 +22,9 @@
     <dependencies>
         <!-- COM -->
         <dependency>
-            <groupId>jawin</groupId>
-            <artifactId>jawin</artifactId>
-            <version>2.0-alpha1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>com.jacob</groupId>
+            <artifactId>jacob</artifactId>
+            <version>1.17-M2</version>
         </dependency>
     </dependencies>
 </project>
