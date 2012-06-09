@@ -14,7 +14,6 @@ import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.file.Folder;
 import org.apache.wicket.util.lang.Bytes;
@@ -43,9 +42,6 @@ public class HomePage extends ACMPage {
     private static final Logger log = LoggerFactory.getLogger(HomePage.class);
 
     private static final String FILE_PART_DELIMITER = "\\s*\\n\\s*";
-
-    @SpringBean
-    private WordCountAnalyzer analyzer;
 
     private Label textHint;
     private FeedbackPanel uploadFeedback;
@@ -90,6 +86,7 @@ public class HomePage extends ACMPage {
                     }
 
                     // analyzing
+                    WordCountAnalyzer analyzer = new WordCountAnalyzer();
                     analyzer.setKeywords(allKeyWords);
                     analyzer.setProgressor(new SNCProgressor() {
                         @Override
