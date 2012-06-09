@@ -53,7 +53,7 @@ public class HomePage extends ACMPage {
 
     private Folder keywordsFolder;
     private Folder textsFolder;
-    private Set<File> keywordFiles = new HashSet<File>();
+    private Set<File> keywordFiles = new HashSet<>();
     private Map<String, Map<String, Integer>> analizeResults = Collections.synchronizedMap(new HashMap<String, Map<String, Integer>>());
     private Map<String, Integer> totalResults = Collections.synchronizedMap(new HashMap<String, Integer>());
 
@@ -84,7 +84,7 @@ public class HomePage extends ACMPage {
                     Set<String> allKeyWords = new HashSet<String>();
 
                     for (File keywordFile : keywordFiles) {
-                        List<String> keywords = WordCountAnalyzer.loadKeywords(keywordFile.getAbsolutePath());
+                        List<String> keywords = WordCountAnalyzer.loadKeywords(keywordFile);
                         allKeyWords.addAll(keywords);
                         keywordsByFile.put(keywordFile.getName(), keywords);
                     }
