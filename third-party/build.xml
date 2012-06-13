@@ -26,21 +26,15 @@
     </antcall>
 
     <antcall target="@mvn-instal-3d-party">
-      <param name="file" value="jadex/jadex-platform-standalone-2.1-SNAPSHOT.jar" />
+      <param name="file" value="jadex/jadex-kernel-bdi-2.1-SNAPSHOT.jar" />
       <param name="groupID" value="net.sourceforge.jadex" />
-      <param name="artifactID" value="jadex-platform-standalone" />
+      <param name="artifactID" value="jadex-kernel-bdi" />
       <param name="version" value="2.1-SNAPSHOT" />
     </antcall>
     <antcall target="@mvn-instal-3d-party">
       <param name="file" value="jadex/jadex-applib-bdi-2.1-SNAPSHOT.jar" />
       <param name="groupID" value="net.sourceforge.jadex" />
       <param name="artifactID" value="jadex-applib-bdi" />
-      <param name="version" value="2.1-SNAPSHOT" />
-    </antcall>
-    <antcall target="@mvn-instal-3d-party">
-      <param name="file" value="jadex/jadex-kernel-bdi-2.1-SNAPSHOT.jar" />
-      <param name="groupID" value="net.sourceforge.jadex" />
-      <param name="artifactID" value="jadex-kernel-bdi" />
       <param name="version" value="2.1-SNAPSHOT" />
     </antcall>
     <antcall target="@mvn-instal-3d-party">
@@ -91,7 +85,6 @@
       <param name="artifactID" value="jadex-kernel-component" />
       <param name="version" value="2.1-SNAPSHOT" />
     </antcall>
-
   </target>
 
 
