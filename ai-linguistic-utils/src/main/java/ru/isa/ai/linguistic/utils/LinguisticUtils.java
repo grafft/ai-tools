@@ -89,13 +89,16 @@ public abstract class LinguisticUtils {
     public static final long MIL_IN_SEC = 1000;
 
     public static String getFormattedIntervalFromCurrent(long fromMillis) {
-        long fromDate = System.currentTimeMillis() - fromMillis;
+        return getFormattedInterval(System.currentTimeMillis() - fromMillis);
+    }
+
+    public static String getFormattedInterval(long interval) {
         StringBuilder builder = new StringBuilder();
-        long day = fromDate / MIL_IN_DAY;
-        long hour = (fromDate - day * MIL_IN_DAY) / MIL_IN_HOUR;
-        long min = (fromDate - day * MIL_IN_DAY - hour * MIL_IN_HOUR) / MIL_IN_MIN;
-        long sec = (fromDate - day * MIL_IN_DAY - hour * MIL_IN_HOUR - min * MIL_IN_MIN) / MIL_IN_SEC;
-        long mil = (fromDate - day * MIL_IN_DAY - hour * MIL_IN_HOUR - min * MIL_IN_MIN - sec * MIL_IN_SEC);
+        long day = interval / MIL_IN_DAY;
+        long hour = (interval - day * MIL_IN_DAY) / MIL_IN_HOUR;
+        long min = (interval - day * MIL_IN_DAY - hour * MIL_IN_HOUR) / MIL_IN_MIN;
+        long sec = (interval - day * MIL_IN_DAY - hour * MIL_IN_HOUR - min * MIL_IN_MIN) / MIL_IN_SEC;
+        long mil = (interval - day * MIL_IN_DAY - hour * MIL_IN_HOUR - min * MIL_IN_MIN - sec * MIL_IN_SEC);
         builder.append(day).append(" day ").append(hour).append(" hour ")
                 .append(min).append(" min ").append(sec).append(".")
                 .append(mil).append(" sec");
