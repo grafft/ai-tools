@@ -13,9 +13,7 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
-import ru.isa.ai.linguistic.SNCPrimer;
-
-public class TxtFileDataLoader implements DataLoader {
+public class TxtFileDataLoader implements IDataLoader {
 
    private static final Logger logger = Logger
            .getLogger(TxtFileDataLoader.class);

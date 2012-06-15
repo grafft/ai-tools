@@ -4,11 +4,12 @@ import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import ru.isa.ai.linguistic.AbstractLinguisticAnalyzer;
-import ru.isa.ai.linguistic.LinguisticsAnalyzingException;
 import ru.isa.ai.linguistic.utils.LinguisticUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.*;
@@ -19,14 +20,20 @@ import java.util.regex.Pattern;
  * Date: 19.10.11
  * Time: 16:04
  */
-public class WordCountAnalyzer extends AbstractLinguisticAnalyzer<Map<String, Integer>> {
+public class WordCountAnalyzer extends AbstractLinguisticAnalyzer<Map<String, Integer>, Map<String, Integer>> {
 
     private static final Logger logger = Logger.getLogger(WordCountAnalyzer.class);
 
-    private Map<String, Integer> frequencies = new HashMap<>();
+    private Set<String> keywords = Collections.synchronizedSet(new HashSet<String>());
+
+    public WordCountAnalyzer(Set<String> keywords) {
+        super();
+        this.keywords = keywords;
+    }
 
     @Override
-    public void analyzeStub(String textName) throws LinguisticsAnalyzingException {
+    public Map<String, Integer> analyzePart(String textName) throws LinguisticsAnalyzingException {
+        Map<String, Integer> frequencies = new HashMap<>();
         try {
             Variant iterator = Dispatch.get(syntax, "Begin");
 
@@ -60,19 +67,26 @@ public class WordCountAnalyzer extends AbstractLinguisticAnalyzer<Map<String, In
         } catch (Exception e) {
             logger.error("Error during sentences extracting", e);
         }
-    }
-
-    public void resetResult() {
-        frequencies.clear();
+        return frequencies;
     }
 
     @Override
-    public Map<String, Integer> getResult() {
-        Map<String, Integer> result = new HashMap<>();
-        for (Map.Entry<String, Integer> entry : frequencies.entrySet()) {
-            result.put(entry.getKey(), entry.getValue());
+    public Map<String, Integer> collectMainResult(Map<String, Integer> partResult, Map<String, Integer> currentResult) {
+        return collect(partResult, currentResult);
+    }
+
+    private Map<String, Integer> collect(Map<String, Integer> partResult, Map<String, Integer> currentResult) {
+        if (currentResult == null) {
+            currentResult = new HashMap<>();
         }
-        return result;
+        for (Map.Entry<String, Integer> entry : partResult.entrySet()) {
+            if (currentResult.containsKey(entry.getKey())) {
+                currentResult.put(entry.getKey(), currentResult.get(entry.getKey()) + entry.getValue());
+            } else {
+                currentResult.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return currentResult;
     }
 
     public static List<String> loadKeywords(URL filename) throws IOException {

@@ -1,4 +1,4 @@
-package ru.isa.ai.linguistic;
+package ru.isa.ai.linguistic.analyzers;
 
 public class LinguisticsAnalyzingException extends Exception {
 	private static final long serialVersionUID = -1746765698641972017L;

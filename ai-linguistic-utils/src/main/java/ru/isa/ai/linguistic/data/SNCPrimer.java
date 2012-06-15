@@ -1,4 +1,4 @@
-package ru.isa.ai.linguistic;
+package ru.isa.ai.linguistic.data;
 
 import java.util.LinkedList;
 import java.util.List;

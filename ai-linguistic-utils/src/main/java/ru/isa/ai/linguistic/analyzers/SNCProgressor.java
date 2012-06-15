@@ -1,4 +1,4 @@
-package ru.isa.ai.linguistic;
+package ru.isa.ai.linguistic.analyzers;
 
 /**
  * User: GraffT

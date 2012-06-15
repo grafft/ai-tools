@@ -1,5 +1,6 @@
 package ru.isa.ai.psyta.page;
 
+import com.google.common.util.concurrent.FutureCallback;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -19,9 +20,9 @@ import org.apache.wicket.util.file.Folder;
 import org.apache.wicket.util.lang.Bytes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.isa.ai.linguistic.SNCPrimer;
-import ru.isa.ai.linguistic.SNCProgressor;
+import ru.isa.ai.linguistic.analyzers.SNCProgressor;
 import ru.isa.ai.linguistic.analyzers.WordCountAnalyzer;
+import ru.isa.ai.linguistic.data.SNCPrimer;
 import ru.isa.ai.linguistic.data.TxtFileDataLoader;
 import ru.isa.ai.linguistic.utils.LinguisticUtils;
 import ru.isa.ai.psyta.ACMApplication;
@@ -70,13 +71,13 @@ public class HomePage extends ACMPage {
                     session.setStatus(ACMSession.WorkStatus.WORKING);
                     session.setAnalyzingFile(file);
 
-                    long currentTime = System.currentTimeMillis();
+                    final long currentTime = System.currentTimeMillis();
                     // loading data
                     TxtFileDataLoader loader = new TxtFileDataLoader(file.getAbsolutePath(), "UTF-8");
                     loader.setDelimiter(FILE_PART_DELIMITER);
                     SNCPrimer primer = loader.loadData();
 
-                    Map<String, List<String>> keywordsByFile = new HashMap<String, List<String>>();
+                    final Map<String, List<String>> keywordsByFile = new HashMap<String, List<String>>();
                     Set<String> allKeyWords = new HashSet<String>();
 
                     for (File keywordFile : keywordFiles) {
@@ -86,36 +87,44 @@ public class HomePage extends ACMPage {
                     }
 
                     // analyzing
-                    WordCountAnalyzer analyzer = new WordCountAnalyzer();
-                    analyzer.setKeywords(allKeyWords);
+                    WordCountAnalyzer analyzer = new WordCountAnalyzer(allKeyWords);
                     analyzer.setProgressor(new SNCProgressor() {
                         @Override
                         public void markProgress(double part) {
                             AnalyzeWorker.this.session.setProgress(part);
                         }
                     });
-                    analyzer.analyze(primer);
-                    Map<String, Integer> results = analyzer.getResult();
-                    analyzer.resetResult();
-
-                    // sorting
-                    for (File keywordFile : keywordFiles) {
-                        int commonFreq = 0;
-                        Map<String, Integer> fileResults = new HashMap<String, Integer>();
-                        for (Map.Entry<String, Integer> entry : results.entrySet()) {
-                            if (keywordsByFile.get(keywordFile.getName()).contains(entry.getKey())) {
-                                fileResults.put(entry.getKey(), entry.getValue());
-                                commonFreq += entry.getValue();
+                    analyzer.analyze(primer, new FutureCallback<Map<String, Integer>>() {
+                        @Override
+                        public void onSuccess(Map<String, Integer> results) {
+                            // sorting
+                            for (File keywordFile : keywordFiles) {
+                                int commonFreq = 0;
+                                Map<String, Integer> fileResults = new HashMap<String, Integer>();
+                                for (Map.Entry<String, Integer> entry : results.entrySet()) {
+                                    if (keywordsByFile.get(keywordFile.getName()).contains(entry.getKey())) {
+                                        fileResults.put(entry.getKey(), entry.getValue());
+                                        commonFreq += entry.getValue();
+                                    }
+                                }
+                                HomePage.this.analizeResults.put(keywordFile.getName(), fileResults);
+                                HomePage.this.totalResults.put(keywordFile.getName(), commonFreq);
                             }
-                        }
-                        HomePage.this.analizeResults.put(keywordFile.getName(), fileResults);
-                        HomePage.this.totalResults.put(keywordFile.getName(), commonFreq);
-                    }
 
-                    session.info("Файл " + file.getName() + " проанализирован за " + LinguisticUtils.getFormattedIntervalFromCurrent(currentTime));
-                    session.setStatus(ACMSession.WorkStatus.SUCCESS);
+                            session.info("Файл " + file.getName() + " проанализирован за " + LinguisticUtils.getFormattedIntervalFromCurrent(currentTime));
+                            session.setStatus(ACMSession.WorkStatus.SUCCESS);
+                        }
+
+                        @Override
+                        public void onFailure(Throwable t) {
+                            session.error("Ошибка в анализе файла: " + t.getMessage());
+                            session.setStatus(ACMSession.WorkStatus.FAIL);
+                        }
+                    });
+
+
                 } catch (Exception e) {
-                    session.error("Ошибка в анализе файла: " + e.getMessage());
+                    session.error("Ошибка при загрузке ключевых слов: " + e.getMessage());
                     session.setStatus(ACMSession.WorkStatus.FAIL);
                 }
             } else {

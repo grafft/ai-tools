@@ -26,5 +26,11 @@
             <artifactId>jacob</artifactId>
             <version>1.17-M2</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>12.0</version>
+        </dependency>
     </dependencies>
 </project>
