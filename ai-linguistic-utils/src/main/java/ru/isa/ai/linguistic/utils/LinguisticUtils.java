@@ -1,5 +1,9 @@
 package ru.isa.ai.linguistic.utils;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Author: Aleksandr Panov
  * Date: 09.06.12
@@ -30,6 +34,8 @@ public abstract class LinguisticUtils {
     public static final int LEXEME_ABBREVIATION = 15;
     public static final int LEXEME_NUMBER = 16;
     public static final int LEXEME_LAST = 16;
+    public static final List<Integer> LEXEME_NONSIGNED = Arrays.asList(LEXEME_UNDEF, LEXEME_PRONOUN, LEXEME_NUMERAL,
+            LEXEME_PARENTHESIS, LEXEME_INTERJECTION, LEXEME_PREPOSITION, LEXEME_CONJUNCTION, LEXEME_PARTICLE, LEXEME_NUMBER);
 
     public static final int LEXEME_GEN_NOUN = 32;
     public static final int LEXEME_GEN_ADJECTIVE = 64;
