@@ -5,10 +5,7 @@ import com.jacob.com.Variant;
 import org.apache.log4j.Logger;
 import ru.isa.ai.linguistic.utils.LinguisticUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Author: Aleksandr Panov
@@ -54,7 +51,7 @@ public class WordNetAnalyzer extends AbstractLinguisticAnalyzer<Map<String, List
         try {
             Variant semanticIterator = Dispatch.get(semantics, "Begin");
             if (semanticIterator != null) {
-                Variant hasNext = null;
+                Variant hasNext;
                 do {
                     Variant semanteme = Dispatch.get(semanticIterator.toDispatch(), "Value");
                     if (semanteme != null) {
