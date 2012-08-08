@@ -1,9 +1,11 @@
-package ru.isa.ai.linguistic.analyzers;
+package ru.isa.ai.linguistic.analyzers.wordcount;
 
 import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import ru.isa.ai.linguistic.analyzers.AbstractLinguisticAnalyzer;
+import ru.isa.ai.linguistic.analyzers.LinguisticsAnalyzingException;
 import ru.isa.ai.linguistic.utils.LinguisticUtils;
 
 import java.io.BufferedReader;

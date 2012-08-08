@@ -21,7 +21,7 @@ import org.apache.wicket.util.lang.Bytes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.isa.ai.linguistic.analyzers.SNCProgressor;
-import ru.isa.ai.linguistic.analyzers.WordCountAnalyzer;
+import ru.isa.ai.linguistic.analyzers.wordcount.WordCountAnalyzer;
 import ru.isa.ai.linguistic.data.SNCPrimer;
 import ru.isa.ai.linguistic.data.TxtFileDataLoader;
 import ru.isa.ai.linguistic.utils.LinguisticUtils;

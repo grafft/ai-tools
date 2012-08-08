@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns2:semanticRelations xmlns:ns2="http://www.isa.ru/schema">
+    <relations>
+        <relation id="0">Не определено</relation>
+        <relation id="1">ABL</relation>
+        <relation id="2">ABS</relation>
+        <relation id="3">ADR</relation>
+        <relation id="4">CAUS</relation>
+        <relation id="5">CMP</relation>
+        <relation id="6">COM</relation>
+        <relation id="7">COR</relation>
+        <relation id="8">DES</relation>
+        <relation id="9">DIS</relation>
+        <relation id="10">DIR</relation>
+        <relation id="11">DLB</relation>
+        <relation id="12">DST</relation>
+        <relation id="13">EQ</relation>
+        <relation id="14">FAB</relation>
+        <relation id="15">GEN</relation>
+        <relation id="16">INS</relation>
+        <relation id="17">LIM</relation>
+        <relation id="18">LOC</relation>
+        <relation id="19">LIQ</relation>
+        <relation id="20">MED</relation>
+        <relation id="21">OBJ</relation>
+        <relation id="22">PAR</relation>
+        <relation id="23">PTN</relation>
+        <relation id="24">POS</relation>
+        <relation id="25">POT</relation>
+        <relation id="26">PRM</relation>
+        <relation id="27">QLT</relation>
+        <relation id="28">QNT</relation>
+        <relation id="29">RSN</relation>
+        <relation id="30">SIT</relation>
+        <relation id="31">SUR</relation>
+        <relation id="32">TAR</relation>
+        <relation id="33">TRA</relation>
+        <relation id="34">TRG</relation>
+        <relation id="35">TMP</relation>
+    </relations>
+</ns2:semanticRelations>

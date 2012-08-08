@@ -1,7 +1,8 @@
 package ru.isa.ai.ass;
 
 import com.google.common.util.concurrent.FutureCallback;
-import ru.isa.ai.linguistic.analyzers.WordNetAnalyzer;
+import ru.isa.ai.linguistic.analyzers.wordnet.LinguisticWordNet;
+import ru.isa.ai.linguistic.analyzers.wordnet.WordNetAnalyzer;
 import ru.isa.ai.linguistic.data.SNCPrimer;
 import ru.isa.ai.linguistic.data.TxtFileDataLoader;
 
@@ -20,14 +21,10 @@ public class WordNetAnalyzerTest {
         SNCPrimer primer = loader.loadData();
 
         WordNetAnalyzer netAnalyzer = new WordNetAnalyzer();
-        netAnalyzer.analyze(primer, new FutureCallback<Map<String, List<WordNetAnalyzer.Pair<String>>>>() {
+        netAnalyzer.analyze(primer, new FutureCallback<LinguisticWordNet>() {
             @Override
-            public void onSuccess(Map<String, List<WordNetAnalyzer.Pair<String>>> result) {
-                for (Map.Entry<String, List<WordNetAnalyzer.Pair<String>>> entry : result.entrySet()) {
-                    for (WordNetAnalyzer.Pair<String> pair : entry.getValue()) {
-                        System.out.println(entry.getKey() + "<-" + pair);
-                    }
-                }
+            public void onSuccess(LinguisticWordNet result) {
+                System.out.println(result.toString());
             }
 
             @Override
