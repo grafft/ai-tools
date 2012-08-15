@@ -28,6 +28,8 @@ public class WordNetAnalyzer extends AbstractLinguisticAnalyzer<LinguisticWordNe
             Variant semRoleIterator = Dispatch.get(roleSemantics, "Begin");
             if (semRoleIterator != null) {
                 Variant hasNext;
+                String predicatorDictForm = "";
+                int predicatorType = 0;
                 do {
                     Variant semRole = Dispatch.get(semRoleIterator.toDispatch(), "Value");
                     if (semRole != null) {
@@ -35,28 +37,28 @@ public class WordNetAnalyzer extends AbstractLinguisticAnalyzer<LinguisticWordNe
                         Dispatch predicator = Dispatch.get(semRole.toDispatch(), "Predicator").toDispatch();
                         Variant predicatorLexeme = Dispatch.get(predicator, "Lexeme");
                         if (predicatorLexeme != null) {
-                            String predicatorDictForm = (String) Dispatch.get(predicatorLexeme.toDispatch(), "DictForm").toJavaObject();
-                            int predicatorType = (Integer) Dispatch.get(predicatorLexeme.toDispatch(), "Type").toJavaObject();
+                            predicatorDictForm = (String) Dispatch.get(predicatorLexeme.toDispatch(), "DictForm").toJavaObject();
+                            predicatorType = (Integer) Dispatch.get(predicatorLexeme.toDispatch(), "Type").toJavaObject();
+                        }
 
-                            Dispatch syntaxeme = Dispatch.get(semRole.toDispatch(), "Syntaxeme").toDispatch();
-                            Dispatch synWordIterator = Dispatch.get(syntaxeme, "WordIterator").toDispatch();
-                            Dispatch word = Dispatch.get(synWordIterator, "Value").toDispatch();
-                            Dispatch wordLexeme = Dispatch.get(word, "Lexeme").toDispatch();
-                            String wordDictForm = (String) Dispatch.get(wordLexeme, "DictForm").toJavaObject();
-                            int wordType = (Integer) Dispatch.get(wordLexeme, "Type").toJavaObject();
-                            if (wordType == LinguisticUtils.LEXEME_PREPOSITION) {
-                                if ((Boolean) Dispatch.call(synWordIterator, "Next").toJavaObject()) {
-                                    word = Dispatch.get(synWordIterator, "Value").toDispatch();
-                                    wordLexeme = Dispatch.get(word, "Lexeme").toDispatch();
-                                    wordDictForm = (String) Dispatch.get(wordLexeme, "DictForm").toJavaObject();
-                                    wordType = (Integer) Dispatch.get(wordLexeme, "Type").toJavaObject();
-                                }
+                        Dispatch syntaxeme = Dispatch.get(semRole.toDispatch(), "Syntaxeme").toDispatch();
+                        Dispatch synWordIterator = Dispatch.get(syntaxeme, "WordIterator").toDispatch();
+                        Dispatch word = Dispatch.get(synWordIterator, "Value").toDispatch();
+                        Dispatch wordLexeme = Dispatch.get(word, "Lexeme").toDispatch();
+                        String wordDictForm = (String) Dispatch.get(wordLexeme, "DictForm").toJavaObject();
+                        int wordType = (Integer) Dispatch.get(wordLexeme, "Type").toJavaObject();
+                        if (wordType == LinguisticUtils.LEXEME_PREPOSITION) {
+                            if ((Boolean) Dispatch.call(synWordIterator, "Next").toJavaObject()) {
+                                word = Dispatch.get(synWordIterator, "Value").toDispatch();
+                                wordLexeme = Dispatch.get(word, "Lexeme").toDispatch();
+                                wordDictForm = (String) Dispatch.get(wordLexeme, "DictForm").toJavaObject();
+                                wordType = (Integer) Dispatch.get(wordLexeme, "Type").toJavaObject();
                             }
-                            if (LinguisticUtils.LEXEME_VERB == predicatorType && !LinguisticUtils.LEXEME_NONSIGNED.contains(wordType)) {
-                                LinguisticNode firstNode = new LinguisticNode(predicatorDictForm, WordType.getByIndex(predicatorType));
-                                LinguisticNode secondNode = new LinguisticNode(wordDictForm, WordType.getByIndex(wordType));
-                                network.addLink(new LinguisticLink(firstNode, secondNode, LinguisticRelation.getRoleById(semRoleType), SemanticRelationType.role));
-                            }
+                        }
+                        if (LinguisticUtils.LEXEME_VERB == predicatorType && !LinguisticUtils.LEXEME_NONSIGNED.contains(wordType)) {
+                            LinguisticNode firstNode = new LinguisticNode(predicatorDictForm, WordType.getByIndex(predicatorType));
+                            LinguisticNode secondNode = new LinguisticNode(wordDictForm, WordType.getByIndex(wordType));
+                            network.addLink(new LinguisticLink(firstNode, secondNode, LinguisticRelation.getRoleById(semRoleType), SemanticRelationType.role));
                         }
                     }
                     hasNext = Dispatch.call(semRoleIterator.toDispatch(), "Next");
