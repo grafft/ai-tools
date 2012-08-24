@@ -7,10 +7,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ai-tests</artifactId>
+    <artifactId>ai-semantic-network</artifactId>
     <packaging>jar</packaging>
 
-    <name>ai-tests</name>
+    <name>ai-semantic-network</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -23,11 +23,6 @@
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.5</version>
         </dependency>
     </dependencies>
 </project>

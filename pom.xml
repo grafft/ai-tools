@@ -19,6 +19,7 @@
 
         <module>ai-text-analizer</module>
         <module>ai-tests</module>
+        <module>ai-semantic-network</module>
     </modules>
 
     <repositories>
