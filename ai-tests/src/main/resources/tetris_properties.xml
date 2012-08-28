@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ns2:tetris xmlns:ns2="http://www.isa.ru/schema">
     <figures>
-        <figure name="1">
+        <figure name="0">
             -++
             ++-
         </figure>
-        <figure name="2">
+        <figure name="1">
             +
             +
             +
             +
         </figure>
-        <figure name="3">
+        <figure name="2">
             +--
             +++
         </figure>
-        <figure name="4">
+        <figure name="3">
             ++
             ++
         </figure>
-        <figure name="5">
+        <figure name="4">
             -+-
             +++
         </figure>

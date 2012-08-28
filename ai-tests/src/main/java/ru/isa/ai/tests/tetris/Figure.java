@@ -15,8 +15,6 @@ public class Figure implements Cloneable {
     private List<Block> blocks = new ArrayList<>();
     private int xCoord = 0;
     private int yCoord = 0;
-    private int xMaxCoord = 0;
-    private int yMaxCoord = 0;
     private byte orientation = 0;
 
     public Figure(int xSize, int ySize, byte[] form) {
@@ -27,12 +25,6 @@ public class Figure implements Cloneable {
             for (int i = 0; i < xSize; i++) {
                 if (form[xSize * j + i] == 1) {
                     blocks.add(new Block(i, j));
-                    if (j > yMaxCoord) {
-                        yMaxCoord = j;
-                    }
-                    if (i > xMaxCoord) {
-                        xMaxCoord = i;
-                    }
                 }
             }
         }
@@ -42,16 +34,8 @@ public class Figure implements Cloneable {
         return xSize;
     }
 
-    public void setxSize(int xSize) {
-        this.xSize = xSize;
-    }
-
     public int getySize() {
         return ySize;
-    }
-
-    public void setySize(int ySize) {
-        this.ySize = ySize;
     }
 
     public byte[] getForm() {
@@ -87,22 +71,6 @@ public class Figure implements Cloneable {
         this.yCoord = yCoord;
     }
 
-    public int getxMaxCoord() {
-        return xMaxCoord;
-    }
-
-    public void setxMaxCoord(int xMaxCoord) {
-        this.xMaxCoord = xMaxCoord;
-    }
-
-    public int getyMaxCoord() {
-        return yMaxCoord;
-    }
-
-    public void setyMaxCoord(int yMaxCoord) {
-        this.yMaxCoord = yMaxCoord;
-    }
-
     @Override
     protected Figure clone() {
         byte[] newForm = new byte[xSize * ySize];
@@ -134,12 +102,6 @@ public class Figure implements Cloneable {
                     Block currentBlock = blocks.get(counter);
                     currentBlock.setxCoord(i);
                     currentBlock.setyCoord(j);
-                    if (j > yMaxCoord) {
-                        yMaxCoord = j;
-                    }
-                    if (i > xMaxCoord) {
-                        xMaxCoord = i;
-                    }
                     counter++;
                 }
             }

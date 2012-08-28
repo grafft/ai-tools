@@ -45,4 +45,24 @@ public class Block implements Cloneable {
         newBlock.setColorIndex(colorIndex);
         return newBlock;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Block block = (Block) o;
+
+        if (xCoord != block.xCoord) return false;
+        if (yCoord != block.yCoord) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = xCoord;
+        result = 31 * result + yCoord;
+        return result;
+    }
 }

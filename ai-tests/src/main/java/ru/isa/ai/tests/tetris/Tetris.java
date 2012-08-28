@@ -25,7 +25,7 @@ public class Tetris {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                final Map<Long, Figure> figures = new HashMap<>();
+                final Map<Integer, Figure> figures = new HashMap<>();
                 loadFigures(figures);
 
                 new TetrisFrame(figures);
@@ -34,7 +34,7 @@ public class Tetris {
 
     }
 
-    private static void loadFigures(Map<Long, Figure> figures) {
+    private static void loadFigures(Map<Integer, Figure> figures) {
         try {
             JAXBContext context = JAXBContext.newInstance(serializable);
             unmarshaller = context.createUnmarshaller();
@@ -60,7 +60,7 @@ public class Tetris {
                         }
                     }
                 }
-                figures.put(figure.name, new Figure(xSize, ySize, form));
+                figures.put(figure.name.intValue(), new Figure(xSize, ySize, form));
             }
         } catch (JAXBException e) {
             e.printStackTrace();
