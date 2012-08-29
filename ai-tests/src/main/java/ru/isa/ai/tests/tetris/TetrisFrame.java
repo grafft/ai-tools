@@ -2,7 +2,6 @@ package ru.isa.ai.tests.tetris;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
@@ -30,11 +29,8 @@ public class TetrisFrame extends JFrame {
         });
 
         getContentPane().setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
 
         JPanel infoPanel = new JPanel();
-        c.anchor = GridBagConstraints.LINE_START;
-        c.insets = new Insets(3, 3, 3, 3);
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         scoreLabel = new JLabel("0");
         infoPanel.add(scoreLabel);
@@ -45,15 +41,17 @@ public class TetrisFrame extends JFrame {
         previewPanel.setPreferredSize(size);
         previewPanel.setMinimumSize(size);
         previewPanel.setLayout(new GridLayout(1, 1, 3, 3));
-        TitledBorder border = new TitledBorder(new LineBorder(Color.black), "Next", TitledBorder.CENTER, TitledBorder.BELOW_TOP);
-        border.setTitleColor(Color.black);
-        previewPanel.setBorder(border);
+        previewPanel.setBorder(LineBorder.createBlackLineBorder());
         previewPanel.add(new PreviewPanel());
         infoPanel.add(previewPanel);
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.NORTHEAST;
+        c.insets = new Insets(3, 3, 3, 3);
         getContentPane().add(infoPanel, c);
 
         final WorkPanel workPanel = new WorkPanel();
-        c.anchor = GridBagConstraints.CENTER;
+        c.anchor = GridBagConstraints.NORTH;
         c.fill = GridBagConstraints.BOTH;
         c.weighty = 1.0;
         c.weightx = 1.0;

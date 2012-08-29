@@ -38,15 +38,6 @@ public class Figure implements Cloneable {
         return ySize;
     }
 
-    public byte[] getForm() {
-        return form;
-    }
-
-    public void setForm(byte[] form) {
-        this.form = form;
-    }
-
-
     public byte getOrientation() {
         return orientation;
     }
@@ -75,7 +66,11 @@ public class Figure implements Cloneable {
     protected Figure clone() {
         byte[] newForm = new byte[xSize * ySize];
         System.arraycopy(form, 0, newForm, 0, xSize * ySize);
-        return new Figure(xSize, ySize, newForm);
+        Figure clone = new Figure(xSize, ySize, newForm);
+        clone.xCoord = xCoord;
+        clone.yCoord = yCoord;
+        clone.orientation = orientation;
+        return clone;
     }
 
     public void rotate() {

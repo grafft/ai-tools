@@ -31,11 +31,11 @@ public class Situation {
         nextFigure = startFigures.get(RandomUtils.nextInt(startFigures.size())).clone();
         nextFigure.setColorIndex(RandomUtils.nextInt(COLOR_COUNT));
         nextFigure.setxCoord((PREVIEW_SIZE - nextFigure.getxSize()) / 2);
-        nextFigure.setyCoord(1);
+        nextFigure.setyCoord((PREVIEW_SIZE - nextFigure.getySize()) / 2);
     }
 
     public synchronized void tick() {
-        if (currentFigure != null && !checkBottom()) {
+        if (currentFigure != null && !checkBottom(currentFigure)) {
             currentFigure.setyCoord(currentFigure.getyCoord() + 1);
         } else {
             currentFigure = nextFigure;
@@ -45,70 +45,81 @@ public class Situation {
             nextFigure = startFigures.get(RandomUtils.nextInt(startFigures.size())).clone();
             nextFigure.setColorIndex(RandomUtils.nextInt(COLOR_COUNT));
             nextFigure.setxCoord((PREVIEW_SIZE - nextFigure.getxSize()) / 2);
-            nextFigure.setyCoord(1);
+            nextFigure.setyCoord((PREVIEW_SIZE - nextFigure.getySize()) / 2);
         }
 
     }
 
     public synchronized boolean moveFigure(int deltaX, int deltaY) {
-        if (currentFigure == null ||
-                checkBottom() ||
-                intersectBounds(deltaX, deltaY) ||
-                intersectStaticBlocks(deltaX, deltaY)) {
-            return false;
+        if (currentFigure != null) {
+            Figure test = currentFigure.clone();
+            test.setxCoord(test.getxCoord() + deltaX);
+            test.setyCoord(test.getyCoord() + deltaY);
+            if ((deltaY != 0 && checkBottom(currentFigure)) ||
+                    intersectBounds(test) ||
+                    intersectStaticBlocks(test)) {
+                return false;
+            } else {
+                currentFigure.setxCoord(currentFigure.getxCoord() + deltaX);
+                currentFigure.setyCoord(currentFigure.getyCoord() + deltaY);
+                return true;
+            }
         } else {
-            currentFigure.setxCoord(currentFigure.getxCoord() + deltaX);
-            currentFigure.setyCoord(currentFigure.getyCoord() + deltaY);
-            return true;
+            return false;
         }
     }
 
-    private boolean checkBottom() {
-        if (currentFigure.getyCoord() + currentFigure.getySize() == Y) {
-            addFigureToStatic();
+    public synchronized void rotateFigure() {
+        if (currentFigure != null) {
+            Figure test = currentFigure.clone();
+            test.rotate();
+            if (!intersectBounds(test) && !intersectStaticBlocks(test)) {
+                currentFigure.rotate();
+            }
+        }
+    }
+
+    private boolean checkBottom(Figure figure) {
+        if (figure.getyCoord() + figure.getySize() == Y) {
+            addFigureToStatic(currentFigure);
+            currentFigure = null;
             return true;
         }
         for (Block block : staticBlocks.getBlockSet()) {
-            if (currentFigure.blockExist(block.getxCoord() - currentFigure.getxCoord(), block.getyCoord() - currentFigure.getyCoord() - 1)) {
-                addFigureToStatic();
+            if (figure.blockExist(block.getxCoord() - figure.getxCoord(), block.getyCoord() - figure.getyCoord() - 1)) {
+                addFigureToStatic(currentFigure);
+                currentFigure = null;
                 return true;
             }
         }
         return false;
     }
 
-    private void addFigureToStatic() {
-        for (Block figureBlock : currentFigure.getBlocks()) {
-            figureBlock.setxCoord(figureBlock.getxCoord() + currentFigure.getxCoord());
-            figureBlock.setyCoord(figureBlock.getyCoord() + currentFigure.getyCoord());
+    private void addFigureToStatic(Figure figure) {
+        for (Block figureBlock : figure.getBlocks()) {
+            figureBlock.setxCoord(figureBlock.getxCoord() + figure.getxCoord());
+            figureBlock.setyCoord(figureBlock.getyCoord() + figure.getyCoord());
             staticBlocks.addBlock(figureBlock);
         }
-        currentFigure = null;
         int collapsed = staticBlocks.collapseLines(X);
         if (collapsed > 0) {
             score += 100 * collapsed;
         }
     }
 
-    private boolean intersectStaticBlocks(int deltaX, int deltaY) {
+    private boolean intersectStaticBlocks(Figure figure) {
         for (Block block : staticBlocks.getBlockSet()) {
-            if (currentFigure.blockExist(block.getxCoord() - currentFigure.getxCoord() - deltaX,
-                    block.getyCoord() - currentFigure.getyCoord() - deltaY)) {
+            if (figure.blockExist(block.getxCoord() - figure.getxCoord(),
+                    block.getyCoord() - figure.getyCoord())) {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean intersectBounds(int deltaX, int deltaY) {
-        return currentFigure.getxCoord() + deltaX < 0 || currentFigure.getxCoord() + currentFigure.getxSize() + deltaX > X ||
-                currentFigure.getyCoord() + currentFigure.getySize() + deltaY > Y;
-    }
-
-    public synchronized void rotateFigure() {
-        if (currentFigure != null) {
-            currentFigure.rotate();
-        }
+    private boolean intersectBounds(Figure figure) {
+        return figure.getxCoord() < 0 || figure.getxCoord() + figure.getxSize() > X ||
+                figure.getyCoord() + figure.getySize() > Y;
     }
 
     public synchronized Figure getCurrentFigure() {
