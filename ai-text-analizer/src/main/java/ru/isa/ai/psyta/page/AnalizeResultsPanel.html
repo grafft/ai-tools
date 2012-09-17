@@ -12,7 +12,7 @@
       </div>
 
       <div wicket:id="showItems">
-         <div>
+         <div style="margin-bottom: 5px; margin-top: 5px; text-align: center;">
             <a wicket:id="saveLink" class="c_post_name add_link" href="#">Сохранить результаты в файл</a>
          </div>
          <div wicket:id="item">
@@ -22,7 +22,8 @@
                   <div class="c_search_res_u">
                      <div class="c_search_res_u_name"><span
                              wicket:id="fileName1">#####</span>&nbsp;&mdash;&nbsp;<span
-                             wicket:id="totalFreq1">#####</span></div>
+                             wicket:id="totalFreq1">#####</span>&nbsp;(<span
+                             wicket:id="percentFreq1">#####</span>%)</div>
                      <div class="c_search_res_u_props">
                         <div wicket:id="beans1">
                            <span wicket:id="word" class="c_search_res_u_prop">#####</span>&nbsp;&ndash;&nbsp;<span
@@ -35,13 +36,14 @@
                </div>
             </div>
 
-            <div class="c_search_res_rcol">
+            <div class="c_search_res_rcol"  wicket:enclosure="fileName2">
                <div class="c_search_res_colcont">
 
                   <div class="c_search_res_u">
-                     <div class="c_search_res_u_name" wicket:enclosure="fileName2"><span
+                     <div class="c_search_res_u_name"><span
                              wicket:id="fileName2"></span>&nbsp;&mdash;&nbsp;<span
-                             wicket:id="totalFreq2">#####</span></div>
+                             wicket:id="totalFreq2">#####</span>&nbsp;(<span
+                             wicket:id="percentFreq2">#####</span>%)</div>
                      <div class="c_search_res_u_props">
                         <div wicket:id="beans2">
                            <span wicket:id="word" class="c_search_res_u_prop">#####</span>&nbsp;&ndash;&nbsp;<span
