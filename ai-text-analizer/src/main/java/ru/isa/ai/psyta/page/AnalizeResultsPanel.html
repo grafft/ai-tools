@@ -1,65 +1,89 @@
 <html xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" xml:lang="en" lang="ru">
-<head>
-   <meta content="text/html; charset=UTF-8;" http-equiv="Content-Type"/>
-</head>
+<wicket:head>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.c_search_res_u_props_fixed').each(function () {
+                if ($(this).children().length > 10) {
+                    $(this).after('<div class="show_more c_search_res_u_props" style="text-align: center">' +
+                            '<span class="js">показать больше</span></div>');
+                }
+            });
+
+            $('.show_more').click(function () {
+                if ($(this).prev().hasClass('c_search_res_u_props_fixed')) {
+                    $(this).children().html('показать меньше');
+                    $(this).prev().removeClass('c_search_res_u_props_fixed');
+                } else {
+                    $(this).children().html('показать больше');
+                    $(this).prev().addClass('c_search_res_u_props_fixed');
+                }
+            });
+        });
+
+    </script>
+</wicket:head>
 <wicket:panel>
-   <div class="c_search_res">
-      <div wicket:id="emptyItems" class="c_search_res_hint">
-         Результаты анализа файла по ключевым словам
-      </div>
-      <div style="text-align: center;">
-         <img wicket:id="throbblerIcon" class="c_search_throbbler" width="32px" height="32px">
-      </div>
+    <div class="c_search_res">
+        <div wicket:id="emptyItems" class="c_search_res_hint">
+            Результаты анализа файла по ключевым словам
+        </div>
+        <div style="text-align: center;">
+            <img wicket:id="throbblerIcon" class="c_search_throbbler" width="32px" height="32px">
+        </div>
 
-      <div wicket:id="showItems">
-         <div style="margin-bottom: 5px; margin-top: 5px; text-align: center;">
-            <a wicket:id="saveLink" class="c_post_name add_link" href="#">Сохранить результаты в файл</a>
-         </div>
-         <div wicket:id="item">
-            <div class="c_search_res_lcol">
-               <div class="c_search_res_colcont">
-
-                  <div class="c_search_res_u">
-                     <div class="c_search_res_u_name"><span
-                             wicket:id="fileName1">#####</span>&nbsp;&mdash;&nbsp;<span
-                             wicket:id="totalFreq1">#####</span>&nbsp;(<span
-                             wicket:id="percentFreq1">#####</span>%)</div>
-                     <div class="c_search_res_u_props">
-                        <div wicket:id="beans1">
-                           <span wicket:id="word" class="c_search_res_u_prop">#####</span>&nbsp;&ndash;&nbsp;<span
-                                wicket:id="freq"
-                                class="c_search_res_u_prop">#####</span>
-                        </div>
-                     </div>
-                  </div>
-
-               </div>
+        <div wicket:id="showItems">
+            <div style="margin-bottom: 5px; margin-top: 5px; text-align: center;">
+                <a wicket:id="saveLink" class="c_post_name add_link" href="#">Сохранить результаты в файл</a>
             </div>
+            <div wicket:id="item">
+                <div class="c_search_res_lcol">
+                    <div class="c_search_res_colcont">
 
-            <div class="c_search_res_rcol"  wicket:enclosure="fileName2">
-               <div class="c_search_res_colcont">
-
-                  <div class="c_search_res_u">
-                     <div class="c_search_res_u_name"><span
-                             wicket:id="fileName2"></span>&nbsp;&mdash;&nbsp;<span
-                             wicket:id="totalFreq2">#####</span>&nbsp;(<span
-                             wicket:id="percentFreq2">#####</span>%)</div>
-                     <div class="c_search_res_u_props">
-                        <div wicket:id="beans2">
-                           <span wicket:id="word" class="c_search_res_u_prop">#####</span>&nbsp;&ndash;&nbsp;<span
-                                wicket:id="freq"
-                                class="c_search_res_u_prop">#####</span>
+                        <div class="c_search_res_u">
+                            <div class="c_search_res_u_name"><span
+                                    wicket:id="fileName1">#####</span>&nbsp;&mdash;&nbsp;<span
+                                    wicket:id="totalFreq1">#####</span>&nbsp;(<span
+                                    wicket:id="percentFreq1">#####</span>%)
+                            </div>
+                            <div class="c_search_res_u_props c_search_res_u_props_fixed">
+                                <div wicket:id="beans1">
+                                    <span wicket:id="word"
+                                          class="c_search_res_u_prop">#####</span>&nbsp;&ndash;&nbsp;<span
+                                        wicket:id="freq"
+                                        class="c_search_res_u_prop">#####</span>
+                                </div>
+                            </div>
                         </div>
-                     </div>
-                  </div>
 
-               </div>
+                    </div>
+                </div>
+
+                <div class="c_search_res_rcol" wicket:enclosure="fileName2">
+                    <div class="c_search_res_colcont">
+
+                        <div class="c_search_res_u">
+                            <div class="c_search_res_u_name"><span
+                                    wicket:id="fileName2"></span>&nbsp;&mdash;&nbsp;<span
+                                    wicket:id="totalFreq2">#####</span>&nbsp;(<span
+                                    wicket:id="percentFreq2">#####</span>%)
+                            </div>
+                            <div class="c_search_res_u_props c_search_res_u_props_fixed">
+                                <div wicket:id="beans2">
+                                    <span wicket:id="word"
+                                          class="c_search_res_u_prop">#####</span>&nbsp;&ndash;&nbsp;<span
+                                        wicket:id="freq"
+                                        class="c_search_res_u_prop">#####</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="clear"></div>
             </div>
-            <div class="clear"></div>
-         </div>
-      </div>
+        </div>
 
-      <div class="clear"></div>
-   </div>
+        <div class="clear"></div>
+    </div>
 </wicket:panel>
 </html>

@@ -51,9 +51,9 @@ a.add_link:hover, a.add_link:visited:hover {
 }
 
 .js {
-    color: #0000CC;
+    color: /*= обычная ссылка */ #6da3bd;
     text-decoration: none;
-    border-bottom: #0000CC 1px dashed;
+    font-weight: bold;
     cursor: pointer;
     cursor: hand;
 }
@@ -381,6 +381,11 @@ ul.feedbackPanel {
     margin-top: 3px;
     font-size: 12px;
     color: /*=второстепенный текст*/ #777;
+}
+
+.c_search_res_u_props_fixed {
+    height: 150px;
+    overflow: hidden;
 }
 
 .c_search_res_u_prop {
