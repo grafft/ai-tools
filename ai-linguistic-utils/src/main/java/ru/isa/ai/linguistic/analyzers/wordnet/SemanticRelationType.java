@@ -7,5 +7,6 @@ package ru.isa.ai.linguistic.analyzers.wordnet;
  */
 public enum SemanticRelationType {
     role,
+    property,
     relation
 }

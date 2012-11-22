@@ -5,7 +5,7 @@ package ru.isa.ai.linguistic.analyzers.wordnet;
  * Date: 08.08.12
  * Time: 10:23
  */
-public class LinguisticLink {
+public class LinguisticLink implements Comparable<LinguisticLink> {
     private LinguisticNode firstNode;
     private LinguisticNode secondNode;
     private String name;
@@ -72,5 +72,25 @@ public class LinguisticLink {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (relationType != null ? relationType.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public int compareTo(LinguisticLink o) {
+        if (this.equals(o)) return 0;
+        if (this.relationType == SemanticRelationType.role) {
+            if (o.relationType == SemanticRelationType.role) {
+                if (!this.firstNode.getNode().equals(o.firstNode.getNode()))
+                    return this.firstNode.getNode().compareTo(o.firstNode.getNode());
+                else return this.secondNode.getNode().compareTo(o.secondNode.getNode());
+            } else return -1;
+        }
+        if (this.relationType == SemanticRelationType.property) {
+            if (o.relationType == SemanticRelationType.property) {
+                if (!this.firstNode.getNode().equals(o.firstNode.getNode()))
+                    return this.firstNode.getNode().compareTo(o.firstNode.getNode());
+                else return this.secondNode.getNode().compareTo(o.secondNode.getNode());
+            } else return 1;
+        }
+        return 0;
     }
 }

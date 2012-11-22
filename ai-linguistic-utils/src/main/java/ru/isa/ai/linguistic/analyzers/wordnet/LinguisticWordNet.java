@@ -1,9 +1,6 @@
 package ru.isa.ai.linguistic.analyzers.wordnet;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Author: Aleksandr Panov
@@ -13,6 +10,7 @@ import java.util.Set;
 public class LinguisticWordNet {
     private Set<LinguisticLink> links;
     private Map<Integer, LinguisticNode> nodes;
+    private LinguisticNode mainNode;
 
     public LinguisticWordNet() {
         links = new HashSet<>();
@@ -41,15 +39,28 @@ public class LinguisticWordNet {
         return new HashSet<>(nodes.values());
     }
 
+    public LinguisticNode getMainNode() {
+        return mainNode;
+    }
+
+    public void setMainNode(LinguisticNode mainNode) {
+        this.mainNode = mainNode;
+    }
+
     public void injection(LinguisticWordNet network) {
         for (LinguisticLink link : network.getLinks()) {
             this.addLink(link);
+        }
+        if (network.mainNode != null) {
+            this.mainNode = network.mainNode;
         }
     }
 
     public String toString() {
         StringBuilder result = new StringBuilder();
-        for (LinguisticLink link : links) {
+        List<LinguisticLink> sortedLinks = new ArrayList<>(links);
+        Collections.sort(sortedLinks);
+        for (LinguisticLink link : sortedLinks) {
             result.append(String.format("%s<-(%s)-%s\n", link.getFirstNode().getNode(), link.getName(), link.getSecondNode().getNode()));
         }
         return result.toString();
