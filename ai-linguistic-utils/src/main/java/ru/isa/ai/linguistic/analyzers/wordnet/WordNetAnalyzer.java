@@ -27,40 +27,7 @@ public class WordNetAnalyzer extends AbstractLinguisticAnalyzer<LinguisticWordNe
     }
 
     private void analyzePartVerbs(LinguisticWordNet network) {
-
         try {
-//            Dispatch sentenceIterator = Dispatch.get(syntax, "Begin").toDispatch();
-//            do {
-//                Dispatch sentence = Dispatch.get(sentenceIterator, "Value").toDispatch();
-//                int sentenceSize = (Integer) Dispatch.get(sentence, "Size").toJavaObject();
-//                Dispatch variantIterator = Dispatch.get(sentence, "Begin").toDispatch();
-//                do {
-//                    Dispatch variant = Dispatch.get(variantIterator, "Value").toDispatch();
-//                    int variantSize = (Integer) Dispatch.get(variant, "Size").toJavaObject();
-//                    Dispatch syntaxemeIterator = Dispatch.get(variant, "SyntaxemeBegin").toDispatch();
-//                    do {
-//                        Dispatch syntaxeme = Dispatch.get(syntaxemeIterator, "Value").toDispatch();
-//                        Dispatch synWord = Dispatch.get(syntaxeme, "Word").toDispatch();
-//                        int type = (Integer) Dispatch.get(syntaxeme, "Type").toJavaObject();
-//                        Dispatch wordLexeme = Dispatch.get(synWord, "Lexeme").toDispatch();
-//                        String wordDictForm = (String) Dispatch.get(wordLexeme, "DictForm").toJavaObject();
-//                        int wordType = (Integer) Dispatch.get(wordLexeme, "Type").toJavaObject();
-//                        Dispatch synWordIterator = Dispatch.get(synWord, "Begin").toDispatch();
-//                        Variant hasNext;
-//                        do {
-//                            Variant synWordVar = Dispatch.get(synWordIterator, "Value");
-//                            if (synWordVar != null) {
-//                                synWord = synWordVar.toDispatch();
-//                                wordLexeme = Dispatch.get(synWord, "Lexeme").toDispatch();
-//                                wordDictForm = (String) Dispatch.get(wordLexeme, "DictForm").toJavaObject();
-//                                wordType = (Integer) Dispatch.get(wordLexeme, "Type").toJavaObject();
-//                            }
-//                            hasNext = Dispatch.call(synWordIterator, "Next");
-//                        } while (hasNext != null && (Boolean) hasNext.toJavaObject());
-//                    } while ((Boolean) Dispatch.call(syntaxemeIterator, "Next").toJavaObject());
-//                } while ((Boolean) Dispatch.call(variantIterator, "Next").toJavaObject());
-//            } while ((Boolean) Dispatch.call(sentenceIterator, "Next").toJavaObject());
-
             Variant semRoleIterator = Dispatch.get(roleSemantics, "Begin");
             if (semRoleIterator != null) {
                 Variant hasNext;
@@ -159,6 +126,40 @@ public class WordNetAnalyzer extends AbstractLinguisticAnalyzer<LinguisticWordNe
         }
     }
 
+    private void analyzeStructure() {
+        Dispatch sentenceIterator = Dispatch.get(syntax, "Begin").toDispatch();
+        do {
+            Dispatch sentence = Dispatch.get(sentenceIterator, "Value").toDispatch();
+            int sentenceSize = (Integer) Dispatch.get(sentence, "Size").toJavaObject();
+            Dispatch variantIterator = Dispatch.get(sentence, "Begin").toDispatch();
+            do {
+                Dispatch variant = Dispatch.get(variantIterator, "Value").toDispatch();
+                int variantSize = (Integer) Dispatch.get(variant, "Size").toJavaObject();
+                Dispatch syntaxemeIterator = Dispatch.get(variant, "SyntaxemeBegin").toDispatch();
+                do {
+                    Dispatch syntaxeme = Dispatch.get(syntaxemeIterator, "Value").toDispatch();
+                    Dispatch synWord = Dispatch.get(syntaxeme, "Word").toDispatch();
+                    int type = (Integer) Dispatch.get(syntaxeme, "Type").toJavaObject();
+                    Dispatch wordLexeme = Dispatch.get(synWord, "Lexeme").toDispatch();
+                    String wordDictForm = (String) Dispatch.get(wordLexeme, "DictForm").toJavaObject();
+                    int wordType = (Integer) Dispatch.get(wordLexeme, "Type").toJavaObject();
+                    Dispatch synWordIterator = Dispatch.get(synWord, "Begin").toDispatch();
+                    Variant hasNext;
+                    do {
+                        Variant synWordVar = Dispatch.get(synWordIterator, "Value");
+                        if (synWordVar != null) {
+                            synWord = synWordVar.toDispatch();
+                            wordLexeme = Dispatch.get(synWord, "Lexeme").toDispatch();
+                            wordDictForm = (String) Dispatch.get(wordLexeme, "DictForm").toJavaObject();
+                            wordType = (Integer) Dispatch.get(wordLexeme, "Type").toJavaObject();
+                        }
+                        hasNext = Dispatch.call(synWordIterator, "Next");
+                    } while (hasNext != null && (Boolean) hasNext.toJavaObject());
+                } while ((Boolean) Dispatch.call(syntaxemeIterator, "Next").toJavaObject());
+            } while ((Boolean) Dispatch.call(variantIterator, "Next").toJavaObject());
+        } while ((Boolean) Dispatch.call(sentenceIterator, "Next").toJavaObject());
+    }
+
     private LinguisticWordNet analyzeSynWord(Dispatch synWord) {
         LinguisticWordNet network = new LinguisticWordNet();
 
@@ -167,7 +168,7 @@ public class WordNetAnalyzer extends AbstractLinguisticAnalyzer<LinguisticWordNe
         int wordType = (Integer) Dispatch.get(wordLexeme, "Type").toJavaObject();
 
         LinguisticNode firstNode = null;
-        if(wordType == LinguisticUtils.LEXEME_NOUN){
+        if (wordType == LinguisticUtils.LEXEME_NOUN) {
             firstNode = new LinguisticNode(wordDictForm, WordType.NOUN);
             network.setMainNode(firstNode);
         }
@@ -186,7 +187,11 @@ public class WordNetAnalyzer extends AbstractLinguisticAnalyzer<LinguisticWordNe
                     LinguisticNode secondNode = new LinguisticNode(wordDictFormNested, WordType.ADJECTIVE);
                     network.addLink(new LinguisticLink(firstNode, secondNode, "свойство", SemanticRelationType.property));
                 }
-
+                if (firstNode != null &&
+                        wordTypeNested == LinguisticUtils.LEXEME_NOUN) {
+                    LinguisticNode secondNode = new LinguisticNode(wordDictFormNested, WordType.NOUN);
+                    network.addLink(new LinguisticLink(firstNode, secondNode, "принадлежность", SemanticRelationType.belong));
+                }
                 LinguisticWordNet nestedNet = analyzeSynWord(synWordNested);
                 network.injection(nestedNet);
             }
