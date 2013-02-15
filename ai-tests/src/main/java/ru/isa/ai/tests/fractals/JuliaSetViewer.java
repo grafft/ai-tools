@@ -16,8 +16,8 @@ public class JuliaSetViewer extends JFrame {
 
     private JLabel cLabel;
     private Timer timer;
-    private double p = -0.39054;
-    private double q = -0.58679;
+    private double p = -0.1940;
+    private double q = -0.6557;
 
     private double xMin = -1.5;
     private double xMax = 1.5;
@@ -190,7 +190,7 @@ public class JuliaSetViewer extends JFrame {
                         if (k == K) {
                             k = 0;
                         }
-                        g2.setColor(k == 0 ? Color.black : new Color(0, 0, k + 55));
+                        g2.setColor(k == 0 ? Color.black : new Color(0, 0, 255 - k));
                         g2.drawLine(nx, ny, nx, ny);
                     }
                 }
