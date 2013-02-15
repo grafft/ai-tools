@@ -16,8 +16,14 @@ public class JuliaSetViewer extends JFrame {
 
     private JLabel cLabel;
     private Timer timer;
-    private double p = -0.1940;
-    private double q = -0.6557;
+
+    //    private double p = -0.1940;
+//    private double q = -0.6557;
+    private double p = -0.481762;
+    private double q = -0.531657;
+
+    private static final double DEFAULT_MIN = -1.5;
+    private static final double DEFAULT_MAX = 1.5;
 
     private double xMin = -1.5;
     private double xMax = 1.5;
@@ -25,7 +31,7 @@ public class JuliaSetViewer extends JFrame {
     private double yMax = 1.5;
 
     private int M = 300;
-    private int K = 200;
+    private int K = 1000;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -47,7 +53,7 @@ public class JuliaSetViewer extends JFrame {
 
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
-        cLabel = new JLabel(String.format("%.3f + %.3fi", p, q));
+        cLabel = new JLabel(String.format("z\u2192z\u00B2%+.3f%+.3fi", p, q), SwingConstants.LEFT);
         infoPanel.add(cLabel);
 
         JPanel previewPanel = new JPanel();
@@ -73,6 +79,7 @@ public class JuliaSetViewer extends JFrame {
                 }
             }
         });
+
         infoPanel.add(startButton);
 
         GridBagConstraints c = new GridBagConstraints();
@@ -95,6 +102,19 @@ public class JuliaSetViewer extends JFrame {
 
     private class PreviewPanel extends JPanel {
 
+        private PreviewPanel() {
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getButton() == MouseEvent.BUTTON3) {
+                        xMin = yMin = DEFAULT_MIN;
+                        xMax = yMax = DEFAULT_MAX;
+                        getContentPane().repaint();
+                    }
+                }
+            });
+        }
+
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -115,15 +135,15 @@ public class JuliaSetViewer extends JFrame {
         private Rectangle rectToDraw = null;
         private Rectangle previousRectDrawn = new Rectangle();
 
-        private Dimension oldDimension;
         private boolean precisionChanged = false;
         private BufferedImage bufferedImage;
-
+        private JuliaTimer redrawTimer;
+        private JProgressBar progressBar;
         private Point[] points = new Point[K + 1];
 
         public WorkPanel() {
             setBorder(LineBorder.createBlackLineBorder());
-            setDoubleBuffered(true);
+            setLayout(new GridBagLayout());
             iterateTimer = new Timer(100, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -140,9 +160,31 @@ public class JuliaSetViewer extends JFrame {
                 }
             });
 
+            redrawTimer = new JuliaTimer();
+            redrawTimer.setRepeats(false);
+
             JuliaMouseListener listener = new JuliaMouseListener();
             addMouseMotionListener(listener);
             addMouseListener(listener);
+            addComponentListener(new ComponentAdapter() {
+                @Override
+                public void componentResized(ComponentEvent e) {
+                    super.componentResized(e);
+                    Dimension size = ((JPanel) e.getSource()).getSize();
+                    bufferedImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
+                    if (redrawTimer.isRunning()) {
+                        redrawTimer.restart();
+                    } else {
+                        redrawTimer.start();
+                    }
+                }
+            });
+
+            progressBar = new JProgressBar(JProgressBar.HORIZONTAL);
+            progressBar.setStringPainted(true);
+            progressBar.setMinimum(0);
+            progressBar.setVisible(false);
+            add(progressBar);
 
             timer = new Timer(100, new ActionListener() {
                 @Override
@@ -156,58 +198,39 @@ public class JuliaSetViewer extends JFrame {
         }
 
         @Override
-        public void paintComponent(Graphics g) {
+        public void paintComponent(final Graphics g) {
             super.paintComponent(g);
 
-            Dimension size = getSize();
-            if (oldDimension == null || size.width != oldDimension.width || size.height != oldDimension.height
-                    || precisionChanged) {
-                oldDimension = size;
+            final Dimension size = getSize();
+            if (bufferedImage == null || precisionChanged) {
                 precisionChanged = false;
 
                 bufferedImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
-                Graphics2D g2 = bufferedImage.createGraphics();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-                double deltaX = (xMax - xMin) / (size.width - 1);
-                double deltaY = (yMax - yMin) / (size.height - 1);
+                if (redrawTimer.isRunning()) {
+                    redrawTimer.restart();
+                } else {
+                    redrawTimer.start();
+                }
+            }
 
-                for (int nx = 0; nx < size.width; nx++) {
-                    for (int ny = 0; ny < size.height; ny++) {
-                        double x = xMin + nx * deltaX;
-                        double y = yMin + ny * deltaY;
-                        int k = 0;
-                        double r = x * x + y * y;
+            if (!redrawTimer.isRunning()) {
+                progressBar.setVisible(false);
+                g.drawImage(bufferedImage, 0, 0, this);
 
-                        while (k < K && r <= M) {
-                            double tmp = x;
-                            x = x * x - y * y + p;
-                            y = 2 * tmp * y + q;
-                            r = x * x + y * y;
-                            k++;
-                        }
-
-                        if (k == K) {
-                            k = 0;
-                        }
-                        g2.setColor(k == 0 ? Color.black : new Color(0, 0, 255 - k));
-                        g2.drawLine(nx, ny, nx, ny);
+                g.setColor(Color.red);
+                for (int i = 0; i < points.length - 1; i++) {
+                    if (points[i] != null && points[i + 1] != null) {
+                        g.drawLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
                     }
                 }
-            }
 
-            g.drawImage(bufferedImage, 0, 0, this);
-
-            g.setColor(Color.red);
-            for (int i = 0; i < points.length - 1; i++) {
-                if (points[i] != null && points[i + 1] != null) {
-                    g.drawLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
+                g.setColor(Color.green);
+                if (currentRect != null) {
+                    g.drawRect(rectToDraw.x, rectToDraw.y, rectToDraw.width - 1, rectToDraw.height - 1);
                 }
-            }
-
-            g.setColor(Color.green);
-            if (currentRect != null) {
-                g.drawRect(rectToDraw.x, rectToDraw.y, rectToDraw.width - 1, rectToDraw.height - 1);
+            } else {
+                progressBar.setVisible(true);
             }
         }
 
@@ -249,6 +272,52 @@ public class JuliaSetViewer extends JFrame {
                 rectToDraw.setBounds(x, y, width, height);
             } else {
                 rectToDraw = new Rectangle(x, y, width, height);
+            }
+        }
+
+        private class JuliaTimer extends Timer {
+
+            public JuliaTimer() {
+                super(100, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        Graphics2D g2 = bufferedImage.createGraphics();
+                        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                        Dimension size = WorkPanel.this.getSize();
+
+                        double deltaX = (xMax - xMin) / (size.width - 1);
+                        double deltaY = (yMax - yMin) / (size.height - 1);
+
+                        progressBar.setMaximum((size.width - 1) * size.height);
+                        for (int nx = 0; nx < size.width; nx++) {
+                            for (int ny = 0; ny < size.height; ny++) {
+                                double x = xMin + nx * deltaX;
+                                double y = yMin + ny * deltaY;
+                                int k = 0;
+                                double r = x * x + y * y;
+
+                                while (k < K && r <= M) {
+                                    double tmp = x;
+                                    x = x * x - y * y + p;
+                                    y = 2 * tmp * y + q;
+                                    r = x * x + y * y;
+                                    k++;
+                                }
+
+                                if (k == K) {
+                                    k = 0;
+                                }
+                                g2.setColor(k == 0 ? Color.black : new Color(0, 0, 255 - k % 200));
+                                g2.drawLine(nx, ny, nx, ny);
+                                progressBar.setValue(nx * size.height + ny);
+                            }
+                        }
+
+                        WorkPanel.this.repaint();
+                    }
+                });
+
             }
         }
 
