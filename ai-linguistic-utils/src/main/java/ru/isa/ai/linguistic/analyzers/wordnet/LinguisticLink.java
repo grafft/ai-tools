@@ -51,6 +51,11 @@ public class LinguisticLink implements Comparable<LinguisticLink> {
     }
 
     @Override
+    public String toString() {
+        return String.format("%s<-(%s)-%s", getFirstNode().getNode(), getName(), getSecondNode().getNode());
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -77,20 +82,10 @@ public class LinguisticLink implements Comparable<LinguisticLink> {
     @Override
     public int compareTo(LinguisticLink o) {
         if (this.equals(o)) return 0;
-        if (this.relationType == SemanticRelationType.role) {
-            if (o.relationType == SemanticRelationType.role) {
-                if (!this.firstNode.getNode().equals(o.firstNode.getNode()))
-                    return this.firstNode.getNode().compareTo(o.firstNode.getNode());
-                else return this.secondNode.getNode().compareTo(o.secondNode.getNode());
-            } else return -1;
-        }
-        if (this.relationType == SemanticRelationType.property) {
-            if (o.relationType == SemanticRelationType.property) {
-                if (!this.firstNode.getNode().equals(o.firstNode.getNode()))
-                    return this.firstNode.getNode().compareTo(o.firstNode.getNode());
-                else return this.secondNode.getNode().compareTo(o.secondNode.getNode());
-            } else return 1;
-        }
-        return 0;
+        if (!this.firstNode.getNode().equals(o.firstNode.getNode()))
+            return this.firstNode.getNode().compareTo(o.firstNode.getNode());
+        else if (!this.secondNode.getNode().equals(o.secondNode.getNode())) {
+            return this.secondNode.getNode().compareTo(o.secondNode.getNode());
+        } else return this.name.compareTo(o.name);
     }
 }

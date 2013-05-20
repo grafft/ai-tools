@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class WordNetAnalyzerTest {
     public static void main(String[] args) throws Exception {
-        TxtFileDataLoader loader = new TxtFileDataLoader(WordNetAnalyzerTest.class.getClassLoader().getResource("text_to_analyze.txt"), "UTF-8");
+        TxtFileDataLoader loader = new TxtFileDataLoader(WordNetAnalyzerTest.class.getClassLoader().getResource("text_big.txt"), "UTF-8");
         loader.setDelimiter("\\s*\\n\\s*");
         SNCPrimer primer = loader.loadData();
 
@@ -29,7 +29,7 @@ public class WordNetAnalyzerTest {
 
             @Override
             public void onFailure(Throwable t) {
-                //To change body of implemented methods use File | Settings | File Templates.
+                t.printStackTrace();
             }
         });
     }

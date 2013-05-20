@@ -61,7 +61,7 @@ public class LinguisticWordNet {
         List<LinguisticLink> sortedLinks = new ArrayList<>(links);
         Collections.sort(sortedLinks);
         for (LinguisticLink link : sortedLinks) {
-            result.append(String.format("%s<-(%s)-%s\n", link.getFirstNode().getNode(), link.getName(), link.getSecondNode().getNode()));
+            result.append(link.toString()).append("\n");
         }
         return result.toString();
     }
