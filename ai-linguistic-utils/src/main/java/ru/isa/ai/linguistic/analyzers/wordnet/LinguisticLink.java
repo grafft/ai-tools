@@ -9,6 +9,7 @@ public class LinguisticLink implements Comparable<LinguisticLink> {
     private LinguisticNode firstNode;
     private LinguisticNode secondNode;
     private String name;
+    private int weight;
     private SemanticRelationType relationType;
 
     public LinguisticLink(LinguisticNode firstNode, LinguisticNode secondNode, String name, SemanticRelationType relationType) {
@@ -16,6 +17,7 @@ public class LinguisticLink implements Comparable<LinguisticLink> {
         this.secondNode = secondNode;
         this.name = name;
         this.relationType = relationType;
+        this.weight = 1;
     }
 
     public LinguisticNode getFirstNode() {
@@ -50,9 +52,17 @@ public class LinguisticLink implements Comparable<LinguisticLink> {
         this.relationType = relationType;
     }
 
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
     @Override
     public String toString() {
-        return String.format("%s<-(%s)-%s", getFirstNode().getNode(), getName(), getSecondNode().getNode());
+        return String.format("%s<-(%s, %d)-%s", getFirstNode().getNode(), getName(), getWeight(), getSecondNode().getNode());
     }
 
     @Override
@@ -81,6 +91,9 @@ public class LinguisticLink implements Comparable<LinguisticLink> {
 
     @Override
     public int compareTo(LinguisticLink o) {
+        if(this.getWeight() != o.getWeight()){
+            return this.getWeight() - o.getWeight();
+        }
         if (this.equals(o)) return 0;
         if (!this.firstNode.getNode().equals(o.firstNode.getNode()))
             return this.firstNode.getNode().compareTo(o.firstNode.getNode());

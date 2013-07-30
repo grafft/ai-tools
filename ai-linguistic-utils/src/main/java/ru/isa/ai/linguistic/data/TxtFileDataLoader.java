@@ -15,59 +15,59 @@ import org.apache.log4j.Logger;
 
 public class TxtFileDataLoader implements IDataLoader {
 
-   private static final Logger logger = Logger
-           .getLogger(TxtFileDataLoader.class);
+    private static final Logger logger = Logger
+            .getLogger(TxtFileDataLoader.class);
 
-   private BufferedReader in;
-   private String fileName;
-   private String delimiter = null;
+    private BufferedReader in;
+    private String fileName;
+    private String delimiter = null;
 
-   public TxtFileDataLoader(String fileName) throws FileNotFoundException {
-      this(fileName, "cp1251");
-   }
+    public TxtFileDataLoader(String fileName) throws FileNotFoundException {
+        this(fileName, "cp1251");
+    }
 
-   public TxtFileDataLoader(URL filePath) throws Exception {
-      this(filePath, "cp1251");
-   }
+    public TxtFileDataLoader(URL filePath) throws Exception {
+        this(filePath, "cp1251");
+    }
 
-   public TxtFileDataLoader(URL filePath, String charsetName) throws Exception {
-      this.fileName = new File(filePath.toURI()).getName();
-      try {
-         in = new BufferedReader(new InputStreamReader(filePath.openStream(), Charset.forName(charsetName)));
-      } catch(IOException e) {
-         logger.error("Error during loader initialization", e);
-         throw e;
-      }
+    public TxtFileDataLoader(URL filePath, String charsetName) throws Exception {
+        this.fileName = new File(filePath.toURI()).getName();
+        try {
+            in = new BufferedReader(new InputStreamReader(filePath.openStream(), Charset.forName(charsetName)));
+        } catch (IOException e) {
+            logger.error("Error during loader initialization", e);
+            throw e;
+        }
 
-   }
+    }
 
-   public TxtFileDataLoader(String fileName, String charsetName)
-           throws FileNotFoundException {
-      this.fileName = fileName;
-      try {
-         in = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), Charset.forName(charsetName)));
-      } catch(FileNotFoundException e) {
-         logger.error("Error during loader initialization", e);
-         throw e;
-      }
-   }
+    public TxtFileDataLoader(String fileName, String charsetName)
+            throws FileNotFoundException {
+        this.fileName = fileName;
+        try {
+            in = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), Charset.forName(charsetName)));
+        } catch (FileNotFoundException e) {
+            logger.error("Error during loader initialization", e);
+            throw e;
+        }
+    }
 
-   @Override
-   public SNCPrimer loadData() {
-      logger.info("Data loading from...");
-      SNCPrimer primer = new SNCPrimer();
-      primer.setTextName(fileName);
-      Scanner scanner = new Scanner(in);
-      scanner.useDelimiter(Pattern.compile(delimiter != null ? delimiter : "\\.\\s+"));
-      while(scanner.hasNext()) {
-         String sentence = scanner.next();
-         primer.addPart(sentence);
-      }
-      return primer;
-   }
+    @Override
+    public SNCPrimer loadData() {
+        logger.info("Data loading from...");
+        SNCPrimer primer = new SNCPrimer();
+        primer.setTextName(fileName);
+        Scanner scanner = new Scanner(in);
+        scanner.useDelimiter(Pattern.compile(delimiter != null ? delimiter : "\\.\\s+"));
+        while (scanner.hasNext()) {
+            String sentence = scanner.next();
+            primer.addPart(sentence);
+        }
+        return primer;
+    }
 
-   public void setDelimiter(String delimiter) {
-      this.delimiter = delimiter;
-   }
+    public void setDelimiter(String delimiter) {
+        this.delimiter = delimiter;
+    }
 
 }

@@ -1,4 +1,4 @@
-package ru.isa.ai.ass;
+package ru.isa.ai.linguistic;
 
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.Dispatch;

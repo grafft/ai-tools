@@ -6,5 +6,5 @@ package ru.isa.ai.linguistic.analyzers;
  * Time: 9:58
  */
 public interface SNCProgressor {
-   void markProgress(double part);
+    void markProgress(double part);
 }

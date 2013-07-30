@@ -5,6 +5,7 @@ import com.jacob.com.Variant;
 import org.apache.log4j.Logger;
 import ru.isa.ai.linguistic.analyzers.AbstractLinguisticAnalyzer;
 import ru.isa.ai.linguistic.analyzers.LinguisticsAnalyzingException;
+import ru.isa.ai.linguistic.thesaurus.wikt.ThesaurusLinksLoader;
 import ru.isa.ai.linguistic.utils.LinguisticUtils;
 
 import java.util.LinkedList;
@@ -17,6 +18,10 @@ import java.util.List;
  */
 public class WordNetAnalyzer extends AbstractLinguisticAnalyzer<LinguisticWordNet, LinguisticWordNet> {
     private static final Logger logger = Logger.getLogger(WordNetAnalyzer.class);
+    private static ThesaurusLinksLoader thesaurusLinksLoader = new ThesaurusLinksLoader();
+    static{
+        thesaurusLinksLoader.init();
+    }
 
     @Override
     public LinguisticWordNet analyzePart(String textName) throws LinguisticsAnalyzingException {
@@ -56,6 +61,13 @@ public class WordNetAnalyzer extends AbstractLinguisticAnalyzer<LinguisticWordNe
                             LinguisticNode firstNode = new LinguisticNode(predicatorDictForm, WordType.getByIndex(predicatorType));
                             LinguisticNode secondNode = new LinguisticNode(nestedNet.getMainNode().getNode(), WordType.NOUN);
                             network.addLink(new LinguisticLink(firstNode, secondNode, LinguisticRelation.getRoleById(semRoleType), SemanticRelationType.role));
+
+                            for(LinguisticLink link : thesaurusLinksLoader.getThesaurusLinks(firstNode)){
+                                network.addLink(link);
+                            }
+                            for(LinguisticLink link : thesaurusLinksLoader.getThesaurusLinks(secondNode)){
+                                network.addLink(link);
+                            }
                         }
                     }
                     hasNext = Dispatch.call(semRoleIterator.toDispatch(), "Next");

@@ -85,6 +85,20 @@
       <param name="artifactID" value="jadex-kernel-component" />
       <param name="version" value="2.1-SNAPSHOT" />
     </antcall>
+
+    <antcall target="@mvn-instal-3d-party">
+      <param name="file" value="wikt/common_wiki.jar" />
+      <param name="groupID" value="wikokit" />
+      <param name="artifactID" value="common-wiki" />
+      <param name="version" value="1.0" />
+    </antcall>
+    <antcall target="@mvn-instal-3d-party">
+      <param name="file" value="wikt/common_wiki_jdbc.jar" />
+      <param name="groupID" value="wikokit" />
+      <param name="artifactID" value="common-wiki-jdbc" />
+      <param name="version" value="1.0" />
+    </antcall>
+
   </target>
 
 

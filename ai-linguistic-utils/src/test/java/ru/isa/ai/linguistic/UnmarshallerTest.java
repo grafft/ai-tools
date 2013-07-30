@@ -1,4 +1,4 @@
-package ru.isa.ai.ass;
+package ru.isa.ai.linguistic;
 
 import ru.isa.ai.linguistic.analyzers.wordnet.xml.RelationsUnmarshaller;
 import ru.isa.ai.linguistic.analyzers.wordnet.xml.RoleUnmarshaller;

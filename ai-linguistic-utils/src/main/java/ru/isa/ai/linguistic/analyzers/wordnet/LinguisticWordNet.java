@@ -8,17 +8,17 @@ import java.util.*;
  * Time: 10:22
  */
 public class LinguisticWordNet {
-    private Set<LinguisticLink> links;
+    private Map<Integer, LinguisticLink> links;
     private Map<Integer, LinguisticNode> nodes;
     private LinguisticNode mainNode;
 
     public LinguisticWordNet() {
-        links = new HashSet<>();
+        links = new HashMap<>();
         nodes = new HashMap<>();
     }
 
     public Set<LinguisticLink> getLinks() {
-        return links;
+        return new HashSet<>(links.values());
     }
 
     public void addLink(LinguisticLink link) {
@@ -26,13 +26,21 @@ public class LinguisticWordNet {
         int secondHashCode = link.getSecondNode().hashCode();
         if (nodes.containsKey(firstHashCode)) {
             link.setFirstNode(nodes.get(firstHashCode));
+        } else {
+            nodes.put(firstHashCode, link.getFirstNode());
         }
         if (nodes.containsKey(secondHashCode)) {
             link.setSecondNode(nodes.get(secondHashCode));
+        } else {
+            nodes.put(secondHashCode, link.getSecondNode());
         }
-        links.add(link);
-        nodes.put(firstHashCode, link.getFirstNode());
-        nodes.put(secondHashCode, link.getSecondNode());
+        if (links.containsKey(link.hashCode())) {
+            LinguisticLink existed = links.get(link.hashCode());
+            existed.setWeight(existed.getWeight() + 1);
+        } else {
+            links.put(link.hashCode(), link);
+        }
+
     }
 
     public Set<LinguisticNode> getNodes() {
@@ -58,7 +66,7 @@ public class LinguisticWordNet {
 
     public String toString() {
         StringBuilder result = new StringBuilder();
-        List<LinguisticLink> sortedLinks = new ArrayList<>(links);
+        List<LinguisticLink> sortedLinks = new ArrayList<>(links.values());
         Collections.sort(sortedLinks);
         for (LinguisticLink link : sortedLinks) {
             result.append(link.toString()).append("\n");

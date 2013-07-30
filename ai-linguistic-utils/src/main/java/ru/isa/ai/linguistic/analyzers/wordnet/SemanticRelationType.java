@@ -9,5 +9,7 @@ public enum SemanticRelationType {
     role,
     property,
     belong,
-    relation
+    relation,
+
+    hyponymy
 }

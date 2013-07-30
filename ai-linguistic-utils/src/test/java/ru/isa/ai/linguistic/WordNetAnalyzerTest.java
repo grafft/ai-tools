@@ -1,13 +1,11 @@
-package ru.isa.ai.ass;
+package ru.isa.ai.linguistic;
 
 import com.google.common.util.concurrent.FutureCallback;
+import ru.isa.ai.linguistic.analyzers.SNCProgressor;
 import ru.isa.ai.linguistic.analyzers.wordnet.LinguisticWordNet;
 import ru.isa.ai.linguistic.analyzers.wordnet.WordNetAnalyzer;
 import ru.isa.ai.linguistic.data.SNCPrimer;
 import ru.isa.ai.linguistic.data.TxtFileDataLoader;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Author: Aleksandr Panov
@@ -16,11 +14,17 @@ import java.util.Map;
  */
 public class WordNetAnalyzerTest {
     public static void main(String[] args) throws Exception {
-        TxtFileDataLoader loader = new TxtFileDataLoader(WordNetAnalyzerTest.class.getClassLoader().getResource("text_big.txt"), "UTF-8");
+        TxtFileDataLoader loader = new TxtFileDataLoader(WordNetAnalyzerTest.class.getClassLoader().getResource("text_to_analyze.txt"), "UTF-8");
         loader.setDelimiter("\\s*\\n\\s*");
         SNCPrimer primer = loader.loadData();
 
         WordNetAnalyzer netAnalyzer = new WordNetAnalyzer();
+        netAnalyzer.setProgressor(new SNCProgressor() {
+            @Override
+            public void markProgress(double part) {
+                System.out.println(String.format("%.0f%s", part*100, "%"));
+            }
+        });
         netAnalyzer.analyze(primer, new FutureCallback<LinguisticWordNet>() {
             @Override
             public void onSuccess(LinguisticWordNet result) {
