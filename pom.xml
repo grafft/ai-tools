@@ -20,6 +20,7 @@
         <module>ai-text-analizer</module>
         <module>ai-tests</module>
         <module>ai-semantic-network</module>
+        <module>ai-causal</module>
     </modules>
 
     <repositories>
