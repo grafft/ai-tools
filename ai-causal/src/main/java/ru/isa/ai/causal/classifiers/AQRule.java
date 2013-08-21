@@ -1,6 +1,10 @@
 package ru.isa.ai.causal.classifiers;
 
-import java.util.ArrayList;
+import weka.core.Attribute;
+import weka.core.Instance;
+import weka.core.Instances;
+
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,28 +15,30 @@ import java.util.Map;
  * Time: 15:38
  */
 public class AQRule {
-    private Map<Integer, List<Integer>> tokens = new HashMap<>();
-    private List<Integer> coveredExamples = new ArrayList<>();
-    private int coverage;
-    int complexity;
+    private Map<AQAttribute, List<Integer>> tokens = new HashMap<>();
+    private int id;
+    private int complexity;
+    private Instances coveredInstances;
 
     public AQRule() {
     }
 
-    public Map<Integer, List<Integer>> getTokens() {
+    public AQRule(AQRule rule) {
+        tokens.putAll(rule.getTokens());
+        complexity = rule.complexity;
+        coveredInstances = new Instances(rule.coveredInstances);
+    }
+
+    public Map<AQAttribute, List<Integer>> getTokens() {
         return tokens;
     }
 
-    public void setTokens(Map<Integer, List<Integer>> tokens) {
+    public void setTokens(Map<AQAttribute, List<Integer>> tokens) {
         this.tokens = tokens;
     }
 
-    public int getCoverage() {
-        return coverage;
-    }
-
-    public void setCoverage(int coverage) {
-        this.coverage = coverage;
+    public int coverage() {
+        return coveredInstances.size();
     }
 
     public int getComplexity() {
@@ -43,11 +49,126 @@ public class AQRule {
         this.complexity = complexity;
     }
 
-    public List<Integer> getCoveredExamples() {
-        return coveredExamples;
+    public int getId() {
+        return id;
     }
 
-    public void setCoveredExamples(List<Integer> coveredExamples) {
-        this.coveredExamples = coveredExamples;
+    public void setId(int id) {
+        this.id = id;
     }
+
+    public Instances getCoveredInstances() {
+        return coveredInstances;
+    }
+
+    public void setCoveredInstances(Instances coveredInstances) {
+        this.coveredInstances = coveredInstances;
+    }
+
+    public int size() {
+        return tokens.size();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AQRule aqRule = (AQRule) o;
+
+        for (Map.Entry<AQAttribute, List<Integer>> entry : tokens.entrySet()) {
+            if (!aqRule.getTokens().containsKey(entry.getKey())) return false;
+            if (!entry.getValue().equals(aqRule.getTokens().get(entry.getKey()))) return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return tokens != null ? tokens.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder(String.format("rule %d[cov=%d,cx=%d]: ", id, coverage(), complexity));
+        int tokenCounter = 0;
+        for (Map.Entry<AQAttribute, List<Integer>> entry : tokens.entrySet()) {
+            builder.append(String.format("(%s=", entry.getKey().toString()));
+            int count = 0;
+            for (int part : entry.getValue()) {
+                builder.append(part);
+                if (count < entry.getValue().size() - 1) builder.append("V");
+                count++;
+            }
+            builder.append(")");
+            if (tokenCounter < tokens.size() - 1) builder.append("&");
+            tokenCounter++;
+        }
+        return builder.toString();
+    }
+
+    public boolean ifCover(Instance object) {
+        for (Map.Entry<AQAttribute, List<Integer>> entry : tokens.entrySet()) {
+            double value = object.value(entry.getKey().getId());
+            if (object.attribute(entry.getKey().getId()).isNumeric()) {
+                boolean result = false;
+                for (int part : entry.getValue()) {
+                    if (entry.getKey().getCutPoints().get(part - 1) < value
+                            && entry.getKey().getCutPoints().get(part) > value) {
+                        result = true;
+                        break;
+                    }
+                }
+                if (!result) return false;
+            } else if (object.attribute(entry.getKey().getId()).isNominal()) {
+                if (!entry.getValue().contains((int) value)) return false;
+            }
+
+        }
+        return true;
+    }
+
+    public int inflate(AQAttribute attrToInflate, Instances plusInstances, Instances minusInstances) {
+        Instances tempInstances = new Instances(plusInstances);
+        List<Integer> parts = tokens.get(attrToInflate);
+        int inflationRate = 0;
+        if (parts != null) {
+            Attribute attribute = tempInstances.attribute(attrToInflate.getName());
+            Enumeration valEnu = attribute.enumerateValues();
+            while (valEnu.hasMoreElements()) {
+                Integer value = attribute.indexOfValue((String)valEnu.nextElement());
+                if (!parts.contains(value)) {
+                    parts.add(value);
+                    if (testCoverage(minusInstances) > 0) {
+                        parts.remove(value);
+                    } else {
+                        updateCoverage(tempInstances);
+                        tempInstances.removeAll(coveredInstances);
+                        inflationRate++;
+                    }
+                }
+            }
+            if (parts.size() == attribute.numValues()) {
+                tokens.remove(attrToInflate);
+            }
+        }
+
+        return inflationRate;
+    }
+
+    private void updateCoverage(Instances newInstances) {
+        for (Instance instance : newInstances) {
+            if (ifCover(instance)) coveredInstances.add(instance);
+        }
+    }
+
+    private int testCoverage(Instances instances) {
+        int coverage = 0;
+        for (Instance instance : instances) {
+            if (ifCover(instance)) coverage++;
+        }
+        return coverage;
+    }
+
 }

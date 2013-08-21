@@ -1,15 +1,12 @@
 package ru.isa.ai.causal.classifiers;
 
+import org.apache.commons.lang.SystemUtils;
 import weka.classifiers.AbstractClassifier;
-import weka.core.Attribute;
-import weka.core.Capabilities;
-import weka.core.Instance;
-import weka.core.Instances;
+import weka.core.*;
 
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -20,6 +17,7 @@ import java.util.regex.Pattern;
 public class AQ21ExternalClassifier extends AbstractClassifier {
 
     private Map<String, List<AQRule>> rules = new HashMap<>();
+    private Map<String, Integer> classMap = new HashMap<>();
 
     @Override
     public Capabilities getCapabilities() {
@@ -46,7 +44,8 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
         testData.deleteWithMissingClass();
 
         String dataPath = createDataFile(testData);
-        String[] cmd = {getClass().getClassLoader().getResource("ru/isa/ai/causal/classifiers/aq21.exe").getPath(),
+        String[] cmd = {getClass().getClassLoader().getResource("ru/isa/ai/causal/classifiers/" +
+                (SystemUtils.IS_OS_WINDOWS ? "aq21.exe" : "aq21")).getPath(),
                 dataPath};
         Process process = Runtime.getRuntime().exec(cmd);
         //process.waitFor();
@@ -78,6 +77,7 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
         StringBuilder builderRuns = new StringBuilder();
         while (classEnu.hasMoreElements()) {
             Object val = classEnu.nextElement();
+            classMap.put(val.toString(), i);
             builder.append(val.toString());
             if (i < testData.classAttribute().numValues() - 1) {
                 builder.append(", ");
@@ -180,7 +180,7 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
 
                 Scanner scanner = getScanner(line.substring(line.indexOf("[") + 1, line.indexOf("]")), Pattern.compile("\\s|,\\s"));
                 while (scanner.hasNextFloat()) {
-                    aqAttr.getCutPoints().add(scanner.nextFloat());
+                    aqAttr.getCutPoints().add(scanner.nextDouble());
                 }
             }
             attributeMap.put(attr.name(), aqAttr);
@@ -282,7 +282,7 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
                             values.add(2);
                             values.add(3);
                         }
-                        rule.getTokens().put(attribute.getId(), values);
+                        rule.getTokens().put(attribute, values);
                     } else {
                         endOfRule = true;
                     }
@@ -292,7 +292,7 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
                 int end_info = result.indexOf(info_end_indicator, startInfo);
                 if (startInfo != -1 && end_info != -1) {
                     int coverage = getScanner(result.substring(startInfo + info_start_indicator.length(), end_info), Pattern.compile("\\s")).nextInt();
-                    rule.setCoverage(coverage);
+                    // TODO rule.setCoverage(coverage);
                 }
 
                 // считываем значение сложности примера
@@ -304,6 +304,12 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
                 } else {
                     rule.setComplexity(0);
                 }
+
+                // считываем id правила
+                int startExamplePart = result.indexOf(covered_info_start, startRule);
+                String idPart = result.substring(endRule + 1, startExamplePart);
+                int id = getScanner(idPart, Pattern.compile("\\s")).nextInt();
+                rule.setId(id);
 
                 // считываем номера покрытых примеров
 //                int startExmaplePart = result.indexOf(examples_start_indicator, startRule);
@@ -335,12 +341,22 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
 
     @Override
     public double classifyInstance(Instance instance) throws Exception {
-        return 0;
+        for (Map.Entry<String, List<AQRule>> clazz : rules.entrySet()) {
+            boolean contained = false;
+            for (AQRule rule : clazz.getValue()) {
+                if (rule.ifCover(instance)) {
+                    contained = true;
+                    break;
+                }
+            }
+            if (contained) return classMap.get(clazz.getKey());
+        }
+        return Utils.missingValue();
     }
 
     public static void main(String[] argv) {
         runClassifier(new AQ21ExternalClassifier(),
                 new String[]{"-t",
-                        AQ21ExternalClassifier.class.getClassLoader().getResource("ru/isa/ai/causal/classifiers/iris.arff").getPath()});
+                        AQ21ExternalClassifier.class.getClassLoader().getResource("ru/isa/ai/causal/classifiers/diabetes.arff").getPath()});
     }
 }

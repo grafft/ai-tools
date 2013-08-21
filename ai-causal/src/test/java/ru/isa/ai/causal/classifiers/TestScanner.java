@@ -1,5 +1,7 @@
 package ru.isa.ai.causal.classifiers;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -17,6 +19,26 @@ public class TestScanner {
         scanner.useDelimiter(Pattern.compile("\\s|=|(\\.\\.)"));
         while (scanner.hasNext()) {
             System.out.println(scanner.next());
+        }
+
+        List<Tester> list = new ArrayList<Tester>();
+        list.add(new Tester(4));
+        list.add(new Tester(5));
+        list.add(new Tester(6));
+        int c = 5;
+        new TestScanner().test(list, c);
+        System.out.println(list.get(0).a + " " + c);
+    }
+
+    private void test(List<Tester> link, int b) {
+        link.get(0).a = 7;
+    }
+
+    public static class Tester {
+        int a = 0;
+
+        public Tester(int a) {
+            this.a = a;
         }
     }
 }

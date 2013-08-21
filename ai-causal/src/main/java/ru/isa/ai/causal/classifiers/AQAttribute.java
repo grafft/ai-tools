@@ -1,7 +1,5 @@
 package ru.isa.ai.causal.classifiers;
 
-import weka.core.Range;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +11,9 @@ import java.util.List;
 public class AQAttribute {
     private String name;
     private int id;
-    private List<Float> cutPoints = new ArrayList<>();
-    private float upLimit;
-    private float downLimit;
+    private List<Double> cutPoints = new ArrayList<>();
+    private double upLimit;
+    private double downLimit;
 
     public AQAttribute() {
     }
@@ -33,27 +31,27 @@ public class AQAttribute {
         this.name = name;
     }
 
-    public List<Float> getCutPoints() {
+    public List<Double> getCutPoints() {
         return cutPoints;
     }
 
-    public void setCutPoints(List<Float> cutPoints) {
+    public void setCutPoints(List<Double> cutPoints) {
         this.cutPoints = cutPoints;
     }
 
-    public float getUpLimit() {
+    public double getUpLimit() {
         return upLimit;
     }
 
-    public void setUpLimit(float upLimit) {
+    public void setUpLimit(double upLimit) {
         this.upLimit = upLimit;
     }
 
-    public float getDownLimit() {
+    public double getDownLimit() {
         return downLimit;
     }
 
-    public void setDownLimit(float downLimit) {
+    public void setDownLimit(double downLimit) {
         this.downLimit = downLimit;
     }
 
@@ -63,5 +61,10 @@ public class AQAttribute {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%d: %s", id, name);
     }
 }
