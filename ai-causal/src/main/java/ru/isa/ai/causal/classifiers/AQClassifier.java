@@ -51,7 +51,9 @@ public class AQClassifier extends AbstractClassifier {
         nominalFilter.setInputFormat(data);
         data = Filter.useFilter(data, nominalFilter);
 
-        weka.filters.supervised.attribute.Discretize discretizeFilter = new weka.filters.supervised.attribute.Discretize();
+        //weka.filters.supervised.attribute.Discretize discretizeFilter = new weka.filters.supervised.attribute.Discretize();
+        weka.filters.unsupervised.attribute.Discretize discretizeFilter = new weka.filters.unsupervised.attribute.Discretize();
+        discretizeFilter.setBins(7);
         discretizeFilter.setInputFormat(data);
         data = Filter.useFilter(data, discretizeFilter);
 
@@ -114,14 +116,15 @@ public class AQClassifier extends AbstractClassifier {
     private void buildRulesForClass(String classNum, Instances plusInstances, Instances minusInstances) {
         List<AQRule> classRules = new ArrayList<>();
         Instances notCoveredInstances = new Instances(plusInstances);
-        //выбираем опорный пример
-        Instance instance = getStartInstance(notCoveredInstances);
         int ruleCounter = 0;
         while (notCoveredInstances.size() > 0) {
+            //выбираем опорный пример
+            Instance instance = getStartInstance(notCoveredInstances);
+            notCoveredInstances.remove(instance);
+
             //строим опорное множество правил для опорного примера
             AQRule rule = new AQRule();
             rule.setId(ruleCounter);
-            rule.setCoveredInstances(new Instances(plusInstances, 0));
 
             //Строим простейшее правило, состоящее просто из свойтсв пробного объекта
             Enumeration attrEnu = plusInstances.enumerateAttributes();
@@ -136,18 +139,15 @@ public class AQClassifier extends AbstractClassifier {
 
 
             //Расширяем простейшее правило (каждое расширенное правило - добавляем в массив rs)
-            Set<AQRule> inflatedRules = inflateRule(rule, rule.getTokens().keySet(), plusInstances, minusInstances);
+            Set<AQRule> inflatedRules = inflateRule(rule, rule.getTokens().keySet(), notCoveredInstances, minusInstances);
 
             //Выбираем из всего множества наиболее покрывающий
             AQRule bestRule = chooseBestRule(inflatedRules);
 
             //Добавляем в множество правил данного класса
             classRules.add(bestRule);
-            //Отмечаем объекта из этого множества как покрытые правилами
-            notCoveredInstances.removeAll(bestRule.getCoveredInstances());
 
             ruleCounter++;
-            instance = getStartInstance(plusInstances);
         }
         rules.put(classNum, classRules);
     }
@@ -176,10 +176,8 @@ public class AQClassifier extends AbstractClassifier {
 
                     Set<AQAttribute> newRemainingAttributes = new HashSet<>(remainingAttributes);
                     newRemainingAttributes.remove(attrToInflate);
-                    Instances newPlusInstances = new Instances(plusInstances);
-                    newPlusInstances.removeAll(inflated.getCoveredInstances());
 
-                    Set<AQRule> inflatedRules = inflateRule(inflated, newRemainingAttributes, newPlusInstances, minusInstances);
+                    Set<AQRule> inflatedRules = inflateRule(inflated, newRemainingAttributes, plusInstances, minusInstances);
                     resultRules.addAll(inflatedRules);
                 }
             }

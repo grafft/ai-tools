@@ -4,10 +4,7 @@ import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
 
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Author: Aleksandr Panov
@@ -18,7 +15,7 @@ public class AQRule {
     private Map<AQAttribute, List<Integer>> tokens = new HashMap<>();
     private int id;
     private int complexity;
-    private Instances coveredInstances;
+    private Set<Instance> coveredInstances = new HashSet<>();
 
     public AQRule() {
     }
@@ -26,7 +23,7 @@ public class AQRule {
     public AQRule(AQRule rule) {
         tokens.putAll(rule.getTokens());
         complexity = rule.complexity;
-        coveredInstances = new Instances(rule.coveredInstances);
+        coveredInstances = new HashSet<>(rule.coveredInstances);
     }
 
     public Map<AQAttribute, List<Integer>> getTokens() {
@@ -57,11 +54,11 @@ public class AQRule {
         this.id = id;
     }
 
-    public Instances getCoveredInstances() {
+    public Set<Instance> getCoveredInstances() {
         return coveredInstances;
     }
 
-    public void setCoveredInstances(Instances coveredInstances) {
+    public void setCoveredInstances(Set<Instance> coveredInstances) {
         this.coveredInstances = coveredInstances;
     }
 
@@ -130,27 +127,28 @@ public class AQRule {
     }
 
     public int inflate(AQAttribute attrToInflate, Instances plusInstances, Instances minusInstances) {
-        Instances tempInstances = new Instances(plusInstances);
         List<Integer> parts = tokens.get(attrToInflate);
         int inflationRate = 0;
         if (parts != null) {
-            Attribute attribute = tempInstances.attribute(attrToInflate.getName());
+            Attribute attribute = plusInstances.attribute(attrToInflate.getName());
             Enumeration valEnu = attribute.enumerateValues();
             while (valEnu.hasMoreElements()) {
-                Integer value = attribute.indexOfValue((String)valEnu.nextElement());
+                Integer value = attribute.indexOfValue((String) valEnu.nextElement());
                 if (!parts.contains(value)) {
                     parts.add(value);
                     if (testCoverage(minusInstances) > 0) {
                         parts.remove(value);
                     } else {
-                        updateCoverage(tempInstances);
-                        tempInstances.removeAll(coveredInstances);
+                        updateCoverage(plusInstances);
+                        plusInstances.removeAll(coveredInstances);
                         inflationRate++;
                     }
                 }
             }
             if (parts.size() == attribute.numValues()) {
                 tokens.remove(attrToInflate);
+            } else {
+                Collections.sort(parts);
             }
         }
 
