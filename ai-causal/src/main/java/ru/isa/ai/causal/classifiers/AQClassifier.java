@@ -1,6 +1,7 @@
 package ru.isa.ai.causal.classifiers;
 
 import org.apache.commons.lang.ArrayUtils;
+import ru.isa.ai.causal.filters.DiscretizationFilter;
 import weka.classifiers.AbstractClassifier;
 import weka.core.*;
 import weka.experiment.Stats;
@@ -52,33 +53,20 @@ public class AQClassifier extends AbstractClassifier {
         data = Filter.useFilter(data, nominalFilter);
 
         //weka.filters.supervised.attribute.Discretize discretizeFilter = new weka.filters.supervised.attribute.Discretize();
-        weka.filters.unsupervised.attribute.Discretize discretizeFilter = new weka.filters.unsupervised.attribute.Discretize();
-        discretizeFilter.setBins(7);
+        //weka.filters.unsupervised.attribute.Discretize discretizeFilter = new weka.filters.unsupervised.attribute.Discretize();
+        //discretizeFilter.setBins(7);
+        DiscretizationFilter discretizeFilter = new DiscretizationFilter();
         discretizeFilter.setInputFormat(data);
         data = Filter.useFilter(data, discretizeFilter);
-
-        int equalsCounter = 0;
-        for (int i = 0; i < data.numInstances(); i++) {
-            for (int j = i + 1; j < data.numInstances(); j++) {
-                Enumeration attrEnu = data.enumerateAttributes();
-                boolean equals = true;
-                while (attrEnu.hasMoreElements()) {
-                    Attribute attribute = (Attribute) attrEnu.nextElement();
-                    if (data.instance(i).value(attribute.index()) != data.instance(j).value(attribute.index())) {
-                        equals = false;
-                        break;
-                    }
-                }
-                if (equals) equalsCounter++;
-            }
-        }
 
         Enumeration attrEnu = data.enumerateAttributes();
         while (attrEnu.hasMoreElements()) {
             Attribute attribute = (Attribute) attrEnu.nextElement();
             double[] cutPoints = discretizeFilter.getCutPoints(attribute.index());
             AQAttribute aqAttr = new AQAttribute(attribute.name(), attribute.index());
-            aqAttr.setCutPoints(Arrays.asList(ArrayUtils.toObject(cutPoints)));
+            if (cutPoints != null) {
+                aqAttr.setCutPoints(Arrays.asList(ArrayUtils.toObject(cutPoints)));
+            }
             Stats stats = testData.attributeStats(attribute.index()).numericStats;
             if (stats != null) {
                 aqAttr.setDownLimit(stats.min);
