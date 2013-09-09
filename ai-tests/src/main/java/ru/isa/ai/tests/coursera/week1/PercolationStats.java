@@ -4,7 +4,6 @@ import edu.princeton.cs.algs4.Stopwatch;
 import edu.princeton.cs.introcs.StdOut;
 import edu.princeton.cs.introcs.StdRandom;
 import edu.princeton.cs.introcs.StdStats;
-import org.apache.commons.lang.time.StopWatch;
 
 /**
  * Author: Aleksandr Panov
