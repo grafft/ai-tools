@@ -35,5 +35,31 @@
             <artifactId>jfreechart</artifactId>
             <version>1.0.13</version>
         </dependency>
+
+        <!--Image processing-->
+        <dependency>
+            <groupId>gov.nih.imagej</groupId>
+            <artifactId>imagej</artifactId>
+            <version>1.47</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.jaitools</groupId>
+            <artifactId>jt-all</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>edu.princeton.cs</groupId>
+            <artifactId>stdlib</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>edu.princeton.cs</groupId>
+            <artifactId>algs4</artifactId>
+            <version>1.0</version>
+        </dependency>
+
     </dependencies>
 </project>

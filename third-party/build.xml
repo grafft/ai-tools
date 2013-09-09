@@ -99,6 +99,20 @@
       <param name="version" value="1.0" />
     </antcall>
 
+
+    <antcall target="@mvn-instal-3d-party">
+      <param name="file" value="algs4/stdlib-package.jar" />
+      <param name="groupID" value="edu.princeton.cs" />
+      <param name="artifactID" value="stdlib" />
+      <param name="version" value="1.0" />
+    </antcall>
+    <antcall target="@mvn-instal-3d-party">
+      <param name="file" value="algs4/algs4-package.jar" />
+      <param name="groupID" value="edu.princeton.cs" />
+      <param name="artifactID" value="algs4" />
+      <param name="version" value="1.0" />
+    </antcall>
+
   </target>
 
 

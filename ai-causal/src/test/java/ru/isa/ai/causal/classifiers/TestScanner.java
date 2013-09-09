@@ -28,6 +28,7 @@ public class TestScanner {
         int c = 5;
         new TestScanner().test(list, c);
         System.out.println(list.get(0).a + " " + c);
+        System.out.println(++c);
     }
 
     private void test(List<Tester> link, int b) {
