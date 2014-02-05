@@ -21,7 +21,7 @@
         <module>ai-semantic-network</module>
         <module>ai-causal</module>
     </modules>
-
+<!--
     <repositories>
         <repository>
             <id>maven2-repository.dev.java.net</id>
@@ -37,7 +37,7 @@
         </repository>
 
     </repositories>
-
+ -->
     <pluginRepositories>
         <pluginRepository>
             <id>maven-repository.dev.java.net</id>

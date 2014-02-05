@@ -3,7 +3,7 @@ package ru.isa.ai.tests;
 import ij.ImagePlus;
 import ij.process.ByteProcessor;
 
-import javax.media.jai.KernelJAI;
+//import javax.media.jai.KernelJAI;
 
 /**
  * Author: Aleksandr Panov
@@ -24,8 +24,8 @@ public class EdgeDetectionTest {
                 0.0F, 1.0F, 0.0F,
                 0.0F, 0.0F, 0.0F
         };
-        KernelJAI kern_h = new KernelJAI(3,3,roberts_h_data);
-        KernelJAI kern_v = new KernelJAI(3,3,roberts_v_data);
+//        KernelJAI kern_h = new KernelJAI(3,3,roberts_h_data);
+//        KernelJAI kern_v = new KernelJAI(3,3,roberts_v_data);
     }
 
     private void prewitt(){
@@ -37,8 +37,8 @@ public class EdgeDetectionTest {
                 0.0F, 0.0F, 0.0F,
                 1.0F, 1.0F, 1.0F
         };
-        KernelJAI kern_h = new KernelJAI(3,3,prewitt_h_data);
-        KernelJAI kern_v = new KernelJAI(3,3,prewitt_v_data);
+//        KernelJAI kern_h = new KernelJAI(3,3,prewitt_h_data);
+//        KernelJAI kern_v = new KernelJAI(3,3,prewitt_v_data);
     }
 
     private void freichen(){
@@ -50,7 +50,7 @@ public class EdgeDetectionTest {
                 0.0F, 0.0F, 0.0F,
                 1.0F, 1.414F, 1.0F
         };
-        KernelJAI kern_h = new KernelJAI(3,3,freichen_h_data);
-        KernelJAI kern_v = new KernelJAI(3,3,freichen_v_data);
+//        KernelJAI kern_h = new KernelJAI(3,3,freichen_h_data);
+//        KernelJAI kern_v = new KernelJAI(3,3,freichen_v_data);
     }
 }
