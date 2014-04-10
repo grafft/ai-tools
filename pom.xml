@@ -20,6 +20,7 @@
         <module>ai-tests</module>
         <module>ai-semantic-network</module>
         <module>ai-causal</module>
+        <module>ai-dhm</module>
     </modules>
 <!--
     <repositories>

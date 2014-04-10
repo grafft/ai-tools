@@ -61,5 +61,11 @@
             <version>1.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>de.intarsys.opensource</groupId>
+            <artifactId>jPod</artifactId>
+            <version>5.5.1</version>
+        </dependency>
+
     </dependencies>
 </project>
