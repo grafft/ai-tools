@@ -167,6 +167,8 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
     }
 
     private void parseResult(String result, Instances testData) {
+        if(getDebug())
+               System.out.println(result);
         Map<String, AQAttribute> attributeMap = new HashMap<>();
 
         Enumeration attrEnu = testData.enumerateAttributes();
