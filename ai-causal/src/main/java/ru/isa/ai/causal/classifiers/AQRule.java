@@ -12,7 +12,7 @@ import java.util.*;
  * Time: 15:38
  */
 public class AQRule {
-    private Map<AQAttribute, List<Integer>> tokens = new HashMap<>();
+    private Map<CRFeature, List<Integer>> tokens = new HashMap<>();
     private int id;
     private int complexity;
     private Set<Instance> coveredInstances = new HashSet<>();
@@ -26,11 +26,11 @@ public class AQRule {
         coveredInstances = new HashSet<>(rule.coveredInstances);
     }
 
-    public Map<AQAttribute, List<Integer>> getTokens() {
+    public Map<CRFeature, List<Integer>> getTokens() {
         return tokens;
     }
 
-    public void setTokens(Map<AQAttribute, List<Integer>> tokens) {
+    public void setTokens(Map<CRFeature, List<Integer>> tokens) {
         this.tokens = tokens;
     }
 
@@ -58,8 +58,8 @@ public class AQRule {
         return coveredInstances;
     }
 
-    public void setCoveredInstances(Set<Instance> coveredInstances) {
-        this.coveredInstances = coveredInstances;
+    public void addCoveredInstance(Instance covered) {
+        this.coveredInstances.add(covered);
     }
 
     public int size() {
@@ -73,7 +73,7 @@ public class AQRule {
 
         AQRule aqRule = (AQRule) o;
 
-        for (Map.Entry<AQAttribute, List<Integer>> entry : tokens.entrySet()) {
+        for (Map.Entry<CRFeature, List<Integer>> entry : tokens.entrySet()) {
             if (!aqRule.getTokens().containsKey(entry.getKey())) return false;
             if (!entry.getValue().equals(aqRule.getTokens().get(entry.getKey()))) return false;
         }
@@ -90,7 +90,7 @@ public class AQRule {
     public String toString() {
         StringBuilder builder = new StringBuilder(String.format("rule %d[cov=%d,cx=%d]: ", id, coverage(), complexity));
         int tokenCounter = 0;
-        for (Map.Entry<AQAttribute, List<Integer>> entry : tokens.entrySet()) {
+        for (Map.Entry<CRFeature, List<Integer>> entry : tokens.entrySet()) {
             builder.append(String.format("(%s=", entry.getKey().toString()));
             int count = 0;
             for (int part : entry.getValue()) {
@@ -106,7 +106,7 @@ public class AQRule {
     }
 
     public boolean ifCover(Instance object) {
-        for (Map.Entry<AQAttribute, List<Integer>> entry : tokens.entrySet()) {
+        for (Map.Entry<CRFeature, List<Integer>> entry : tokens.entrySet()) {
             double value = object.value(entry.getKey().getId());
             if (object.attribute(entry.getKey().getId()).isNumeric()) {
                 boolean result = false;
@@ -126,7 +126,7 @@ public class AQRule {
         return true;
     }
 
-    public int inflate(AQAttribute attrToInflate, Instances plusInstances, Instances minusInstances) {
+    public int inflate(CRFeature attrToInflate, Instances plusInstances, Instances minusInstances) {
         List<Integer> parts = tokens.get(attrToInflate);
         int inflationRate = 0;
         if (parts != null) {

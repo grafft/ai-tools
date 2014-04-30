@@ -20,7 +20,7 @@ public class AQClassifier extends AbstractClassifier {
 
     private Map<String, List<AQRule>> rules = new HashMap<>();
     private Map<String, Integer> classMap = new HashMap<>();
-    private Map<String, AQAttribute> attributeMap = new HashMap<>();
+    private Map<String, CRFeature> attributeMap = new HashMap<>();
 
     private int maxIterationNumber = 5;
 
@@ -63,7 +63,7 @@ public class AQClassifier extends AbstractClassifier {
         while (attrEnu.hasMoreElements()) {
             Attribute attribute = (Attribute) attrEnu.nextElement();
             double[] cutPoints = discretizeFilter.getCutPoints(attribute.index());
-            AQAttribute aqAttr = new AQAttribute(attribute.name(), attribute.index());
+            CRFeature aqAttr = new CRFeature(attribute.name(), attribute.index());
             if (cutPoints != null) {
                 aqAttr.setCutPoints(Arrays.asList(ArrayUtils.toObject(cutPoints)));
             }
@@ -150,19 +150,19 @@ public class AQClassifier extends AbstractClassifier {
         return result;
     }
 
-    private Set<AQRule> inflateRule(AQRule rule, Set<AQAttribute> remainingAttributes, Instances plusInstances, Instances minusInstances) {
+    private Set<AQRule> inflateRule(AQRule rule, Set<CRFeature> remainingAttributes, Instances plusInstances, Instances minusInstances) {
         Set<AQRule> resultRules = new HashSet<>();
         // строим правила начиная с каждого атрибута
         if (remainingAttributes.size() > 0) {
             boolean wasInflated = false;
             for (int i = 0; i < remainingAttributes.size(); i++) {
                 // строим ветку атрибутов на обощение
-                AQAttribute attrToInflate = getAttributeToInflate(rule, remainingAttributes, plusInstances, minusInstances);
+                CRFeature attrToInflate = getAttributeToInflate(rule, remainingAttributes, plusInstances, minusInstances);
                 AQRule inflated = new AQRule(rule);
                 if (inflated.inflate(attrToInflate, plusInstances, minusInstances) > 0) {
                     wasInflated = true;
 
-                    Set<AQAttribute> newRemainingAttributes = new HashSet<>(remainingAttributes);
+                    Set<CRFeature> newRemainingAttributes = new HashSet<>(remainingAttributes);
                     newRemainingAttributes.remove(attrToInflate);
 
                     Set<AQRule> inflatedRules = inflateRule(inflated, newRemainingAttributes, plusInstances, minusInstances);
@@ -177,7 +177,7 @@ public class AQClassifier extends AbstractClassifier {
         return resultRules;
     }
 
-    private AQAttribute getAttributeToInflate(AQRule rule, Set<AQAttribute> remainingAttributes, Instances plusInstances, Instances minusInstances) {
+    private CRFeature getAttributeToInflate(AQRule rule, Set<CRFeature> remainingAttributes, Instances plusInstances, Instances minusInstances) {
         return remainingAttributes.iterator().next();
     }
 

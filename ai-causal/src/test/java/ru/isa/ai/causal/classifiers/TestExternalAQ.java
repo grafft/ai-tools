@@ -3,6 +3,10 @@ package ru.isa.ai.causal.classifiers;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Author: Aleksandr Panov
  * Date: 29.04.2014
@@ -18,5 +22,8 @@ public class TestExternalAQ {
         int actualClassIndex = train.numAttributes() - 1;
         Instances tmpInst = trainSource.getDataSet(actualClassIndex);
         cl.buildClassifier(tmpInst);
+
+        Map<String, List<AQRule>> rules = cl.getRules();
+        Map<String, Set<CRProperty>> factBase = FactBaseBuilder.buildFactBase(rules, train);
     }
 }

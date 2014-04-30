@@ -167,15 +167,14 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
     }
 
     private void parseResult(String result, Instances testData) {
-        if(getDebug())
-               System.out.println(result);
-        Map<String, AQAttribute> attributeMap = new HashMap<>();
+        if (getDebug())
+            System.out.println(result);
+        Map<String, CRFeature> attributeMap = new HashMap<>();
 
         Enumeration attrEnu = testData.enumerateAttributes();
-        int counter = 0;
         while (attrEnu.hasMoreElements()) {
             Attribute attr = (Attribute) attrEnu.nextElement();
-            AQAttribute aqAttr = new AQAttribute(attr.name(), counter);
+            CRFeature aqAttr = new CRFeature(attr.name(), attr.index());
             int discrPos = result.indexOf(attr.name() + "_Discretized");
             if (discrPos != -1) {
                 String line = result.substring(discrPos, result.indexOf("\n", discrPos));
@@ -186,7 +185,6 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
                 }
             }
             attributeMap.put(attr.name(), aqAttr);
-            counter++;
         }
 
         String rule_start_indicator = "<--";
@@ -261,7 +259,7 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
                             }
                         }
 
-                        AQAttribute attribute = attributeMap.get(attrName);
+                        CRFeature attribute = attributeMap.get(attrName);
                         if (top != Float.MIN_VALUE && bottom != Float.MIN_VALUE) {
                             for (int j = 0; j < attribute.getCutPoints().size() - 1; j++) {
                                 if (attribute.getCutPoints().get(j) == bottom) {
@@ -292,9 +290,9 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
                 // считываем количество покрытых положительных примеров
                 int startInfo = result.indexOf(info_start_indicator, startRule);
                 int end_info = result.indexOf(info_end_indicator, startInfo);
+                int coverage = -1;
                 if (startInfo != -1 && end_info != -1) {
-                    int coverage = getScanner(result.substring(startInfo + info_start_indicator.length(), end_info), Pattern.compile("\\s")).nextInt();
-                    // TODO rule.setCoverage(coverage);
+                    coverage = getScanner(result.substring(startInfo + info_start_indicator.length(), end_info), Pattern.compile("\\s")).nextInt();
                 }
 
                 // считываем значение сложности примера
@@ -314,18 +312,18 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
                 rule.setId(id);
 
                 // считываем номера покрытых примеров
-//                int startExmaplePart = result.indexOf(examples_start_indicator, startRule);
-//                int end_example_number_part = result.indexOf(examples_end_endicator, startExmaplePart + 1);
-//                if (startExmaplePart != -1 && end_example_number_part != -1) {
-//                    int next_value = startExmaplePart + 2;
-//                    for (int j = 0; j < rule.getCoverage(); j++) {
-//                        int end_line = result.indexOf("\n", next_value);
-//                        int last_part = result.lastIndexOf(",", end_line);
-//                        int event_number = getScanner(result.substring(last_part + 1, end_line), Pattern.compile("\\s")).nextInt();
-//                        rule.getCoveredExamples().add(event_number);
-//                        next_value = end_line + 1;
-//                    }
-//                }
+                int startExmaplePart = result.indexOf(examples_start_indicator, startRule);
+                int end_example_number_part = result.indexOf(examples_end_endicator, startExmaplePart + 1);
+                if (startExmaplePart != -1 && end_example_number_part != -1) {
+                    int next_value = startExmaplePart + 2;
+                    for (int j = 0; j < coverage; j++) {
+                        int end_line = result.indexOf("\n", next_value);
+                        int last_part = result.lastIndexOf(",", end_line);
+                        int event_number = getScanner(result.substring(last_part + 1, end_line), Pattern.compile("\\s")).nextInt();
+                        rule.addCoveredInstance(testData.get(event_number));
+                        next_value = end_line + 1;
+                    }
+                }
 
                 classRules.add(rule);
             }
@@ -339,6 +337,10 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
         scanner.useLocale(Locale.US);
 
         return scanner;
+    }
+
+    public Map<String, List<AQRule>> getRules() {
+        return rules;
     }
 
     @Override
@@ -359,6 +361,7 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
     public static void main(String[] argv) {
         runClassifier(new AQ21ExternalClassifier(),
                 new String[]{"-t",
-                        AQ21ExternalClassifier.class.getClassLoader().getResource("ru/isa/ai/causal/classifiers/diabetes.arff").getPath()});
+                        AQ21ExternalClassifier.class.getClassLoader().getResource("ru/isa/ai/causal/classifiers/diabetes.arff").getPath()}
+        );
     }
 }

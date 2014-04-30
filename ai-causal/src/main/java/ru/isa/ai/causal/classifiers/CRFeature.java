@@ -8,17 +8,17 @@ import java.util.List;
  * Date: 30.07.13
  * Time: 15:17
  */
-public class AQAttribute {
+public class CRFeature {
     private String name;
     private int id;
     private List<Double> cutPoints = new ArrayList<>();
     private double upLimit;
     private double downLimit;
 
-    public AQAttribute() {
+    public CRFeature() {
     }
 
-    public AQAttribute(String name, int id) {
+    public CRFeature(String name, int id) {
         this.name = name;
         this.id = id;
     }
@@ -61,6 +61,23 @@ public class AQAttribute {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CRFeature attribute = (CRFeature) o;
+
+        if (id != attribute.id) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 
     @Override
