@@ -13,13 +13,13 @@ import java.util.regex.Pattern;
  */
 public class TestScanner {
     public static void main(String[] args) {
-        String s = "[attr=4.3..12.000]";
+        String s = "attr_4=4.3..12.000";
         Scanner scanner = new Scanner(s);
         scanner.useLocale(Locale.US);
-        scanner.useDelimiter(Pattern.compile("\\s|=|(\\.\\.)"));
-        while (scanner.hasNext()) {
-            System.out.println(scanner.next());
-        }
+        scanner.useDelimiter(Pattern.compile("_|=|\\.{2}"));
+
+        System.out.println(scanner.next());
+        System.out.println(scanner.nextInt());
 
         List<Tester> list = new ArrayList<Tester>();
         list.add(new Tester(4));

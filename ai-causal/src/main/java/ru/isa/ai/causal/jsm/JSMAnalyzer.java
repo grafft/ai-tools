@@ -39,9 +39,11 @@ public class JSMAnalyzer {
                     for (int i = 0; i < intersection.value.length; i++)
                         if (intersection.value[i] == 1)
                             causeProps.add(otherProps.get(i));
-                    cause.addValue(causeProps);
+                    if (causeProps.size() > 0)
+                        cause.addValue(causeProps);
                 }
-                causes.add(cause);
+                if (cause.getValue().size() > 0)
+                    causes.add(cause);
             }
         }
         return causes;
@@ -98,7 +100,8 @@ public class JSMAnalyzer {
                     break;
                 }
             }
-            if (toAdd)
+            // если его размер не слишеом велик
+            if (toAdd && BooleanArrayUtils.countNonZero(entry.getValue()) <= maxIntersectionLength)
                 hypothesis.add(new Intersection(entry.getValue(), entry.getKey()));
         }
         // 4. Исключаем из гипотез те гипотезы, которые являются надмножествами других

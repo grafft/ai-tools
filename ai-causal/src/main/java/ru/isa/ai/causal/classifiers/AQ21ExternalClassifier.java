@@ -6,6 +6,9 @@ import weka.core.*;
 
 import java.io.*;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -64,14 +67,14 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
         // Описание задачи
         builder.append("Problem_description\n");
         builder.append("{\n");
-        builder.append("	Building rules for classes\n");
+        builder.append("\tBuilding rules for classes\n");
         builder.append("}\n");
 
         // Список признаков и их шкал
         builder.append("Attributes\n");
         builder.append("{\n");
         // Первый признак - разделитель классов
-        builder.append("	class nominal {");
+        builder.append("\tclass nominal {");
         Enumeration classEnu = testData.classAttribute().enumerateValues();
         int i = 0;
         StringBuilder builderRuns = new StringBuilder();
@@ -82,20 +85,14 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
             if (i < testData.classAttribute().numValues() - 1) {
                 builder.append(", ");
             }
-            builderRuns.append("	rules_for_");
-            builderRuns.append(val.toString());
-            builderRuns.append("\n");
-            builderRuns.append("	{\n");
-
-            builderRuns.append("		Consequent = [class=");
-            builderRuns.append(val.toString());
-            builderRuns.append("]\n");
-            builderRuns.append("		Mode = TF\n");
-            builderRuns.append("		Ambiguity = IgnoreForLearning\n");
-            builderRuns.append("		Display_selectors_coverage = false\n");
-            builderRuns.append("		Display_events_covered = true\n");
-
-            builderRuns.append("	}\n");
+            builderRuns.append("\trules_for_").append(val.toString()).append("\n");
+            builderRuns.append("\t{\n");
+            builderRuns.append("\t\tConsequent = [class=").append(val.toString()).append("]\n");
+            builderRuns.append("\t\tMode = TF\n");
+            builderRuns.append("\tAmbiguity = IgnoreForLearning\n");
+            builderRuns.append("\tDisplay_selectors_coverage = false\n");
+            builderRuns.append("\tDisplay_events_covered = true\n");
+            builderRuns.append("\t}\n");
             i++;
         }
 
@@ -106,9 +103,7 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
             Attribute attribute = (Attribute) attrEnu.nextElement();
             switch (attribute.type()) {
                 case Attribute.NOMINAL:
-                    builder.append("	");
-                    builder.append(attribute.name());
-                    builder.append(" nominal {");
+                    builder.append("\t").append("attr_").append(attribute.index()).append(" nominal {");
                     Enumeration attrValEnu = attribute.enumerateValues();
                     int j = 0;
                     while (attrValEnu.hasMoreElements()) {
@@ -121,9 +116,7 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
                     builder.append("}\n");
                     break;
                 case Attribute.NUMERIC:
-                    builder.append("	");
-                    builder.append(attribute.name());
-                    builder.append(" continuous ChiMerge 3\n");
+                    builder.append("\t").append("attr_").append(attribute.index()).append(" continuous ChiMerge 3\n");
                     break;
             }
         }
@@ -141,9 +134,7 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
         Enumeration instEnu = testData.enumerateInstances();
         while (instEnu.hasMoreElements()) {
             Instance instance = (Instance) instEnu.nextElement();
-            builder.append("	");
-            builder.append(testData.classAttribute().value((int) instance.classValue()));
-            builder.append(",");
+            builder.append("\t").append(testData.classAttribute().value((int) instance.classValue())).append(",");
             for (int j = 0; j < instance.numValues(); j++) {
                 if (j != instance.classIndex()) {
                     builder.append(instance.value(j));
@@ -169,13 +160,13 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
     private void parseResult(String result, Instances testData) {
         if (getDebug())
             System.out.println(result);
-        Map<String, CRFeature> attributeMap = new HashMap<>();
+        Map<Integer, CRFeature> attributeMap = new HashMap<>();
 
         Enumeration attrEnu = testData.enumerateAttributes();
         while (attrEnu.hasMoreElements()) {
             Attribute attr = (Attribute) attrEnu.nextElement();
             CRFeature aqAttr = new CRFeature(attr.name(), attr.index());
-            int discrPos = result.indexOf(attr.name() + "_Discretized");
+            int discrPos = result.indexOf("attr_" + attr.index() + "_Discretized");
             if (discrPos != -1) {
                 String line = result.substring(discrPos, result.indexOf("\n", discrPos));
 
@@ -184,7 +175,7 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
                     aqAttr.getCutPoints().add(scanner.nextDouble());
                 }
             }
-            attributeMap.put(attr.name(), aqAttr);
+            attributeMap.put(attr.index(), aqAttr);
         }
 
         String rule_start_indicator = "<--";
@@ -231,35 +222,39 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
                     if (startPart != -1 && startPart < endRule && endPart != -1 && endPart < endRule) {
                         // Анализируем значение интервалов
                         String partString = result.substring(startPart + 1, endPart);
-                        String attrName = "";
+                        int attrIndex = -1;
                         List<Integer> values = new ArrayList<>();
                         float top = Float.MAX_VALUE;
                         float bottom = Float.MAX_VALUE;
                         if (partString.contains(">=")) {
-                            Scanner scanner = getScanner(partString, Pattern.compile("=|(\\.\\.)"));
-                            attrName = scanner.next();
+                            Scanner scanner = getScanner(partString, Pattern.compile("_|>="));
+                            scanner.next();
+                            attrIndex = scanner.nextInt();
                             bottom = scanner.nextFloat();
                             top = Float.MIN_VALUE;
                         } else if (partString.contains("<=")) {
-                            Scanner scanner = getScanner(partString, Pattern.compile("<="));
-                            attrName = scanner.next();
+                            Scanner scanner = getScanner(partString, Pattern.compile("_|<="));
+                            scanner.next();
+                            attrIndex = scanner.nextInt();
                             top = scanner.nextFloat();
                             bottom = Float.MIN_VALUE;
                         } else if (partString.contains("=") && partString.contains("..")) {
-                            Scanner scanner = getScanner(partString, Pattern.compile("=|\\.{2}"));
-                            attrName = scanner.next();
+                            Scanner scanner = getScanner(partString, Pattern.compile("_|=|\\.{2}"));
+                            scanner.next();
+                            attrIndex = scanner.nextInt();
                             bottom = scanner.nextFloat();
                             top = scanner.nextFloat();
                         } else if (partString.contains("=")) {
                             int startValue = partString.indexOf("=");
-                            Scanner scanner = getScanner(partString.substring(0, startValue), Pattern.compile("=|,"));
-                            attrName = scanner.next();
+                            Scanner scanner = getScanner(partString.substring(0, startValue), Pattern.compile("_|=|,"));
+                            scanner.next();
+                            attrIndex = scanner.nextInt();
                             while (scanner.hasNextInt()) {
                                 values.add(scanner.nextInt());
                             }
                         }
 
-                        CRFeature attribute = attributeMap.get(attrName);
+                        CRFeature attribute = attributeMap.get(attrIndex);
                         if (top != Float.MIN_VALUE && bottom != Float.MIN_VALUE) {
                             for (int j = 0; j < attribute.getCutPoints().size() - 1; j++) {
                                 if (attribute.getCutPoints().get(j) == bottom) {

@@ -4,8 +4,12 @@ import ru.isa.ai.causal.jsm.JSMAnalyzer;
 import ru.isa.ai.causal.jsm.JSMHypothesis;
 import weka.core.Attribute;
 import weka.core.Instances;
+import weka.core.converters.ArffLoader;
 import weka.core.converters.ConverterUtils;
 
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,8 +23,9 @@ public class TestExternalAQ {
     public static void main(String[] args) throws Exception {
         AQ21ExternalClassifier cl = new AQ21ExternalClassifier();
         cl.setDebug(true);
-        ConverterUtils.DataSource trainSource = new ConverterUtils.DataSource(
-                AQ21ExternalClassifier.class.getClassLoader().getResource("ru/isa/ai/causal/classifiers/data1.arff").getPath());
+
+        ConverterUtils.DataSource trainSource = new ConverterUtils.DataSource(AQ21ExternalClassifier.class.getClassLoader().getResource("ru/isa/ai/causal/classifiers/data1.arff").getPath());
+
         Instances train = trainSource.getStructure();
         int actualClassIndex = train.numAttributes() - 1;
         Instances tmpInst = trainSource.getDataSet(actualClassIndex);
@@ -31,9 +36,14 @@ public class TestExternalAQ {
 
         JSMAnalyzer analyzer = new JSMAnalyzer(classDescription, tmpInst);
         Attribute classAttr = tmpInst.classAttribute();
-        List<JSMHypothesis> hypothesises = analyzer.evaluateCauses(classAttr.value(1));
-        for (JSMHypothesis hypothesis : hypothesises) {
-            System.out.println(hypothesis.toString());
+        Enumeration<String> enumerator = classAttr.enumerateValues();
+        while (enumerator.hasMoreElements()) {
+            String className = enumerator.nextElement();
+            System.out.println("Causes for class " + className + ": ");
+            List<JSMHypothesis> hypothesises = analyzer.evaluateCauses(className);
+            for (JSMHypothesis hypothesis : hypothesises) {
+                System.out.println("\t" + hypothesis.toString());
+            }
         }
     }
 }
