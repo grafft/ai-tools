@@ -1,5 +1,8 @@
 package ru.isa.ai.causal.classifiers;
 
+import ru.isa.ai.causal.jsm.JSMAnalyzer;
+import ru.isa.ai.causal.jsm.JSMHypothesis;
+import weka.core.Attribute;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
 
@@ -24,6 +27,13 @@ public class TestExternalAQ {
         cl.buildClassifier(tmpInst);
 
         Map<String, List<AQRule>> rules = cl.getRules();
-        Map<String, Set<CRProperty>> factBase = FactBaseBuilder.buildFactBase(rules, train);
+        Map<String, Set<CRProperty>> classDescription = ClassDescriber.describeClasses(rules, tmpInst);
+
+        JSMAnalyzer analyzer = new JSMAnalyzer(classDescription, tmpInst);
+        Attribute classAttr = tmpInst.classAttribute();
+        List<JSMHypothesis> hypothesises = analyzer.evaluateCauses(classAttr.value(1));
+        for (JSMHypothesis hypothesis : hypothesises) {
+            System.out.println(hypothesis.toString());
+        }
     }
 }

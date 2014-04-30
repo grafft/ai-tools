@@ -20,7 +20,7 @@ public class BooleanArrayUtils {
     public static byte[] multiply(byte[] array1, byte[] array2) {
         if (array1.length != array2.length)
             throw new IllegalArgumentException("Arrays must have equals size");
-        byte[] result = new byte[0];
+        byte[] result = new byte[array1.length];
         for (int i = 0; i < array1.length; i++) {
             if (array1[i] == 1 && array2[i] == 1)
                 result[i] = 1;
@@ -33,7 +33,7 @@ public class BooleanArrayUtils {
     public static byte[] subtraction(byte[] array1, byte[] array2) {
         if (array1.length != array2.length)
             throw new IllegalArgumentException("Arrays must have equals size");
-        byte[] result = new byte[0];
+        byte[] result = new byte[array1.length];
         for (int i = 0; i < array1.length; i++) {
             if (array1[i] == 1 && array2[i] == 1)
                 result[i] = 0;
@@ -78,7 +78,7 @@ public class BooleanArrayUtils {
     public static byte[] addition(byte[] array1, byte[] array2) {
         if (array1.length != array2.length)
             throw new IllegalArgumentException("Arrays must have equals size");
-        byte[] result = new byte[0];
+        byte[] result = new byte[array1.length];
         for (int i = 0; i < array1.length; i++) {
             if (array1[i] == 0 && array2[i] == 0)
                 result[i] = 0;

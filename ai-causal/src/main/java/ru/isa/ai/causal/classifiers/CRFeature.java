@@ -82,6 +82,6 @@ public class CRFeature {
 
     @Override
     public String toString() {
-        return String.format("[%d:%s]", id, name);
+        return name;
     }
 }

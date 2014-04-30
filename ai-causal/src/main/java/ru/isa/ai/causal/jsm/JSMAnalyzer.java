@@ -22,20 +22,33 @@ public class JSMAnalyzer {
         this.data = data;
     }
 
-    public Map<CRProperty, Set<CRProperty>> evaluateCauses(String className) {
-        Map<CRProperty, Set<CRProperty>> causes = new HashMap<>();
+    public List<JSMHypothesis> evaluateCauses(String className) {
+        List<JSMHypothesis> causes = new ArrayList<>();
         Set<CRProperty> properties = classDescriptions.get(className);
         for (CRProperty property : properties) {
             List<CRProperty> otherProps = new ArrayList<>(properties);
             otherProps.remove(property);
             FactBase factBase = buildFactBase(data, property, otherProps);
-
             factBase.reduceEquals();
+
             if (!factBase.isConflicted()) {
+                JSMHypothesis cause = new JSMHypothesis(property);
                 List<Intersection> hypothesis = reasons(factBase);
+                for (Intersection intersection : hypothesis) {
+                    Set<CRProperty> causeProps = new HashSet<>();
+                    for (int i = 0; i < intersection.value.length; i++)
+                        if (intersection.value[i] == 1)
+                            causeProps.add(otherProps.get(i));
+                    cause.addValue(causeProps);
+                }
+                causes.add(cause);
             }
         }
         return causes;
+    }
+
+    public void setMaxIntersectionLength(int maxIntersectionLength) {
+        this.maxIntersectionLength = maxIntersectionLength;
     }
 
     private List<Intersection> reasons(FactBase factBase) {
@@ -89,17 +102,17 @@ public class JSMAnalyzer {
                 hypothesis.add(new Intersection(entry.getValue(), entry.getKey()));
         }
         // 4. Исключаем из гипотез те гипотезы, которые являются надмножествами других
-        List<Integer> toDel = new ArrayList<>();
+        List<Intersection> toDel = new ArrayList<>();
         for (int i = 0; i < hypothesis.size(); i++) {
             for (int j = 0; j < hypothesis.size(); j++) {
                 if (i != j && BooleanArrayUtils.include(hypothesis.get(i).value, hypothesis.get(j).value)) {
-                    toDel.add(i);
+                    toDel.add(hypothesis.get(i));
                     break;
                 }
             }
         }
-        for (int index : toDel)
-            hypothesis.remove(index);
+        for (Intersection inter : toDel)
+            hypothesis.remove(inter);
         return hypothesis;
     }
 
@@ -247,9 +260,7 @@ public class JSMAnalyzer {
 
             Intersection that = (Intersection) o;
 
-            if (!BooleanArrayUtils.equals(value, that.value)) return false;
-
-            return true;
+            return BooleanArrayUtils.equals(value, that.value);
         }
 
         @Override

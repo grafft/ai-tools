@@ -11,8 +11,8 @@ import java.util.*;
  * Date: 30.04.2014
  * Time: 10:01
  */
-public class FactBaseBuilder {
-    public static Map<String, Set<CRProperty>> buildFactBase(Map<String, List<AQRule>> rules, Instances data) {
+public class ClassDescriber {
+    public static Map<String, Set<CRProperty>> describeClasses(Map<String, List<AQRule>> rules, Instances data) {
         Map<String, Set<CRProperty>> factBase = new HashMap<>();
         int equalsPropsCount = 0;
         int collinearPropsCount = 0;

@@ -44,6 +44,7 @@ public class CRProperty {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder(feature.toString());
+        builder.append("=");
         for (int i = 0; i < indexes.size(); i++) {
             builder.append(indexes.get(i));
             if (i < indexes.size() - 1)

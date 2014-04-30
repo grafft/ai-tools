@@ -320,7 +320,7 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
                         int end_line = result.indexOf("\n", next_value);
                         int last_part = result.lastIndexOf(",", end_line);
                         int event_number = getScanner(result.substring(last_part + 1, end_line), Pattern.compile("\\s")).nextInt();
-                        rule.addCoveredInstance(testData.get(event_number));
+                        rule.addCoveredInstance(testData.get(event_number - 1));
                         next_value = end_line + 1;
                     }
                 }
