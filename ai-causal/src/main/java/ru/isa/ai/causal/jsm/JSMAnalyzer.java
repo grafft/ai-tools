@@ -15,7 +15,7 @@ import java.util.*;
 public class JSMAnalyzer {
     private Map<String, Set<CRProperty>> classDescriptions;
     private Instances data;
-    private int maxIntersectionLength = 3;
+    private int maxHypothesisLength = 3;
 
     public JSMAnalyzer(Map<String, Set<CRProperty>> classDescriptions, Instances data) {
         this.classDescriptions = classDescriptions;
@@ -49,8 +49,8 @@ public class JSMAnalyzer {
         return causes;
     }
 
-    public void setMaxIntersectionLength(int maxIntersectionLength) {
-        this.maxIntersectionLength = maxIntersectionLength;
+    public void setMaxHypothesisLength(int maxHypothesisLength) {
+        this.maxHypothesisLength = maxHypothesisLength;
     }
 
     private List<Intersection> reasons(FactBase factBase) {
@@ -73,7 +73,7 @@ public class JSMAnalyzer {
             // 2.2 Если такого объекта нет, то включить пересечение в гипотезы
             if (minusObject == -1) {
                 hypothesis.add(intersection);
-            } else if (intersection.value.length < maxIntersectionLength) {
+            } else if (intersection.value.length < maxHypothesisLength) {
                 // положительные примеры - это множество образующих с вычтенным пересечением
                 FactBase newFactBase = new FactBase();
                 for (Integer objectId : intersection.generators) {
@@ -101,7 +101,7 @@ public class JSMAnalyzer {
                 }
             }
             // если его размер не слишеом велик
-            if (toAdd && BooleanArrayUtils.countNonZero(entry.getValue()) <= maxIntersectionLength)
+            if (toAdd && BooleanArrayUtils.countNonZero(entry.getValue()) <= maxHypothesisLength)
                 hypothesis.add(new Intersection(entry.getValue(), entry.getKey()));
         }
         // 4. Исключаем из гипотез те гипотезы, которые являются надмножествами других

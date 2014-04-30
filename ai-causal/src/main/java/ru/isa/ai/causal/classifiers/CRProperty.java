@@ -8,7 +8,7 @@ import java.util.List;
  * Date: 30.04.2014
  * Time: 10:26
  */
-public class CRProperty {
+public class CRProperty implements Comparable<CRProperty> {
     private CRFeature feature;
     private List<Integer> indexes = new ArrayList<>();
 
@@ -72,5 +72,13 @@ public class CRProperty {
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public int compareTo(CRProperty o) {
+        if (this.equals(o))
+            return 0;
+        else
+            return Integer.compare(this.getFeature().getId(), o.getFeature().getId());
     }
 }
