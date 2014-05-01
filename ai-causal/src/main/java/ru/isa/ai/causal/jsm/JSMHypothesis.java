@@ -36,6 +36,7 @@ public class JSMHypothesis {
         StringBuilder builder = new StringBuilder();
         builder.append("Causes for ").append(keyProperty).append(":\n");
 
+        int totalCounter = 0;
         for (Map.Entry<Integer, Set<CRProperty>> entry : value.entrySet()) {
             builder.append("\t").append(entry.getKey()).append(": ");
             int counter = 0;
@@ -45,9 +46,10 @@ public class JSMHypothesis {
                     builder.append(" & ");
                 counter++;
             }
-            builder.append("\n");
+            if (totalCounter < value.size() - 1)
+                builder.append("\n");
+            totalCounter++;
         }
-        builder.append("\n");
 
         return builder.toString();
     }

@@ -93,4 +93,16 @@ public class AQClassDescription {
         }
         return classDescription;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Class ").append(className).append(":\n");
+        for (int i = 0; i < description.size(); i++) {
+            builder.append("\t").append(description.get(i).getPopularity()).append(" - ").append(description.get(i).toString());
+            if (i < description.size() - 1)
+                builder.append("\n");
+        }
+        return builder.toString();
+    }
 }

@@ -16,6 +16,7 @@ import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Reorder;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.*;
@@ -33,6 +34,7 @@ public class AQJSM {
     }
 
     private static final Logger logger = LogManager.getLogger(AQJSM.class.getSimpleName());
+    private static final String CD_FILE_NAME = "class_descriptions.xml";
 
     public static void main(String[] args) {
         Options options = new Options();
@@ -70,7 +72,7 @@ public class AQJSM {
                 int maxUniverseSize = Integer.parseInt(line.getOptionValue("u", "100"));
                 int maxHypothesisLength = Integer.parseInt(line.getOptionValue("l", "3"));
                 int iterationCount = Integer.parseInt(line.getOptionValue("i", "100"));
-                double threshold = Double.parseDouble(line.getOptionValue("t", "0.33"));
+                double threshold = Double.parseDouble(line.getOptionValue("t", "0.25"));
                 List<String> classes = new ArrayList<>();
                 if (line.hasOption("c"))
                     Collections.addAll(classes, line.getOptionValues("c"));
@@ -162,9 +164,9 @@ public class AQJSM {
                         }
                         break;
                     case jsm:
-                        logger.info("Start load class descriptions from class_descriptions.xml");
+                        logger.info("Start load class descriptions from " + CD_FILE_NAME);
                         String path = new File(AQJSM.class.getProtectionDomain().getCodeSource().getLocation().getPath()
-                                + "class_descriptions.xml").getPath();
+                                + CD_FILE_NAME).getPath();
                         Unmarshaller unmarshaller = context.createUnmarshaller();
                         InputStream stream = new FileInputStream(path);
                         ClassDescriptionList list = (ClassDescriptionList) unmarshaller.unmarshal(stream);
@@ -198,6 +200,7 @@ public class AQJSM {
 
                             if (classes.isEmpty() || classes.contains(description.getClassName())) {
                                 logger.info("Start evaluating of causal relations for class " + description.getClassName());
+                                logger.info(description.toString());
                                 List<JSMHypothesis> hypothesises = analyzer.evaluateCauses();
                                 int classIndex = data.classAttribute().indexOfValue(description.getClassName());
                                 int objectCount = data.attributeStats(data.classIndex()).nominalCounts[classIndex];
@@ -205,8 +208,10 @@ public class AQJSM {
                                 builder.append("Causes for class ").append(description.getClassName()).append(" [desc_size=")
                                         .append(description.getDescription().size()).append(", object_num=").
                                         append(objectCount).append("]:\n");
-                                for (JSMHypothesis hypothesis : hypothesises) {
-                                    builder.append("\t").append(hypothesis.toString());
+                                for (int i = 0; i < hypothesises.size(); i++) {
+                                    builder.append("\t").append(hypothesises.get(i).toString());
+                                    if (i < hypothesises.size() - 1)
+                                        builder.append("\n");
                                 }
                                 logger.info(builder.toString());
                             }
@@ -215,9 +220,15 @@ public class AQJSM {
                 }
             }
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error("Error during parse command line", e);
+        } catch (JAXBException e) {
+            logger.error("Cannot parse or write description of classes", e);
+        } catch (FileNotFoundException e) {
+            logger.error("Cannot find file with classes' description: " + CD_FILE_NAME, e);
+        } catch (IOException e) {
+            logger.error("Cannot read from or write to file with classes' description: " + CD_FILE_NAME, e);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Weka exception: " + e.getMessage(), e);
         }
 
     }
