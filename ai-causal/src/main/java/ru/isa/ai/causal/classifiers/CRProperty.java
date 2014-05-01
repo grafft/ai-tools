@@ -1,6 +1,7 @@
 package ru.isa.ai.causal.classifiers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -11,6 +12,7 @@ import java.util.List;
 public class CRProperty implements Comparable<CRProperty> {
     private CRFeature feature;
     private List<Integer> indexes = new ArrayList<>();
+    private int popularity = 0;
 
     public CRProperty(CRFeature feature, List<Integer> indexes) {
         this.feature = feature;
@@ -21,6 +23,14 @@ public class CRProperty implements Comparable<CRProperty> {
         return feature;
     }
 
+    public int getPopularity() {
+        return popularity;
+    }
+
+    public void setPopularity(int popularity) {
+        this.popularity = popularity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -29,7 +39,10 @@ public class CRProperty implements Comparable<CRProperty> {
         CRProperty that = (CRProperty) o;
 
         if (!feature.equals(that.feature)) return false;
-        if (!indexes.equals(that.indexes)) return false;
+        if (indexes.size() != that.indexes.size()) return false;
+        for (int value : indexes)
+            if (!that.indexes.contains(value))
+                return false;
 
         return true;
     }
@@ -37,7 +50,9 @@ public class CRProperty implements Comparable<CRProperty> {
     @Override
     public int hashCode() {
         int result = feature.hashCode();
-        result = 31 * result + indexes.hashCode();
+        result = 31 * result + indexes.size();
+        for (int value : indexes)
+            result += value;
         return result;
     }
 
@@ -79,6 +94,6 @@ public class CRProperty implements Comparable<CRProperty> {
         if (this.equals(o))
             return 0;
         else
-            return Integer.compare(this.getFeature().getId(), o.getFeature().getId());
+            return this.getFeature().getName().compareTo(o.getFeature().getName());
     }
 }

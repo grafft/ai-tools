@@ -13,18 +13,18 @@ import java.util.*;
  * Time: 11:21
  */
 public class JSMAnalyzer {
-    private Map<String, Set<CRProperty>> classDescriptions;
+    private Map<String, List<CRProperty>> classDescriptions;
     private Instances data;
     private int maxHypothesisLength = 3;
 
-    public JSMAnalyzer(Map<String, Set<CRProperty>> classDescriptions, Instances data) {
+    public JSMAnalyzer(Map<String, List<CRProperty>> classDescriptions, Instances data) {
         this.classDescriptions = classDescriptions;
         this.data = data;
     }
 
     public List<JSMHypothesis> evaluateCauses(String className) {
         List<JSMHypothesis> causes = new ArrayList<>();
-        Set<CRProperty> properties = classDescriptions.get(className);
+        List<CRProperty> properties = classDescriptions.get(className);
         for (CRProperty property : properties) {
             List<CRProperty> otherProps = new ArrayList<>(properties);
             otherProps.remove(property);

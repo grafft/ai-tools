@@ -32,7 +32,7 @@ public class TestExternalAQ {
         cl.buildClassifier(tmpInst);
 
         Map<String, List<AQRule>> rules = cl.getRules();
-        Map<String, Set<CRProperty>> classDescription = ClassDescriber.describeClasses(rules, tmpInst);
+        Map<String, List<CRProperty>> classDescription = ClassDescriber.describeClasses(rules, tmpInst);
 
         JSMAnalyzer analyzer = new JSMAnalyzer(classDescription, tmpInst);
         Attribute classAttr = tmpInst.classAttribute();

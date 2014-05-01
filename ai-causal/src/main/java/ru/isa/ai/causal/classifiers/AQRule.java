@@ -107,8 +107,16 @@ public class AQRule {
 
     public boolean ifCover(Instance object) {
         for (Map.Entry<CRFeature, List<Integer>> entry : tokens.entrySet()) {
-            double value = object.value(entry.getKey().getId());
-            if (object.attribute(entry.getKey().getId()).isNumeric()) {
+            Enumeration<Attribute> attrEnumeration = object.enumerateAttributes();
+            Attribute attr = null;
+            while (attrEnumeration.hasMoreElements()) {
+                attr = attrEnumeration.nextElement();
+                if (attr.name().equals(entry.getKey().getName()))
+                    break;
+            }
+
+            double value = object.value(attr.index());
+            if (attr.isNumeric()) {
                 boolean result = false;
                 for (int part : entry.getValue()) {
                     if (entry.getKey().getCutPoints().get(part - 1) < value
@@ -118,7 +126,7 @@ public class AQRule {
                     }
                 }
                 if (!result) return false;
-            } else if (object.attribute(entry.getKey().getId()).isNominal()) {
+            } else if (attr.isNominal()) {
                 if (!entry.getValue().contains((int) value)) return false;
             }
 

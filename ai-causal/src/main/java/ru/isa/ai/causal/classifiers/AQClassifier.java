@@ -63,7 +63,7 @@ public class AQClassifier extends AbstractClassifier {
         while (attrEnu.hasMoreElements()) {
             Attribute attribute = (Attribute) attrEnu.nextElement();
             double[] cutPoints = discretizeFilter.getCutPoints(attribute.index());
-            CRFeature aqAttr = new CRFeature(attribute.name(), attribute.index());
+            CRFeature aqAttr = new CRFeature(attribute.name());
             if (cutPoints != null) {
                 aqAttr.setCutPoints(Arrays.asList(ArrayUtils.toObject(cutPoints)));
             }

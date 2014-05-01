@@ -1,6 +1,7 @@
 package ru.isa.ai.causal;
 
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Ordering;
 import com.google.common.collect.TreeMultimap;
 import org.apache.commons.cli.*;
 import org.apache.commons.lang.ArrayUtils;
@@ -66,7 +67,8 @@ public class AQJSM {
                 int maxHypothesisLength = Integer.parseInt(line.getOptionValue("l", "3"));
                 int iterationCount = Integer.parseInt(line.getOptionValue("i", "100"));
                 List<String> classes = new ArrayList<>();
-                Collections.addAll(classes, line.getOptionValues("c"));
+                if (line.hasOption("c"))
+                    Collections.addAll(classes, line.getOptionValues("c"));
 
                 ConverterUtils.DataSource trainSource = new ConverterUtils.DataSource(dataFile);
                 Instances train = trainSource.getStructure();
@@ -74,7 +76,7 @@ public class AQJSM {
                 Instances data = trainSource.getDataSet(actualClassIndex);
                 dataToJSM = new Instances(data);
 
-                Map<String, Set<CRProperty>> classDescription = null;
+                Map<String, List<CRProperty>> classDescription = null;
                 switch (mode) {
                     case aq_simple_jsm:
                     case aq_simple:
@@ -91,7 +93,7 @@ public class AQJSM {
                             classDescription = reorderedAQ(data);
 
                             maxSize = 0;
-                            for (Set<CRProperty> props : classDescription.values()) {
+                            for (List<CRProperty> props : classDescription.values()) {
                                 if (maxSize < props.size())
                                     maxSize = props.size();
                             }
@@ -103,11 +105,12 @@ public class AQJSM {
                         int bestComplexity = Integer.MAX_VALUE;
                         for (int i = 0; i < iterationCount; i++) {
                             classDescription = reorderedAQ(data);
-                            for (Map.Entry<String, Set<CRProperty>> entry : classDescription.entrySet()) {
+                            for (Map.Entry<String, List<CRProperty>> entry : classDescription.entrySet()) {
                                 if (stats.get(entry.getKey()) == null)
                                     stats.put(entry.getKey(), new HashMap<CRProperty, Integer>());
                                 for (CRProperty property : entry.getValue()) {
                                     Integer value = stats.get(entry.getKey()).get(property);
+                                    stats.get(entry.getKey()).containsKey(property);
                                     if (value == null)
                                         stats.get(entry.getKey()).put(property, 1);
                                     else
@@ -123,7 +126,12 @@ public class AQJSM {
                         }
                         classDescription.clear();
                         for (Map.Entry<String, Map<CRProperty, Integer>> classEntry : stats.entrySet()) {
-                            Multimap<Integer, CRProperty> sortedMap = TreeMultimap.create();
+                            Multimap<Integer, CRProperty> sortedMap = TreeMultimap.create(new Comparator<Integer>() {
+                                @Override
+                                public int compare(Integer o1, Integer o2) {
+                                    return -o1.compareTo(o2);
+                                }
+                            }, Ordering.<CRProperty>natural());
                             List<Integer> frequents = new ArrayList<>();
                             for (Map.Entry<CRProperty, Integer> entry : classEntry.getValue().entrySet()) {
                                 sortedMap.put(entry.getValue(), entry.getKey());
@@ -135,12 +143,22 @@ public class AQJSM {
                                     return Integer.compare(o2, o1);
                                 }
                             });
-                            int minFrequency = sortedMap.size() < maxUniverseSize ? 0 : frequents.get(maxUniverseSize);
-                            Set<CRProperty> classDesc = new HashSet<>();
+                            int minFrequency = frequents.get(0) / 2;
+                            int countUniver = 0;
+                            for (int freq : frequents)
+                                if (freq > minFrequency)
+                                    countUniver++;
+                            if (countUniver > maxUniverseSize)
+                                minFrequency = frequents.get(maxUniverseSize);
+                            List<CRProperty> classDesc = new ArrayList<>();
                             for (Map.Entry<Integer, CRProperty> entry : sortedMap.entries()) {
-                                if (entry.getKey() > minFrequency)
-                                    classDesc.add(entry.getValue());
+                                if (entry.getKey() > minFrequency) {
+                                    CRProperty prop = entry.getValue();
+                                    prop.setPopularity(entry.getKey());
+                                    classDesc.add(prop);
+                                }
                             }
+                            classDesc = ClassDescriber.clearDescription(classDesc);
                             classDescription.put(classEntry.getKey(), classDesc);
                         }
                         rules = bestRules;
@@ -189,7 +207,7 @@ public class AQJSM {
         return totalComplexity;
     }
 
-    private static Map<String, Set<CRProperty>> reorderedAQ(Instances data) throws Exception {
+    private static Map<String, List<CRProperty>> reorderedAQ(Instances data) throws Exception {
         Reorder reorderFilter = new Reorder();
         List<Integer> listToShuffle = new ArrayList<>();
         List<Integer> listOfNominal = new ArrayList<>();

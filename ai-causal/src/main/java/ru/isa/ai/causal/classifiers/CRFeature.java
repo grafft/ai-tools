@@ -10,7 +10,6 @@ import java.util.List;
  */
 public class CRFeature {
     private String name;
-    private int id;
     private List<Double> cutPoints = new ArrayList<>();
     private double upLimit;
     private double downLimit;
@@ -18,9 +17,8 @@ public class CRFeature {
     public CRFeature() {
     }
 
-    public CRFeature(String name, int id) {
+    public CRFeature(String name) {
         this.name = name;
-        this.id = id;
     }
 
     public String getName() {
@@ -55,29 +53,21 @@ public class CRFeature {
         this.downLimit = downLimit;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        CRFeature attribute = (CRFeature) o;
+        CRFeature crFeature = (CRFeature) o;
 
-        if (id != attribute.id) return false;
+        if (name != null ? !name.equals(crFeature.name) : crFeature.name != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return id;
+        return name != null ? name.hashCode() : 0;
     }
 
     @Override

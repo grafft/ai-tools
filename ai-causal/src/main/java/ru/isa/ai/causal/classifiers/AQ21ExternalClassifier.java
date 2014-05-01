@@ -6,9 +6,6 @@ import weka.core.*;
 
 import java.io.*;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -165,7 +162,7 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
         Enumeration attrEnu = testData.enumerateAttributes();
         while (attrEnu.hasMoreElements()) {
             Attribute attr = (Attribute) attrEnu.nextElement();
-            CRFeature aqAttr = new CRFeature(attr.name(), attr.index());
+            CRFeature aqAttr = new CRFeature(attr.name());
             int discrPos = result.indexOf("attr_" + attr.index() + "_Discretized");
             if (discrPos != -1) {
                 String line = result.substring(discrPos, result.indexOf("\n", discrPos));
