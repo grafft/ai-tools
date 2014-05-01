@@ -6,12 +6,11 @@ import com.google.common.collect.TreeMultimap;
 import org.apache.commons.cli.*;
 import org.apache.commons.lang.ArrayUtils;
 import ru.isa.ai.causal.classifiers.AQ21ExternalClassifier;
+import ru.isa.ai.causal.classifiers.AQClassDescription;
 import ru.isa.ai.causal.classifiers.AQRule;
 import ru.isa.ai.causal.classifiers.CRProperty;
-import ru.isa.ai.causal.classifiers.ClassDescriber;
 import ru.isa.ai.causal.jsm.JSMAnalyzer;
 import ru.isa.ai.causal.jsm.JSMHypothesis;
-import weka.core.Attribute;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
 import weka.filters.Filter;
@@ -29,8 +28,7 @@ public class AQJSM {
         aq_simple, aq_best, aq_simple_jsm, aq_best_jsm, aq_accum_jsm, jsm
     }
 
-    private static Instances dataToJSM;
-    private static Map<String, List<AQRule>> rules;
+    private static Map<String, List<AQRule>> ruleBase;
 
     public static void main(String[] args) {
         Options options = new Options();
@@ -74,29 +72,28 @@ public class AQJSM {
                 Instances train = trainSource.getStructure();
                 int actualClassIndex = train.numAttributes() - 1;
                 Instances data = trainSource.getDataSet(actualClassIndex);
-                dataToJSM = new Instances(data);
 
-                Map<String, List<CRProperty>> classDescription = null;
+                List<AQClassDescription> classDescriptions = new ArrayList<>();
                 switch (mode) {
                     case aq_simple_jsm:
                     case aq_simple:
                         AQ21ExternalClassifier classifier = new AQ21ExternalClassifier();
                         classifier.buildClassifier(data);
-                        rules = classifier.getRules();
-                        classDescription = ClassDescriber.describeClasses(rules, data);
+                        ruleBase = classifier.getRules();
+                        for (Map.Entry<String, List<AQRule>> classRules : ruleBase.entrySet())
+                            classDescriptions.add(AQClassDescription.createFromRules(classRules.getValue(), classRules.getKey()));
                         break;
                     case aq_best:
                     case aq_best_jsm:
                         int maxSize = Integer.MAX_VALUE;
                         while (maxSize > maxUniverseSize) {
-                            rules = null;
-                            classDescription = reorderedAQ(data);
+                            ruleBase = null;
+                            classDescriptions = reorderedAQ(data);
 
                             maxSize = 0;
-                            for (List<CRProperty> props : classDescription.values()) {
-                                if (maxSize < props.size())
-                                    maxSize = props.size();
-                            }
+                            for (AQClassDescription description : classDescriptions)
+                                if (maxSize < description.getDescription().size())
+                                    maxSize = description.getDescription().size();
                         }
                         break;
                     case aq_accum_jsm:
@@ -104,27 +101,26 @@ public class AQJSM {
                         Map<String, Map<CRProperty, Integer>> stats = new HashMap<>();
                         int bestComplexity = Integer.MAX_VALUE;
                         for (int i = 0; i < iterationCount; i++) {
-                            classDescription = reorderedAQ(data);
-                            for (Map.Entry<String, List<CRProperty>> entry : classDescription.entrySet()) {
-                                if (stats.get(entry.getKey()) == null)
-                                    stats.put(entry.getKey(), new HashMap<CRProperty, Integer>());
-                                for (CRProperty property : entry.getValue()) {
-                                    Integer value = stats.get(entry.getKey()).get(property);
-                                    stats.get(entry.getKey()).containsKey(property);
+                            classDescriptions = reorderedAQ(data);
+                            for (AQClassDescription description : classDescriptions) {
+                                if (stats.get(description.getClassName()) == null)
+                                    stats.put(description.getClassName(), new HashMap<CRProperty, Integer>());
+                                for (CRProperty property : description.getDescription()) {
+                                    Integer value = stats.get(description.getClassName()).get(property);
                                     if (value == null)
-                                        stats.get(entry.getKey()).put(property, 1);
+                                        stats.get(description.getClassName()).put(property, 1);
                                     else
-                                        stats.get(entry.getKey()).put(property, value + 1);
+                                        stats.get(description.getClassName()).put(property, value + 1);
                                 }
                             }
 
-                            int complexity = countComplexity(rules);
+                            int complexity = countComplexity(ruleBase);
                             if (complexity < bestComplexity) {
-                                bestRules = rules;
+                                bestRules = ruleBase;
                                 bestComplexity = complexity;
                             }
                         }
-                        classDescription.clear();
+                        classDescriptions.clear();
                         for (Map.Entry<String, Map<CRProperty, Integer>> classEntry : stats.entrySet()) {
                             Multimap<Integer, CRProperty> sortedMap = TreeMultimap.create(new Comparator<Integer>() {
                                 @Override
@@ -150,18 +146,18 @@ public class AQJSM {
                                     countUniver++;
                             if (countUniver > maxUniverseSize)
                                 minFrequency = frequents.get(maxUniverseSize);
-                            List<CRProperty> classDesc = new ArrayList<>();
+                            List<CRProperty> properties = new ArrayList<>();
                             for (Map.Entry<Integer, CRProperty> entry : sortedMap.entries()) {
                                 if (entry.getKey() > minFrequency) {
                                     CRProperty prop = entry.getValue();
                                     prop.setPopularity(entry.getKey());
-                                    classDesc.add(prop);
+                                    properties.add(prop);
                                 }
                             }
-                            classDesc = ClassDescriber.clearDescription(classDesc);
-                            classDescription.put(classEntry.getKey(), classDesc);
+                            AQClassDescription classDescription = AQClassDescription.createFromProperties(properties, classEntry.getKey());
+                            classDescriptions.add(classDescription);
                         }
-                        rules = bestRules;
+                        ruleBase = bestRules;
                         break;
                     default:
                         formatter.printHelp("aqjsm", options);
@@ -173,19 +169,15 @@ public class AQJSM {
                     case aq_best_jsm:
                     case aq_accum_jsm:
                     case jsm:
-                        if (classDescription != null) {
-                            JSMAnalyzer analyzer = new JSMAnalyzer(classDescription, dataToJSM);
+                        for (AQClassDescription description : classDescriptions) {
+                            JSMAnalyzer analyzer = new JSMAnalyzer(description, data);
                             analyzer.setMaxHypothesisLength(maxHypothesisLength);
-                            Attribute classAttr = dataToJSM.classAttribute();
-                            Enumeration<String> enumerator = classAttr.enumerateValues();
-                            while (enumerator.hasMoreElements()) {
-                                String className = enumerator.nextElement();
-                                if (classes.isEmpty() || classes.contains(className)) {
-                                    System.out.println("Causes for class " + className + ": ");
-                                    List<JSMHypothesis> hypothesises = analyzer.evaluateCauses(className);
-                                    for (JSMHypothesis hypothesis : hypothesises) {
-                                        System.out.println("\t" + hypothesis.toString());
-                                    }
+
+                            if (classes.isEmpty() || classes.contains(description.getClassName())) {
+                                System.out.println("Causes for class " + description.getClassName() + ": ");
+                                List<JSMHypothesis> hypothesises = analyzer.evaluateCauses();
+                                for (JSMHypothesis hypothesis : hypothesises) {
+                                    System.out.println("\t" + hypothesis.toString());
                                 }
                             }
                         }
@@ -197,6 +189,7 @@ public class AQJSM {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     private static int countComplexity(Map<String, List<AQRule>> rules) {
@@ -207,7 +200,7 @@ public class AQJSM {
         return totalComplexity;
     }
 
-    private static Map<String, List<CRProperty>> reorderedAQ(Instances data) throws Exception {
+    private static List<AQClassDescription> reorderedAQ(Instances data) throws Exception {
         Reorder reorderFilter = new Reorder();
         List<Integer> listToShuffle = new ArrayList<>();
         List<Integer> listOfNominal = new ArrayList<>();
@@ -223,13 +216,17 @@ public class AQJSM {
         int[] indexes = ArrayUtils.addAll(nominalIndexes, reorderedIndexes);
         reorderFilter.setAttributeIndicesArray(ArrayUtils.add(indexes, data.numAttributes() - 1));
 
-        dataToJSM = new Instances(data);
-        reorderFilter.setInputFormat(dataToJSM);
-        dataToJSM = Filter.useFilter(dataToJSM, reorderFilter);
+        Instances toReorder = new Instances(data);
+        reorderFilter.setInputFormat(toReorder);
+        toReorder = Filter.useFilter(toReorder, reorderFilter);
 
         AQ21ExternalClassifier classifier = new AQ21ExternalClassifier();
-        classifier.buildClassifier(dataToJSM);
-        rules = classifier.getRules();
-        return ClassDescriber.describeClasses(rules, dataToJSM);
+        classifier.buildClassifier(toReorder);
+        ruleBase = classifier.getRules();
+        List<AQClassDescription> classDescriptions = new ArrayList<>();
+        for (Map.Entry<String, List<AQRule>> classRules : ruleBase.entrySet())
+            classDescriptions.add(AQClassDescription.createFromRules(classRules.getValue(), classRules.getKey()));
+
+        return classDescriptions;
     }
 }

@@ -107,13 +107,7 @@ public class AQRule {
 
     public boolean ifCover(Instance object) {
         for (Map.Entry<CRFeature, List<Integer>> entry : tokens.entrySet()) {
-            Enumeration<Attribute> attrEnumeration = object.enumerateAttributes();
-            Attribute attr = null;
-            while (attrEnumeration.hasMoreElements()) {
-                attr = attrEnumeration.nextElement();
-                if (attr.name().equals(entry.getKey().getName()))
-                    break;
-            }
+            Attribute attr = object.dataset().attribute(entry.getKey().getName());
 
             double value = object.value(attr.index());
             if (attr.isNumeric()) {

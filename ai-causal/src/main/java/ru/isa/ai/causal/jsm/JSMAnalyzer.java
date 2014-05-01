@@ -1,5 +1,6 @@
 package ru.isa.ai.causal.jsm;
 
+import ru.isa.ai.causal.classifiers.AQClassDescription;
 import ru.isa.ai.causal.classifiers.CRProperty;
 import weka.core.Attribute;
 import weka.core.Instance;
@@ -13,20 +14,19 @@ import java.util.*;
  * Time: 11:21
  */
 public class JSMAnalyzer {
-    private Map<String, List<CRProperty>> classDescriptions;
+    private AQClassDescription classDescription;
     private Instances data;
     private int maxHypothesisLength = 3;
 
-    public JSMAnalyzer(Map<String, List<CRProperty>> classDescriptions, Instances data) {
-        this.classDescriptions = classDescriptions;
+    public JSMAnalyzer(AQClassDescription classDescription, Instances data) {
+        this.classDescription = classDescription;
         this.data = data;
     }
 
-    public List<JSMHypothesis> evaluateCauses(String className) {
+    public List<JSMHypothesis> evaluateCauses() {
         List<JSMHypothesis> causes = new ArrayList<>();
-        List<CRProperty> properties = classDescriptions.get(className);
-        for (CRProperty property : properties) {
-            List<CRProperty> otherProps = new ArrayList<>(properties);
+        for (CRProperty property : classDescription.getDescription()) {
+            List<CRProperty> otherProps = new ArrayList<>(classDescription.getDescription());
             otherProps.remove(property);
             FactBase factBase = buildFactBase(data, property, otherProps);
             factBase.reduceEquals();

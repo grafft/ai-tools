@@ -9,10 +9,7 @@ import weka.core.converters.ConverterUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Author: Aleksandr Panov
@@ -32,15 +29,11 @@ public class TestExternalAQ {
         cl.buildClassifier(tmpInst);
 
         Map<String, List<AQRule>> rules = cl.getRules();
-        Map<String, List<CRProperty>> classDescription = ClassDescriber.describeClasses(rules, tmpInst);
 
-        JSMAnalyzer analyzer = new JSMAnalyzer(classDescription, tmpInst);
-        Attribute classAttr = tmpInst.classAttribute();
-        Enumeration<String> enumerator = classAttr.enumerateValues();
-        while (enumerator.hasMoreElements()) {
-            String className = enumerator.nextElement();
-            System.out.println("Causes for class " + className + ": ");
-            List<JSMHypothesis> hypothesises = analyzer.evaluateCauses(className);
+        for (Map.Entry<String, List<AQRule>> entry : rules.entrySet()) {
+            JSMAnalyzer analyzer = new JSMAnalyzer(AQClassDescription.createFromRules(entry.getValue(), entry.getKey()), tmpInst);
+            System.out.println("Causes for class " + entry.getKey() + ": ");
+            List<JSMHypothesis> hypothesises = analyzer.evaluateCauses();
             for (JSMHypothesis hypothesis : hypothesises) {
                 System.out.println("\t" + hypothesis.toString());
             }
