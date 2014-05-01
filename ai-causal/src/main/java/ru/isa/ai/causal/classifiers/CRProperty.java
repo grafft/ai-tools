@@ -1,5 +1,6 @@
 package ru.isa.ai.causal.classifiers;
 
+import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,10 +10,19 @@ import java.util.List;
  * Date: 30.04.2014
  * Time: 10:26
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class CRProperty implements Comparable<CRProperty> {
+    @XmlElement(required = true)
     private CRFeature feature;
+    @XmlElementWrapper(required = true)
+    @XmlElement
     private List<Integer> indexes = new ArrayList<>();
+    @XmlAttribute
     private int popularity = 0;
+
+    public CRProperty() {
+    }
 
     public CRProperty(CRFeature feature, List<Integer> indexes) {
         this.feature = feature;

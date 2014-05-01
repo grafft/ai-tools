@@ -1,5 +1,6 @@
 package ru.isa.ai.causal.classifiers;
 
+import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -7,8 +8,13 @@ import java.util.Map;
 /**
  * Created by GraffT on 01.05.2014.
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class AQClassDescription {
+    @XmlAttribute
     private String className;
+    @XmlElementWrapper
+    @XmlElement
     private List<CRProperty> description = new ArrayList<>();
 
     public AQClassDescription() {

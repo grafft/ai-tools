@@ -1,5 +1,9 @@
 package ru.isa.ai.causal.classifiers;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,10 +12,16 @@ import java.util.List;
  * Date: 30.07.13
  * Time: 15:17
  */
+@XmlRootElement()
+@XmlAccessorType(XmlAccessType.FIELD)
 public class CRFeature {
+    @XmlAttribute(required = true)
     private String name;
+    @XmlAttribute
     private List<Double> cutPoints = new ArrayList<>();
+    @XmlAttribute
     private double upLimit;
+    @XmlAttribute
     private double downLimit;
 
     public CRFeature() {

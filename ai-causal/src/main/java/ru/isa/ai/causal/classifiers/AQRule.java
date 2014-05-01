@@ -11,10 +11,11 @@ import java.util.*;
  * Date: 30.07.13
  * Time: 15:38
  */
+
 public class AQRule {
-    private Map<CRFeature, List<Integer>> tokens = new HashMap<>();
     private int id;
     private int complexity;
+    private Map<CRFeature, List<Integer>> tokens = new HashMap<>();
     private Set<Instance> coveredInstances = new HashSet<>();
 
     public AQRule() {
