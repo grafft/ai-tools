@@ -1,8 +1,5 @@
 package ru.isa.ai.causal;
 
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Ordering;
-import com.google.common.collect.TreeMultimap;
 import org.apache.commons.cli.*;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
@@ -84,84 +81,32 @@ public class AQJSM {
 
                 JAXBContext context = JAXBContext.newInstance(new Class<?>[]{ClassDescriptionList.class,
                         AQClassDescription.class, CRProperty.class, CRFeature.class});
-                List<AQClassDescription> classDescriptions = new ArrayList<>();
+                Collection<AQClassDescription> classDescriptions = new ArrayList<>();
+                AQ21ExternalClassifier classifier = new AQ21ExternalClassifier();
                 switch (mode) {
                     case aq_simple_jsm:
                     case aq_simple:
                         logger.info("Start build class descriptions by simple aq covering");
-                        AQ21ExternalClassifier classifier = new AQ21ExternalClassifier();
                         classifier.buildClassifier(data);
-                        for (Map.Entry<String, List<AQRule>> classRules : classifier.getRules().entrySet())
-                            classDescriptions.add(AQClassDescription.createFromRules(classRules.getValue(), classRules.getKey()));
+                        classDescriptions = classifier.getDescriptions();
                         break;
                     case aq_best:
                     case aq_best_jsm:
                         logger.info("Start build class descriptions by best aq covering");
-                        int maxSize = Integer.MAX_VALUE;
-                        while (maxSize > maxUniverseSize) {
-                            classDescriptions = reorderedAQ(data);
-
-                            maxSize = 0;
-                            for (AQClassDescription description : classDescriptions)
-                                if (maxSize < description.getDescription().size())
-                                    maxSize = description.getDescription().size();
-                        }
+                        classifier.setTryToMinimize(true);
+                        classifier.setMaximumDescriptionSize(maxUniverseSize);
+                        classifier.buildClassifier(data);
+                        classDescriptions = classifier.getDescriptions();
                         break;
                     case aq_accum:
                     case aq_accum_jsm:
                         logger.info("Start build class descriptions by cumulative aq covering");
-                        Map<String, Map<CRProperty, Integer>> stats = new HashMap<>();
-                        for (int i = 0; i < iterationCount; i++) {
-                            classDescriptions = reorderedAQ(data);
-                            for (AQClassDescription description : classDescriptions) {
-                                if (stats.get(description.getClassName()) == null)
-                                    stats.put(description.getClassName(), new HashMap<CRProperty, Integer>());
-                                for (CRProperty property : description.getDescription()) {
-                                    Integer value = stats.get(description.getClassName()).get(property);
-                                    if (value == null)
-                                        stats.get(description.getClassName()).put(property, 1);
-                                    else
-                                        stats.get(description.getClassName()).put(property, value + 1);
-                                }
-                            }
-                        }
-                        classDescriptions.clear();
-                        for (Map.Entry<String, Map<CRProperty, Integer>> classEntry : stats.entrySet()) {
-                            Multimap<Integer, CRProperty> sortedMap = TreeMultimap.create(new Comparator<Integer>() {
-                                @Override
-                                public int compare(Integer o1, Integer o2) {
-                                    return -o1.compareTo(o2);
-                                }
-                            }, Ordering.<CRProperty>natural());
-                            List<Integer> frequents = new ArrayList<>();
-                            for (Map.Entry<CRProperty, Integer> entry : classEntry.getValue().entrySet()) {
-                                sortedMap.put(entry.getValue(), entry.getKey());
-                                frequents.add(entry.getValue());
-                            }
-                            Collections.sort(frequents, new Comparator<Integer>() {
-                                @Override
-                                public int compare(Integer o1, Integer o2) {
-                                    return Integer.compare(o2, o1);
-                                }
-                            });
-                            int minFrequency = (int) (frequents.get(0) * threshold);
-                            int countUniver = 0;
-                            for (int freq : frequents)
-                                if (freq > minFrequency)
-                                    countUniver++;
-                            if (countUniver > maxUniverseSize)
-                                minFrequency = frequents.get(maxUniverseSize);
-                            List<CRProperty> properties = new ArrayList<>();
-                            for (Map.Entry<Integer, CRProperty> entry : sortedMap.entries()) {
-                                if (entry.getKey() > minFrequency) {
-                                    CRProperty prop = entry.getValue();
-                                    prop.setPopularity(entry.getKey());
-                                    properties.add(prop);
-                                }
-                            }
-                            AQClassDescription classDescription = AQClassDescription.createFromProperties(properties, classEntry.getKey());
-                            classDescriptions.add(classDescription);
-                        }
+                        classifier.setCumulative(true);
+                        classifier.setMaximumDescriptionSize(maxUniverseSize);
+                        classifier.setCumulativeThreshold(threshold);
+                        classifier.setNumIterations(iterationCount);
+                        classifier.buildClassifier(data);
+                        classDescriptions = classifier.getDescriptions();
                         break;
                     case jsm:
                         logger.info("Start load class descriptions from " + CD_FILE_NAME);
@@ -193,7 +138,6 @@ public class AQJSM {
                     case aq_best_jsm:
                     case aq_accum_jsm:
                     case jsm:
-
                         for (AQClassDescription description : classDescriptions) {
                             JSMAnalyzer analyzer = new JSMAnalyzer(description, data);
                             analyzer.setMaxHypothesisLength(maxHypothesisLength);
@@ -233,43 +177,6 @@ public class AQJSM {
 
     }
 
-    private static int countComplexity(Map<String, List<AQRule>> rules) {
-        int totalComplexity = 0;
-        for (List<AQRule> classRules : rules.values())
-            for (AQRule rule : classRules)
-                totalComplexity += rule.getComplexity();
-        return totalComplexity;
-    }
-
-    private static List<AQClassDescription> reorderedAQ(Instances data) throws Exception {
-        Reorder reorderFilter = new Reorder();
-        List<Integer> listToShuffle = new ArrayList<>();
-        List<Integer> listOfNominal = new ArrayList<>();
-        for (int i = 0; i < data.numAttributes() - 1; i++) {
-            if (data.attribute(i).isNominal())
-                listOfNominal.add(i);
-            else
-                listToShuffle.add(i);
-        }
-        Collections.shuffle(listToShuffle);
-        int[] nominalIndexes = ArrayUtils.toPrimitive(listOfNominal.toArray(new Integer[listOfNominal.size()]));
-        int[] reorderedIndexes = ArrayUtils.toPrimitive(listToShuffle.toArray(new Integer[listToShuffle.size()]));
-        int[] indexes = ArrayUtils.addAll(nominalIndexes, reorderedIndexes);
-        reorderFilter.setAttributeIndicesArray(ArrayUtils.add(indexes, data.numAttributes() - 1));
-
-        Instances toReorder = new Instances(data);
-        reorderFilter.setInputFormat(toReorder);
-        toReorder = Filter.useFilter(toReorder, reorderFilter);
-
-        AQ21ExternalClassifier classifier = new AQ21ExternalClassifier();
-        classifier.buildClassifier(toReorder);
-        List<AQClassDescription> classDescriptions = new ArrayList<>();
-        for (Map.Entry<String, List<AQRule>> classRules : classifier.getRules().entrySet())
-            classDescriptions.add(AQClassDescription.createFromRules(classRules.getValue(), classRules.getKey()));
-
-        return classDescriptions;
-    }
-
     @XmlRootElement
     @XmlAccessorType(XmlAccessType.FIELD)
     private static class ClassDescriptionList {
@@ -277,18 +184,22 @@ public class AQJSM {
         @XmlElement
         private List<AQClassDescription> classDescriptions = new ArrayList<>();
 
-        private ClassDescriptionList() {
+        ClassDescriptionList() {
         }
 
-        private ClassDescriptionList(List<AQClassDescription> classDescriptions) {
+        ClassDescriptionList(List<AQClassDescription> classDescriptions) {
             this.classDescriptions = classDescriptions;
         }
 
-        public List<AQClassDescription> getClassDescriptions() {
+        ClassDescriptionList(Collection<AQClassDescription> classDescriptions) {
+            this.classDescriptions.addAll(classDescriptions);
+        }
+
+        List<AQClassDescription> getClassDescriptions() {
             return classDescriptions;
         }
 
-        public void setClassDescriptions(List<AQClassDescription> classDescriptions) {
+        void setClassDescriptions(List<AQClassDescription> classDescriptions) {
             this.classDescriptions = classDescriptions;
         }
     }

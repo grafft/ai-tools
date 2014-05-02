@@ -183,7 +183,15 @@ public class JSMAnalyzer {
             byte[] objectVector = new byte[properties.size()];
             for (int i = 0; i < properties.size(); i++) {
                 Attribute attr = data.attribute(properties.get(i).getFeature().getName());
-                objectVector[i] = (byte) (properties.get(i).cover(event.value(attr.index())) ? 1 : 0);
+                switch (attr.type()) {
+                    case Attribute.NOMINAL:
+                        String value = attr.value((int)event.value(attr.index()));
+                        objectVector[i] = (byte) (properties.get(i).coverNominal(value) ? 1 : 0);
+                        break;
+                    case Attribute.NUMERIC:
+                        objectVector[i] = (byte) (properties.get(i).cover(event.value(attr.index())) ? 1 : 0);
+                        break;
+                }
             }
             if (keyProperty.cover(event.value(keyAttr.index()))) {
                 factBase.plusExamples.put(data.indexOf(event), objectVector);

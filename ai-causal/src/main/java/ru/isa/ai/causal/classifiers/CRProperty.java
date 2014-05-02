@@ -3,6 +3,7 @@ package ru.isa.ai.causal.classifiers;
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -99,6 +100,10 @@ public class CRProperty implements Comparable<CRProperty> {
         return false;
     }
 
+    public boolean coverNominal(String value) {
+        return indexes.contains(Integer.parseInt(value));
+    }
+
     @Override
     public int compareTo(CRProperty o) {
         if (this.equals(o))
@@ -107,3 +112,4 @@ public class CRProperty implements Comparable<CRProperty> {
             return this.getFeature().getName().compareTo(o.getFeature().getName());
     }
 }
+

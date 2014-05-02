@@ -1,11 +1,16 @@
 package ru.isa.ai.causal.classifiers;
 
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Ordering;
+import com.google.common.collect.TreeMultimap;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.SystemUtils;
 import weka.classifiers.AbstractClassifier;
 import weka.core.*;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.Reorder;
 
 import java.io.*;
-import java.net.URISyntaxException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -16,8 +21,16 @@ import java.util.regex.Pattern;
  */
 public class AQ21ExternalClassifier extends AbstractClassifier {
 
-    private Map<String, List<AQRule>> rules = new HashMap<>();
+    private Map<String, List<AQRule>> classRules = new HashMap<>();
+    private Map<String, AQClassDescription> classMapDescriptions = new HashMap<>();
     private Map<String, Integer> classMap = new HashMap<>();
+
+    private boolean classifyByRules = false;
+    private boolean tryToMinimize = false;
+    private boolean isCumulative = false;
+    private int numIterations = 100;
+    private int maximumDescriptionSize = 100;
+    private double cumulativeThreshold = 0.25;
 
     @Override
     public Capabilities getCapabilities() {
@@ -43,28 +56,156 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
         testData = new Instances(testData);
         testData.deleteWithMissingClass();
 
-        String dataPath = createDataFile(testData);
+        int maxSize;
+        int countIterations = 0;
+        int minComplexity = Integer.MAX_VALUE;
+        Map<String, List<AQRule>> bestClassRules = new HashMap<>();
+        Map<String, Map<CRProperty, Integer>> stats = new HashMap<>();
+        do {
+            buildRules(testData);
+            for (Map.Entry<String, List<AQRule>> entry : classRules.entrySet())
+                classMapDescriptions.put(entry.getKey(), AQClassDescription.createFromRules(entry.getValue(), entry.getKey()));
+
+            maxSize = 0;
+            for (AQClassDescription description : classMapDescriptions.values())
+                if (maxSize < description.getDescription().size())
+                    maxSize = description.getDescription().size();
+
+            for (AQClassDescription description : classMapDescriptions.values()) {
+                if (stats.get(description.getClassName()) == null)
+                    stats.put(description.getClassName(), new HashMap<CRProperty, Integer>());
+                for (CRProperty property : description.getDescription()) {
+                    Integer value = stats.get(description.getClassName()).get(property);
+                    if (value == null)
+                        stats.get(description.getClassName()).put(property, 1);
+                    else
+                        stats.get(description.getClassName()).put(property, value + 1);
+                }
+            }
+
+            int totalComplexity = countTotalComplexity(classRules);
+            if (minComplexity > totalComplexity) {
+                minComplexity = totalComplexity;
+                bestClassRules = classRules;
+            }
+
+            testData = reorderData(testData);
+            countIterations++;
+        } while ((tryToMinimize && maxSize > maximumDescriptionSize) ||
+                (isCumulative && countIterations < numIterations));
+
+        classRules = bestClassRules;
+        if (isCumulative)
+            cumulateDescription(stats);
+    }
+
+    private void buildRules(Instances data) throws AQClassifierException {
+        String dataPath = null;
+        try {
+            dataPath = createDataFile(data);
+        } catch (IOException e) {
+            throw new AQClassifierException("Cannot create input file for aq command", e);
+        }
         String[] cmd = {getClass().getClassLoader().getResource("ru/isa/ai/causal/classifiers/" +
                 (SystemUtils.IS_OS_WINDOWS ? "aq21.exe" : "aq21")).getPath(),
                 dataPath};
-        Process process = Runtime.getRuntime().exec(cmd);
+        Process process = null;
+        try {
+            process = Runtime.getRuntime().exec(cmd);
+        } catch (IOException e) {
+            throw new AQClassifierException("Cannot execute aq command", e);
+        }
         //process.waitFor();
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line;
         StringBuilder resultBuilder = new StringBuilder();
-        while ((line = reader.readLine()) != null) {
-            resultBuilder.append(line);
-            resultBuilder.append("\n");
+        try {
+            while ((line = reader.readLine()) != null) {
+                resultBuilder.append(line);
+                resultBuilder.append("\n");
+            }
+        } catch (IOException e) {
+            throw new AQClassifierException("Cannot read output of aq command", e);
         }
-        parseResult(resultBuilder.toString(), testData);
+        classRules = new HashMap<>();
+        parseResult(resultBuilder.toString(), data);
     }
 
-    private String createDataFile(Instances testData) throws IOException, URISyntaxException {
+    private void cumulateDescription(Map<String, Map<CRProperty, Integer>> stats) {
+        classMapDescriptions.clear();
+        for (Map.Entry<String, Map<CRProperty, Integer>> classEntry : stats.entrySet()) {
+            Multimap<Integer, CRProperty> sortedMap = TreeMultimap.create(new Comparator<Integer>() {
+                @Override
+                public int compare(Integer o1, Integer o2) {
+                    return -o1.compareTo(o2);
+                }
+            }, Ordering.<CRProperty>natural());
+            List<Integer> frequents = new ArrayList<>();
+            for (Map.Entry<CRProperty, Integer> entry : classEntry.getValue().entrySet()) {
+                sortedMap.put(entry.getValue(), entry.getKey());
+                frequents.add(entry.getValue());
+            }
+            Collections.sort(frequents, new Comparator<Integer>() {
+                @Override
+                public int compare(Integer o1, Integer o2) {
+                    return Integer.compare(o2, o1);
+                }
+            });
+            int minFrequency = (int) (frequents.get(0) * cumulativeThreshold);
+            int countUniver = 0;
+            for (int freq : frequents)
+                if (freq > minFrequency)
+                    countUniver++;
+            if (countUniver > maximumDescriptionSize)
+                minFrequency = frequents.get(maximumDescriptionSize);
+            List<CRProperty> properties = new ArrayList<>();
+            for (Map.Entry<Integer, CRProperty> entry : sortedMap.entries()) {
+                if (entry.getKey() > minFrequency) {
+                    CRProperty prop = entry.getValue();
+                    prop.setPopularity(entry.getKey());
+                    properties.add(prop);
+                }
+            }
+            AQClassDescription classDescription = AQClassDescription.createFromProperties(properties, classEntry.getKey());
+            classMapDescriptions.put(classEntry.getKey(), classDescription);
+        }
+    }
+
+    private Instances reorderData(Instances data) throws Exception {
+        Reorder reorderFilter = new Reorder();
+        List<Integer> listToShuffle = new ArrayList<>();
+        List<Integer> listOfNominal = new ArrayList<>();
+        for (int i = 0; i < data.numAttributes() - 1; i++) {
+            if (data.attribute(i).isNominal())
+                listOfNominal.add(i);
+            else
+                listToShuffle.add(i);
+        }
+        Collections.shuffle(listToShuffle);
+        int[] nominalIndexes = ArrayUtils.toPrimitive(listOfNominal.toArray(new Integer[listOfNominal.size()]));
+        int[] reorderedIndexes = ArrayUtils.toPrimitive(listToShuffle.toArray(new Integer[listToShuffle.size()]));
+        int[] indexes = ArrayUtils.addAll(nominalIndexes, reorderedIndexes);
+        reorderFilter.setAttributeIndicesArray(ArrayUtils.add(indexes, data.numAttributes() - 1));
+
+        Instances toReorder = new Instances(data);
+        reorderFilter.setInputFormat(toReorder);
+        return Filter.useFilter(toReorder, reorderFilter);
+    }
+
+    private int countTotalComplexity(Map<String, List<AQRule>> rules) {
+        int totalComplexity = 0;
+        for (List<AQRule> classRules : rules.values())
+            for (AQRule rule : classRules)
+                totalComplexity += rule.getComplexity();
+        return totalComplexity;
+    }
+
+    private String createDataFile(Instances testData) throws IOException {
         StringBuilder builder = new StringBuilder();
         // Описание задачи
         builder.append("Problem_description\n");
         builder.append("{\n");
-        builder.append("\tBuilding rules for classes\n");
+        builder.append("\tBuilding classRules for classes\n");
         builder.append("}\n");
 
         // Список признаков и их шкал
@@ -132,13 +273,22 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
         while (instEnu.hasMoreElements()) {
             Instance instance = (Instance) instEnu.nextElement();
             builder.append("\t").append(testData.classAttribute().value((int) instance.classValue())).append(",");
-            for (int j = 0; j < instance.numValues(); j++) {
-                if (j != instance.classIndex()) {
-                    builder.append(instance.value(j));
-                    if (j < instance.numValues() - 2) {
-                        builder.append(",");
-                    }
+            Enumeration<Attribute> attrEventEnu = testData.enumerateAttributes();
+            int counter = 0;
+            while (attrEventEnu.hasMoreElements()) {
+                Attribute attr = attrEventEnu.nextElement();
+                switch (attr.type()) {
+                    case Attribute.NOMINAL:
+                        builder.append(attr.value((int) instance.value(attr.index())));
+                        break;
+                    case Attribute.NUMERIC:
+                        builder.append(instance.value(attr.index()));
+                        break;
                 }
+                if (counter < testData.numAttributes() - 2) {
+                    builder.append(",");
+                }
+                counter++;
             }
             builder.append("\n");
         }
@@ -154,22 +304,24 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
         return path;
     }
 
-    private void parseResult(String result, Instances testData) {
-        if (getDebug())
-            System.out.println(result);
+    private void parseResult(String result, Instances testData) throws AQClassifierException {
         Map<Integer, CRFeature> attributeMap = new HashMap<>();
 
-        Enumeration attrEnu = testData.enumerateAttributes();
+        Enumeration<Attribute> attrEnu = testData.enumerateAttributes();
         while (attrEnu.hasMoreElements()) {
-            Attribute attr = (Attribute) attrEnu.nextElement();
+            Attribute attr = attrEnu.nextElement();
             CRFeature aqAttr = new CRFeature(attr.name());
-            int discrPos = result.indexOf("attr_" + attr.index() + "_Discretized");
-            if (discrPos != -1) {
-                String line = result.substring(discrPos, result.indexOf("\n", discrPos));
+            if (!attr.isNominal()) {
+                int discrPos = result.indexOf("attr_" + attr.index() + "_Discretized");
+                if (discrPos != -1) {
+                    String line = result.substring(discrPos, result.indexOf("\n", discrPos));
 
-                Scanner scanner = getScanner(line.substring(line.indexOf("[") + 1, line.indexOf("]")), Pattern.compile("\\s|,\\s"));
-                while (scanner.hasNextFloat()) {
-                    aqAttr.getCutPoints().add(scanner.nextDouble());
+                    Scanner scanner = getScanner(line.substring(line.indexOf("[") + 1, line.indexOf("]")), Pattern.compile("\\s|,\\s"));
+                    while (scanner.hasNextFloat()) {
+                        aqAttr.getCutPoints().add(scanner.nextDouble());
+                    }
+                } else {
+                    throw new AQClassifierException("Bad aq result:\n" + result);
                 }
             }
             attributeMap.put(attr.index(), aqAttr);
@@ -242,13 +394,14 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
                             bottom = scanner.nextFloat();
                             top = scanner.nextFloat();
                         } else if (partString.contains("=")) {
-                            int startValue = partString.indexOf("=");
-                            Scanner scanner = getScanner(partString.substring(0, startValue), Pattern.compile("_|=|,"));
+                            Scanner scanner = getScanner(partString, Pattern.compile("_|=|,"));
                             scanner.next();
                             attrIndex = scanner.nextInt();
                             while (scanner.hasNextInt()) {
                                 values.add(scanner.nextInt());
                             }
+                            top = Float.MIN_VALUE;
+                            bottom = Float.MIN_VALUE;
                         }
 
                         CRFeature attribute = attributeMap.get(attrIndex);
@@ -319,7 +472,7 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
 
                 classRules.add(rule);
             }
-            rules.put(className, classRules);
+            this.classRules.put(className, classRules);
         }
     }
 
@@ -331,23 +484,90 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
         return scanner;
     }
 
-    public Map<String, List<AQRule>> getRules() {
-        return rules;
+    public Map<String, List<AQRule>> getClassRules() {
+        return classRules;
+    }
+
+    public Collection<AQClassDescription> getDescriptions() {
+        return classMapDescriptions.values();
+    }
+
+    public boolean isClassifyByRules() {
+        return classifyByRules;
+    }
+
+    public void setClassifyByRules(boolean classifyByRules) {
+        this.classifyByRules = classifyByRules;
+    }
+
+    public boolean isTryToMinimize() {
+        return tryToMinimize;
+    }
+
+    public void setTryToMinimize(boolean tryToMinimize) {
+        this.tryToMinimize = tryToMinimize;
+    }
+
+    public boolean isCumulative() {
+        return isCumulative;
+    }
+
+    public void setCumulative(boolean isCumulative) {
+        this.isCumulative = isCumulative;
+    }
+
+    public int getNumIterations() {
+        return numIterations;
+    }
+
+    public void setNumIterations(int numIterations) {
+        this.numIterations = numIterations;
+    }
+
+    public int getMaximumDescriptionSize() {
+        return maximumDescriptionSize;
+    }
+
+    public void setMaximumDescriptionSize(int maximumDescriptionSize) {
+        this.maximumDescriptionSize = maximumDescriptionSize;
+    }
+
+    public double getCumulativeThreshold() {
+        return cumulativeThreshold;
+    }
+
+    public void setCumulativeThreshold(double cumulativeThreshold) {
+        this.cumulativeThreshold = cumulativeThreshold;
     }
 
     @Override
     public double classifyInstance(Instance instance) throws Exception {
-        for (Map.Entry<String, List<AQRule>> clazz : rules.entrySet()) {
-            boolean contained = false;
-            for (AQRule rule : clazz.getValue()) {
-                if (rule.ifCover(instance)) {
-                    contained = true;
-                    break;
+        if (classifyByRules) {
+            for (Map.Entry<String, List<AQRule>> clazz : classRules.entrySet()) {
+                boolean contained = false;
+                for (AQRule rule : clazz.getValue()) {
+                    if (rule.ifCover(instance)) {
+                        contained = true;
+                        break;
+                    }
                 }
+                if (contained) return classMap.get(clazz.getKey());
             }
-            if (contained) return classMap.get(clazz.getKey());
+            return Utils.missingValue();
+        } else {
+            for (AQClassDescription description : classMapDescriptions.values()) {
+                boolean covered = true;
+                for (CRProperty property : description.getDescription()) {
+                    Attribute attr = instance.dataset().attribute(property.getFeature().getName());
+                    if (!property.cover(instance.value(attr.index()))) {
+                        covered = false;
+                        break;
+                    }
+                }
+                if (covered) return classMap.get(description.getClassName());
+            }
+            return Utils.missingValue();
         }
-        return Utils.missingValue();
     }
 
     public static void main(String[] argv) {

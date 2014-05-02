@@ -2,13 +2,9 @@ package ru.isa.ai.causal.classifiers;
 
 import ru.isa.ai.causal.jsm.JSMAnalyzer;
 import ru.isa.ai.causal.jsm.JSMHypothesis;
-import weka.core.Attribute;
 import weka.core.Instances;
-import weka.core.converters.ArffLoader;
 import weka.core.converters.ConverterUtils;
 
-import java.io.*;
-import java.nio.charset.Charset;
 import java.util.*;
 
 /**
@@ -19,7 +15,6 @@ import java.util.*;
 public class TestExternalAQ {
     public static void main(String[] args) throws Exception {
         AQ21ExternalClassifier cl = new AQ21ExternalClassifier();
-        cl.setDebug(true);
 
         ConverterUtils.DataSource trainSource = new ConverterUtils.DataSource(AQ21ExternalClassifier.class.getClassLoader().getResource("ru/isa/ai/causal/classifiers/data1.arff").getPath());
 
@@ -28,7 +23,7 @@ public class TestExternalAQ {
         Instances tmpInst = trainSource.getDataSet(actualClassIndex);
         cl.buildClassifier(tmpInst);
 
-        Map<String, List<AQRule>> rules = cl.getRules();
+        Map<String, List<AQRule>> rules = cl.getClassRules();
 
         for (Map.Entry<String, List<AQRule>> entry : rules.entrySet()) {
             JSMAnalyzer analyzer = new JSMAnalyzer(AQClassDescription.createFromRules(entry.getValue(), entry.getKey()), tmpInst);
