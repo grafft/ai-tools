@@ -185,7 +185,7 @@ public class JSMAnalyzer {
                 Attribute attr = data.attribute(properties.get(i).getFeature().getName());
                 switch (attr.type()) {
                     case Attribute.NOMINAL:
-                        String value = attr.value((int)event.value(attr.index()));
+                        String value = attr.value((int) event.value(attr.index()));
                         objectVector[i] = (byte) (properties.get(i).coverNominal(value) ? 1 : 0);
                         break;
                     case Attribute.NUMERIC:
@@ -193,7 +193,17 @@ public class JSMAnalyzer {
                         break;
                 }
             }
-            if (keyProperty.cover(event.value(keyAttr.index()))) {
+            boolean isCover = false;
+            switch (keyAttr.type()) {
+                case Attribute.NOMINAL:
+                    String value = keyAttr.value((int) event.value(keyAttr.index()));
+                    isCover = keyProperty.coverNominal(value);
+                    break;
+                case Attribute.NUMERIC:
+                    isCover = keyProperty.cover(event.value(keyAttr.index()));
+                    break;
+            }
+            if (isCover) {
                 factBase.plusExamples.put(data.indexOf(event), objectVector);
             } else {
                 factBase.minusExamples.put(data.indexOf(event), objectVector);

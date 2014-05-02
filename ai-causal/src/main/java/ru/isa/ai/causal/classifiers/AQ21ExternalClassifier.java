@@ -559,10 +559,19 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
                 boolean covered = true;
                 for (CRProperty property : description.getDescription()) {
                     Attribute attr = instance.dataset().attribute(property.getFeature().getName());
-                    if (!property.cover(instance.value(attr.index()))) {
-                        covered = false;
-                        break;
+                    switch (attr.type()) {
+                        case Attribute.NOMINAL:
+                            String value = attr.value((int) instance.value(attr.index()));
+                            if (!property.coverNominal(value))
+                                covered = false;
+                            break;
+                        case Attribute.NUMERIC:
+                            if (!property.cover(instance.value(attr.index())))
+                                covered = false;
+                            break;
                     }
+                    if (!covered)
+                        break;
                 }
                 if (covered) return classMap.get(description.getClassName());
             }
