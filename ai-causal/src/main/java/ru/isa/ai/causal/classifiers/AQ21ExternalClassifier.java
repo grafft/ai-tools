@@ -3,8 +3,11 @@ package ru.isa.ai.causal.classifiers;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.TreeMultimap;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.SystemUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import weka.classifiers.AbstractClassifier;
 import weka.core.*;
 import weka.filters.Filter;
@@ -20,6 +23,8 @@ import java.util.regex.Pattern;
  * Time: 11:18
  */
 public class AQ21ExternalClassifier extends AbstractClassifier {
+
+    private static final Logger logger = LogManager.getLogger(AQ21ExternalClassifier.class.getSimpleName());
 
     private Map<String, List<AQRule>> classRules = new HashMap<>();
     private Map<String, AQClassDescription> classMapDescriptions = new HashMap<>();
@@ -106,9 +111,21 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
         } catch (IOException e) {
             throw new AQClassifierException("Cannot create input file for aq command", e);
         }
-        String[] cmd = {getClass().getClassLoader().getResource("ru/isa/ai/causal/classifiers/" +
-                (SystemUtils.IS_OS_WINDOWS ? "aq21.exe" : "aq21")).getPath(),
-                dataPath};
+        String pathToFile = System.getProperty("java.io.tmpdir") + File.separator + (SystemUtils.IS_OS_WINDOWS ? "aq21.exe" : "aq21");
+        File fileToExec = new File(pathToFile);
+        if (!fileToExec.exists()) {
+            logger.info("Copy aq executable to " + pathToFile);
+            if(SystemUtils.IS_OS_WINDOWS) {
+                InputStream exeStream = getClass().getClassLoader().getResourceAsStream("ru/isa/ai/causal/classifiers/aq21.exe");
+                copyToFile(exeStream, pathToFile);
+                InputStream dllStream = getClass().getClassLoader().getResourceAsStream("ru/isa/ai/causal/classifiers/cc3250.dll");
+                copyToFile(dllStream, System.getProperty("java.io.tmpdir") + File.separator+"cc3250.dll");
+            }else{
+                InputStream stream = getClass().getClassLoader().getResourceAsStream("ru/isa/ai/causal/classifiers/aq21");
+                copyToFile(stream,pathToFile);
+            }
+        }
+        String[] cmd = {pathToFile, dataPath};
         Process process = null;
         try {
             process = Runtime.getRuntime().exec(cmd);
@@ -482,6 +499,17 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
         scanner.useLocale(Locale.US);
 
         return scanner;
+    }
+
+    private void copyToFile(InputStream stream, String filePath) throws AQClassifierException {
+        try {
+            OutputStream out = new FileOutputStream(filePath);
+            IOUtils.copy(stream, out);
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            throw new AQClassifierException("Cannot extract aq execution file to " + filePath);
+        }
     }
 
     public Map<String, List<AQRule>> getClassRules() {

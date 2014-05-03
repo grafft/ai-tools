@@ -1,16 +1,14 @@
 package ru.isa.ai.causal;
 
 import org.apache.commons.cli.*;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.isa.ai.causal.classifiers.*;
 import ru.isa.ai.causal.jsm.JSMAnalyzer;
 import ru.isa.ai.causal.jsm.JSMHypothesis;
 import weka.core.Instances;
+import weka.core.converters.CSVLoader;
 import weka.core.converters.ConverterUtils;
-import weka.filters.Filter;
-import weka.filters.unsupervised.attribute.Reorder;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -18,7 +16,10 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.*;
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Author: Aleksandr Panov
@@ -74,10 +75,33 @@ public class AQJSM {
                 if (line.hasOption("c"))
                     Collections.addAll(classes, line.getOptionValues("c"));
 
-                ConverterUtils.DataSource trainSource = new ConverterUtils.DataSource(dataFile);
-                Instances train = trainSource.getStructure();
-                int actualClassIndex = train.numAttributes() - 1;
-                Instances data = trainSource.getDataSet(actualClassIndex);
+                Instances data;
+                if (ConverterUtils.DataSource.isArff(dataFile)) {
+                    ConverterUtils.DataSource trainSource = new ConverterUtils.DataSource(dataFile);
+                    Instances train = trainSource.getStructure();
+                    int actualClassIndex = train.numAttributes() - 1;
+                    data = trainSource.getDataSet(actualClassIndex);
+                } else if (dataFile.toLowerCase().endsWith("csv")) {
+                    CSVLoader loader = new CSVLoader() {
+                        @Override
+                        public void setSource(InputStream input) throws IOException {
+                            m_structure = null;
+                            m_sourceFile = null;
+                            m_File = null;
+
+                            m_sourceReader = new BufferedReader(new InputStreamReader(input, "cp1251"));
+                        }
+                    };
+                    loader.setSource(new File(dataFile));
+                    loader.setFieldSeparator("\t");
+                    loader.setNominalAttributes("1-3");
+                    loader.setNominalLabelSpecs(new String[]{"1:1,2,3", "2:1,2", "3:1,2"});
+                    ConverterUtils.DataSource trainSource = new ConverterUtils.DataSource(loader);
+                    data = trainSource.getDataSet(0);
+                } else {
+                    throw new AQClassifierException("Not supported file extension: " + dataFile);
+                }
+
 
                 JAXBContext context = JAXBContext.newInstance(new Class<?>[]{ClassDescriptionList.class,
                         AQClassDescription.class, CRProperty.class, CRFeature.class});
