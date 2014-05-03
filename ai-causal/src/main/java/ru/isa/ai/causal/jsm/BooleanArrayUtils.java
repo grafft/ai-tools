@@ -1,7 +1,10 @@
 package ru.isa.ai.causal.jsm;
 
+import org.apache.commons.lang.ArrayUtils;
+
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Random;
 
 /**
  * Author: Aleksandr Panov
@@ -88,4 +91,15 @@ public class BooleanArrayUtils {
         return result;
     }
 
+    public static byte[] generateRandomArray(int length) {
+        Random random = new Random();
+        byte[] output = new byte[length];
+        for (int i = 0; i < length; i++)
+            output[i] = (byte) (random.nextDouble() < 0.5 ? 0 : 1);
+        return output;
+    }
+
+    public static byte[] join(byte[] firstArray, byte[] secondArray){
+        return ArrayUtils.addAll(firstArray, secondArray);
+    }
 }

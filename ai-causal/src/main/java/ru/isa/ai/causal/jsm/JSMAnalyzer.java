@@ -1,5 +1,7 @@
 package ru.isa.ai.causal.jsm;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.isa.ai.causal.classifiers.AQClassDescription;
 import ru.isa.ai.causal.classifiers.CRProperty;
 import weka.core.Attribute;
@@ -14,6 +16,8 @@ import java.util.*;
  * Time: 11:21
  */
 public class JSMAnalyzer {
+    private static final Logger logger = LogManager.getLogger(JSMAnalyzer.class.getSimpleName());
+
     private AQClassDescription classDescription;
     private Instances data;
     private int maxHypothesisLength = 3;
@@ -44,6 +48,8 @@ public class JSMAnalyzer {
                 }
                 if (cause.getValue().size() > 0)
                     causes.add(cause);
+            } else {
+                logger.info("Fact base is conflicted for property " + property.toString());
             }
         }
         return causes;
@@ -53,7 +59,7 @@ public class JSMAnalyzer {
         this.maxHypothesisLength = maxHypothesisLength;
     }
 
-    private List<Intersection> reasons(FactBase factBase) {
+    public List<Intersection> reasons(FactBase factBase) {
         List<Intersection> hypothesis = new ArrayList<>();
 
         // 1. Находим минимальные пересечения над объектами, обладающими свойством
@@ -212,9 +218,9 @@ public class JSMAnalyzer {
         return factBase;
     }
 
-    private class FactBase {
-        Map<Integer, byte[]> plusExamples = new HashMap<>();
-        Map<Integer, byte[]> minusExamples = new HashMap<>();
+    public class FactBase {
+        public Map<Integer, byte[]> plusExamples = new HashMap<>();
+        public Map<Integer, byte[]> minusExamples = new HashMap<>();
         List<CRProperty> universe;
 
         void reduceEquals() {
@@ -249,9 +255,9 @@ public class JSMAnalyzer {
         }
     }
 
-    private class Intersection implements Comparable<Intersection> {
-        byte[] value;
-        List<Integer> generators = new ArrayList<>();
+    public class Intersection implements Comparable<Intersection> {
+        public byte[] value;
+        public List<Integer> generators = new ArrayList<>();
 
         private Intersection(byte[] value, int objectId) {
             this.value = value;
