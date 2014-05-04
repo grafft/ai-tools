@@ -21,7 +21,7 @@ public interface ISpatialPooler {
      *                         columns use 2000, or [2000]. For a three dimensional
      *                         topology of 32x64x16 use [32, 64, 16].
      */
-    void initialize(int[] inputDimensions, int[] columnDimensions);
+    void initialize(int[] inputDimensions, int[] columnDimensions) throws SpatialPoolerInitializationException;
 
     /**
      * This is the main workshorse method of the SpatialPooler class. This

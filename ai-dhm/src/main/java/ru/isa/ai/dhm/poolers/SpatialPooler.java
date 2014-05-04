@@ -1,5 +1,21 @@
 package ru.isa.ai.dhm.poolers;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.la4j.factory.Basic1DFactory;
+import org.la4j.factory.Factory;
+import org.la4j.matrix.sparse.CRSMatrix;
+import org.la4j.matrix.sparse.SparseMatrix;
+import org.la4j.vector.*;
+import org.la4j.vector.Vector;
+import org.la4j.vector.dense.BasicVector;
+import org.la4j.vector.functor.VectorPredicate;
+import ru.isa.ai.dhm.MathUtils;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.*;
+
 /**
  * The Spatial Pooler is responsible for creating a sparse distributed
  * representation of the input. Given an input it computes a set of sparse
@@ -20,6 +36,11 @@ package ru.isa.ai.dhm.poolers;
  * }
  */
 public class SpatialPooler implements ISpatialPooler {
+
+    private final Logger logger = LogManager.getLogger(SpatialPooler.class.getSimpleName());
+    private final String SP_PROP_FILENAME = "dhm_sp.properties";
+    private final int PRECISION = 5;
+
     /**
      * This parameter deteremines the extent of the
      * input that each column can potentially be connected to. This
@@ -151,14 +172,320 @@ public class SpatialPooler implements ISpatialPooler {
      * linearly extrapolated from these 2 endpoints.
      */
     private double maxBoost = 10.0;
-    /**
-     * spVerbosity level: 0, 1, 2, or 3
-     */
-    private long spVerbosity = 0;
+
+    private int[] inputDimensions;
+    private int numInputs = 1;
+    private int[] columnDimensions;
+    private int numColumns = 1;
+
+    private int inhibitionRadius = 0;
+    private double synPermBelowStimulusInc;
+    private double synPermTrimThreshold;
+    private double synPermMin = 0.0;
+    private double synPermMax = 1.0;
+
+    private long updatePeriod = 50;
+    private double initConnectedPct = 0.5;
+    private int iterationNum = 0;
+    private int iterationLearnNum = 0;
+
+    private SparseMatrix permanences;
+    private SparseMatrix potentialPools;
+    private SparseMatrix connectedSynapses;
+    private List<Integer> connectedCounts;
+
+    private BitSet overlaps;
+    private List<Double> overlapsPct;
+    private List<Double> boostedOverlaps;
+    private List<Integer> activeColumns;
+    private List<Double> tieBreaker;
+
+    private List<Double> boostFactors;
+    private List<Double> overlapDutyCycles;
+    private List<Double> activeDutyCycles;
+    private List<Double> minOverlapDutyCycles;
+    private List<Double> minActiveDutyCycles;
+
+    private Random random = new Random();
 
     @Override
-    public void initialize(int[] inputDimensions, int[] columnDimensions) {
+    public void initialize(int[] inputDimensions, int[] columnDimensions) throws SpatialPoolerInitializationException {
+        this.inputDimensions = new int[inputDimensions.length];
+        for (int i = 0; i < inputDimensions.length; i++) {
+            numInputs *= inputDimensions[i];
+            this.inputDimensions[i] = inputDimensions[i];
+        }
+        this.columnDimensions = new int[columnDimensions.length];
+        for (int i = 0; i < columnDimensions.length; i++) {
+            numColumns *= columnDimensions[i];
+            this.columnDimensions[i] = columnDimensions[i];
+        }
 
+        loadProperties();
+        checkProperties();
+
+        tieBreaker = new ArrayList<>(numColumns);
+        for (int i = 0; i < numColumns; i++)
+            tieBreaker.set(i, 0.01 * random.nextDouble());
+        potentialPools = new CRSMatrix(numColumns, numInputs);
+        permanences = new CRSMatrix(numColumns, numInputs);
+        connectedSynapses = new CRSMatrix(numColumns, numInputs);
+        connectedCounts = new ArrayList<>(numColumns);
+
+        overlapDutyCycles = new ArrayList<>(numColumns);
+        Collections.fill(overlapDutyCycles, 0.0);
+        activeDutyCycles = new ArrayList<>(numColumns);
+        Collections.fill(activeDutyCycles, 0.0);
+        minOverlapDutyCycles = new ArrayList<>(numColumns);
+        Collections.fill(minOverlapDutyCycles, 0.0);
+        minActiveDutyCycles = new ArrayList<>(numColumns);
+        Collections.fill(minActiveDutyCycles, 0.0);
+        boostFactors = new ArrayList<>(numColumns);
+        Collections.fill(boostFactors, 1.0);
+        overlaps = new BitSet(numColumns);
+        overlapsPct = new ArrayList<>(numColumns);
+        boostedOverlaps = new ArrayList<>(numColumns);
+
+        for (int i = 0; i < numColumns; i++) {
+            Vector potential = mapPotential1D(1, true);
+            potentialPools.setRow(i, potential);
+            Vector perm = initPermanence(potential, initConnectedPct);
+            updatePermanencesForColumn(perm, i, true);
+        }
+
+        updateInhibitionRadius();
+    }
+
+    private Vector mapPotential1D(int column, boolean wrapAround) {
+        double ratio = column / Math.max(numColumns - 1, 1.0);
+        column = (int) ((numInputs - 1) * ratio);
+
+        Vector potential = new BasicVector(numInputs);
+        potential.assign(0);
+        List<Integer> indices = new ArrayList<>();
+        for (int i = -potentialRadius + column; i <= potentialRadius + column; i++) {
+            if (wrapAround) {
+                indices.add((i + numInputs) % numInputs);
+            } else if (i >= 0 && i < numInputs) {
+                indices.add(i);
+            }
+        }
+
+        Set<Integer> unique = new TreeSet<>(indices);
+        indices = Arrays.asList((Integer[]) unique.toArray());
+        Collections.shuffle(indices, random);
+
+        long numPotential = Math.round(indices.size() * potentialPct);
+        for (int i = 0; i < numPotential; i++) {
+            potential.set(indices.get(i), 1.0);
+        }
+
+        return potential;
+    }
+
+    private Vector initPermanence(Vector potential, double connectedPct) {
+        Vector perm = new BasicVector(numInputs);
+        perm.assign(0);
+        for (int i = 0; i < numInputs; i++) {
+            if (potential.get(i) < 1)
+                continue;
+
+            if (random.nextDouble() <= connectedPct) {
+                perm.set(i, MathUtils.roundWithPrecision(synPermConnected + random.nextDouble() * synPermActiveInc / 4.0, PRECISION));
+            } else {
+                perm.set(i, MathUtils.roundWithPrecision(synPermConnected * random.nextDouble(), PRECISION));
+            }
+            perm.set(i, perm.get(i) < synPermTrimThreshold ? 0 : perm.get(i));
+        }
+
+        return perm;
+    }
+
+    private void updatePermanencesForColumn(Vector perm, int column, boolean raisePerm) {
+        Vector connectedSparse = new BasicVector();
+        int numConnected;
+        if (raisePerm) {
+            Vector potential = potentialPools.getRow(column);
+            raisePermanencesToThreshold(perm, potential);
+        }
+
+        numConnected = 0;
+        for (int i = 0; i < perm.length(); ++i) {
+            if (perm.get(i) >= synPermConnected) {
+                connectedSparse.add(i);
+                ++numConnected;
+            }
+        }
+
+        clip(perm, true);
+        connectedSynapses.setRow(column, connectedSparse);
+        permanences.setRow(column, perm);
+        connectedCounts.set(column, numConnected);
+    }
+
+    private void clip(Vector perm, boolean trim) {
+        double minVal = trim ? synPermTrimThreshold : synPermMin;
+        for (int i = 0; i < perm.length(); i++) {
+            perm.set(i, perm.get(i) > synPermMax ? synPermMax : perm.get(i));
+            perm.set(i, perm.get(i) < minVal ? synPermMin : perm.get(i));
+        }
+    }
+
+    private int countConnected(Vector perm) {
+        int numConnected = 0;
+        for (int i = 0; i < perm.length(); i++) {
+            if (perm.get(i) > synPermConnected) {
+                ++numConnected;
+            }
+        }
+        return numConnected;
+    }
+
+    private int raisePermanencesToThreshold(Vector perm, Vector potential) {
+        clip(perm, false);
+        int numConnected;
+        while (true) {
+            numConnected = countConnected(perm);
+            if (numConnected >= stimulusThreshold)
+                break;
+
+            for (int i = 0; i < potential.length(); i++) {
+                int index = (int) potential.get(i);
+                perm.set(index, perm.get(index) + synPermBelowStimulusInc);
+            }
+        }
+        return numConnected;
+    }
+
+    private void updateInhibitionRadius() {
+        if (globalInhibition) {
+            inhibitionRadius = MathUtils.max(columnDimensions);
+            return;
+        }
+
+        double connectedSpan = 0;
+        for (int i = 0; i < numColumns; i++) {
+            connectedSpan += avgConnectedSpanForColumnND(i);
+        }
+        connectedSpan /= numColumns;
+        double columnsPerInput = avgColumnsPerInput();
+        double diameter = connectedSpan * columnsPerInput;
+        double radius = (diameter - 1) / 2.0;
+        radius = Math.max(1.0, radius);
+        inhibitionRadius = (int) Math.round(radius);
+    }
+
+    private double avgConnectedSpanForColumnND(int column) {
+        Vector connectedSparse = connectedSynapses.getRow(column);
+        Vector maxCoord = new BasicVector(inputDimensions.length);
+        maxCoord.assign(0);
+        Vector minCoord = new BasicVector(inputDimensions.length);
+        minCoord.assign(MathUtils.max(inputDimensions));
+
+        CoordinateConverterND conv = new CoordinateConverterND(inputDimensions);
+
+        if (connectedSparse.length() == 0)
+            return 0;
+
+        Vector columnCoord = new BasicVector();
+        for (int i = 0; i < connectedSparse.length(); i++) {
+            conv.toCoord((int) connectedSparse.get(i), columnCoord);
+            for (int j = 0; j < columnCoord.length(); j++) {
+                maxCoord.set(j, Math.max(maxCoord.get(j), columnCoord.get(j)));
+                minCoord.set(j, Math.min(minCoord.get(j), columnCoord.get(j)));
+            }
+        }
+
+        double totalSpan = 0;
+        for (int j = 0; j < inputDimensions.length; j++) {
+            totalSpan += maxCoord.get(j) - minCoord.get(j) + 1;
+        }
+
+        return totalSpan / inputDimensions.length;
+
+    }
+
+    private double avgColumnsPerInput() {
+        int numDim = Math.max(columnDimensions.length, inputDimensions.length);
+        double columnsPerInput = 0;
+        for (int i = 0; i < numDim; i++) {
+            double col = (i < columnDimensions.length) ? columnDimensions[i] : 1;
+            double input = (i < inputDimensions.length) ? inputDimensions[i] : 1;
+            columnsPerInput += col / input;
+        }
+        return columnsPerInput / numDim;
+    }
+
+    private void checkProperties() throws SpatialPoolerInitializationException {
+        if (numColumns <= 0)
+            throw new SpatialPoolerInitializationException("Column dimensions must be non zero positive values");
+        if (numInputs <= 0)
+            throw new SpatialPoolerInitializationException("Input dimensions must be non zero positive values");
+        if (numActiveColumnsPerInhArea <= 0 && (localAreaDensity <= 0 || localAreaDensity > 0.5))
+            throw new SpatialPoolerInitializationException("Or numActiveColumnsPerInhArea > 0 or localAreaDensity > 0 " +
+                    "and localAreaDensity <= 0.5");
+        if (potentialPct <= 0 || potentialPct > 1)
+            throw new SpatialPoolerInitializationException("potentialPct must be > 0 and <= 1");
+    }
+
+    private void loadProperties() throws SpatialPoolerInitializationException {
+        Properties properties = new Properties();
+        try {
+            properties.load(new FileInputStream(SP_PROP_FILENAME));
+            for (String name : properties.stringPropertyNames()) {
+                switch (name) {
+                    case "potentialRadius":
+                        potentialRadius = Integer.parseInt(properties.getProperty(name));
+                        potentialRadius = potentialRadius > numInputs ? numInputs : potentialRadius;
+                        break;
+                    case "potentialPct":
+                        potentialPct = Double.parseDouble(properties.getProperty(name));
+                        break;
+                    case "globalInhibition":
+                        globalInhibition = Boolean.parseBoolean(properties.getProperty(name));
+                        break;
+                    case "localAreaDensity":
+                        localAreaDensity = Double.parseDouble(properties.getProperty(name));
+                        break;
+                    case "numActiveColumnsPerInhArea":
+                        numActiveColumnsPerInhArea = Long.parseLong(properties.getProperty(name));
+                        break;
+                    case "stimulusThreshold":
+                        stimulusThreshold = Long.parseLong(properties.getProperty(name));
+                        break;
+                    case "synPermInactiveDec":
+                        synPermInactiveDec = Double.parseDouble(properties.getProperty(name));
+                        break;
+                    case "synPermActiveInc":
+                        synPermActiveInc = Double.parseDouble(properties.getProperty(name));
+                        synPermTrimThreshold = synPermActiveInc / 2.0;
+                        break;
+                    case "synPermConnected":
+                        synPermConnected = Double.parseDouble(properties.getProperty(name));
+                        synPermBelowStimulusInc = synPermConnected / 10.0;
+                        break;
+                    case "minPctOverlapDutyCycles":
+                        minPctOverlapDutyCycles = Double.parseDouble(properties.getProperty(name));
+                        break;
+                    case "minPctActiveDutyCycles":
+                        minPctActiveDutyCycles = Double.parseDouble(properties.getProperty(name));
+                        break;
+                    case "dutyCyclePeriod":
+                        dutyCyclePeriod = Long.parseLong(properties.getProperty(name));
+                        break;
+                    case "maxBoost":
+                        maxBoost = Double.parseDouble(properties.getProperty(name));
+                        break;
+                    default:
+                        logger.error("Illegal property name: " + name);
+                        break;
+                }
+            }
+        } catch (IOException e) {
+            throw new SpatialPoolerInitializationException("Cannot load properties file " + SP_PROP_FILENAME, e);
+        } catch (NumberFormatException nfe) {
+            throw new SpatialPoolerInitializationException("Wrong property value in property file " + SP_PROP_FILENAME, nfe);
+        }
     }
 
     @Override
