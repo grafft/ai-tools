@@ -2,6 +2,8 @@ package ru.isa.ai.dhm.poolers;
 
 import org.la4j.vector.Vector;
 
+import java.util.List;
+
 /**
  * Created by GraffT on 04.05.2014.
  */
@@ -19,8 +21,8 @@ public class CoordinateConverterND {
         }
     }
 
-    public void toCoord(int index, Vector coord) {
-        coord.resize(0);
+    public void toCoord(int index, List<Integer> coord) {
+        coord.clear();
         for (int i = 0; i < bounds.length; i++) {
             coord.add((index / bounds[i]) % inputDimensions[i]);
         }

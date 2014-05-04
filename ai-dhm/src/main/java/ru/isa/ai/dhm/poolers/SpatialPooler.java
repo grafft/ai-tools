@@ -1,15 +1,16 @@
 package ru.isa.ai.dhm.poolers;
 
+import cern.colt.function.tint.IntProcedure;
+import cern.colt.matrix.tbit.BitMatrix;
+import cern.colt.matrix.tbit.BitVector;
+import cern.colt.matrix.tdouble.DoubleMatrix1D;
+import cern.colt.matrix.tdouble.impl.DenseDoubleMatrix1D;
+import cern.colt.matrix.tdouble.impl.SparseDoubleMatrix2D;
+import cern.colt.matrix.tint.IntMatrix1D;
+import cern.colt.matrix.tint.impl.DenseIntMatrix1D;
+import cern.colt.matrix.tint.impl.SparseIntMatrix2D;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.la4j.factory.Basic1DFactory;
-import org.la4j.factory.Factory;
-import org.la4j.matrix.sparse.CRSMatrix;
-import org.la4j.matrix.sparse.SparseMatrix;
-import org.la4j.vector.*;
-import org.la4j.vector.Vector;
-import org.la4j.vector.dense.BasicVector;
-import org.la4j.vector.functor.VectorPredicate;
 import ru.isa.ai.dhm.MathUtils;
 
 import java.io.FileInputStream;
@@ -189,12 +190,12 @@ public class SpatialPooler implements ISpatialPooler {
     private int iterationNum = 0;
     private int iterationLearnNum = 0;
 
-    private SparseMatrix permanences;
-    private SparseMatrix potentialPools;
-    private SparseMatrix connectedSynapses;
+    private SparseDoubleMatrix2D permanences;
+    private BitMatrix potentialPools;
+    private BitMatrix connectedSynapses;
     private List<Integer> connectedCounts;
 
-    private BitSet overlaps;
+    private List<Integer> overlaps;
     private List<Double> overlapsPct;
     private List<Double> boostedOverlaps;
     private List<Integer> activeColumns;
@@ -227,9 +228,9 @@ public class SpatialPooler implements ISpatialPooler {
         tieBreaker = new ArrayList<>(numColumns);
         for (int i = 0; i < numColumns; i++)
             tieBreaker.set(i, 0.01 * random.nextDouble());
-        potentialPools = new CRSMatrix(numColumns, numInputs);
-        permanences = new CRSMatrix(numColumns, numInputs);
-        connectedSynapses = new CRSMatrix(numColumns, numInputs);
+        potentialPools = new BitMatrix(numColumns, numInputs);
+        permanences = new SparseDoubleMatrix2D(numColumns, numInputs);
+        connectedSynapses = new BitMatrix(numColumns, numInputs);
         connectedCounts = new ArrayList<>(numColumns);
 
         overlapDutyCycles = new ArrayList<>(numColumns);
@@ -242,26 +243,26 @@ public class SpatialPooler implements ISpatialPooler {
         Collections.fill(minActiveDutyCycles, 0.0);
         boostFactors = new ArrayList<>(numColumns);
         Collections.fill(boostFactors, 1.0);
-        overlaps = new BitSet(numColumns);
+        overlaps = new ArrayList<>(numColumns);
         overlapsPct = new ArrayList<>(numColumns);
         boostedOverlaps = new ArrayList<>(numColumns);
 
         for (int i = 0; i < numColumns; i++) {
-            Vector potential = mapPotential1D(1, true);
-            potentialPools.setRow(i, potential);
-            Vector perm = initPermanence(potential, initConnectedPct);
+            BitVector potential = mapPotential1D(1, true);
+            MathUtils.setRow(potentialPools, potential, i);
+            DoubleMatrix1D perm = initPermanence(potential, initConnectedPct);
             updatePermanencesForColumn(perm, i, true);
         }
 
         updateInhibitionRadius();
     }
 
-    private Vector mapPotential1D(int column, boolean wrapAround) {
+    private BitVector mapPotential1D(int column, boolean wrapAround) {
         double ratio = column / Math.max(numColumns - 1, 1.0);
         column = (int) ((numInputs - 1) * ratio);
 
-        Vector potential = new BasicVector(numInputs);
-        potential.assign(0);
+        BitVector potential = new BitVector(numInputs);
+        potential.clear();
         List<Integer> indices = new ArrayList<>();
         for (int i = -potentialRadius + column; i <= potentialRadius + column; i++) {
             if (wrapAround) {
@@ -277,17 +278,17 @@ public class SpatialPooler implements ISpatialPooler {
 
         long numPotential = Math.round(indices.size() * potentialPct);
         for (int i = 0; i < numPotential; i++) {
-            potential.set(indices.get(i), 1.0);
+            potential.set(indices.get(i));
         }
 
         return potential;
     }
 
-    private Vector initPermanence(Vector potential, double connectedPct) {
-        Vector perm = new BasicVector(numInputs);
+    private DoubleMatrix1D initPermanence(BitVector potential, double connectedPct) {
+        DoubleMatrix1D perm = new DenseDoubleMatrix1D(numInputs);
         perm.assign(0);
         for (int i = 0; i < numInputs; i++) {
-            if (potential.get(i) < 1)
+            if (!potential.get(i))
                 continue;
 
             if (random.nextDouble() <= connectedPct) {
@@ -301,47 +302,49 @@ public class SpatialPooler implements ISpatialPooler {
         return perm;
     }
 
-    private void updatePermanencesForColumn(Vector perm, int column, boolean raisePerm) {
-        Vector connectedSparse = new BasicVector();
+    private void updatePermanencesForColumn(DoubleMatrix1D perm, int column, boolean raisePerm) {
+        BitVector connectedSparse = new BitVector(numColumns);
         int numConnected;
         if (raisePerm) {
-            Vector potential = potentialPools.getRow(column);
+            BitVector potential = MathUtils.getRow(potentialPools, column);
             raisePermanencesToThreshold(perm, potential);
         }
 
         numConnected = 0;
-        for (int i = 0; i < perm.length(); ++i) {
-            if (perm.get(i) >= synPermConnected) {
-                connectedSparse.add(i);
-                ++numConnected;
+        for (int i = 0; i < perm.size(); ++i) {
+            if (perm.getQuick(i) >= synPermConnected) {
+                connectedSparse.set(i);
+                numConnected++;
             }
         }
 
         clip(perm, true);
-        connectedSynapses.setRow(column, connectedSparse);
-        permanences.setRow(column, perm);
+        MathUtils.setRow(connectedSynapses, connectedSparse, column);
+        //MathUtils.setRow(permanences, perm, column);
         connectedCounts.set(column, numConnected);
     }
 
-    private void clip(Vector perm, boolean trim) {
+    private void clip(DoubleMatrix1D perm, boolean trim) {
         double minVal = trim ? synPermTrimThreshold : synPermMin;
-        for (int i = 0; i < perm.length(); i++) {
-            perm.set(i, perm.get(i) > synPermMax ? synPermMax : perm.get(i));
-            perm.set(i, perm.get(i) < minVal ? synPermMin : perm.get(i));
+        for (int i = 0; i < perm.size(); i++) {
+            double value = perm.getQuick(i);
+            perm.set(i, value > synPermMax ? synPermMax : value);
+            value = perm.getQuick(i);
+            perm.set(i, value < minVal ? synPermMin : value);
         }
     }
 
-    private int countConnected(Vector perm) {
+    private int countConnected(DoubleMatrix1D perm) {
         int numConnected = 0;
-        for (int i = 0; i < perm.length(); i++) {
-            if (perm.get(i) > synPermConnected) {
-                ++numConnected;
+        for (int i = 0; i < perm.size(); i++) {
+            if (perm.getQuick(i) > synPermConnected) {
+                numConnected++;
             }
         }
         return numConnected;
     }
 
-    private int raisePermanencesToThreshold(Vector perm, Vector potential) {
+    private int raisePermanencesToThreshold(DoubleMatrix1D perm, BitVector potential) {
         clip(perm, false);
         int numConnected;
         while (true) {
@@ -349,9 +352,9 @@ public class SpatialPooler implements ISpatialPooler {
             if (numConnected >= stimulusThreshold)
                 break;
 
-            for (int i = 0; i < potential.length(); i++) {
-                int index = (int) potential.get(i);
-                perm.set(index, perm.get(index) + synPermBelowStimulusInc);
+            for (int i = 0; i < potential.size(); i++) {
+                if (potential.getQuick(i))
+                    perm.set(i, perm.getQuick(i) + synPermBelowStimulusInc);
             }
         }
         return numConnected;
@@ -376,21 +379,22 @@ public class SpatialPooler implements ISpatialPooler {
     }
 
     private double avgConnectedSpanForColumnND(int column) {
-        Vector connectedSparse = connectedSynapses.getRow(column);
-        Vector maxCoord = new BasicVector(inputDimensions.length);
+        BitVector connectedSparse = MathUtils.getRow(connectedSynapses, column);
+        IntMatrix1D maxCoord = new DenseIntMatrix1D(inputDimensions.length);
         maxCoord.assign(0);
-        Vector minCoord = new BasicVector(inputDimensions.length);
+        IntMatrix1D minCoord = new DenseIntMatrix1D(inputDimensions.length);
         minCoord.assign(MathUtils.max(inputDimensions));
 
         CoordinateConverterND conv = new CoordinateConverterND(inputDimensions);
 
-        if (connectedSparse.length() == 0)
+        if (connectedSparse.size() == 0)
             return 0;
 
-        Vector columnCoord = new BasicVector();
-        for (int i = 0; i < connectedSparse.length(); i++) {
-            conv.toCoord((int) connectedSparse.get(i), columnCoord);
-            for (int j = 0; j < columnCoord.length(); j++) {
+        List<Integer> columnCoord = new ArrayList<>();
+        for (int i = 0; i < connectedSparse.size(); i++) {
+            if(connectedSparse.get(i))
+                conv.toCoord(i, columnCoord);
+            for (int j = 0; j < columnCoord.size(); j++) {
                 maxCoord.set(j, Math.max(maxCoord.get(j), columnCoord.get(j)));
                 minCoord.set(j, Math.min(minCoord.get(j), columnCoord.get(j)));
             }
@@ -489,7 +493,47 @@ public class SpatialPooler implements ISpatialPooler {
     }
 
     @Override
-    public void compute(byte[] inputVector, boolean learn, byte[] activeVector) {
+    public void compute(BitVector inputVector, boolean learn, BitVector activeVector) {
+        iterationNum++;
+        if (learn) {
+            iterationLearnNum++;
+        }
+//        calculateOverlap(inputVector, overlaps);
+//        calculateOverlapPct(overlaps, overlapsPct);
+//
+//        if (learn) {
+//            boostOverlaps(overlaps, boostedOverlaps);
+//        } else {
+//            for (int i = 0; i < overlaps.size(); i++)
+//                boostedOverlaps.set(i, overlaps.get(i) ? 1.0 : 0.0);
+//        }
+//
+//        inhibitColumns(boostedOverlaps, activeColumns);
+//        toDense(activeColumns, activeVector, numColumns);
+//
+//        if (learn) {
+//            adaptSynapses(inputVector, activeColumns);
+//            updateDutyCycles(overlaps, activeVector);
+//            bumpUpWeakColumns();
+//            updateBoostFactors();
+//            if (isUpdateRound()) {
+//                updateInhibitionRadius();
+//                updateMinDutyCycles();
+//            }
+//        } else {
+//            stripNeverLearned(activeVector);
+//        }
+    }
 
+    private void calculateOverlap(BitSet inputVector, List<Integer> overlaps) {
+        overlaps.clear();
+//        overlaps = connectedSynapses.rightVecSumAtNZ(inputVector, numInputs);
+//        if (stimulusThreshold > 0) {
+//            for (int i = 0; i < numColumns; i++) {
+//                if (overlaps.get(i) < stimulusThreshold) {
+//                    overlaps.set(i, 0);
+//                }
+//            }
+//        }
     }
 }

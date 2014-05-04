@@ -1,5 +1,9 @@
 package ru.isa.ai.dhm.poolers;
 
+import cern.colt.matrix.tbit.BitVector;
+
+import java.util.BitSet;
+
 /**
  * Created by GraffT on 03.05.2014.
  */
@@ -28,7 +32,6 @@ public interface ISpatialPooler {
      * method takes an input vector and computes the set of output active
      * columns. If 'learn' is set to True, this method also performs
      * learning.
-     *
      * @param inputVector  An array of integer 0's and 1's that comprises
      *                     the input to the spatial pooler. The length of the
      *                     array must match the total number of input bits implied by
@@ -44,13 +47,11 @@ public interface ISpatialPooler {
      *                     is off, boosting is turned off and columns that have never won
      *                     will be removed from activeVector.
      * @param activeVector An array representing the winning columns after
-     *                     inhinition. The size of the array is equal to the number of
-     *                     columns (also returned by the method getNumColumns). This array
-     *                     will be populated with 1's at the indices of the active columns,
-     *                     and 0's everywhere else. In the case where the output is
-     *                     multi-dimensional, activeVector represents a flattened array
-     *                     of outputs.
+*                     inhinition. The size of the array is equal to the number of
+*                     columns (also returned by the method getNumColumns). This array
+*                     will be populated with 1's at the indices of the active columns,
+*                     and 0's everywhere else. In the case where the output is
      */
-    void compute(byte[] inputVector, boolean learn, byte[] activeVector);
+    void compute(BitVector inputVector, boolean learn, BitVector activeVector);
 
 }

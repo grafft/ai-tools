@@ -1,5 +1,8 @@
 package ru.isa.ai.dhm;
 
+import cern.colt.matrix.tbit.BitMatrix;
+import cern.colt.matrix.tbit.BitVector;
+import cern.colt.matrix.tint.impl.SparseIntMatrix2D;
 import org.la4j.vector.Vector;
 
 /**
@@ -21,5 +24,13 @@ public final class MathUtils {
                 max = columnDimension;
         }
         return max;
+    }
+
+    public static void setRow(BitMatrix matrix, BitVector row, int rowIndex) {
+        matrix.toBitVector().replaceFromToWith(matrix.columns() * rowIndex, (matrix.columns() + 1) * rowIndex, row, 0);
+    }
+
+    public static BitVector getRow(BitMatrix matrix, int rowIndex) {
+        return matrix.part(0, rowIndex, matrix.columns(), 1).toBitVector();
     }
 }
