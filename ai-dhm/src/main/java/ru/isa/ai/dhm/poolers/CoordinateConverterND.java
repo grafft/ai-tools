@@ -27,4 +27,12 @@ public class CoordinateConverterND {
             coord.add((index / bounds[i]) % inputDimensions[i]);
         }
     }
+
+    public int toIndex(List<Integer> coords) {
+        int index = 0;
+        for (int i = 0; i < coords.size(); i++)
+            index += coords.get(i) * bounds[i];
+        return index;
+
+    }
 }
