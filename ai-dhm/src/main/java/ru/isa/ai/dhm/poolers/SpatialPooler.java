@@ -223,11 +223,13 @@ public class SpatialPooler implements ISpatialPooler {
     @Override
     public void initialize(int[] inputDimensions, int[] columnDimensions) throws SpatialPoolerInitializationException {
         this.inputDimensions = new int[inputDimensions.length];
+        numInputs = 1;
         for (int i = 0; i < inputDimensions.length; i++) {
             numInputs *= inputDimensions[i];
             this.inputDimensions[i] = inputDimensions[i];
         }
         this.columnDimensions = new int[columnDimensions.length];
+        numColumns = 1;
         for (int i = 0; i < columnDimensions.length; i++) {
             numColumns *= columnDimensions[i];
             this.columnDimensions[i] = columnDimensions[i];
@@ -331,7 +333,7 @@ public class SpatialPooler implements ISpatialPooler {
     /**
      * Обновляет связи колонки
      *
-     * @param perm    - размер numInput
+     * @param perm        - размер numInput
      * @param columnIndex
      * @param raisePerm
      */
@@ -423,13 +425,12 @@ public class SpatialPooler implements ISpatialPooler {
         if (connectedSparse.size() == 0)
             return 0;
 
-        final List<Integer> columnCoord = new ArrayList<>();
         connectedSparse.forEachIndexFromToInState(0, connectedSparse.size() - 1, true, new IntProcedure() {
             @Override
             public boolean apply(int index) {
-                conv.toCoord(index, columnCoord);
-                for (int j = 0; j < columnCoord.size(); j++) {
-                    int coord = columnCoord.get(j);
+                int[] columnCoord = conv.toCoord(index);
+                for (int j = 0; j < columnCoord.length; j++) {
+                    int coord = columnCoord[j];
                     maxCoord.set(j, Math.max(maxCoord.get(j), coord));
                     minCoord.set(j, Math.min(minCoord.get(j), coord));
                 }
@@ -513,6 +514,8 @@ public class SpatialPooler implements ISpatialPooler {
                         synPermBelowStimulusInc = Double.parseDouble(properties.getProperty(name));
                         synPermBelowStimulusIncInited = true;
                         break;
+                    case "minPctOverlapDutyCycles":
+                        minPctOverlapDutyCycles = Double.parseDouble(properties.getProperty(name));
                     case "minPctActiveDutyCycles":
                         minPctActiveDutyCycles = Double.parseDouble(properties.getProperty(name));
                         break;
@@ -522,6 +525,8 @@ public class SpatialPooler implements ISpatialPooler {
                     case "maxBoost":
                         maxBoost = Double.parseDouble(properties.getProperty(name));
                         break;
+                    case "inhibitionRadius":
+                        inhibitionRadius = Integer.parseInt(properties.getProperty(name));
                     default:
                         logger.error("Illegal property name: " + name);
                         break;
@@ -731,14 +736,13 @@ public class SpatialPooler implements ISpatialPooler {
         List<Integer> neighbors = new ArrayList<>();
         CoordinateConverterND conv = new CoordinateConverterND(columnDimensions);
 
-        List<Integer> columnCoord = new ArrayList<>();
-        conv.toCoord(column, columnCoord);
+        int[] columnCoord = conv.toCoord(column);
 
         List<List<Integer>> rangeND = new ArrayList<>();
 
         for (int i = 0; i < columnDimensions.length; i++) {
             List<Integer> curRange = new ArrayList<>();
-            for (int j = columnCoord.get(i) - inhibitionRadius; j <= columnCoord.get(i) + inhibitionRadius; j++) {
+            for (int j = columnCoord[i] - inhibitionRadius; j <= columnCoord[i] + inhibitionRadius; j++) {
                 if (wrapAround) {
                     curRange.add((j + columnDimensions[i]) % columnDimensions[i]);
                 } else if (j >= 0 && j < columnDimensions[i]) {
@@ -791,7 +795,25 @@ public class SpatialPooler implements ISpatialPooler {
         }
     }
 
-    /**************Getters and Setters*************************/
+    /**
+     * ***********Getters for result*************************
+     */
+
+    public SparseDoubleMatrix2D getPermanences() {
+        return permanences;
+    }
+
+    public BitMatrix getConnectedSynapses() {
+        return connectedSynapses;
+    }
+
+    public List<Integer> getConnectedCounts() {
+        return connectedCounts;
+    }
+
+    /**
+     * ***********Getters and Setters************************
+     */
 
     public String getFilePropName() {
         return filePropName;
@@ -959,5 +981,9 @@ public class SpatialPooler implements ISpatialPooler {
 
     public void setInitConnectedPct(double initConnectedPct) {
         this.initConnectedPct = initConnectedPct;
+    }
+
+    public void setPermanence(int i, DoubleMatrix1D permArr) {
+        updatePermanencesForColumn(permArr, i, false);
     }
 }
