@@ -14,6 +14,11 @@ import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Reorder;
 
 import java.io.*;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -121,7 +126,17 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
                 InputStream dllStream = getClass().getClassLoader().getResourceAsStream("ru/isa/ai/causal/classifiers/cc3250.dll");
                 copyToFile(dllStream, System.getProperty("java.io.tmpdir") + File.separator+"cc3250.dll");
             }else{
+
                 InputStream stream = getClass().getClassLoader().getResourceAsStream("ru/isa/ai/causal/classifiers/aq21");
+                try {
+                    Path path = Paths.get(pathToFile);
+                    Files.copy(stream, path);
+                    Set<PosixFilePermission> permissions = new HashSet<>();
+                    permissions.add(PosixFilePermission.OWNER_EXECUTE);
+                    Files.setPosixFilePermissions(path, permissions);
+                } catch (IOException e) {
+                    throw new AQClassifierException("Cannot copy aq executable with permissions", e);
+                }
                 copyToFile(stream,pathToFile);
             }
         }
