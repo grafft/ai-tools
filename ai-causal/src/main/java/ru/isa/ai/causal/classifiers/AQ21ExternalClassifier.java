@@ -3,7 +3,6 @@ package ru.isa.ai.causal.classifiers;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.TreeMultimap;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.logging.log4j.LogManager;
@@ -14,7 +13,6 @@ import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Reorder;
 
 import java.io.*;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -120,24 +118,23 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
         File fileToExec = new File(pathToFile);
         if (!fileToExec.exists()) {
             logger.info("Copy aq executable to " + pathToFile);
-            if(SystemUtils.IS_OS_WINDOWS) {
-                InputStream exeStream = getClass().getClassLoader().getResourceAsStream("ru/isa/ai/causal/classifiers/aq21.exe");
-                copyToFile(exeStream, pathToFile);
-                InputStream dllStream = getClass().getClassLoader().getResourceAsStream("ru/isa/ai/causal/classifiers/cc3250.dll");
-                copyToFile(dllStream, System.getProperty("java.io.tmpdir") + File.separator+"cc3250.dll");
-            }else{
-
-                InputStream stream = getClass().getClassLoader().getResourceAsStream("ru/isa/ai/causal/classifiers/aq21");
-                try {
+            try {
+                if (SystemUtils.IS_OS_WINDOWS) {
+                    InputStream exeStream = getClass().getClassLoader().getResourceAsStream("ru/isa/ai/causal/classifiers/aq21.exe");
+                    Files.copy(exeStream, Paths.get(pathToFile));
+                    InputStream dllStream = getClass().getClassLoader().getResourceAsStream("ru/isa/ai/causal/classifiers/cc3250.dll");
+                    Files.copy(dllStream, Paths.get(System.getProperty("java.io.tmpdir") + File.separator + "cc3250.dll"));
+                } else {
+                    InputStream stream = getClass().getClassLoader().getResourceAsStream("ru/isa/ai/causal/classifiers/aq21");
                     Path path = Paths.get(pathToFile);
                     Files.copy(stream, path);
                     Set<PosixFilePermission> permissions = new HashSet<>();
                     permissions.add(PosixFilePermission.OWNER_EXECUTE);
                     Files.setPosixFilePermissions(path, permissions);
-                } catch (IOException e) {
-                    throw new AQClassifierException("Cannot copy aq executable with permissions", e);
+
                 }
-                copyToFile(stream,pathToFile);
+            } catch (IOException e) {
+                throw new AQClassifierException("Cannot copy aq executable with permissions", e);
             }
         }
         String[] cmd = {pathToFile, dataPath};
@@ -514,17 +511,6 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
         scanner.useLocale(Locale.US);
 
         return scanner;
-    }
-
-    private void copyToFile(InputStream stream, String filePath) throws AQClassifierException {
-        try {
-            OutputStream out = new FileOutputStream(filePath);
-            IOUtils.copy(stream, out);
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-            throw new AQClassifierException("Cannot extract aq execution file to " + filePath);
-        }
     }
 
     public Map<String, List<AQRule>> getClassRules() {
