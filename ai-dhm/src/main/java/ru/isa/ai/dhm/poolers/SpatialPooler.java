@@ -649,10 +649,10 @@ public class SpatialPooler implements ISpatialPooler {
         long period = dutyCyclePeriod > iterationNum ? iterationNum : dutyCyclePeriod;
 
         for (int i = 0; i < overlapDutyCycles.size(); i++)
-            overlapDutyCycles.setQuick(i, overlapDutyCycles.getQuick(i) * (period - 1) + newOverlapVal.getQuick(i) / period);
+            overlapDutyCycles.setQuick(i, (overlapDutyCycles.getQuick(i) * (period - 1) + newOverlapVal.getQuick(i)) / period);
 
         for (int i = 0; i < activeDutyCycles.size(); i++)
-            activeDutyCycles.setQuick(i, activeDutyCycles.getQuick(i) * (period - 1) + newActiveVal.getQuick(i) / period);
+            activeDutyCycles.setQuick(i, (activeDutyCycles.getQuick(i) * (period - 1) + newActiveVal.getQuick(i)) / period);
     }
 
     private void adaptSynapses(BitVector inputVector, List<Integer> activeColumns) {
@@ -985,5 +985,29 @@ public class SpatialPooler implements ISpatialPooler {
 
     public void setPermanence(int i, DoubleMatrix1D permArr) {
         updatePermanencesForColumn(permArr, i, false);
+    }
+
+    public void setOverlapDutyCycles(DoubleMatrix1D overlapDutyCycles) {
+        this.overlapDutyCycles = overlapDutyCycles;
+    }
+
+    public void setActiveDutyCycles(DoubleMatrix1D activeDutyCycles) {
+        this.activeDutyCycles = activeDutyCycles;
+    }
+
+    public DoubleMatrix1D getMinOverlapDutyCycles() {
+        return minOverlapDutyCycles;
+    }
+
+    public DoubleMatrix1D getMinActiveDutyCycles() {
+        return minActiveDutyCycles;
+    }
+
+    public DoubleMatrix1D getOverlapDutyCycles() {
+        return overlapDutyCycles;
+    }
+
+    public void setIterationNum(int iterationNum) {
+        this.iterationNum = iterationNum;
     }
 }
