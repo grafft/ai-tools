@@ -51,7 +51,7 @@ public class TestJSM extends TestCase{
                 factBase.minusExamples.put(i, BooleanArrayUtils.join(secondUnique, array));
         }
 
-        List<JSMAnalyzer.Intersection> hypothesises = analyzer.reasons(factBase);
+        List<JSMAnalyzer.Intersection> hypothesises = analyzer.reasons(factBase, 0);
         assertEquals(1, hypothesises.size());
         assertEquals(2, BooleanArrayUtils.cardinality(hypothesises.get(0).value));
     }
