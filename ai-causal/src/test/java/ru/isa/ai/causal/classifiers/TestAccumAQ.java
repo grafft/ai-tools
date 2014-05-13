@@ -29,7 +29,7 @@ public class TestAccumAQ {
         loader.setNominalAttributes("1-3");
         loader.setNominalLabelSpecs(new String[]{"1:1,2,3", "2:1,2", "3:1,2"});
 
-        loader.setSource(new File("C:\\Users\\GraffT\\Documents\\Projects\\Sience\\dis\\ai-tools\\text-data\\causal\\data.csv"));
+        loader.setSource(new File(TestAccumAQ.class.getResource("/data.csv").getPath()));
         ConverterUtils.DataSource trainSource = new ConverterUtils.DataSource(loader);
         Instances data = trainSource.getDataSet(0);
 
