@@ -102,9 +102,10 @@ public class JSMAnalyzer {
                 // с полученными новыми мнжествами примеров и усеченным универсумом - ищем причины
                 List<Intersection> toAdd = reasons(newFactBase, deep + 1);
                 for (Intersection inter : toAdd) {
-                    intersection.add(inter);
-                    if (BooleanArrayUtils.cardinality(intersection.value) <= maxHypothesisLength) {
-                        hypothesis.add(intersection);
+                    Intersection clone = intersection.clone();
+                    clone.add(inter);
+                    if (BooleanArrayUtils.cardinality(clone.value) <= maxHypothesisLength) {
+                        hypothesis.add(clone);
                     }
                 }
             }
@@ -137,7 +138,7 @@ public class JSMAnalyzer {
         return hypothesis;
     }
 
-    private List<Intersection> searchIntersection(Map<Integer, BitSet> objectMap, boolean check) {
+    public List<Intersection> searchIntersection(Map<Integer, BitSet> objectMap, boolean check) {
         List<Intersection> intersections = new ArrayList<>();
 
         Map<Integer, BitSet> objects = new HashMap<>();
@@ -271,13 +272,18 @@ public class JSMAnalyzer {
         }
     }
 
-    public class Intersection implements Comparable<Intersection> {
+    public class Intersection implements Comparable<Intersection>, Cloneable {
         public BitSet value;
         public List<Integer> generators = new ArrayList<>();
 
         private Intersection(BitSet value, int objectId) {
             this.value = value;
             generators.add(objectId);
+        }
+
+        private Intersection(BitSet value, List<Integer> generators) {
+            this.value = value;
+            generators.addAll(generators);
         }
 
         public void intersect(Map<Integer, BitSet> objects) {
@@ -318,5 +324,9 @@ public class JSMAnalyzer {
             return Integer.compare(this.generators.size(), o.generators.size());
         }
 
+        @Override
+        public Intersection clone() {
+            return new Intersection((BitSet) this.value.clone(), this.generators);
+        }
     }
 }
