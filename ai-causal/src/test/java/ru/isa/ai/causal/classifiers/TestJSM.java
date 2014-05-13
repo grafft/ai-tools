@@ -1,27 +1,43 @@
 package ru.isa.ai.causal.classifiers;
 
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 import ru.isa.ai.causal.jsm.BooleanArrayUtils;
 import ru.isa.ai.causal.jsm.JSMAnalyzer;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.List;
 
 /**
  * Created by GraffT on 03.05.2014.
  */
-public class TestJSM {
-    public static void main(String[] args) {
-        List<byte[]> arrays = new ArrayList<>();
+public class TestJSM extends TestCase{
+    public TestJSM(String name) {
+        super(name);
+    }
+
+    public static Test suite() {
+        return new TestSuite(TestJSM.class);
+    }
+
+    public void testJSM() {
+        List<BitSet> arrays = new ArrayList<>();
         JSMAnalyzer analyzer = new JSMAnalyzer(null, null);
         JSMAnalyzer.FactBase factBase = analyzer.new FactBase();
-        byte[] firstUnique = new byte[]{(byte) 1, (byte) 0, (byte) 0, (byte) 1};
-        byte[] secondUnique = new byte[]{(byte) 0, (byte) 1, (byte) 1, (byte) 0};
+        BitSet firstUnique = new BitSet(4);
+        firstUnique.set(0);
+        firstUnique.set(3);
+        BitSet secondUnique = new BitSet(4);
+        secondUnique.set(1);
+        secondUnique.set(2);
         for (int i = 0; i < 1000; i++) {
             boolean unique = true;
-            byte[] array;
+            BitSet array;
             do {
-                array = BooleanArrayUtils.generateRandomArray(100);
-                for (byte[] value : arrays) {
+                array = BooleanArrayUtils.getRandomBitSet(100);
+                for (BitSet value : arrays) {
                     if (BooleanArrayUtils.equals(array, value)) {
                         unique = false;
                         break;
@@ -36,8 +52,7 @@ public class TestJSM {
         }
 
         List<JSMAnalyzer.Intersection> hypothesises = analyzer.reasons(factBase);
-        for (JSMAnalyzer.Intersection hypothesis : hypothesises) {
-            System.out.println(BooleanArrayUtils.countNonZero(hypothesis.value));
-        }
+        assertEquals(1, hypothesises.size());
+        assertEquals(2, BooleanArrayUtils.cardinality(hypothesises.get(0).value));
     }
 }
