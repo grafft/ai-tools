@@ -32,7 +32,7 @@ public class JSMAnalyzer {
         int objectCount = data.attributeStats(data.classIndex()).nominalCounts[classIndex];
 
         logger.info("Start evaluating of causal relations for class " + classDescription.getClassName() + " [desc_size=" +
-                classDescription.getDescription().size() + ", object_num=" + objectCount + "]:\n");
+                classDescription.getDescription().size() + ", object_num=" + objectCount + "]");
         logger.info(classDescription.toString());
 
         List<JSMHypothesis> causes = new ArrayList<>();
@@ -45,7 +45,7 @@ public class JSMAnalyzer {
             if (!factBase.isConflicted()) {
                 logger.info("Start search causes for " + property.toString());
                 JSMHypothesis cause = new JSMHypothesis(property);
-                List<Intersection> hypothesis = reasons(factBase);
+                List<Intersection> hypothesis = reasons(factBase, 0);
                 for (Intersection intersection : hypothesis) {
                     Set<CRProperty> causeProps = new HashSet<>();
                     for (int i = 0; i < intersection.value.length(); i++)
@@ -69,8 +69,11 @@ public class JSMAnalyzer {
         this.maxHypothesisLength = maxHypothesisLength;
     }
 
-    public List<Intersection> reasons(FactBase factBase) {
+    public List<Intersection> reasons(FactBase factBase, int deep) {
         List<Intersection> hypothesis = new ArrayList<>();
+
+        if (deep < maxHypothesisLength)
+            return hypothesis;
 
         // 1. Находим минимальные пересечения над объектами, обладающими свойством
         List<Intersection> intersections = searchIntersection(factBase.plusExamples, true);
@@ -89,7 +92,7 @@ public class JSMAnalyzer {
             // 2.2 Если такого объекта нет, то включить пересечение в гипотезы
             if (minusObject == -1) {
                 hypothesis.add(intersection);
-            } else if (BooleanArrayUtils.cardinality(intersection.value) < maxHypothesisLength) {
+            } else {
                 // положительные примеры - это множество образующих с вычтенным пересечением
                 FactBase newFactBase = new FactBase();
                 for (Integer objectId : intersection.generators) {
@@ -100,7 +103,7 @@ public class JSMAnalyzer {
                     newFactBase.minusExamples.put(entry.getKey(), BooleanArrayUtils.andNot(entry.getValue(), intersection.value));
                 }
                 // с полученными новыми мнжествами примеров и усеченным универсумом - ищем причины
-                List<Intersection> toAdd = reasons(newFactBase);
+                List<Intersection> toAdd = reasons(newFactBase, deep + 1);
                 for (Intersection inter : toAdd) {
                     intersection.add(inter);
                     hypothesis.add(intersection);
