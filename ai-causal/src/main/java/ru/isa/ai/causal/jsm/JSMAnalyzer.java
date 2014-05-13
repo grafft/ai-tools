@@ -28,6 +28,13 @@ public class JSMAnalyzer {
     }
 
     public List<JSMHypothesis> evaluateCauses() {
+        int classIndex = data.classAttribute().indexOfValue(classDescription.getClassName());
+        int objectCount = data.attributeStats(data.classIndex()).nominalCounts[classIndex];
+
+        logger.info("Start evaluating of causal relations for class " + classDescription.getClassName() + " [desc_size=" +
+                classDescription.getDescription().size() + ", object_num=" + objectCount + "]:\n");
+        logger.info(classDescription.toString());
+
         List<JSMHypothesis> causes = new ArrayList<>();
         for (CRProperty property : classDescription.getDescription()) {
             List<CRProperty> otherProps = new ArrayList<>(classDescription.getDescription());
@@ -36,6 +43,7 @@ public class JSMAnalyzer {
             factBase.reduceEquals();
 
             if (!factBase.isConflicted()) {
+                logger.info("Start search causes for " + property.toString());
                 JSMHypothesis cause = new JSMHypothesis(property);
                 List<Intersection> hypothesis = reasons(factBase);
                 for (Intersection intersection : hypothesis) {
@@ -46,10 +54,12 @@ public class JSMAnalyzer {
                     if (causeProps.size() > 0)
                         cause.addValue(causeProps);
                 }
-                if (cause.getValue().size() > 0)
+                if (cause.getValue().size() > 0) {
                     causes.add(cause);
+                    logger.info(cause.toString());
+                }
             } else {
-                logger.info("Fact base is conflicted for property " + property.toString());
+                logger.warn("Fact base is conflicted for property " + property.toString());
             }
         }
         return causes;

@@ -163,25 +163,10 @@ public class AQJSM {
                     case aq_accum_jsm:
                     case jsm:
                         for (AQClassDescription description : classDescriptions) {
-                            JSMAnalyzer analyzer = new JSMAnalyzer(description, data);
-                            analyzer.setMaxHypothesisLength(maxHypothesisLength);
-
                             if (classes.isEmpty() || classes.contains(description.getClassName())) {
-                                logger.info("Start evaluating of causal relations for class " + description.getClassName());
-                                logger.info(description.toString());
+                                JSMAnalyzer analyzer = new JSMAnalyzer(description, data);
+                                analyzer.setMaxHypothesisLength(maxHypothesisLength);
                                 List<JSMHypothesis> hypothesises = analyzer.evaluateCauses();
-                                int classIndex = data.classAttribute().indexOfValue(description.getClassName());
-                                int objectCount = data.attributeStats(data.classIndex()).nominalCounts[classIndex];
-                                StringBuilder builder = new StringBuilder();
-                                builder.append("Causes for class ").append(description.getClassName()).append(" [desc_size=")
-                                        .append(description.getDescription().size()).append(", object_num=").
-                                        append(objectCount).append("]:\n");
-                                for (int i = 0; i < hypothesises.size(); i++) {
-                                    builder.append("\t").append(hypothesises.get(i).toString());
-                                    if (i < hypothesises.size() - 1)
-                                        builder.append("\n");
-                                }
-                                logger.info(builder.toString());
                             }
                         }
                         break;
