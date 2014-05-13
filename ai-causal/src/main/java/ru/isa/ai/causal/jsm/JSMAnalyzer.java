@@ -72,9 +72,6 @@ public class JSMAnalyzer {
     public List<Intersection> reasons(FactBase factBase, int deep) {
         List<Intersection> hypothesis = new ArrayList<>();
 
-        if (deep < maxHypothesisLength)
-            return hypothesis;
-
         // 1. Находим минимальные пересечения над объектами, обладающими свойством
         List<Intersection> intersections = searchIntersection(factBase.plusExamples, true);
         // упорядочиваем их по убыванию мощности множеств образующих
@@ -106,7 +103,9 @@ public class JSMAnalyzer {
                 List<Intersection> toAdd = reasons(newFactBase, deep + 1);
                 for (Intersection inter : toAdd) {
                     intersection.add(inter);
-                    hypothesis.add(intersection);
+                    if (BooleanArrayUtils.cardinality(intersection.value) <= maxHypothesisLength) {
+                        hypothesis.add(intersection);
+                    }
                 }
             }
         }
