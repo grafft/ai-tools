@@ -89,5 +89,19 @@ public class TestJSM extends TestCase{
         assertEquals(2, intersections.size());
         assertEquals(BitSet.valueOf(new byte[]{0b0001001}), intersections.get(0).value);
         assertEquals(BitSet.valueOf(new byte[]{0b0000011}), intersections.get(1).value);
+
+        factBase.plusExamples.clear();
+        factBase.minusExamples.clear();
+        factBase.plusExamples.put(0, BitSet.valueOf(new byte[]{0b0001001}));
+        factBase.plusExamples.put(1, BitSet.valueOf(new byte[]{0b0001011}));
+        factBase.plusExamples.put(2, BitSet.valueOf(new byte[]{0b0000101}));
+
+        factBase.minusExamples.put(3, BitSet.valueOf(new byte[]{0b1110001}));
+        factBase.minusExamples.put(4, BitSet.valueOf(new byte[]{0b1100000}));
+
+        intersections = analyzer.reasons(factBase, 0);
+        assertEquals(2, intersections.size());
+        assertEquals(BitSet.valueOf(new byte[]{0b0001001}), intersections.get(0).value);
+        assertEquals(BitSet.valueOf(new byte[]{0b0000101}), intersections.get(1).value);
     }
 }
