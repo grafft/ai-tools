@@ -11,6 +11,9 @@ import cern.colt.matrix.tdouble.impl.SparseDoubleMatrix2D;
 import cern.colt.matrix.tint.IntMatrix1D;
 import cern.colt.matrix.tint.impl.DenseIntMatrix1D;
 import cern.jet.math.tdouble.DoublePlusMultSecond;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Ordering;
+import com.google.common.collect.TreeMultimap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.isa.ai.dhm.MathUtils;
@@ -701,36 +704,47 @@ public class SpatialPooler implements ISpatialPooler {
         activeColumns.clear();
         if (globalInhibition || inhibitionRadius > MathUtils.max(columnDimensions)) {
             // inhibitColumnsGlobal
-            int numActive = (int) (density * numColumns);
-            TreeMap<Integer, Double> winners = new TreeMap<>();
-            for (int i = 0; i < numColumns; i++) {
-                double score = overlapsWithNoise.getQuick(i);
-                if (winners.size() < numActive || score > winners.get(winners.lastKey()))
-                    winners.put(i, score);
-            }
-
-            for (int key : winners.keySet()) {
-                activeColumns.add(key);
-            }
+            inhibitColumnsGlobal(overlapsWithNoise, density, activeColumns);
         } else {
             // inhibitColumnsLocal
-            double arbitration = MathUtils.max(overlapsWithNoise.toArray()) / 1000.0;
-            for (int column = 0; column < numColumns; column++) {
-                List<Integer> neighbors = getNeighborsND(column, columnDimensions, inhibitionRadius, false);
-                int numActive = (int) (0.5 + (density * (neighbors.size() + 1)));
-                int numBigger = 0;
-                for (int index : neighbors) {
-                    if (overlapsWithNoise.getQuick(index) > overlapsWithNoise.getQuick(column)) {
-                        numBigger++;
-                    }
-                }
+            inhibitColumnsLocal(overlapsWithNoise, density, activeColumns);
+        }
+    }
 
-                if (numBigger < numActive) {
-                    activeColumns.add(column);
-                    overlapsWithNoise.setQuick(column, overlapsWithNoise.getQuick(column) + arbitration);
-                }
-
+    private void inhibitColumnsGlobal(DoubleMatrix1D overlapsWithNoise, double density, List<Integer> activeColumns) {
+        int numActive = (int) (density * numColumns);
+        Map<Integer, Double> baseMap = new HashMap<>();
+        TreeMap<Integer, Double> winners = new TreeMap<>(new ValueComparator(baseMap));
+        for (int i = 0; i < numColumns; i++) {
+            double score = overlapsWithNoise.getQuick(i);
+            if (winners.size() < numActive || score > winners.get(winners.lastKey())) {
+                baseMap.put(i, score);
+                winners.put(i, score);
             }
+        }
+
+        for (int key : winners.keySet()) {
+            activeColumns.add(key);
+        }
+    }
+
+    private void inhibitColumnsLocal(DoubleMatrix1D overlapsWithNoise, double density, List<Integer> activeColumns) {
+        double arbitration = MathUtils.max(overlapsWithNoise.toArray()) / 1000.0;
+        for (int column = 0; column < numColumns; column++) {
+            List<Integer> neighbors = getNeighborsND(column, columnDimensions, inhibitionRadius, false);
+            int numActive = (int) (0.5 + (density * (neighbors.size() + 1)));
+            int numBigger = 0;
+            for (int index : neighbors) {
+                if (overlapsWithNoise.getQuick(index) > overlapsWithNoise.getQuick(column)) {
+                    numBigger++;
+                }
+            }
+
+            if (numBigger < numActive) {
+                activeColumns.add(column);
+                overlapsWithNoise.setQuick(column, overlapsWithNoise.getQuick(column) + arbitration);
+            }
+
         }
     }
 

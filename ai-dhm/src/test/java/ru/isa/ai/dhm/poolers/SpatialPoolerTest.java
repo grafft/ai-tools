@@ -811,22 +811,20 @@ public class SpatialPoolerTest extends TestCase {
 
     }
 
-    public void testInhibitColumns() throws SpatialPoolerInitializationException, ReflectiveOperationException {
-        Method method = SpatialPooler.class.getDeclaredMethod("inhibitColumns", DoubleMatrix1D.class, List.class);
+    public void testInhibitColumnsGlobal() throws SpatialPoolerInitializationException, ReflectiveOperationException {
+        Method method = SpatialPooler.class.getDeclaredMethod("inhibitColumnsGlobal", DoubleMatrix1D.class, double.class, List.class);
         method.setAccessible(true);
 
         SpatialPooler sp = new SpatialPooler(getClass().getClassLoader().getResource("dhm_sp_def.properties").getPath());
         sp.initialize(new int[]{10}, new int[]{10});
-        sp.setLocalAreaDensity(0.3);
-        sp.setNumActiveColumnsPerInhArea(0);
 
-        DoubleMatrix1D overlaps = new DenseDoubleMatrix1D(new double[]{1,2,1,4,8,3,12,5,4,1});
-        List<Integer>  activeColumns = new ArrayList<>();
-        method.invoke(sp, overlaps, activeColumns);
+        DoubleMatrix1D overlaps = new DenseDoubleMatrix1D(new double[]{1, 2, 1, 4, 8, 3, 12, 5, 4, 1});
+        List<Integer> activeColumns = new ArrayList<>();
+        method.invoke(sp, overlaps, 0.3, activeColumns);
 
-        int[] trueActiveArray1 = {4,6,7};
+        int[] trueActiveArray1 = {4, 6, 7};
 
-        int [] trueActive = new int[10];
+        int[] trueActive = new int[10];
         int[] active = new int[10];
 
         for (int i = 0; i < 3; i++) {
@@ -838,11 +836,9 @@ public class SpatialPoolerTest extends TestCase {
         }
         assertTrue(Arrays.equals(active, trueActive));
 
-
-        sp.setLocalAreaDensity(0.5);
         overlaps = new DenseDoubleMatrix1D(new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
-        method.invoke(sp, overlaps, activeColumns);
-        int[] trueActiveArray2 = {5,6,7,8,9};
+        method.invoke(sp, overlaps, 0.5, activeColumns);
+        int[] trueActiveArray2 = {5, 6, 7, 8, 9};
 
         for (int i = 0; i < 5; i++) {
             trueActive[trueActiveArray2[i]] = 1;
