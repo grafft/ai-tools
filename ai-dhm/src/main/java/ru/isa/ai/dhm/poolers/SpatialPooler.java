@@ -196,9 +196,19 @@ public class SpatialPooler implements ISpatialPooler {
 
     private SparseDoubleMatrix2D permanences;
     private BitMatrix potentialPools;
+    /**
+     * Подмножество потенциальных синапсов
+     * potentialSynapses(c) у которых значение
+     * перманентности больше чем connectedPerm. То есть это
+     * прямые входные биты, которые подключены к колонке c.
+     */
     private BitMatrix connectedSynapses;
     private List<Integer> connectedCounts;
 
+    /**
+     * Значение перекрытия для колонки с в пространственном
+     * группировщике для данного конкретного входа.
+     */
     private IntMatrix1D overlaps;
     private DoubleMatrix1D overlapsPct;
     private DoubleMatrix1D boostedOverlaps;
@@ -549,6 +559,9 @@ public class SpatialPooler implements ISpatialPooler {
         if (learn) {
             iterationLearnNum++;
         }
+        /*
+        Фаза 1: Перекрытие (Overlap)
+         */
         calculateOverlap(inputVector, overlaps);
         calculateOverlapPct(overlaps, overlapsPct);
 
@@ -560,11 +573,17 @@ public class SpatialPooler implements ISpatialPooler {
                 boostedOverlaps.set(i, overlaps.getQuick(i));
         }
 
+        /*
+        Фаза 2: Подавление (Inhibition)
+         */
         inhibitColumns(boostedOverlaps, activeColumns);
         activeVector.replaceFromToWith(0, numColumns, false);
         for (int index : activeColumns)
             activeVector.set(index);
 
+        /*
+        Фаза 3: Обучение
+         */
         if (learn) {
             adaptSynapses(inputVector, activeColumns);
             updateDutyCycles(overlaps, activeVector);
@@ -578,6 +597,109 @@ public class SpatialPooler implements ISpatialPooler {
             for (int i = 0; i < numColumns; i++) {
                 if (activeDutyCycles.getQuick(i) == 0)
                     activeVector.clear(i);
+            }
+        }
+    }
+
+    /**
+     * Первая фаза вычисляет значение перекрытия каждой колонки с заданным
+     * входным вектором (данными). Перекрытие для каждой колонки это просто число
+     * действующих синапсов подключенных к активным входным битам, умноженное на
+     * фактор ускорения («агрессивности») колонки. Если полученное число будет
+     * меньше minOverlap, то мы устанавливаем значение перекрытия в ноль.
+     * <p/>
+     */
+    private void calculateOverlap(final BitVector inputVector, final IntMatrix1D overlaps) {
+        overlaps.assign(0);
+        connectedSynapses.forEachCoordinateInState(true, new IntIntProcedure() {
+            @Override
+            public boolean apply(int first, int second) {
+                int id = numInputs - first - 1;
+                overlaps.setQuick(second, overlaps.getQuick(second) + (inputVector.get(id) ? 1 : 0));
+                return true;
+            }
+        });
+        if (stimulusThreshold > 0) {
+            overlaps.assign(new IntProcedure() {
+                @Override
+                public boolean apply(int element) {
+                    return element < stimulusThreshold;
+                }
+            }, 0);
+        }
+    }
+
+    private void calculateOverlapPct(IntMatrix1D overlaps, DoubleMatrix1D overlapsPct) {
+        overlapsPct.assign(0);
+        for (int i = 0; i < numColumns; i++) {
+            double connectedCount = connectedCounts.get(i);
+            if (connectedCount != 0) {
+                overlapsPct.setQuick(i, overlaps.getQuick(i) / connectedCount);
+            } else {
+                // The intent here is to see if a cell matches its input well.
+                // Therefore if nothing is connected the overlapPct is set to 0.
+                overlapsPct.setQuick(i, 0);
+            }
+        }
+    }
+
+    /**
+     * На второй фазе вычисляется какие из колонок остаются победителями после
+     * применения взаимного подавления. Параметр desiredLocalActivity контролирует
+     * число колонок, которые останутся победителями. Например, если
+     * desiredLocalActivity=localAreaDensity*N равен 10, то колонка останется победителем если ее
+     * значение перекрытия выше чем значения перекрытия 10 самых лучших колонок в
+     * ее радиусе подавления (ингибирования).
+     *
+     * @param boostedOverlaps
+     * @param activeColumns
+     */
+    private void inhibitColumns(DoubleMatrix1D boostedOverlaps, List<Integer> activeColumns) {
+        double density = localAreaDensity;
+        if (numActiveColumnsPerInhArea > 0) {
+            double inhibitionArea = Math.pow(2 * inhibitionRadius + 1.0, columnDimensions.length);
+            inhibitionArea = Math.min(inhibitionArea, numColumns);
+            density = numActiveColumnsPerInhArea / inhibitionArea;
+            density = Math.min(density, 0.5);
+        }
+
+        DoubleMatrix1D overlapsWithNoise = new DenseDoubleMatrix1D(numColumns);
+        for (int i = 0; i < numColumns; i++) {
+            overlapsWithNoise.setQuick(i, boostedOverlaps.getQuick(i) + tieBreaker.getQuick(i));
+        }
+
+        activeColumns.clear();
+        if (globalInhibition || inhibitionRadius > MathUtils.max(columnDimensions)) {
+            // inhibitColumnsGlobal
+            int numActive = (int) (density * numColumns);
+            TreeMap<Integer, Double> winners = new TreeMap<>();
+            for (int i = 0; i < numColumns; i++) {
+                double score = overlapsWithNoise.getQuick(i);
+                if (winners.size() < numActive || score > winners.get(winners.lastKey()))
+                    winners.put(i, score);
+            }
+
+            for (int key : winners.keySet()) {
+                activeColumns.add(key);
+            }
+        } else {
+            // inhibitColumnsLocal
+            double arbitration = MathUtils.max(overlapsWithNoise.toArray()) / 1000.0;
+            for (int column = 0; column < numColumns; column++) {
+                List<Integer> neighbors = getNeighborsND(column, columnDimensions, inhibitionRadius, false);
+                int numActive = (int) (0.5 + (density * (neighbors.size() + 1)));
+                int numBigger = 0;
+                for (int index : neighbors) {
+                    if (overlapsWithNoise.getQuick(index) > overlapsWithNoise.getQuick(column)) {
+                        numBigger++;
+                    }
+                }
+
+                if (numBigger < numActive) {
+                    activeColumns.add(column);
+                    overlapsWithNoise.setQuick(column, overlapsWithNoise.getQuick(column) + arbitration);
+                }
+
             }
         }
     }
@@ -684,56 +806,6 @@ public class SpatialPooler implements ISpatialPooler {
         }
     }
 
-    private void inhibitColumns(DoubleMatrix1D boostedOverlaps, List<Integer> activeColumns) {
-        double density = localAreaDensity;
-        if (numActiveColumnsPerInhArea > 0) {
-            double inhibitionArea = Math.pow(2 * inhibitionRadius + 1.0, columnDimensions.length);
-            inhibitionArea = Math.min(inhibitionArea, numColumns);
-            density = numActiveColumnsPerInhArea / inhibitionArea;
-            density = Math.min(density, 0.5);
-        }
-
-        DoubleMatrix1D overlapsWithNoise = new DenseDoubleMatrix1D(numColumns);
-        for (int i = 0; i < numColumns; i++) {
-            overlapsWithNoise.setQuick(i, boostedOverlaps.getQuick(i) + tieBreaker.getQuick(i));
-        }
-
-        activeColumns.clear();
-        if (globalInhibition || inhibitionRadius > MathUtils.max(columnDimensions)) {
-            // inhibitColumnsGlobal
-            int numActive = (int) (density * numColumns);
-            TreeMap<Integer, Double> winners = new TreeMap<>();
-            for (int i = 0; i < numColumns; i++) {
-                double score = overlapsWithNoise.getQuick(i);
-                if (winners.size() < numActive || score > winners.get(winners.lastKey()))
-                    winners.put(i, score);
-            }
-
-            for (int key : winners.keySet()) {
-                activeColumns.add(key);
-            }
-        } else {
-            // inhibitColumnsLocal
-            double arbitration = MathUtils.max(overlapsWithNoise.toArray()) / 1000.0;
-            for (int column = 0; column < numColumns; column++) {
-                List<Integer> neighbors = getNeighborsND(column, columnDimensions, inhibitionRadius, false);
-                int numActive = (int) (0.5 + (density * (neighbors.size() + 1)));
-                int numBigger = 0;
-                for (int index : neighbors) {
-                    if (overlapsWithNoise.getQuick(index) > overlapsWithNoise.getQuick(column)) {
-                        numBigger++;
-                    }
-                }
-
-                if (numBigger < numActive) {
-                    activeColumns.add(column);
-                    overlapsWithNoise.setQuick(column, overlapsWithNoise.getQuick(column) + arbitration);
-                }
-
-            }
-        }
-    }
-
     private List<Integer> getNeighborsND(int column, int[] columnDimensions, int inhibitionRadius, boolean wrapAround) {
         List<Integer> neighbors = new ArrayList<>();
         CoordinateConverterND conv = new CoordinateConverterND(columnDimensions);
@@ -764,39 +836,6 @@ public class SpatialPooler implements ISpatialPooler {
         return neighbors;
     }
 
-    private void calculateOverlapPct(IntMatrix1D overlaps, DoubleMatrix1D overlapsPct) {
-        overlapsPct.assign(0);
-        for (int i = 0; i < numColumns; i++) {
-            double connectedCount = connectedCounts.get(i);
-            if (connectedCount != 0) {
-                overlapsPct.setQuick(i, overlaps.getQuick(i) / connectedCount);
-            } else {
-                // The intent here is to see if a cell matches its input well.
-                // Therefore if nothing is connected the overlapPct is set to 0.
-                overlapsPct.setQuick(i, 0);
-            }
-        }
-    }
-
-    private void calculateOverlap(final BitVector inputVector, final IntMatrix1D overlaps) {
-        overlaps.assign(0);
-        connectedSynapses.forEachCoordinateInState(true, new IntIntProcedure() {
-            @Override
-            public boolean apply(int first, int second) {
-                int id = numInputs - first - 1;
-                overlaps.setQuick(second, overlaps.getQuick(second) + (inputVector.get(id) ? 1 : 0));
-                return true;
-            }
-        });
-        if (stimulusThreshold > 0) {
-            overlaps.assign(new IntProcedure() {
-                @Override
-                public boolean apply(int element) {
-                    return element < stimulusThreshold;
-                }
-            }, 0);
-        }
-    }
 
     /**
      * ***********Getters for result*************************
