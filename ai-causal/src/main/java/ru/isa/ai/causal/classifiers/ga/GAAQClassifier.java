@@ -19,9 +19,9 @@ import java.util.Enumeration;
  * Date: 11.06.2014
  * Time: 9:44
  */
-public class AQGAClassifier extends AbstractClassifier {
+public class GAAQClassifier extends AbstractClassifier {
 
-    private static final Logger logger = LogManager.getLogger(AQGAClassifier.class.getSimpleName());
+    private static final Logger logger = LogManager.getLogger(GAAQClassifier.class.getSimpleName());
 
     @Override
     public Capabilities getCapabilities() {
