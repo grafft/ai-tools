@@ -13,7 +13,7 @@ public class Population {
     private int numpoints;
     private int sizeGen;
     public Genotype[] genots;
-    public Genotype bestgenotype;
+    public Genotype bestgenotype = new Genotype();
     private int[][] tobj0;
     private int[][] tobj;
     private int[][] fobj;
@@ -48,6 +48,7 @@ public class Population {
         sizeGen = sizegen;
         genots = new Genotype[n];
         for (int i = 0; i < n; ++i) {
+            genots[i] = new Genotype();
             genots[i].numGenes = numGenes;
             genots[i].sizeGen = sizeGen;
             genots[i].numpoints = numpoints;
@@ -487,7 +488,7 @@ public class Population {
         boolean onemore = true;
         while (onemore) {
             onemore = false;
-            for (int i = numGenes; i >= 0; --i)
+            for (int i = numGenes - 1; i >= 0; --i)
                 for (int j = sizeGen - 1; j > 0; --j) {
                     if ((genots[genotnum].genes[i] & Genotype.DEG[j]) != 0)
                         genots[genotnum].genes[i] -= Genotype.DEG[j];
@@ -516,7 +517,7 @@ public class Population {
         boolean onemore = true;
         while (onemore) {
             onemore = false;
-            for (int i = numGenes; i >= 0; --i)
+            for (int i = numGenes - 1; i >= 0; --i)
                 for (int j = sizeGen - 1; j > 0; --j) {
                     for (int k = j - 1; k > 0; --k) {
                         if ((genots[genotnum].genes[i] & Genotype.DEG[j]) != 0)
@@ -555,7 +556,7 @@ public class Population {
         boolean onemore = true;
         while (onemore) {
             onemore = false;
-            for (int i = numGenes; i >= 0; --i)
+            for (int i = numGenes - 1; i >= 0; --i)
                 for (int k = i; k >= 0; --k)
                     for (int m = sizeGen - 1; m > 0; --m)
                         for (int j = sizeGen - 1; j > 0; --j) {

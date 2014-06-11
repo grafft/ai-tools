@@ -117,14 +117,16 @@ public class GAAQClassifier extends AbstractClassifier {
                             value = numVal < (min + inter) / 3 ? 1 : (numVal < min + 2 * inter / 3 ? 2 : 4);
                             break;
                     }
-                    if ((int) instance.classValue() == 1)
+                    if ((int) instance.classValue() == classIndex)
                         tobj[posObjCounter][attrCounter] = value;
                     else
                         fobj[objCounter][attrCounter] = value;
                     attrCounter++;
                 }
-                objCounter++;
-                posObjCounter++;
+                if ((int) instance.classValue() == classIndex)
+                    posObjCounter++;
+                else
+                    objCounter++;
             }
 
             Population[] BestPop = new Population[100];
@@ -170,13 +172,13 @@ public class GAAQClassifier extends AbstractClassifier {
                             bg = mainCpop.pop[i].bestgenotype.fit;
                         }
                     }
-                    logger.info("\nbestfit = " + mainCpop.bestpop.bestgenotype.fit);
+                    logger.info("bestfit = " + mainCpop.bestpop.bestgenotype.fit);
                     if (BestPop[sizeBestPop - 1].bestgenotype.fit < mainCpop.bestpop.bestgenotype.fit) {
                         System.arraycopy(mainCpop.bestpop.bestgenotype.genes, 0, BestPop[sizeBestPop - 1].bestgenotype.genes, 0, mainCpop.bestpop.bestgenotype.numGenes);
                         BestPop[sizeBestPop - 1].bestgenotype.fit = mainCpop.bestpop.bestgenotype.fit;
                     }
                 }
-                logger.info("\nBestPop = " + BestPop[sizeBestPop - 1].bestgenotype.fit);
+                logger.info("BestPop = " + BestPop[sizeBestPop - 1].bestgenotype.fit);
 
                 boolean ess_bool;
                 ArrayList<Boolean> ess = new ArrayList<>();
@@ -235,57 +237,6 @@ public class GAAQClassifier extends AbstractClassifier {
                 logger.info("num_ob = " + num_ob);
             }
 
-            Coevolution mainCpop = new Coevolution(cn, n, numgen, sizegen, ngen, nadapt, socialcard, socialfine,
-                    typega, typesel, sizetur, typerec, mutation, mutadapt,
-                    truthvalue, tobj0, tobj, fobj);
-            mainCpop.bestpop = BestPop[0];
-            Coevolution mainCpop2 = new Coevolution(cn, n, numgen, sizegen, ngen, nadapt, socialcard, socialfine,
-                    typega, typesel, sizetur, typerec, mutation, mutadapt,
-                    truthvalue, tobj0, tobj, fobj);
-            mainCpop2.bestpop = BestPop[1];
-            //локальный спуск после ГА, надо будет сделать вывод, найденного после спуска
-            //НАЧАЛО
-            Population pop_for_loc = new Population(1, numgen, sizegen, tobj0, tobj, fobj);
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < mainCpop.bestpop.bestgenotype.numGenes; ++i)
-                sb.append(mainCpop.bestpop.bestgenotype.genes[i]).append("\t");
-            logger.info(sb);
-            System.arraycopy(mainCpop.bestpop.bestgenotype.genes, 0, pop_for_loc.genots[0].genes, 0, mainCpop.bestpop.bestgenotype.numGenes);
-            pop_for_loc.genots[0].fit = mainCpop.bestpop.bestgenotype.fit;
-            pop_for_loc.bestgenotype.fit = mainCpop.bestpop.bestgenotype.fit;
-            pop_for_loc.localeOpt(0);
-            StringBuilder sb1 = new StringBuilder();
-            for (int i = 0; i < pop_for_loc.genots[0].numGenes; ++i)
-                sb1.append(pop_for_loc.genots[0].genes[i]).append("\t");
-            logger.info(sb1);
-            logger.info("bestfit after local_opt = " + pop_for_loc.bestgenotype.fit + " " + pop_for_loc.howmanyfit + " " + pop_for_loc.howmanyfit2);
-            //КОНЕЦ
-
-            //локальный спуск после ГА, надо будет сделать вывод, найденного после спуска
-            //НАЧАЛО
-            Population pop_for_loc2 = new Population(1, numgen, sizegen, tobj0, tobj, fobj);
-            System.arraycopy(mainCpop.bestpop.bestgenotype.genes, 0, pop_for_loc2.genots[0].genes, 0, mainCpop.bestpop.bestgenotype.numGenes);
-            pop_for_loc2.genots[0].fit = mainCpop.bestpop.bestgenotype.fit;
-            pop_for_loc2.bestgenotype.fit = mainCpop.bestpop.bestgenotype.fit;
-            pop_for_loc2.localeOpt2(0);
-            logger.info("bestfit after local_opt = " + pop_for_loc2.bestgenotype.fit + " " + pop_for_loc2.howmanyfit + " " + pop_for_loc2.howmanyfit2);
-            //КОНЕЦ
-
-            //локальный спуск после ГА, надо будет сделать вывод, найденного после спуска
-            //НАЧАЛО
-            Population pop_for_loc3 = new Population(1, numgen, sizegen, tobj0, tobj, fobj);
-            System.arraycopy(mainCpop.bestpop.bestgenotype.genes, 0, pop_for_loc3.genots[0].genes, 0, mainCpop.bestpop.bestgenotype.numGenes);
-            pop_for_loc3.genots[0].fit = mainCpop.bestpop.bestgenotype.fit;
-            pop_for_loc3.bestgenotype.fit = mainCpop.bestpop.bestgenotype.fit;
-            pop_for_loc3.localeOpt3(0);
-            logger.info("bestfit after local_opt = ", pop_for_loc3.bestgenotype.fit, " ", pop_for_loc3.howmanyfit, " ", pop_for_loc3.howmanyfit2);
-            //КОНЕЦ
-
-            for (int i = 0; i < cn; ++i) {
-                mainCpop.howmanyfit += mainCpop.pop[i].howmanyfit;
-                mainCpop.howmanyfit2 += mainCpop.pop[i].howmanyfit2;
-            }
-
             String[] map_atr = new String[8];
             map_atr[0] = "0";
             map_atr[1] = "1";
@@ -298,9 +249,9 @@ public class GAAQClassifier extends AbstractClassifier {
 
             StringBuilder result = new StringBuilder();
             for (int bp = 0; bp < sizeBestPop; ++bp) {
-                result.append("NUM_NEW_OBJECTS: ").append((int) (BestPop[bp].bestgenotype.fit / 1000));
-                result.append("NUM_OBJECTS: ").append(num_objects.get(bp));
-                result.append("RULE_").append(bp + 1).append(":");
+                result.append("NUM_NEW_OBJECTS: ").append((int) (BestPop[bp].bestgenotype.fit / 1000)).append("\n");
+                result.append("NUM_OBJECTS: ").append(num_objects.get(bp)).append("\n");
+                result.append("RULE_").append(bp + 1).append(":\n");
                 for (int i = 0; i < BestPop[bp].bestgenotype.numGenes; ++i) {
                     if (essential.get(bp).get(i))
                         result.append("attr_").append(i + 1).append("=").append(map_atr[BestPop[bp].bestgenotype.genes[i]]).append("\n");
@@ -308,28 +259,19 @@ public class GAAQClassifier extends AbstractClassifier {
                 result.append("\n");
             }
 
-
-            //эти выводы нужны
-            result.append("\nbestfit = ").append(mainCpop.bestpop.bestgenotype.fit).append("\n");
-            result.append("howmanyfit = ").append(mainCpop.howmanyfit).append("\n");
-            result.append("howmanydifferent = ").append(mainCpop.howmanyfit2).append("\n");
-            result.append("howmanyfit_beforebest = ").append(mainCpop.howmanyfit_beforebest).append("\n");
-            result.append("howmanydifferent_beforebest = ").append(mainCpop.howmanyfit2_beforebest).append("\n");
-            result.append("whatgener = ").append(mainCpop.whatgener).append("\n");
-
-            result.append("\nbestfit = ").append(mainCpop2.bestpop.bestgenotype.fit).append("\n");
-            result.append("howmanyfit = ").append(mainCpop2.howmanyfit).append("\n");
-            result.append("howmanydifferent = ").append(mainCpop2.howmanyfit2).append("\n");
-            result.append("howmanyfit_beforebest = ").append(mainCpop2.howmanyfit_beforebest).append("\n");
-            result.append("howmanydifferent_beforebest = ").append(mainCpop2.howmanyfit2_beforebest).append("\n");
-            result.append("whatgener = ").append(mainCpop2.whatgener).append("\n");
-
-            result.append("\n\nДля выхода введите 1. Для продолжения любое другое число.\nПеред продолжением вы можете изменить sequence.txt и файлы n-грамм\nЗакончить работу:\t");
+            result.append("\n\nДля выхода введите 1. Для продолжения любое другое число.\n");
             logger.info(result);
 
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             cont = Integer.parseInt(br.readLine());
             logger.info("\n");
         } while (cont != 1);
+    }
+
+    public static void main(String[] argv) {
+        runClassifier(new GAAQClassifier(),
+                new String[]{"-t",
+                        GAAQClassifier.class.getClassLoader().getResource("ru/isa/ai/causal/classifiers/diabetes.arff").getPath()}
+        );
     }
 }
