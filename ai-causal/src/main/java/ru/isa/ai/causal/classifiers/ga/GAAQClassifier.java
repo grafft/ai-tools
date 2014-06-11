@@ -83,7 +83,7 @@ public class GAAQClassifier extends AbstractClassifier {
 
             cn = 5;
             n = 500;
-            numgen = 28;//data 13, data2 31
+            numgen = numAttr;//data 13, data2 31
             sizegen = 3;
             ngen = 50;
             nadapt = 8;
