@@ -19,6 +19,36 @@
         <weka.version>3.7.9</weka.version>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>AQJSM</id>
+            <activation>
+                <property>
+                    <name>mode</name>
+                    <value>aq</value>
+                </property>
+            </activation>
+            <properties>
+                <app.mainClass>ru.isa.ai.causal.AQJSM</app.mainClass>
+                <app.finalName>aqjsm</app.finalName>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>GAAQJSM</id>
+            <activation>
+                <property>
+                    <name>mode</name>
+                    <value>gaaq</value>
+                </property>
+            </activation>
+            <properties>
+                <app.mainClass>ru.isa.ai.causal.GAAQJSM</app.mainClass>
+                <app.finalName>gaaqjsm</app.finalName>
+            </properties>
+        </profile>
+    </profiles>
+
     <dependencies>
         <dependency>
             <groupId>nz.ac.waikato.cms.weka</groupId>
@@ -72,11 +102,11 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                    <finalName>aqjsm</finalName>
+                    <finalName>${app.finalName}</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
-                            <mainClass>ru.isa.ai.causal.AQJSM</mainClass>
+                            <mainClass>${app.mainClass}</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
