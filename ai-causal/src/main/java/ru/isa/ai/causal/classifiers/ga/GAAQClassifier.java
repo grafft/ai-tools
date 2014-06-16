@@ -2,17 +2,17 @@ package ru.isa.ai.causal.classifiers.ga;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.isa.ai.causal.classifiers.AQClassDescription;
+import ru.isa.ai.causal.classifiers.AQRule;
+import ru.isa.ai.causal.classifiers.CRFeature;
 import weka.classifiers.AbstractClassifier;
 import weka.core.Attribute;
 import weka.core.Capabilities;
 import weka.core.Instance;
 import weka.core.Instances;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.*;
 
 /**
  * Author: Aleksandr Panov
@@ -22,6 +22,16 @@ import java.util.Enumeration;
 public class GAAQClassifier extends AbstractClassifier {
 
     private static final Logger logger = LogManager.getLogger(GAAQClassifier.class.getSimpleName());
+
+    private List<String> classes;
+    private Map<String, AQClassDescription> classMapDescriptions = new HashMap<>();
+
+    public GAAQClassifier(List<String> classes) {
+        this.classes = classes;
+    }
+
+    public GAAQClassifier() {
+    }
 
     @Override
     public Capabilities getCapabilities() {
@@ -50,30 +60,34 @@ public class GAAQClassifier extends AbstractClassifier {
     }
 
     private void buildRules(Instances testData) throws IOException {
-        int classIndex = testData.classAttribute().indexOfValue("1");
-        int numObjects = testData.numInstances();
-        int numObjectsPos = testData.attributeStats(testData.classIndex()).nominalCounts[classIndex];
-        int numAttr = testData.numAttributes() - 1;
+        Enumeration classEnum = testData.classAttribute().enumerateValues();
+        while (classEnum.hasMoreElements()) {
+            String className = (String) classEnum.nextElement();
+            if (classes != null && !classes.contains(className))
+                continue;
 
-        long start, finish;
-        int cont;
-        double truthvalue;
-        int cn;
-        int n;
-        int numgen;
-        int sizegen;
-        int ngen;
-        int nadapt;
-        int socialcard;
-        int socialfine;
-        boolean typega[] = {true, true, true, true, true};//тип га 0-стандартный га, 1-вга
-        int typesel[] = {0, 1, 2, 2, 2};//тип селекции 0-пропорциональная, 1-ранговая, 2-турнирная
-        int sizetur[] = {5, 5, 5, 7, 12};//размер турнира
-        int typerec[] = {1, 1, 1, 1, 1};//тип рекомбинации 0-одноточечная, 1-двуточечная, 2-равномерная
-        boolean mutadapt[] = {false, false, false, false, false};
-        double mutation[] = {4, 4, 4, 4, 4};
+            int classIndex = testData.classAttribute().indexOfValue(className);
+            int numObjects = testData.numInstances();
+            int numObjectsPos = testData.attributeStats(testData.classIndex()).nominalCounts[classIndex];
+            int numAttr = testData.numAttributes() - 1;
 
-        do {
+            long start, finish;
+            double truthvalue;
+            int cn;
+            int n;
+            int numgen;
+            int sizegen;
+            int ngen;
+            int nadapt;
+            int socialcard;
+            int socialfine;
+            boolean typega[] = {true, true, true, true, true};//тип га 0-стандартный га, 1-вга
+            int typesel[] = {0, 1, 2, 2, 2};//тип селекции 0-пропорциональная, 1-ранговая, 2-турнирная
+            int sizetur[] = {5, 5, 5, 7, 12};//размер турнира
+            int typerec[] = {1, 1, 1, 1, 1};//тип рекомбинации 0-одноточечная, 1-двуточечная, 2-равномерная
+            boolean mutadapt[] = {false, false, false, false, false};
+            double mutation[] = {4, 4, 4, 4, 4};
+
             //truthvalue = HUGE;
             truthvalue = 2;
 
@@ -98,6 +112,7 @@ public class GAAQClassifier extends AbstractClassifier {
             Enumeration instEnu = testData.enumerateInstances();
             int objCounter = 0;
             int posObjCounter = 0;
+            Map<Integer, CRFeature> featureMap = new HashMap<>();
             while (instEnu.hasMoreElements()) {
                 Instance instance = (Instance) instEnu.nextElement();
                 Enumeration<Attribute> attrEventEnu = testData.enumerateAttributes();
@@ -108,13 +123,27 @@ public class GAAQClassifier extends AbstractClassifier {
                     switch (attr.type()) {
                         case Attribute.NOMINAL:
                             value = (int) instance.value(attr.index());
+
+                            if (!featureMap.containsKey(attr.index())) {
+                                CRFeature feature = new CRFeature(attr.name());
+                                featureMap.put(attr.index(), feature);
+                            }
                             break;
                         case Attribute.NUMERIC:
                             double numVal = instance.value(attr.index());
                             double min = testData.attributeStats(attr.index()).numericStats.min;
                             double max = testData.attributeStats(attr.index()).numericStats.max;
                             double inter = max - min;
-                            value = numVal < (min + inter) / 3 ? 1 : (numVal < min + 2 * inter / 3 ? 2 : 4);
+                            value = numVal < min + inter / 3 ? 1 : (numVal < min + 2 * inter / 3 ? 2 : 4);
+
+                            if (!featureMap.containsKey(attr.index())) {
+                                CRFeature feature = new CRFeature(attr.name());
+                                feature.getCutPoints().add(min);
+                                feature.getCutPoints().add(min + inter / 3);
+                                feature.getCutPoints().add(min + 2 * inter / 3);
+                                feature.getCutPoints().add(max);
+                                featureMap.put(attr.index(), feature);
+                            }
                             break;
                     }
                     if ((int) instance.classValue() == classIndex)
@@ -237,35 +266,40 @@ public class GAAQClassifier extends AbstractClassifier {
                 logger.info("num_ob = " + num_ob);
             }
 
-            String[] map_atr = new String[8];
-            map_atr[0] = "0";
-            map_atr[1] = "1";
-            map_atr[2] = "2";
-            map_atr[3] = "1,2";
-            map_atr[4] = "3";
-            map_atr[5] = "1,3";
-            map_atr[6] = "2,3";
-            map_atr[7] = "1,2,3";
+            Integer[][] map_atr = new Integer[8][];
+            map_atr[0] = new Integer[]{0};
+            map_atr[1] = new Integer[]{1};
+            map_atr[2] = new Integer[]{2};
+            map_atr[3] = new Integer[]{1, 2};
+            map_atr[4] = new Integer[]{3};
+            map_atr[5] = new Integer[]{1, 3};
+            map_atr[6] = new Integer[]{2, 3};
+            map_atr[7] = new Integer[]{1, 2, 3};
 
             StringBuilder result = new StringBuilder();
+            List<AQRule> classRules = new ArrayList<>();
             for (int bp = 0; bp < sizeBestPop; ++bp) {
                 result.append("NUM_NEW_OBJECTS: ").append((int) (BestPop[bp].bestgenotype.fit / 1000)).append("\n");
                 result.append("NUM_OBJECTS: ").append(num_objects.get(bp)).append("\n");
+                AQRule rule = new AQRule();
+                rule.setId(bp);
                 result.append("RULE_").append(bp + 1).append(":\n");
                 for (int i = 0; i < BestPop[bp].bestgenotype.numGenes; ++i) {
-                    if (essential.get(bp).get(i))
-                        result.append("attr_").append(i + 1).append("=").append(map_atr[BestPop[bp].bestgenotype.genes[i]]).append("\n");
+                    if (essential.get(bp).get(i)) {
+                        rule.getTokens().put(featureMap.get(i), Arrays.asList(map_atr[BestPop[bp].bestgenotype.genes[i]]));
+                        result.append("attr_").append(i + 1).append("=").append(Arrays.toString(map_atr[BestPop[bp].bestgenotype.genes[i]])).append("\n");
+                    }
                 }
+                classRules.add(rule);
                 result.append("\n");
             }
+            classMapDescriptions.put(className, AQClassDescription.createFromRules(classRules, className));
+            logger.info(result.toString());
+        }
+    }
 
-            result.append("\n\nДля выхода введите 1. Для продолжения любое другое число.\n");
-            logger.info(result);
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            cont = Integer.parseInt(br.readLine());
-            logger.info("\n");
-        } while (cont != 1);
+    public Collection<AQClassDescription> getDescriptions() {
+        return classMapDescriptions.values();
     }
 
     public static void main(String[] argv) {
