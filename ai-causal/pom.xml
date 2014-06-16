@@ -17,22 +17,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <weka.version>3.7.9</weka.version>
+        <app.mainClass>ru.isa.ai.causal.AQJSM</app.mainClass>
+        <app.finalName>aqjsm</app.finalName>
     </properties>
 
     <profiles>
-        <profile>
-            <id>AQJSM</id>
-            <activation>
-                <property>
-                    <name>mode</name>
-                    <value>aq</value>
-                </property>
-            </activation>
-            <properties>
-                <app.mainClass>ru.isa.ai.causal.AQJSM</app.mainClass>
-                <app.finalName>aqjsm</app.finalName>
-            </properties>
-        </profile>
 
         <profile>
             <id>GAAQJSM</id>
