@@ -72,7 +72,7 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
         do {
             buildRules(testData);
             for (Map.Entry<String, List<AQRule>> entry : classRules.entrySet())
-                classMapDescriptions.put(entry.getKey(), AQClassDescription.createFromRules(entry.getValue(), entry.getKey()));
+                classMapDescriptions.put(entry.getKey(), AQClassDescription.createFromRules(entry.getValue(), maximumDescriptionSize, entry.getKey()));
 
             maxSize = 0;
             for (AQClassDescription description : classMapDescriptions.values())

@@ -12,11 +12,12 @@ import java.util.*;
  * Time: 15:38
  */
 
-public class AQRule {
+public class AQRule implements Comparable<AQRule> {
     private int id;
     private int complexity;
     private Map<CRFeature, List<Integer>> tokens = new HashMap<>();
     private Set<Instance> coveredInstances = new HashSet<>();
+    private int forceCoverage;
 
     public AQRule() {
     }
@@ -36,7 +37,11 @@ public class AQRule {
     }
 
     public int coverage() {
-        return coveredInstances.size();
+        return coveredInstances.size() != 0 ? coveredInstances.size() : forceCoverage;
+    }
+
+    public void setForceCoverage(int forceCoverage) {
+        this.forceCoverage = forceCoverage;
     }
 
     public int getComplexity() {
@@ -172,4 +177,8 @@ public class AQRule {
         return coverage;
     }
 
+    @Override
+    public int compareTo(AQRule o) {
+        return -Integer.compare(this.coverage(), o.coverage());
+    }
 }

@@ -25,6 +25,7 @@ public class GAAQClassifier extends AbstractClassifier {
 
     private List<String> classes;
     private Map<String, AQClassDescription> classMapDescriptions = new HashMap<>();
+    private int maximumDescriptionSize = 10;
 
     public GAAQClassifier(List<String> classes) {
         this.classes = classes;
@@ -122,7 +123,7 @@ public class GAAQClassifier extends AbstractClassifier {
                     int value = 0;
                     switch (attr.type()) {
                         case Attribute.NOMINAL:
-                            value = (int) instance.value(attr.index());
+                            value = (int) Math.pow(2.0, instance.value(attr.index()));
 
                             if (!featureMap.containsKey(attr.index())) {
                                 CRFeature feature = new CRFeature(attr.name());
@@ -283,6 +284,7 @@ public class GAAQClassifier extends AbstractClassifier {
                 result.append("NUM_OBJECTS: ").append(num_objects.get(bp)).append("\n");
                 AQRule rule = new AQRule();
                 rule.setId(bp);
+                rule.setForceCoverage(num_objects.get(bp));
                 result.append("RULE_").append(bp + 1).append(":\n");
                 for (int i = 0; i < BestPop[bp].bestgenotype.numGenes; ++i) {
                     if (essential.get(bp).get(i)) {
@@ -293,9 +295,18 @@ public class GAAQClassifier extends AbstractClassifier {
                 classRules.add(rule);
                 result.append("\n");
             }
-            classMapDescriptions.put(className, AQClassDescription.createFromRules(classRules, className));
+            Collections.sort(classRules);
+            classMapDescriptions.put(className, AQClassDescription.createFromRules(classRules, maximumDescriptionSize, className));
             logger.info(result.toString());
         }
+    }
+
+    public void setMaximumDescriptionSize(int maximumDescriptionSize) {
+        this.maximumDescriptionSize = maximumDescriptionSize;
+    }
+
+    public int getMaximumDescriptionSize() {
+        return maximumDescriptionSize;
     }
 
     public Collection<AQClassDescription> getDescriptions() {
@@ -308,4 +319,5 @@ public class GAAQClassifier extends AbstractClassifier {
                         GAAQClassifier.class.getClassLoader().getResource("ru/isa/ai/causal/classifiers/diabetes.arff").getPath()}
         );
     }
+
 }

@@ -26,7 +26,7 @@ public class TestExternalAQ {
         Map<String, List<AQRule>> rules = cl.getClassRules();
 
         for (Map.Entry<String, List<AQRule>> entry : rules.entrySet()) {
-            JSMAnalyzer analyzer = new JSMAnalyzer(AQClassDescription.createFromRules(entry.getValue(), entry.getKey()), tmpInst);
+            JSMAnalyzer analyzer = new JSMAnalyzer(AQClassDescription.createFromRules(entry.getValue(), 100, entry.getKey()), tmpInst);
             System.out.println("Causes for class " + entry.getKey() + ": ");
             List<JSMHypothesis> hypothesises = analyzer.evaluateCauses();
             for (JSMHypothesis hypothesis : hypothesises) {

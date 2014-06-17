@@ -32,6 +32,7 @@ public class GAAQJSM {
         options.addOption(OptionBuilder.withDescription("set file of data").hasArg().create("f"));
         options.addOption(OptionBuilder.withValueSeparator(',').hasArgs().withDescription("set id of classes for JSM analyze").create("c"));
         options.addOption("l", true, "set maximum length of causes");
+        options.addOption("u", true, "set maximum size of universe of characters for JSM analyze");
 
         CommandLineParser parser = new BasicParser();
 
@@ -44,6 +45,7 @@ public class GAAQJSM {
             } else {
                 String dataFile = line.getOptionValue("f");
                 int maxHypothesisLength = Integer.parseInt(line.getOptionValue("l", "3"));
+                int maxUniverseSize = Integer.parseInt(line.getOptionValue("u", "10"));
                 List<String> classes = new ArrayList<>();
                 if (line.hasOption("c"))
                     Collections.addAll(classes, line.getOptionValues("c"));
@@ -79,6 +81,7 @@ public class GAAQJSM {
                 }
 
                 GAAQClassifier classifier = new GAAQClassifier(classes);
+                classifier.setMaximumDescriptionSize(maxUniverseSize);
                 classifier.buildClassifier(data);
                 Collection<AQClassDescription> classDescriptions = classifier.getDescriptions();
                 for (AQClassDescription description : classDescriptions) {
