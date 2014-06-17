@@ -64,7 +64,7 @@ public class GAAQClassifier extends AbstractClassifier {
         Enumeration classEnum = testData.classAttribute().enumerateValues();
         while (classEnum.hasMoreElements()) {
             String className = (String) classEnum.nextElement();
-            if (classes != null && !classes.contains(className))
+            if (classes != null && !classes.isEmpty() && !classes.contains(className))
                 continue;
 
             int classIndex = testData.classAttribute().indexOfValue(className);
@@ -125,9 +125,9 @@ public class GAAQClassifier extends AbstractClassifier {
                         case Attribute.NOMINAL:
                             value = (int) Math.pow(2.0, instance.value(attr.index()));
 
-                            if (!featureMap.containsKey(attr.index())) {
+                            if (!featureMap.containsKey(attrCounter)) {
                                 CRFeature feature = new CRFeature(attr.name());
-                                featureMap.put(attr.index(), feature);
+                                featureMap.put(attrCounter, feature);
                             }
                             break;
                         case Attribute.NUMERIC:
@@ -137,13 +137,13 @@ public class GAAQClassifier extends AbstractClassifier {
                             double inter = max - min;
                             value = numVal < min + inter / 3 ? 1 : (numVal < min + 2 * inter / 3 ? 2 : 4);
 
-                            if (!featureMap.containsKey(attr.index())) {
+                            if (!featureMap.containsKey(attrCounter)) {
                                 CRFeature feature = new CRFeature(attr.name());
                                 feature.getCutPoints().add(min);
                                 feature.getCutPoints().add(min + inter / 3);
                                 feature.getCutPoints().add(min + 2 * inter / 3);
                                 feature.getCutPoints().add(max);
-                                featureMap.put(attr.index(), feature);
+                                featureMap.put(attrCounter, feature);
                             }
                             break;
                     }
