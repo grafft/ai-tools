@@ -98,6 +98,10 @@ public class AQJSM {
                     loader.setNominalLabelSpecs(new String[]{"1:1,2,3", "2:1,2", "3:1,2"});
                     ConverterUtils.DataSource trainSource = new ConverterUtils.DataSource(loader);
                     data = trainSource.getDataSet(0);
+//                    loader.setNominalAttributes("29");
+//                    loader.setNominalLabelSpecs(new String[]{"29:1,2,3"});
+//                    ConverterUtils.DataSource trainSource = new ConverterUtils.DataSource(loader);
+//                    data = trainSource.getDataSet(28);
                 } else {
                     throw new AQClassifierException("Not supported file extension: " + dataFile);
                 }

@@ -422,7 +422,7 @@ public class SpatialPooler implements ISpatialPooler {
 
         final CoordinateConverterND conv = new CoordinateConverterND(inputDimensions);
 
-        if (connectedSparse.size() == 0)
+        if (connectedSparse.cardinality() == 0)
             return 0;
 
         connectedSparse.forEachIndexFromToInState(0, connectedSparse.size() - 1, true, new IntProcedure() {
@@ -629,7 +629,8 @@ public class SpatialPooler implements ISpatialPooler {
             potential.forEachIndexFromToInState(0, potential.size() - 1, true, new IntProcedure() {
                 @Override
                 public boolean apply(int index) {
-                    perm.setQuick(index, perm.getQuick(index) + synPermBelowStimulusInc);
+                    int id = numInputs - index - 1;
+                    perm.setQuick(id, perm.getQuick(id) + synPermBelowStimulusInc);
                     return true;
                 }
             });
@@ -672,7 +673,8 @@ public class SpatialPooler implements ISpatialPooler {
             potential.forEachIndexFromToInState(0, potential.size() - 1, true, new IntProcedure() {
                 @Override
                 public boolean apply(int index) {
-                    perm.setQuick(index, perm.getQuick(index) + permChanges.getQuick(index));
+                    int id = numInputs - index - 1;
+                    perm.setQuick(id, perm.getQuick(id) + permChanges.getQuick(index));
                     return true;
                 }
             });
@@ -781,7 +783,8 @@ public class SpatialPooler implements ISpatialPooler {
         connectedSynapses.forEachCoordinateInState(true, new IntIntProcedure() {
             @Override
             public boolean apply(int first, int second) {
-                overlaps.setQuick(first, overlaps.getQuick(first) + (inputVector.get(second) ? 1 : 0));
+                int id = numInputs - first - 1;
+                overlaps.setQuick(second, overlaps.getQuick(second) + (inputVector.get(id) ? 1 : 0));
                 return true;
             }
         });
@@ -1010,4 +1013,29 @@ public class SpatialPooler implements ISpatialPooler {
     public void setIterationNum(int iterationNum) {
         this.iterationNum = iterationNum;
     }
+
+    public DoubleMatrix1D getPermanence(int column) {
+        return MathUtils.getRow(permanences, column);
+    }
+
+    public void setPotential(int column, BitVector ints) {
+        MathUtils.setRow(potentialPools, ints, column);
+    }
+
+    public void setMinOverlapDutyCycles(DoubleMatrix1D minOverlapDutyCycles) {
+        this.minOverlapDutyCycles = minOverlapDutyCycles;
+    }
+
+    public void setBoostFactors(DoubleMatrix1D boostFactors) {
+        this.boostFactors = boostFactors;
+    }
+
+    public DoubleMatrix1D getBoostFactors() {
+        return boostFactors;
+    }
+
+    public void setMinActiveDutyCycles(DoubleMatrix1D minActiveDutyCycles) {
+        this.minActiveDutyCycles = minActiveDutyCycles;
+    }
+
 }

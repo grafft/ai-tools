@@ -43,13 +43,14 @@ public class JSMAnalyzer {
             factBase.reduceEquals();
 
             if (!factBase.isConflicted()) {
-                logger.info("Start search causes for " + property.toString());
+                logger.info("Start search causes for " + property.toString() + " [plus_ex=" + factBase.plusExamples.size() +
+                        ", minus_ex=" + factBase.minusExamples.size() + ", univer=" + factBase.universe.size() + "]");
                 JSMHypothesis cause = new JSMHypothesis(property);
-                List<Intersection> hypothesis = reasons(factBase);
+                List<Intersection> hypothesis = reasons(factBase, 0);
                 for (Intersection intersection : hypothesis) {
                     Set<CRProperty> causeProps = new HashSet<>();
-                    for (int i = 0; i < intersection.value.length; i++)
-                        if (intersection.value[i] == 1)
+                    for (int i = 0; i < intersection.value.length(); i++)
+                        if (intersection.value.get(i))
                             causeProps.add(otherProps.get(i));
                     if (causeProps.size() > 0)
                         cause.addValue(causeProps);
@@ -69,7 +70,7 @@ public class JSMAnalyzer {
         this.maxHypothesisLength = maxHypothesisLength;
     }
 
-    public List<Intersection> reasons(FactBase factBase) {
+    public List<Intersection> reasons(FactBase factBase, int deep) {
         List<Intersection> hypothesis = new ArrayList<>();
 
         // 1. Находим минимальные пересечения над объектами, обладающими свойством
@@ -80,7 +81,7 @@ public class JSMAnalyzer {
         for (Intersection intersection : intersections) {
             // 2.1. Ищем объект из объектов, не обладающих свойством, в который входит это пересечение (его индекс)
             int minusObject = -1;
-            for (Map.Entry<Integer, byte[]> entry : factBase.minusExamples.entrySet()) {
+            for (Map.Entry<Integer, BitSet> entry : factBase.minusExamples.entrySet()) {
                 if (BooleanArrayUtils.include(entry.getValue(), intersection.value)) {
                     minusObject = entry.getKey();
                     break;
@@ -93,22 +94,25 @@ public class JSMAnalyzer {
                 // положительные примеры - это множество образующих с вычтенным пересечением
                 FactBase newFactBase = new FactBase();
                 for (Integer objectId : intersection.generators) {
-                    newFactBase.plusExamples.put(objectId, BooleanArrayUtils.subtraction(factBase.plusExamples.get(objectId), intersection.value));
+                    newFactBase.plusExamples.put(objectId, BooleanArrayUtils.andNot(factBase.plusExamples.get(objectId), intersection.value));
                 }
                 // отрицательные примеры - множество исходныех отрицательных с вычетом найденного примера
-                for (Map.Entry<Integer, byte[]> entry : factBase.minusExamples.entrySet()) {
-                    newFactBase.minusExamples.put(entry.getKey(), BooleanArrayUtils.subtraction(entry.getValue(), intersection.value));
+                for (Map.Entry<Integer, BitSet> entry : factBase.minusExamples.entrySet()) {
+                    newFactBase.minusExamples.put(entry.getKey(), BooleanArrayUtils.andNot(entry.getValue(), intersection.value));
                 }
                 // с полученными новыми мнжествами примеров и усеченным универсумом - ищем причины
-                List<Intersection> toAdd = reasons(newFactBase);
+                List<Intersection> toAdd = reasons(newFactBase, deep + 1);
                 for (Intersection inter : toAdd) {
-                    intersection.add(inter);
-                    hypothesis.add(intersection);
+                    Intersection clone = intersection.clone();
+                    clone.add(inter);
+                    if (BooleanArrayUtils.cardinality(clone.value) <= maxHypothesisLength) {
+                        hypothesis.add(clone);
+                    }
                 }
             }
         }
         // 3. Включаем в гипотезы объекты, не входящие во множество образующих ни одного минимального пересечения
-        for (Map.Entry<Integer, byte[]> entry : factBase.plusExamples.entrySet()) {
+        for (Map.Entry<Integer, BitSet> entry : factBase.plusExamples.entrySet()) {
             boolean toAdd = true;
             for (Intersection inter : intersections) {
                 if (inter.generators.contains(entry.getKey())) {
@@ -117,7 +121,7 @@ public class JSMAnalyzer {
                 }
             }
             // если его размер не слишеом велик
-            if (toAdd && BooleanArrayUtils.countNonZero(entry.getValue()) <= maxHypothesisLength)
+            if (toAdd && BooleanArrayUtils.cardinality(entry.getValue()) <= maxHypothesisLength)
                 hypothesis.add(new Intersection(entry.getValue(), entry.getKey()));
         }
         // 4. Исключаем из гипотез те гипотезы, которые являются надмножествами других
@@ -135,13 +139,13 @@ public class JSMAnalyzer {
         return hypothesis;
     }
 
-    private List<Intersection> searchIntersection(Map<Integer, byte[]> objectMap, boolean check) {
+    public List<Intersection> searchIntersection(Map<Integer, BitSet> objectMap, boolean check) {
         List<Intersection> intersections = new ArrayList<>();
 
-        Map<Integer, byte[]> objects = new HashMap<>();
+        Map<Integer, BitSet> objects = new HashMap<>();
         int firstKey = -1;
         Intersection intersection = null;
-        for (Map.Entry<Integer, byte[]> entry : objectMap.entrySet()) {
+        for (Map.Entry<Integer, BitSet> entry : objectMap.entrySet()) {
             if (firstKey == -1) {
                 intersection = new Intersection(entry.getValue(), entry.getKey());
                 firstKey = entry.getKey();
@@ -156,10 +160,10 @@ public class JSMAnalyzer {
             if (intersection.generators.size() > 1)
                 intersections.add(intersection);
             // 3. построить новый массив объектов вычитанием из имеющихся объектов полученного пересечения, считая непустые объекты
-            Map<Integer, byte[]> newObjects = new HashMap<>();
-            for (Map.Entry<Integer, byte[]> entry : objectMap.entrySet()) {
-                byte[] result = BooleanArrayUtils.subtraction(entry.getValue(), intersection.value);
-                if (BooleanArrayUtils.countNonZero(result) > 0) {
+            Map<Integer, BitSet> newObjects = new HashMap<>();
+            for (Map.Entry<Integer, BitSet> entry : objectMap.entrySet()) {
+                BitSet result = BooleanArrayUtils.andNot(entry.getValue(), intersection.value);
+                if (BooleanArrayUtils.cardinality(result) > 0) {
                     newObjects.put(entry.getKey(), result);
                 }
             }
@@ -174,12 +178,12 @@ public class JSMAnalyzer {
             if (check) {
                 List<Intersection> toDel = new ArrayList<>();
                 for (Intersection inter : intersections) {
-                    List<byte[]> generators = new ArrayList<>();
-                    for (Map.Entry<Integer, byte[]> entry : objectMap.entrySet()) {
+                    List<BitSet> generators = new ArrayList<>();
+                    for (Map.Entry<Integer, BitSet> entry : objectMap.entrySet()) {
                         if (inter.generators.contains(entry.getKey()))
                             generators.add(entry.getValue());
                     }
-                    byte[] result = BooleanArrayUtils.multiplyAll(generators);
+                    BitSet result = BooleanArrayUtils.andAll(generators);
                     if (!BooleanArrayUtils.equals(inter.value, result))
                         toDel.add(inter);
                 }
@@ -196,16 +200,16 @@ public class JSMAnalyzer {
 
         Attribute keyAttr = data.attribute(keyProperty.getFeature().getName());
         for (Instance event : data) {
-            byte[] objectVector = new byte[properties.size()];
+            BitSet objectVector = new BitSet(properties.size());
             for (int i = 0; i < properties.size(); i++) {
                 Attribute attr = data.attribute(properties.get(i).getFeature().getName());
                 switch (attr.type()) {
                     case Attribute.NOMINAL:
                         String value = attr.value((int) event.value(attr.index()));
-                        objectVector[i] = (byte) (properties.get(i).coverNominal(value) ? 1 : 0);
+                        objectVector.set(i, properties.get(i).coverNominal(value));
                         break;
                     case Attribute.NUMERIC:
-                        objectVector[i] = (byte) (properties.get(i).cover(event.value(attr.index())) ? 1 : 0);
+                        objectVector.set(i, properties.get(i).cover(event.value(attr.index())));
                         break;
                 }
             }
@@ -220,23 +224,25 @@ public class JSMAnalyzer {
                     break;
             }
             if (isCover) {
-                factBase.plusExamples.put(data.indexOf(event), objectVector);
+                if (!factBase.plusExamples.containsValue(objectVector))
+                    factBase.plusExamples.put(data.indexOf(event), objectVector);
             } else {
-                factBase.minusExamples.put(data.indexOf(event), objectVector);
+                if (!factBase.minusExamples.containsValue(objectVector))
+                    factBase.minusExamples.put(data.indexOf(event), objectVector);
             }
         }
         return factBase;
     }
 
     public class FactBase {
-        public Map<Integer, byte[]> plusExamples = new HashMap<>();
-        public Map<Integer, byte[]> minusExamples = new HashMap<>();
+        public Map<Integer, BitSet> plusExamples = new HashMap<>();
+        public Map<Integer, BitSet> minusExamples = new HashMap<>();
         List<CRProperty> universe;
 
         void reduceEquals() {
             Set<Integer> toRemove = new HashSet<>();
-            for (Map.Entry<Integer, byte[]> entry1 : plusExamples.entrySet()) {
-                for (Map.Entry<Integer, byte[]> entry2 : plusExamples.entrySet()) {
+            for (Map.Entry<Integer, BitSet> entry1 : plusExamples.entrySet()) {
+                for (Map.Entry<Integer, BitSet> entry2 : plusExamples.entrySet()) {
                     if (!entry1.getKey().equals(entry2.getKey()) && !toRemove.contains(entry2.getKey()) &&
                             BooleanArrayUtils.equals(entry1.getValue(), entry2.getValue()))
                         toRemove.add(entry1.getKey());
@@ -245,9 +251,10 @@ public class JSMAnalyzer {
 
             for (int index : toRemove)
                 plusExamples.remove(index);
+
             toRemove.clear();
-            for (Map.Entry<Integer, byte[]> entry1 : minusExamples.entrySet()) {
-                for (Map.Entry<Integer, byte[]> entry2 : minusExamples.entrySet()) {
+            for (Map.Entry<Integer, BitSet> entry1 : minusExamples.entrySet()) {
+                for (Map.Entry<Integer, BitSet> entry2 : minusExamples.entrySet()) {
                     if (!entry1.getKey().equals(entry2.getKey()) && !toRemove.contains(entry2.getKey()) &&
                             BooleanArrayUtils.equals(entry1.getValue(), entry2.getValue()))
                         toRemove.add(entry1.getKey());
@@ -258,8 +265,8 @@ public class JSMAnalyzer {
         }
 
         boolean isConflicted() {
-            for (byte[] plusExample : plusExamples.values()) {
-                for (byte[] minusExample : minusExamples.values()) {
+            for (BitSet plusExample : plusExamples.values()) {
+                for (BitSet minusExample : minusExamples.values()) {
                     if (BooleanArrayUtils.equals(plusExample, minusExample))
                         return true;
                 }
@@ -268,19 +275,24 @@ public class JSMAnalyzer {
         }
     }
 
-    public class Intersection implements Comparable<Intersection> {
-        public byte[] value;
+    public class Intersection implements Comparable<Intersection>, Cloneable {
+        public BitSet value;
         public List<Integer> generators = new ArrayList<>();
 
-        private Intersection(byte[] value, int objectId) {
+        private Intersection(BitSet value, int objectId) {
             this.value = value;
             generators.add(objectId);
         }
 
-        public void intersect(Map<Integer, byte[]> objects) {
-            for (Map.Entry<Integer, byte[]> entry : objects.entrySet()) {
-                byte[] result = BooleanArrayUtils.multiply(value, entry.getValue());
-                if (BooleanArrayUtils.countNonZero(result) > 0) {
+        private Intersection(BitSet value, List<Integer> generators) {
+            this.value = value;
+            generators.addAll(generators);
+        }
+
+        public void intersect(Map<Integer, BitSet> objects) {
+            for (Map.Entry<Integer, BitSet> entry : objects.entrySet()) {
+                BitSet result = BooleanArrayUtils.and(value, entry.getValue());
+                if (BooleanArrayUtils.cardinality(result) > 0) {
                     value = result;
                     generators.add(entry.getKey());
                 }
@@ -290,7 +302,7 @@ public class JSMAnalyzer {
         public void add(Intersection toAdd) {
             generators.clear();
             generators.addAll(toAdd.generators);
-            value = BooleanArrayUtils.addition(value, toAdd.value);
+            value = BooleanArrayUtils.or(value, toAdd.value);
         }
 
         @Override
@@ -305,7 +317,7 @@ public class JSMAnalyzer {
 
         @Override
         public int hashCode() {
-            return Arrays.hashCode(value);
+            return value.hashCode();
         }
 
         @Override
@@ -315,5 +327,9 @@ public class JSMAnalyzer {
             return Integer.compare(this.generators.size(), o.generators.size());
         }
 
+        @Override
+        public Intersection clone() {
+            return new Intersection((BitSet) this.value.clone(), this.generators);
+        }
     }
 }

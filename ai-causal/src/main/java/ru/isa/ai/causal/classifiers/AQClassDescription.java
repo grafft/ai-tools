@@ -32,11 +32,14 @@ public class AQClassDescription {
         return className;
     }
 
-    public static AQClassDescription createFromRules(List<AQRule> rules, String className) {
+    public static AQClassDescription createFromRules(List<AQRule> rules, int maximumDescriptionSize, String className) {
         List<CRProperty> rawDescription = new ArrayList<>();
+        over:
         for (AQRule rule : rules) {
             // добавялем каждое свойство из правила с проверкой
             for (Map.Entry<CRFeature, List<Integer>> ruleEntry : rule.getTokens().entrySet()) {
+                if (rawDescription.size() >= maximumDescriptionSize)
+                    break over;
                 CRProperty prop = new CRProperty(ruleEntry.getKey(), ruleEntry.getValue());
                 prop.setPopularity(rule.getCoveredInstances().size());
                 if (!rawDescription.contains(prop))

@@ -11,6 +11,7 @@ import junit.framework.TestSuite;
 import ru.isa.ai.dhm.MathUtils;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -496,6 +497,358 @@ public class SpatialPoolerTest extends TestCase {
             assertEquals(trueAvgConnectedSpan[i], result);
         }
 
+    }
+
+    public void testAdaptSynapses() throws SpatialPoolerInitializationException, ReflectiveOperationException {
+        Method method = SpatialPooler.class.getDeclaredMethod("adaptSynapses", BitVector.class, List.class);
+        method.setAccessible(true);
+
+        SpatialPooler sp = new SpatialPooler(getClass().getClassLoader().getResource("dhm_sp_def.properties").getPath());
+        sp.initialize(new int[]{8}, new int[]{4});
+
+        long[] potentialArr1 =
+                {
+                        0b11110000,
+                        0b10001101,
+                        0b00100010,
+                        0b10000010
+                };
+
+        double[][] permanencesArr1 =
+                {
+                        {0.200, 0.120, 0.090, 0.060, 0.000, 0.000, 0.000, 0.000},
+                        {0.150, 0.000, 0.000, 0.000, 0.180, 0.120, 0.000, 0.450},
+                        {0.000, 0.000, 0.014, 0.000, 0.000, 0.000, 0.110, 0.000},
+                        {0.070, 0.000, 0.000, 0.000, 0.000, 0.000, 0.178, 0.000}
+                };
+
+        double[][] truePermanences1 =
+                {
+                        {0.300, 0.110, 0.080, 0.160, 0.000, 0.000, 0.000, 0.000},
+                        //   Inc     Dec   Dec    Inc      -      -      -     -
+                        {0.250, 0.000, 0.000, 0.000, 0.280, 0.110, 0.000, 0.440},
+                        //   Inc      -      -     -      Inc    Dec    -     Dec
+                        {0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.210, 0.000},
+                        //   -      -     Trim     -     -     -       Inc   -
+                        {0.070, 0.000, 0.000, 0.000, 0.000, 0.000, 0.178, 0.000}
+                        //    -      -      -      -      -      -      -       -
+                };
+
+        BitVector inputArr1 = new BitVector(new long[]{0b10011010}, 8);
+
+        for (int column = 0; column < 4; column++) {
+            sp.setPotential(column, new BitVector(new long[]{potentialArr1[column]}, 8));
+            sp.setPermanence(column, new DenseDoubleMatrix1D(permanencesArr1[column]));
+        }
+
+        List<Integer> activeColumns = Arrays.asList(0, 1, 2);
+
+        method.invoke(sp, inputArr1, activeColumns);
+        for (int column = 0; column < 4; column++) {
+            DoubleMatrix1D permArr = sp.getPermanence(column);
+            assertTrue(MathUtils.almostEquals(truePermanences1[column], permArr.toArray()));
+        }
+
+
+        long[] potentialArr2 =
+                {
+                        0b11100000,
+                        0b01110000,
+                        0b00111000,
+                        0b10000010
+                };
+
+        double[][] permanencesArr2 =
+                {
+                        {0.200, 0.120, 0.090, 0.000, 0.000, 0.000, 0.000, 0.000},
+                        {0.000, 0.017, 0.232, 0.400, 0.000, 0.000, 0.000, 0.000},
+                        {0.000, 0.000, 0.014, 0.051, 0.730, 0.000, 0.000, 0.000},
+                        {0.170, 0.000, 0.000, 0.000, 0.000, 0.000, 0.380, 0.000}
+                };
+
+        double[][] truePermanences2 =
+                {
+                        {0.30, 0.110, 0.080, 0.000, 0.000, 0.000, 0.000, 0.000},
+                        //  #  Inc    Dec     Dec     -       -    -    -    -
+                        {0.000, 0.000, 0.222, 0.500, 0.000, 0.000, 0.000, 0.000},
+                        //  #  -     Trim    Dec    Inc    -       -      -      -
+                        {0.000, 0.000, 0.000, 0.151, 0.830, 0.000, 0.000, 0.000},
+                        //  #   -      -    Trim   Inc    Inc     -     -     -
+                        {0.170, 0.000, 0.000, 0.000, 0.000, 0.000, 0.380, 0.000}
+                        //  #  -    -      -      -      -       -       -     -
+                };
+
+        BitVector inputArr2 = new BitVector(new long[]{0b10011010}, 8);
+
+
+        for (int column = 0; column < 4; column++) {
+            sp.setPotential(column, new BitVector(new long[]{potentialArr2[column]}, 8));
+            sp.setPermanence(column, new DenseDoubleMatrix1D(permanencesArr2[column]));
+        }
+
+        activeColumns = Arrays.asList(0, 1, 2);
+
+        method.invoke(sp, inputArr2, activeColumns);
+        for (int column = 0; column < 4; column++) {
+            DoubleMatrix1D permArr = sp.getPermanence(column);
+            assertTrue(MathUtils.almostEquals(truePermanences2[column], permArr.toArray()));
+        }
+    }
+
+    public void testBumpUpWeakColumns() throws SpatialPoolerInitializationException, ReflectiveOperationException {
+        Method method = SpatialPooler.class.getDeclaredMethod("bumpUpWeakColumns");
+        method.setAccessible(true);
+
+        SpatialPooler sp = new SpatialPooler(getClass().getClassLoader().getResource("dhm_sp_def.properties").getPath());
+        sp.initialize(new int[]{8}, new int[]{5});
+
+        sp.setSynPermBelowStimulusInc(0.01);
+        sp.setSynPermTrimThreshold(0.05);
+        DoubleMatrix1D overlapDutyCyclesArr = new DenseDoubleMatrix1D(new double[]{0, 0.009, 0.1, 0.001, 0.002});
+        sp.setOverlapDutyCycles(overlapDutyCyclesArr);
+        DoubleMatrix1D minOverlapDutyCyclesArr = new DenseDoubleMatrix1D(new double[]{0.01, 0.01, 0.01, 0.01, 0.01});
+        sp.setMinOverlapDutyCycles(minOverlapDutyCyclesArr);
+
+        long[] potentialArr =
+                {
+                        0b11110000,
+                        0b10001101,
+                        0b00101110,
+                        0b11100010,
+                        0b11111111
+                };
+
+        double[][] permArr =
+                {
+                        {0.200, 0.120, 0.090, 0.040, 0.000, 0.000, 0.000, 0.000},
+                        {0.150, 0.000, 0.000, 0.000, 0.180, 0.120, 0.000, 0.450},
+                        {0.000, 0.000, 0.074, 0.000, 0.062, 0.054, 0.110, 0.000},
+                        {0.051, 0.000, 0.000, 0.000, 0.000, 0.000, 0.178, 0.000},
+                        {0.100, 0.738, 0.085, 0.002, 0.052, 0.008, 0.208, 0.034}
+                };
+
+        double[][] truePermArr =
+                {
+                        {0.210, 0.130, 0.100, 0.000, 0.000, 0.000, 0.000, 0.000},
+                        //  Inc    Inc    Inc    Trim    -     -     -    -
+                        {0.160, 0.000, 0.000, 0.000, 0.190, 0.130, 0.000, 0.460},
+                        //  Inc   -     -    -     Inc   Inc    -     Inc
+                        {0.000, 0.000, 0.074, 0.000, 0.062, 0.054, 0.110, 0.000},  // unchanged
+                        //  -    -     -    -     -    -     -    -
+                        {0.061, 0.000, 0.000, 0.000, 0.000, 0.000, 0.188, 0.000},
+                        //   Inc   Trim    Trim    -     -      -     Inc     -
+                        {0.110, 0.748, 0.095, 0.000, 0.062, 0.000, 0.218, 0.000}
+                };
+
+        for (int i = 0; i < 5; i++) {
+            sp.setPotential(i, new BitVector(new long[]{potentialArr[i]}, 8));
+            sp.setPermanence(i, new DenseDoubleMatrix1D(permArr[i]));
+        }
+
+        method.invoke(sp);
+        for (int i = 0; i < 5; i++) {
+            DoubleMatrix1D perm = sp.getPermanence(i);
+            assertTrue(MathUtils.almostEquals(truePermArr[i], perm.toArray()));
+        }
+    }
+
+    public void testUpdateBoostFactors() throws SpatialPoolerInitializationException, ReflectiveOperationException {
+        Method method = SpatialPooler.class.getDeclaredMethod("updateBoostFactors");
+        method.setAccessible(true);
+
+        SpatialPooler sp = new SpatialPooler(getClass().getClassLoader().getResource("dhm_sp_def.properties").getPath());
+        sp.initialize(new int[]{6}, new int[]{6});
+
+        DoubleMatrix1D initMinActiveDutyCycles1 = new DenseDoubleMatrix1D(new double[]{1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 0});
+        DoubleMatrix1D initActiveDutyCycles1 = new DenseDoubleMatrix1D(new double[]{0.1, 0.3, 0.02, 0.04, 0.7, 0.12});
+        DoubleMatrix1D initBoostFactors1 = new DenseDoubleMatrix1D(new double[]{0, 0, 0, 0, 0, 0});
+        DoubleMatrix1D trueBoostFactors1 = new DenseDoubleMatrix1D(new double[]{1, 1, 1, 1, 1, 0});
+        sp.setMaxBoost(10);
+        sp.setBoostFactors(initBoostFactors1);
+        sp.setActiveDutyCycles(initActiveDutyCycles1);
+        sp.setMinActiveDutyCycles(initMinActiveDutyCycles1);
+
+        method.invoke(sp);
+
+        DoubleMatrix1D resultBoostFactors1 = sp.getBoostFactors();
+        assertTrue(MathUtils.almostEquals(trueBoostFactors1.toArray(), resultBoostFactors1.toArray()));
+
+        DoubleMatrix1D initMinActiveDutyCycles2 = new DenseDoubleMatrix1D(new double[]{0.1, 0.3, 0.02, 0.04, 0.7, 0.12});
+        DoubleMatrix1D initActiveDutyCycles2 = new DenseDoubleMatrix1D(new double[]{0.1, 0.3, 0.02, 0.04, 0.7, 0.12});
+        DoubleMatrix1D initBoostFactors2 = new DenseDoubleMatrix1D(new double[]{0, 0, 0, 0, 0, 0});
+        DoubleMatrix1D trueBoostFactors2 = new DenseDoubleMatrix1D(new double[]{1, 1, 1, 1, 1, 1});
+        sp.setMaxBoost(10);
+        sp.setBoostFactors(initBoostFactors2);
+        sp.setActiveDutyCycles(initActiveDutyCycles2);
+        sp.setMinActiveDutyCycles(initMinActiveDutyCycles2);
+
+        method.invoke(sp);
+
+        DoubleMatrix1D resultBoostFactors2 = sp.getBoostFactors();
+        assertTrue(MathUtils.almostEquals(trueBoostFactors2.toArray(), resultBoostFactors2.toArray()));
+
+        DoubleMatrix1D initMinActiveDutyCycles3 = new DenseDoubleMatrix1D(new double[]{0.1, 0.3, 0.02, 0.04, 0.7, 0.12});
+        DoubleMatrix1D initActiveDutyCycles3 = new DenseDoubleMatrix1D(new double[]{0.01, 0.03, 0.002, 0.004, 0.07, 0.012});
+        DoubleMatrix1D initBoostFactors3 = new DenseDoubleMatrix1D(new double[]{0, 0, 0, 0, 0, 0});
+        DoubleMatrix1D trueBoostFactors3 = new DenseDoubleMatrix1D(new double[]{9.1, 9.1, 9.1, 9.1, 9.1, 9.1});
+        sp.setMaxBoost(10);
+        sp.setBoostFactors(initBoostFactors3);
+        sp.setActiveDutyCycles(initActiveDutyCycles3);
+        sp.setMinActiveDutyCycles(initMinActiveDutyCycles3);
+
+        method.invoke(sp);
+
+        DoubleMatrix1D resultBoostFactors3 = sp.getBoostFactors();
+        assertTrue(MathUtils.almostEquals(trueBoostFactors3.toArray(), resultBoostFactors3.toArray()));
+
+        DoubleMatrix1D initMinActiveDutyCycles4 = new DenseDoubleMatrix1D(new double[]{0.1, 0.3, 0.02, 0.04, 0.7, 0.12});
+        DoubleMatrix1D initActiveDutyCycles4 = new DenseDoubleMatrix1D(new double[]{0, 0, 0, 0, 0, 0});
+        DoubleMatrix1D initBoostFactors4 = new DenseDoubleMatrix1D(new double[]{0, 0, 0, 0, 0, 0});
+        DoubleMatrix1D trueBoostFactors4 = new DenseDoubleMatrix1D(new double[]{10, 10, 10, 10, 10, 10});
+        sp.setMaxBoost(10);
+        sp.setBoostFactors(initBoostFactors4);
+        sp.setActiveDutyCycles(initActiveDutyCycles4);
+        sp.setMinActiveDutyCycles(initMinActiveDutyCycles4);
+
+        method.invoke(sp);
+
+        DoubleMatrix1D resultBoostFactors4 = sp.getBoostFactors();
+        assertTrue(MathUtils.almostEquals(trueBoostFactors4.toArray(), resultBoostFactors4.toArray()));
+    }
+
+    public void testCalculateOverlap() throws SpatialPoolerInitializationException, ReflectiveOperationException {
+        Method method = SpatialPooler.class.getDeclaredMethod("calculateOverlap", BitVector.class, IntMatrix1D.class);
+        method.setAccessible(true);
+
+        SpatialPooler sp = new SpatialPooler(getClass().getClassLoader().getResource("dhm_sp_def.properties").getPath());
+        sp.initialize(new int[]{10}, new int[]{5});
+        sp.setStimulusThreshold(0);
+
+        double[][] permArr =
+                {
+                        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                        {0, 0, 1, 1, 1, 1, 1, 1, 1, 1},
+                        {0, 0, 0, 0, 1, 1, 1, 1, 1, 1},
+                        {0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
+                        {0, 0, 0, 0, 0, 0, 0, 0, 1, 1}
+                };
+
+
+        long[] inputs =
+                {
+                        0b0000000000,
+                        0b1111111111,
+                        0b0101010101,
+                        0b1111100000,
+                        0b0000000001
+                };
+
+        int[][] trueOverlaps =
+                {
+                        {0, 0, 0, 0, 0},
+                        {10, 8, 6, 4, 2},
+                        {5, 4, 3, 2, 1},
+                        {5, 3, 1, 0, 0},
+                        {1, 1, 1, 1, 1}
+                };
+
+        for (int i = 0; i < 5; i++)
+            sp.setPermanence(i, new DenseDoubleMatrix1D(permArr[i]));
+
+        for (int i = 0; i < 5; i++) {
+            IntMatrix1D overlaps = new DenseIntMatrix1D(5);
+            method.invoke(sp, new BitVector(new long[]{inputs[i]}, 10), overlaps);
+            assertTrue(Arrays.equals(trueOverlaps[i], overlaps.toArray()));
+        }
+    }
+
+    public void testCalculateOverlapPct() throws SpatialPoolerInitializationException, ReflectiveOperationException {
+        Method method = SpatialPooler.class.getDeclaredMethod("calculateOverlapPct", IntMatrix1D.class, DoubleMatrix1D.class);
+        method.setAccessible(true);
+
+        SpatialPooler sp = new SpatialPooler(getClass().getClassLoader().getResource("dhm_sp_def.properties").getPath());
+        sp.initialize(new int[]{10}, new int[]{5});
+
+        sp.setStimulusThreshold(0);
+
+        double[][] permArr =
+                {
+                        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                        {0, 0, 1, 1, 1, 1, 1, 1, 1, 1},
+                        {0, 0, 0, 0, 1, 1, 1, 1, 1, 1},
+                        {0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
+                        {0, 0, 0, 0, 0, 0, 0, 0, 1, 1}
+                };
+
+        int[][] overlapsArr =
+                {
+                        {0, 0, 0, 0, 0},
+                        {10, 8, 6, 4, 2},
+                        {5, 4, 3, 2, 1},
+                        {5, 3, 1, 0, 0},
+                        {1, 1, 1, 1, 1}
+                };
+
+        double[][] trueOverlapsPct =
+                {
+                        {0.0, 0.0, 0.0, 0.0, 0.0},
+                        {1.0, 1.0, 1.0, 1.0, 1.0},
+                        {0.5, 0.5, 0.5, 0.5, 0.5},
+                        {0.5, 3.0 / 8, 1.0 / 6, 0, 0},
+                        {1.0 / 10, 1.0 / 8, 1.0 / 6, 1.0 / 4, 1.0 / 2}
+                };
+
+        for (int i = 0; i < 5; i++)
+            sp.setPermanence(i, new DenseDoubleMatrix1D(permArr[i]));
+
+        for (int i = 0; i < 5; i++) {
+            IntMatrix1D overlaps = new DenseIntMatrix1D(overlapsArr[i]);
+            DoubleMatrix1D overlapsPct = new DenseDoubleMatrix1D(5);
+            method.invoke(sp, overlaps, overlapsPct);
+            assertTrue(Arrays.equals(trueOverlapsPct[i], overlapsPct.toArray()));
+        }
+
+
+    }
+
+    public void testInhibitColumnsGlobal() throws SpatialPoolerInitializationException, ReflectiveOperationException {
+        Method method = SpatialPooler.class.getDeclaredMethod("inhibitColumnsGlobal", DoubleMatrix1D.class, double.class, List.class);
+        method.setAccessible(true);
+
+        SpatialPooler sp = new SpatialPooler(getClass().getClassLoader().getResource("dhm_sp_def.properties").getPath());
+        sp.initialize(new int[]{10}, new int[]{10});
+
+        DoubleMatrix1D overlaps = new DenseDoubleMatrix1D(new double[]{1, 2, 1, 4, 8, 3, 12, 5, 4, 1});
+        List<Integer> activeColumns = new ArrayList<>();
+        method.invoke(sp, overlaps, 0.3, activeColumns);
+
+        int[] trueActiveArray1 = {4, 6, 7};
+
+        int[] trueActive = new int[10];
+        int[] active = new int[10];
+
+        for (int i = 0; i < 3; i++) {
+            trueActive[trueActiveArray1[i]] = 1;
+        }
+
+        for (Integer activeColumn : activeColumns) {
+            active[activeColumn] = 1;
+        }
+        assertTrue(Arrays.equals(active, trueActive));
+
+        overlaps = new DenseDoubleMatrix1D(new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+        method.invoke(sp, overlaps, 0.5, activeColumns);
+        int[] trueActiveArray2 = {5, 6, 7, 8, 9};
+
+        for (int i = 0; i < 5; i++) {
+            trueActive[trueActiveArray2[i]] = 1;
+        }
+
+        for (Integer activeColumn : activeColumns) {
+            active[activeColumn] = 1;
+        }
+
+        assertTrue(Arrays.equals(active, trueActive));
     }
 
 //    public void test() throws SpatialPoolerInitializationException, ReflectiveOperationException {
