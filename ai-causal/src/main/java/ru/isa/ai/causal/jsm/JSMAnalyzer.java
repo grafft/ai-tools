@@ -43,7 +43,8 @@ public class JSMAnalyzer {
             factBase.reduceEquals();
 
             if (!factBase.isConflicted()) {
-                logger.info("Start search causes for " + property.toString());
+                logger.info("Start search causes for " + property.toString() + " [plus_ex=" + factBase.plusExamples.size() +
+                        ", minus_ex=" + factBase.minusExamples.size() + ", univer=" + factBase.universe.size() + "]");
                 JSMHypothesis cause = new JSMHypothesis(property);
                 List<Intersection> hypothesis = reasons(factBase, 0);
                 for (Intersection intersection : hypothesis) {
@@ -223,9 +224,11 @@ public class JSMAnalyzer {
                     break;
             }
             if (isCover) {
-                factBase.plusExamples.put(data.indexOf(event), objectVector);
+                if (!factBase.plusExamples.containsValue(objectVector))
+                    factBase.plusExamples.put(data.indexOf(event), objectVector);
             } else {
-                factBase.minusExamples.put(data.indexOf(event), objectVector);
+                if (!factBase.minusExamples.containsValue(objectVector))
+                    factBase.minusExamples.put(data.indexOf(event), objectVector);
             }
         }
         return factBase;
