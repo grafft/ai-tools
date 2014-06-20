@@ -109,6 +109,7 @@ public class GAAQClassifier extends AbstractClassifier {
             int[][] fobj = new int[numObjects - numObjectsPos][numAttr];
             ArrayList<ArrayList<Boolean>> essential = new ArrayList<>();
             ArrayList<Integer> num_objects = new ArrayList<>();
+            ArrayList<Integer> num_new_objects = new ArrayList<>();
 
             Enumeration instEnu = testData.enumerateInstances();
             int objCounter = 0;
@@ -160,7 +161,7 @@ public class GAAQClassifier extends AbstractClassifier {
             }
 
             Population[] BestPop = new Population[100];
-            int num_ob;
+            int num_ob, num_new_ob;
             int sizeBestPop = 0;
 
             int[][] tobj0 = tobj;
@@ -236,6 +237,7 @@ public class GAAQClassifier extends AbstractClassifier {
 
                 boolean found;
                 ArrayList<int[]> tobj2 = new ArrayList<>();
+                num_new_ob=0;
                 for (int[] aTobj : tobj) {
                     found = true;
                     for (int j = 0; j < BestPop[sizeBestPop - 1].bestgenotype.numGenes; ++j) {
@@ -246,6 +248,8 @@ public class GAAQClassifier extends AbstractClassifier {
                     }
                     if (!found)
                         tobj2.add(aTobj);
+                    else
+                        ++num_new_ob;
                 }
                 tobj = new int[tobj2.size()][numAttr];
                 for (int i = 0; i < tobj2.size(); i++)
@@ -263,7 +267,9 @@ public class GAAQClassifier extends AbstractClassifier {
                     if (found)
                         ++num_ob;
                 }
+                num_new_objects.add(num_new_ob);
                 num_objects.add(num_ob);
+                logger.info("num_new_ob = " + num_new_ob);
                 logger.info("num_ob = " + num_ob);
             }
 
@@ -280,7 +286,7 @@ public class GAAQClassifier extends AbstractClassifier {
             StringBuilder result = new StringBuilder();
             List<AQRule> classRules = new ArrayList<>();
             for (int bp = 0; bp < sizeBestPop; ++bp) {
-                result.append("NUM_NEW_OBJECTS: ").append((int) (BestPop[bp].bestgenotype.fit / 1000)).append("\n");
+                result.append("NUM_NEW_OBJECTS: ").append(num_new_objects.get(bp)).append("\n");//((int) (BestPop[bp].bestgenotype.fit / 1000)).append("\n");
                 result.append("NUM_OBJECTS: ").append(num_objects.get(bp)).append("\n");
                 AQRule rule = new AQRule();
                 rule.setId(bp);

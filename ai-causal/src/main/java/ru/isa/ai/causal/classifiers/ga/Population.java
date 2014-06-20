@@ -413,7 +413,12 @@ public class Population {
                     ++num_ones;
         }
 
-        fit = num * 1000.0 + num0 - num_ones / 1000.0;
+        if(num!=0)
+            fit = num0 * 1000.0 + num - num_ones / 1000.0;
+        else
+            fit = num0 - num_ones / 1000.0;
+
+        //fit = num * 1000.0 + num0 - num_ones / 1000.0;
         return fit;
     }
 
