@@ -14,12 +14,14 @@ public class Cortex {
     // Список всех колонок
     public Region region = new Region();
 
+    // TODO AP: в максимуме случаев нужно стараться исопльзовать либо массивы intов (именно примитивных), либо оптимизированные специальные классы типа Sparse...
     public List<Integer[][]> inputBits;
     // public SparseIntMatrix3D inputBits;
 
     /*Список индексов колонок – победителей благодаря прямым
     входным данным. (Выход пространственного группировщика)
    */
+    // TODO AP: нужен, конечно,  IntMatrix2D или Sparse...
     public List<List<Integer>> activeColumns;
     //public IntMatrix2D activeColumns;
 
@@ -39,9 +41,12 @@ public class Cortex {
 
     /////////////////////////////////////////////////////////////////////////
 
+    // TODO AP: везде нужно испоьзовать простые int, double и т.п. вместо объектных оберток - это быстрее
     public Integer input(Integer t, Integer j, Integer k) {
         //return Math.sin(j+k+totalTime) > 0 ? 1 : 0;
         //return rnd.nextInt(2);
+        // TODO AP: нужно обязательно отделить GUI от бизнес-логики, т.е. от алгоритмов,
+        // TODO AP: нужно постараться сохранить идеологию класса ru.isa.ai.dhm.poolers.SpatialPooler - оставить только то, что нужно для реализации алгоритмов - все остальное, GUI генерацию дефолтного входа и т.п. - вынести наржу, в другие классы
         if (ExtensionGUI.Input == null)
             return t % 2 > 0 ? rnd.nextInt(2) : Math.sin(j + k + totalTime) > 0 ? 1 : 0;
         else {
@@ -73,6 +78,7 @@ public class Cortex {
     }
 
     ////////////////
+    // TODO AP: массивы boolean - дорого - надо испольовать BitSet и т.п.
     boolean[][] get2DcolsANDcellsAtT(State state, Integer t) {
         boolean[][] list = new boolean[region.columns.size()][];
         for (int col = 0; col < region.columns.size(); col++) {
@@ -116,6 +122,7 @@ public class Cortex {
     случае предпочтение отдается сегментам с наибольшей активностью.
      */
     public Integer[] getActiveSegment(Integer c, Integer i, Integer t, State state) {
+        // TODO AP: везде надо использовать массивы, где это возможно, вместо списков
         List<Segment> activeSegments = new ArrayList<Segment>();
         for (Segment segment : region.columns.get(c).cells.get(i).dendriteSegments) {
             if (segmentActive(segment, t, state))
@@ -339,6 +346,7 @@ public class Cortex {
         }
     }
 
+    // TODO AP: все методы - с маленькой буквы!
     public void SInitialization() {
 
         for (int i = 0; i < region.xDimension; i++) {

@@ -164,6 +164,7 @@ inhibitionRadius колонки c.
         return kthScore(neighbours(i), desiredLocalActivity);
     }
 
+    // TODO AP: аналогично с Cortex - надо всю неалгоритмическую работу вывести во вспомогательные классы
     public void loadProperties() throws RegionInitializationException {
         Properties properties = new Properties();
         //this.xDimension = 20;
