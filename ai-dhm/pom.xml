@@ -47,6 +47,18 @@
         </dependency>
 
         <dependency>
+            <groupId>net.sf.jchart2d</groupId>
+            <artifactId>jchart2d</artifactId>
+            <version>3.3.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.casmi</groupId>
+            <artifactId>casmi</artifactId>
+            <version>0.4.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
