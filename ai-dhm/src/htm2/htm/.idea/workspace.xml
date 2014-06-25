@@ -1,0 +1,1092 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="HTM:jar" />
+    </artifacts-to-build>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1538ed6b-b3b6-4195-8ab0-ffb0773b1701" name="Default" comment="some realization issues fixed">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/HTM/Cortex.java" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\.idea\.name" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\.idea\ant.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\.idea\artifacts\HTM_jar.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\.idea\compiler.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\.idea\copyright\profiles_settings.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\.idea\dictionaries\soil.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\.idea\encodings.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\.idea\libraries\JMyron.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\.idea\libraries\apache_log4j.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\.idea\libraries\casmi_0_1_2_SNAPSHOT.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\.idea\libraries\gluegen_rt.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\.idea\libraries\jchart2d_3_2_2.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\.idea\libraries\jtransforms_2_4.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\.idea\libraries\pdfbox_1_7_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\.idea\misc.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\.idea\modules.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\.idea\scopes\scope_settings.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\.idea\uiDesigner.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\.idea\vcs.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\.idea\workspace.xml" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\HTM.iml" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\htm.properties" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\libs\JMyron.dll" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\libs\JMyron.jar" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\libs\JTransforms-2.4.jar" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\libs\apache-log4j.jar" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\libs\casmi-0.1.2-SNAPSHOT.jar" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\libs\gluegen-rt.jar" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\libs\jchart2d-3.2.2.jar" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\libs\jogl.jar" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\libs\jogl_jni_windows_i386.zip" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\libs\libJMyron.jnilib" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\libs\pdfbox-1.7.0.jar" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\libs\xmlgraphics-commons-1.3.1.jar" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\artifacts\HTM_jar\HTM.jar" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\HTM\Cell.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\HTM\ChartHandler.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\HTM\Column.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\HTM\Cortex$State.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\HTM\Cortex.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\HTM\CortexThread.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\HTM\Region.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\HTM\RegionInitializationException.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\HTM\Segment.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\HTM\SegmentUpdate.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\HTM\Synapse.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\applet\ExtensionGUI$1.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\applet\ExtensionGUI$CamButtonListener$1.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\applet\ExtensionGUI$CamButtonListener.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\applet\ExtensionGUI$ExtraButtonListener.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\applet\ExtensionGUI.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\applet\HTMConfiguration$1.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\applet\HTMConfiguration$LoadPropertiesButtonGUIListener.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\applet\HTMConfiguration$MakeStepButtonListener.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\applet\HTMConfiguration$RunCortexButtonListener.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\applet\HTMConfiguration$ShowExtendedGUIListener.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\applet\HTMConfiguration$StopCortexButtonListener.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\applet\HTMConfiguration.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\com\intellij\uiDesigner\core\AbstractLayout.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\com\intellij\uiDesigner\core\DimensionInfo.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\com\intellij\uiDesigner\core\GridConstraints.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\com\intellij\uiDesigner\core\GridLayoutManager.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\com\intellij\uiDesigner\core\HorizontalInfo.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\com\intellij\uiDesigner\core\LayoutState.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\com\intellij\uiDesigner\core\Spacer.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\com\intellij\uiDesigner\core\SupportCode$TextWithMnemonic.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\com\intellij\uiDesigner\core\SupportCode.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\com\intellij\uiDesigner\core\Util.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\com\intellij\uiDesigner\core\VerticalInfo.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\resouce\htm.properties" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\visual\CasmiApplet$1.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\out\production\HTM\visual\CasmiApplet.class" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\src\HTM\Cell.java" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\src\HTM\ChartHandler.java" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\src\HTM\Column.java" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\src\HTM\Cortex.java" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\src\HTM\CortexThread.java" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\src\HTM\Region.java" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\src\HTM\RegionInitializationException.java" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\src\HTM\Segment.java" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\src\HTM\SegmentUpdate.java" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\src\HTM\Synapse.java" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\src\META-INF\MANIFEST.MF" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\src\applet\ExtensionGUI.form" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\src\applet\ExtensionGUI.java" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\src\applet\HTMConfiguration.form" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\src\applet\HTMConfiguration.java" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\src\resouce\htm.properties" afterPath="" />
+      <change type="DELETED" beforePath="E:\_main\_studies\_Курс 4\практика\htm\htm\j-htm-master\src\visual\CasmiApplet.java" afterPath="" />
+    </list>
+    <ignored path="HTM.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="Commander">
+    <leftPanel />
+    <rightPanel />
+    <splitter proportion="0.5" />
+  </component>
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="DebuggerManager">
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" converted="true" />
+    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true" converted="true">
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </breakpoint_any>
+    <breakpoint_rules converted="true" />
+    <ui_properties converted="true" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="HTM" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="Cortex.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/HTM/Cortex.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.22616407" vertical-offset="0" max-vertical-offset="10013">
+              <caret line="12" column="28" selection-start-line="12" selection-start-column="28" selection-end-line="12" selection-end-column="28" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HTMConfiguration.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/applet/HTMConfiguration.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1683" max-vertical-offset="2771">
+              <caret line="122" column="16" selection-start-line="122" selection-start-column="16" selection-end-line="122" selection-end-column="16" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Region.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/HTM/Region.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="2244" max-vertical-offset="4590">
+              <caret line="132" column="27" selection-start-line="132" selection-start-column="27" selection-end-line="132" selection-end-column="27" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Segment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/HTM/Segment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="340">
+              <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Synapse.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/HTM/Synapse.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="221" max-vertical-offset="323">
+              <caret line="13" column="1" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Cell.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/HTM/Cell.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="264" max-vertical-offset="884">
+              <caret line="28" column="35" selection-start-line="28" selection-start-column="35" selection-end-line="28" selection-end-column="35" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HTM.iml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/HTM.iml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="425">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Column.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/HTM/Column.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1530" max-vertical-offset="2176">
+              <caret line="90" column="0" selection-start-line="90" selection-start-column="0" selection-end-line="90" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CortexThread.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/HTM/CortexThread.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="850" max-vertical-offset="1173">
+              <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="false" />
+    </FindUsagesManager>
+  </component>
+  <component name="Git.Settings">
+    <option name="SYNC_SETTING" value="DONT" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitLogSettings">
+    <option name="myDateState">
+      <MyDateState />
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="changedFiles">
+      <list>
+        <option value="D:/HTM - symbios vers/DHM/src/ru/isa/ai/dhm/DHMCell.java" />
+        <option value="$PROJECT_DIR$/src/Region.java" />
+        <option value="$PROJECT_DIR$/src/HTM/SegmentUpdate.java" />
+        <option value="$PROJECT_DIR$/src/HTM/Synapse.java" />
+        <option value="$PROJECT_DIR$/src/visual/CasmiApplet.java" />
+        <option value="$PROJECT_DIR$/src/HTM/CortexThread.java" />
+        <option value="$PROJECT_DIR$/src/HTM/RegionInitializationException.java" />
+        <option value="$PROJECT_DIR$/src/HTM/htm.properties" />
+        <option value="$PROJECT_DIR$/src/HTM/Segment.java" />
+        <option value="$PROJECT_DIR$/src/HTM/ChartHandler.java" />
+        <option value="$PROJECT_DIR$/src/HTM/Column.java" />
+        <option value="$PROJECT_DIR$/src/HTM/Cell.java" />
+        <option value="$PROJECT_DIR$/src/applet/HTMConfiguration.form" />
+        <option value="$PROJECT_DIR$/src/applet/HTMConfiguration.java" />
+        <option value="$PROJECT_DIR$/src/HTM/Region.java" />
+        <option value="$PROJECT_DIR$/src/HTM/Cortex.java" />
+      </list>
+    </option>
+  </component>
+  <component name="MavenProjectNavigator">
+    <treeState />
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1382" />
+    <option name="height" value="754" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <OptionsSetting value="true" id="Undo Check Out" />
+    <OptionsSetting value="true" id="Get Latest Version" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectReloadState">
+    <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="MemberChooser.sorted" value="false" />
+    <property name="recentsLimit" value="5" />
+    <property name="options.lastSelected" value="vcs.Git" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../../../_programming/Git/bin/git.exe" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="GoToClass.toSaveIncludeLibraries" value="false" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="MemberChooser.showClasses" value="true" />
+    <property name="GoToClass.includeLibraries" value="false" />
+    <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="dynamic.classpath" value="false" />
+    <property name="FullScreen" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\soil\HTM\libs" />
+      <recent name="C:\Users\soil\HTM\src\applet" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.HTMConfiguration">
+    <configuration default="false" name="CasmiApplet" type="Applet" factoryName="Applet" temporary="true">
+      <module name="HTM" />
+      <option name="MAIN_CLASS_NAME" value="visual.CasmiApplet" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="HTMConfiguration" type="Application" factoryName="Application" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" value="applet.HTMConfiguration" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="HTM" />
+      <envs />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
+      <module name="" />
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m" />
+      <option name="PROGRAM_PARAMETERS" />
+      <method />
+    </configuration>
+    <configuration default="true" type="GrailsRunConfigurationType" factoryName="Grails">
+      <module name="" />
+      <setting name="vmparams" value="" />
+      <setting name="cmdLine" value="run-app" />
+      <setting name="depsClasspath" value="false" />
+      <setting name="passParentEnv" value="true" />
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <setting name="launchBrowser" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+      <method />
+    </configuration>
+    <configuration default="true" type="TestNG" factoryName="TestNG">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <method />
+    </configuration>
+    <configuration default="true" type="FlashRunConfigurationType" factoryName="Flash App">
+      <option name="BCName" value="" />
+      <option name="IOSSimulatorSdkPath" value="" />
+      <option name="adlOptions" value="" />
+      <option name="airProgramParameters" value="" />
+      <option name="appDescriptorForEmulator" value="Android" />
+      <option name="debugTransport" value="USB" />
+      <option name="debuggerSdkRaw" value="BC SDK" />
+      <option name="emulator" value="NexusOne" />
+      <option name="emulatorAdlOptions" value="" />
+      <option name="fastPackaging" value="true" />
+      <option name="fullScreenHeight" value="0" />
+      <option name="fullScreenWidth" value="0" />
+      <option name="launchUrl" value="false" />
+      <option name="launcherParameters">
+        <LauncherParameters>
+          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
+          <option name="launcherType" value="OSDefault" />
+          <option name="newPlayerInstance" value="false" />
+          <option name="playerPath" value="FlashPlayerDebugger.exe" />
+        </LauncherParameters>
+      </option>
+      <option name="mobileRunTarget" value="Emulator" />
+      <option name="moduleName" value="" />
+      <option name="overriddenMainClass" value="" />
+      <option name="overriddenOutputFileName" value="" />
+      <option name="overrideMainClass" value="false" />
+      <option name="runTrusted" value="true" />
+      <option name="screenDpi" value="0" />
+      <option name="screenHeight" value="0" />
+      <option name="screenWidth" value="0" />
+      <option name="url" value="http://" />
+      <option name="usbDebugPort" value="7936" />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
+      <module name="" />
+      <option name="TESTING_TYPE" value="0" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="FlexUnitRunConfigurationType" factoryName="FlexUnit" appDescriptorForEmulator="Android" class_name="" emulatorAdlOptions="" method_name="" package_name="" scope="Class">
+      <option name="BCName" value="" />
+      <option name="launcherParameters">
+        <LauncherParameters>
+          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
+          <option name="launcherType" value="OSDefault" />
+          <option name="newPlayerInstance" value="false" />
+          <option name="playerPath" value="FlashPlayerDebugger.exe" />
+        </LauncherParameters>
+      </option>
+      <option name="moduleName" value="" />
+      <option name="trusted" value="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="myFilePath" />
+      <option name="GLUE" />
+      <option name="myNameFilter" />
+      <option name="myGeneratedName" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" value="HTMConfiguration" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
+      <module name="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
+    <list size="2">
+      <item index="0" class="java.lang.String" itemvalue="Applet.CasmiApplet" />
+      <item index="1" class="java.lang.String" itemvalue="Application.HTMConfiguration" />
+    </list>
+    <recent_temporary>
+      <list size="1">
+        <item index="0" class="java.lang.String" itemvalue="Application.HTMConfiguration" />
+      </list>
+    </recent_temporary>
+    <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
+      <Host>localhost</Host>
+      <Port>5050</Port>
+    </configuration>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SliceManager">
+    <option name="analysisUIOptions">
+      <AnalysisUIOptions />
+    </option>
+  </component>
+  <component name="SvnConfiguration" myUseAcceleration="nothing">
+    <configuration useDefault="false">C:\Users\soil\AppData\Roaming\Subversion</configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1538ed6b-b3b6-4195-8ab0-ffb0773b1701" name="Default" comment="" />
+      <created>1330910377873</created>
+      <updated>1330910377873</updated>
+      <workItem from="1403597444073" duration="8488000" />
+      <workItem from="1403617759252" duration="447000" />
+    </task>
+    <task id="LOCAL-00001" summary="new synapses only from learning cells">
+      <created>1337777124908</created>
+      <updated>1337777124908</updated>
+    </task>
+    <task id="LOCAL-00002" summary="segments count timeline">
+      <created>1337780762385</created>
+      <updated>1337780762385</updated>
+    </task>
+    <task id="LOCAL-00003" summary="segments growth fixed">
+      <created>1338375949627</created>
+      <updated>1338375949627</updated>
+    </task>
+    <task id="LOCAL-00004" summary="some realization issues fixed">
+      <created>1340686797186</created>
+      <updated>1340686797186</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="8935000" />
+  </component>
+  <component name="TodoView" selected-index="0">
+    <todo-panel id="selected-file">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="default-changelist">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="false" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1382" height="754" extended-state="7" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32960895" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2569546" sideWeight="0.8018757" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24951644" sideWeight="0.66201115" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2616099" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32960895" sideWeight="0.5003224" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32942554" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32960895" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24951644" sideWeight="0.66201115" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3997421" sideWeight="0.66201115" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.12662338" sideWeight="0.8018757" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.16698904" sideWeight="0.801676" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19812427" sideWeight="0.49516442" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2137628" sideWeight="0.8018757" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32960895" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="myTodoPanelSettings">
+      <TodoPanelSettings />
+    </option>
+    <MESSAGE value="new synapses only from learning cells" />
+    <MESSAGE value="segments count timeline" />
+    <MESSAGE value="segments growth fixed" />
+    <MESSAGE value="some realization issues fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="some realization issues fixed" />
+    <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="4" />
+    </breakpoint-manager>
+  </component>
+  <component name="antWorkspaceConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="FILTER_TARGETS" value="false" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/HTM/Cortex.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="10115">
+          <caret line="8" column="33" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/applet/HTMConfiguration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1683" max-vertical-offset="2771">
+          <caret line="122" column="16" selection-start-line="122" selection-start-column="16" selection-end-line="122" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/Region.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2244" max-vertical-offset="4590">
+          <caret line="132" column="27" selection-start-line="132" selection-start-column="27" selection-end-line="132" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/Segment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="17" max-vertical-offset="357">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/Synapse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="221" max-vertical-offset="323">
+          <caret line="13" column="1" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/Cell.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="357" max-vertical-offset="884">
+          <caret line="28" column="35" selection-start-line="28" selection-start-column="35" selection-end-line="28" selection-end-column="35" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/Column.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1530" max-vertical-offset="2176">
+          <caret line="90" column="0" selection-start-line="90" selection-start-column="0" selection-end-line="90" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/CortexThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1173">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/Cortex.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="68" max-vertical-offset="12478">
+          <caret line="4" column="31" selection-start-line="4" selection-start-column="31" selection-end-line="4" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/Region.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2125" max-vertical-offset="2873">
+          <caret line="125" column="0" selection-start-line="125" selection-start-column="0" selection-end-line="125" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/Segment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="85" max-vertical-offset="476">
+          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/SegmentUpdate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="68" max-vertical-offset="357">
+          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/Synapse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="34" max-vertical-offset="323">
+          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/Cell.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="595" max-vertical-offset="799">
+          <caret line="35" column="25" selection-start-line="35" selection-start-column="25" selection-end-line="35" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/ChartHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="187" max-vertical-offset="3451">
+          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/Column.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1207" max-vertical-offset="2159">
+          <caret line="71" column="30" selection-start-line="71" selection-start-column="30" selection-end-line="71" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/CortexThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="833" max-vertical-offset="1173">
+          <caret line="49" column="0" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/SegmentUpdate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="68" max-vertical-offset="357">
+          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/ChartHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="170" max-vertical-offset="3434">
+          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/libs/jchart2d-3.2.2.jar!/info/monitorenter/gui/chart/Chart2D.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.535109" vertical-offset="0" max-vertical-offset="6052">
+          <caret line="14" column="56" selection-start-line="14" selection-start-column="56" selection-end-line="14" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/applet/HTMConfiguration.form">
+      <provider selected="true" editor-type-id="ui-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/CortexThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1020">
+          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_60/src.zip!/javax/swing/plaf/basic/BasicButtonListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33259425" vertical-offset="3539" max-vertical-offset="4879">
+          <caret line="251" column="0" selection-start-line="251" selection-start-column="0" selection-end-line="251" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/Synapse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="323">
+          <caret line="13" column="1" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/Column.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="51" max-vertical-offset="2125">
+          <caret line="90" column="0" selection-start-line="90" selection-start-column="0" selection-end-line="90" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/Cell.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="264" max-vertical-offset="884">
+          <caret line="28" column="35" selection-start-line="28" selection-start-column="35" selection-end-line="28" selection-end-column="35" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/HTM.iml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="620">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/Segment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="17" max-vertical-offset="357">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/Region.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1173" max-vertical-offset="4556">
+          <caret line="132" column="27" selection-start-line="132" selection-start-column="27" selection-end-line="132" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/applet/HTMConfiguration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1683" max-vertical-offset="2771">
+          <caret line="122" column="16" selection-start-line="122" selection-start-column="16" selection-end-line="122" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HTM/Cortex.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22616407" vertical-offset="0" max-vertical-offset="10013">
+          <caret line="12" column="28" selection-start-line="12" selection-start-column="28" selection-end-line="12" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <last-edited>HTM:jar</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.5" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.7</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>HTM</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>apache-log4j</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>
+
