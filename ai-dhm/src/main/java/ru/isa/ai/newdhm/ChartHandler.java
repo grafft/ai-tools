@@ -131,8 +131,9 @@ public class ChartHandler {
         int overalDSCount = 0;
         buf += "Cells Activity: \r\n" + "Timestep: " + cfg.crtx.r.totalTime + "\r\n";
         buf += "Inhibition Radius: " + cfg.crtx.r.region.inhibitionRadius + "\r\n";
-        if (cfg.crtx.r.activeColumns.size() > 0)
-            buf += "Active Columns: " + cfg.crtx.r.activeColumns.viewColumn(cfg.crtx.r.time - 1 > 0 ? cfg.crtx.r.time - 1 : 0).size() + "\r\n";
+        //if (cfg.crtx.r.activeColumns.size() > 0)
+        buf += "Active Columns: " + cfg.crtx.r.activeColumns.viewRow(cfg.crtx.r.time - 1 > 0 ? cfg.crtx.r.time - 1 : 0).getQuick(0) + "\r\n";
+            //buf += "Active Columns: " + cfg.crtx.r.activeColumns.viewColumn(cfg.crtx.r.time - 1 > 0 ? cfg.crtx.r.time - 1 : 0).size() + "\r\n";
                     //get(cfg.crtx.r.time - 1 > 0 ? cfg.crtx.r.time - 1 : 0).size() + "\r\n";
 //                            textPane1.setText(buf + region.dendriteSegments.toString() + "\r\n");
 //                            textPane1.setText(buf + region.learnState.get(region.time).toString() + "\r\n");
@@ -169,7 +170,7 @@ public class ChartHandler {
                     traceP.addPoint(c, val ? i + 1 * 1.0 : 0.0);
                 }
 
-                Integer size = cfg.crtx.r.region.columns[c].cells[i].dendriteSegments.length;  //!!!
+                Integer size = cfg.crtx.r.region.columns[c].cells[i].dendriteSegmentsNum;   //dendriteSegments.length;  //!!!
                 overalDSCount += size;
                 if (showDistalSegmentsCount) {
                     traceD.addPoint(c, i + 1 * size);

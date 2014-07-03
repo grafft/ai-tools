@@ -104,7 +104,7 @@ public class Region {
 inhibitionRadius колонки c.
      */
     public IntMatrix1D neighbours(int c) {
-        IntMatrix1D result = new SparseIntMatrix1D(numColumns);
+        IntMatrix1D result = new SparseIntMatrix1D(1000);
         int length = 1 ;
         for(int i = 0; i < numColumns; i++) {
             if ((Math.abs(columns[i].x - columns[c].x) < inhibitionRadius) &&
@@ -113,24 +113,54 @@ inhibitionRadius колонки c.
                 length++;
             }
         }
-        result.setQuick(0,length);
+        result.setQuick(0,length-1);
         return result;
     }
 
+
+    private int partition (double[] array, int start, int end)
+    {
+        int marker = start;
+        for ( int i = start; i <= end; i++ )
+        {
+            if ( array[i] <= array[end] )
+            {
+                double temp = array[marker];
+                array[marker] = array[i];
+                array[i] = temp;
+                marker += 1;
+            }
+        }
+        return marker - 1;
+    }
+
+    private void quicksort (double[] array, int start, int end)
+    {
+        if ( start >= end )
+        {
+            return;
+        }
+        int pivot = partition (array, start, end);
+        quicksort (array, start, pivot-1);
+        quicksort (array, pivot+1, end);
+    }
     /*
    Для заданного списка колонок возвращает их k-ое максимальное значение
 их перекрытий со входом
     */
     public double kthScore(IntMatrix1D cols, int k){
-        double[] overlaps = new double[columns.length];
+        double[] overlaps = new double[1000];
         //doubleMatrix1D overlaps;
 
-        for(int i=1; i < cols.getQuick(0)-1; i++) {
-            int ind = cols.get(i);
-            overlaps[i-1] = columns[ind].overlap;
+        int length = 1;
+        for(int i=1; i <= cols.getQuick(0); i++) {
+            overlaps[i] = columns[cols.get(i)].overlap;
+            length++;
         }
-        Arrays.sort(overlaps);
-        return overlaps[overlaps.length-k];
+        //Arrays.sort( overlaps);
+        overlaps[0] = length - 1;
+        quicksort(overlaps, 1, length - 1);
+        return overlaps[length - 1 - k];
     }
 
     /*
@@ -147,7 +177,7 @@ inhibitionRadius колонки c.
         ///////
         double xDistance;
         double yDistance;
-        for(int i = 0; i < columns.length;i++) {
+        for(int i = 0; i < numColumns; i++) {
             xDistance = 0.0;
             yDistance = 0.0;
             for(Synapse synapse : columns[i].potentialSynapses) {

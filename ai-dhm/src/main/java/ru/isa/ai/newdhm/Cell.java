@@ -53,7 +53,7 @@ public class Cell {
     }
 
     public void clearSegmentUpdateList(){
-        for (int i = 0 ; i < segmentUpdateList.length; i++)
+        for (int i = 0 ; i < segmentUpdateListNum; i++)
             segmentUpdateList[i] = null;
 
         segmentUpdateListNum = 0;

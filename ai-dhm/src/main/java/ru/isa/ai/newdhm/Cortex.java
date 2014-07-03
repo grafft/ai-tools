@@ -79,18 +79,14 @@ public class Cortex {
      */
     public double updateActiveDutyCycle(int c) {
         double value = 0.0;
-        IntMatrix1D col = activeColumns.viewColumn(time);
-        for (int  ind = 0; ind < col.size(); ind++ ) {
-            if (c == ind) {
+        IntMatrix1D col = activeColumns.viewRow(time);
+        for (int  ind = 1; ind <= col.get(0); ind++ ) {
+            if (c == ind -1){
+            //if (c == ind) {
                 value = 1.0;
                 break;
             }
         }
-        /*for(int idx: activeColumns.get(time))   //SparseIntMatrix2D
-            if (c.equals(idx)) {
-                value = 1.0;
-                break;
-            }*/
        // return (value + totalTime.floatValue() * region.columns.get(c).activeDutyCycle) / (totalTime.floatValue() + 1.0);
         return (value + totalTime * region.columns[c].activeDutyCycle) / (totalTime + 1.0);
     }
@@ -449,8 +445,7 @@ public class Cortex {
             }
         }
 
-        activeColumns = new DenseIntMatrix2D(region.xDimension, region.yDimension);
-        //activeColumns = new ArrayList<List<int>>();
+        activeColumns = new DenseIntMatrix2D(1000, region.numColumns); //моменты t по вертикали, индексы колонок по горизонтали
 
         //inputBits = new ArrayList<int[][]>();
        // inputBits.add(new int[region.xDimension][region.yDimension]);
@@ -516,15 +511,19 @@ public class Cortex {
      */
     public void sInhibition() {
         int i = 0;
+        int activeColumnsAtTlength = 1;
         for(Column c : region.columns){
             if (c == null) break;
             double minLocalActivity = region.GetMinLocalActivity(i);
             double overlap = c.overlap;
             if (overlap > 0.0 && overlap >= minLocalActivity) {
-                activeColumns.setQuick(c.x,c.y,i);
+                //activeColumns.setQuick(c.x,c.y,i);
+                activeColumns.setQuick(time, activeColumnsAtTlength , i);
+                activeColumnsAtTlength++;
             }
             i++;
         }
+        activeColumns.setQuick(time,0,activeColumnsAtTlength-1);
     }
 
     /*
@@ -536,8 +535,8 @@ public class Cortex {
      */
     public void sLearning() {
         //for (int c : activeColumns.get(time)) {
-        for (int c = 0 ; c < activeColumns.viewColumn(time).size(); c++){
-            for (Synapse s : region.columns[c].potentialSynapses) {
+        for (int c = 1 ; c <= activeColumns.viewRow(time).getQuick(0); c++){
+            for (Synapse s : region.columns[c-1].potentialSynapses) { //так как в activeColumns в [0] лежит длина
                 if (s == null) break;
                 if (input(time, s.c, s.i) > 0) {
                     s.permanence += region.permanenceInc;
@@ -583,16 +582,16 @@ public class Cortex {
     входным данным, выбирается для обучения, причем ей добавляется новый латеральный дендритный сегмент.
      */
     public void tCellStates() {
-        for (int c = 0 ; c < activeColumns.viewColumn(time).size(); c++){
+        for (int c = 1 ; c <= activeColumns.viewRow(time).getQuick(0); c++){
             boolean buPredicted = false;
             boolean lcChosen = false;
 
             int ind=0;
-            for (Cell i: region.columns[c].cells) {
+            for (Cell i: region.columns[c-1].cells) {
                 if (i == null) break;
                 if (i.predictiveState.get(time - 1 > 0 ? time - 1 : 0)) {
 
-                    int[] s = getActiveSegment(c, ind, time - 1 > 0 ? time - 1 : 0, State.active);
+                    int[] s = getActiveSegment(c-1, ind, time - 1 > 0 ? time - 1 : 0, State.active);
                     if (s[2] >= 0 && region.columns[s[0]].cells[s[1]].dendriteSegments[s[2]].sequenceSegment) {
 
                         buPredicted = true;
@@ -608,18 +607,18 @@ public class Cortex {
             }
 
             if (!buPredicted) {
-                for (Cell i:  region.columns[c].cells) {
+                for (Cell i:  region.columns[c-1].cells) {
                     if (i== null) break;
                     i.activeState.put(time, true);
                 }
             }
 
             if (!lcChosen) {
-                int[] lc = getBestMatchingCell(c, time - 1 > 0 ? time - 1 : 0);
-                Cell i = region.columns[c].cells[lc[1]];
+                int[] lc = getBestMatchingCell(c-1, time - 1 > 0 ? time - 1 : 0);
+                Cell i = region.columns[c-1].cells[lc[1]];
                 i.learnState.put(time, true);
                 if (time - 1 >= 0) {
-                    SegmentUpdate sUpdate = getSegmentActiveSynapses(c, lc[1], time - 1, lc[2], true);
+                    SegmentUpdate sUpdate = getSegmentActiveSynapses(c-1, lc[1], time - 1, lc[2], true);
                     sUpdate.sequenceSegment = true;
                     i.segmentUpdateList[i.segmentUpdateListNum] = sUpdate;
                     i.segmentUpdateListNum++;
