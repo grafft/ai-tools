@@ -4,11 +4,11 @@ import java.util.List;
 
 public class SegmentUpdate {
 
-    public Integer[] segmentIndex;
-    public List<Synapse> activeSynapses;
+    public int[] segmentIndex;
+    public Synapse[] activeSynapses;
     public Boolean sequenceSegment = false;
 
-    public SegmentUpdate(Integer[] segmentIndex, List<Synapse> activeSynapses) {
+    public SegmentUpdate(int[] segmentIndex, Synapse[] activeSynapses) {
         this.segmentIndex = segmentIndex;
         this.activeSynapses = activeSynapses;
     }

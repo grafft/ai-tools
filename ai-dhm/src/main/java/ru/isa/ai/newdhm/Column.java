@@ -5,9 +5,9 @@ import java.util.List;
 
 public class Column {
 
-    public Integer x;
-    public Integer y;
-    List<Cell> cells;
+    public int x;
+    public int y;
+    Cell[] cells;
 
     // public Segment proximalSegment;
 
@@ -35,14 +35,16 @@ public class Column {
     potentialSynapses(c) - Список потенциальных синапсов и их значений
  перманентности
      */
-    List<Synapse> potentialSynapses;
+    Synapse[] potentialSynapses;
+    int potentialSynapsesNum;
     /*
     connectedSynapses(c) - Подмножество потенциальных синапсов
 potentialSynapses(c) у которых значение
 перманентности больше чем connectedPerm. То есть это
 прямые входные биты, которые подключены к колонке c.
      */
-    List<Synapse> connectedSynapses;
+    Synapse[] connectedSynapses;
+    int connectedSynapsesNum;
     /*
     activeDutyCycle(c) Интервальное среднее показывающее как часто колонка c
     была активна после подавления
@@ -64,7 +66,7 @@ potentialSynapses(c) у которых значение
     */
     public double minDutyCycle;
 
-    public Column(Region region, Integer x, Integer y) {
+    public Column(Region region, int x, int y) {
         this.x = x;
         this.y = y;
         //this.isActive = false;
@@ -75,24 +77,29 @@ potentialSynapses(c) у которых значение
         this.overlapDutyCycle = 0.0;
         this.minDutyCycle = 0.0;
 
-        cells = new ArrayList<Cell>();
+        cells = new Cell[region.cellsPerColumn];
         for (int i = 0; i < region.cellsPerColumn; i++) {
-            cells.add(new Cell(i));
+            cells[i] = new Cell(i);
         }
         //proximalSegment = new Segment();
 
-        potentialSynapses = new ArrayList<Synapse>();
+        potentialSynapses = new Synapse[1000];
+        potentialSynapsesNum = 0;
 
-        connectedSynapses = new ArrayList<Synapse>();
-
+        connectedSynapses = new Synapse[1000];
+        connectedSynapsesNum = 0;
     }
 
 
-    public List<Synapse> connectedSynapses() {
-        List<Synapse> result = new ArrayList<>();
+    public Synapse[] connectedSynapses() {
+        Synapse[] result = new Synapse[this.potentialSynapsesNum];
+        int length = 0;
         for (Synapse synapse : this.potentialSynapses) {
-            if (synapse.permanence > region.connectedPerm)
-                result.add(synapse);
+            if (synapse == null) break;
+            if (synapse.permanence > region.connectedPerm) {
+                result[length] = synapse;
+                length++;
+            }
         }
         return result;
     }
@@ -116,6 +123,5 @@ potentialSynapses(c) у которых значение
     public Double boostFunction() {
         return activeDutyCycle > minDutyCycle ? 1.0 : (1.0 + minDutyCycle * 100);
     }
-
 
 }

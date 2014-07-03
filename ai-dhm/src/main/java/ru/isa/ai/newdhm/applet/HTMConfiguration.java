@@ -93,18 +93,18 @@ public class HTMConfiguration {
         public void actionPerformed (ActionEvent event) {
             try{
                 crtx.r.region.loadProperties();
-                textField1.setText(crtx.r.region.desiredLocalActivity.toString());
-                textField2.setText(crtx.r.region.minOverlap.toString());
-                textField3.setText(crtx.r.region.connectedPerm.toString());
-                textField4.setText(crtx.r.region.permanenceInc.toString());
-                textField5.setText(crtx.r.region.permanenceDec.toString());
-                textField6.setText(crtx.r.region.cellsPerColumn.toString());
-                textField7.setText(crtx.r.region.activationThreshold.toString());
-                textField8.setText(crtx.r.region.initialPerm.toString());
-                textField9.setText(crtx.r.region.minThreshold.toString());
-                textField10.setText(crtx.r.region.newSynapseCount.toString());
-                textField11.setText(crtx.r.region.xDimension.toString());
-                textField12.setText(crtx.r.region.yDimension.toString());
+                textField1.setText(String.valueOf(crtx.r.region.desiredLocalActivity));
+                textField2.setText(String.valueOf(crtx.r.region.minOverlap));
+                textField3.setText(String.valueOf(crtx.r.region.connectedPerm));
+                textField4.setText(String.valueOf(crtx.r.region.permanenceInc));
+                textField5.setText(String.valueOf(crtx.r.region.permanenceDec));
+                textField6.setText(String.valueOf(crtx.r.region.cellsPerColumn));
+                textField7.setText(String.valueOf(crtx.r.region.activationThreshold));
+                textField8.setText(String.valueOf(crtx.r.region.initialPerm));
+                textField9.setText(String.valueOf(crtx.r.region.minThreshold));
+                textField10.setText(String.valueOf(crtx.r.region.newSynapseCount));
+                textField11.setText(String.valueOf(crtx.r.region.xDimension));
+                textField12.setText(String.valueOf(crtx.r.region.yDimension));
             }
             catch (RegionInitializationException e){
                     System.out.println("caught " + e);

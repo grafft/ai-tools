@@ -1,5 +1,6 @@
 package ru.isa.ai.newdhm;
 
+import cern.colt.matrix.tint.impl.SparseIntMatrix1D;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,67 +11,70 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import cern.colt.matrix.tint.IntMatrix1D;
+import ru.isa.ai.dhm.MathUtils;
 
 public class Region {
-    public List<Column> columns;
+    public Column[] columns;
 
-    public Integer xDimension;
-    public Integer yDimension;
-    public Integer square;
+    public int numColumns = 1;
+    public int xDimension;
+    public int yDimension;
 
     //Число клеток в каждой из колонок.
-    public Integer cellsPerColumn;
+    public int cellsPerColumn;
 
     /*
     Средний размер входного (рецепторного) поля колонок
      */
-    public Double inhibitionRadius;
+    public double inhibitionRadius;
 
     /*
     Минимальное число активных входов колонки для ее участия
     в шаге подавления.
      */
-    public Integer minOverlap;
+    public int minOverlap;
     /*
     Параметр контролирующий число колонок победителей
     после шага подавления.
     */
-    public Integer desiredLocalActivity;
+    public int desiredLocalActivity;
 
     /*
     Если значение перманентности синапса больше данного параметра, то он считается подключенным (действующим).
      */
-    public Double connectedPerm;
+    public double connectedPerm;
     /*
     Количество значений перманентности синапсов, которые
     были увеличены при обучении.
      */
-    public Double permanenceInc;
+    public double permanenceInc;
     /*
     Количество значений перманентности синапсов, которые
     были уменьшены при обучении.
     */
-    public Double permanenceDec;
+    public double permanenceDec;
     /*
     Порог активации для сегмента. Если число активных
     подключенных синапсов в сегменте больше чем
     activationThreshold, данный сегмент считается активным.
      */
-    public Integer activationThreshold;
+    public int activationThreshold;
 
     /*
    Начальное значение перманентности для синапсов
     */
-    public Double initialPerm;
+    public double initialPerm;
     /*
     Минимальная активность в сегменте для обучения.
      */
-    public Integer minThreshold;
+    public int minThreshold;
     /*
     Максимальное число синапсов добавляемых сегменту при
     обучении.
      */
-    public Integer newSynapseCount;
+    public int newSynapseCount;
+
     ////////////////////////////////////////////////////////
     // загрузка свойств из файла
     private final Logger logger = LogManager.getLogger(Region.class.getSimpleName());
@@ -82,26 +86,34 @@ public class Region {
     }
 
     public void addColumns(){
-        columns = new ArrayList<Column>();
+        numColumns = xDimension * yDimension;
 
-        for (int i = 0;i < xDimension; i++) {
+        columns = new Column[numColumns];
+
+        int ind = 0;
+        for (int i = 0; i < xDimension; i++) {
             for (int j = 0;j < yDimension; j++) {
-                columns.add(new Column(this, i, j));
+                columns[ind] = new Column(this, i, j);
+                ind++;
             }
         }
-        square = xDimension * yDimension;
+
     }
     /*
     neighbors(c) -  Список колонок находящихся в радиусе подавления
 inhibitionRadius колонки c.
      */
-    public List<Integer> neighbours(int c) {
-        List<Integer> result = new ArrayList<Integer>();
-        for(int i=0;i<columns.size();i++) {
-            if ((Math.abs(columns.get(i).x - columns.get(c).x) < inhibitionRadius) &&
-                    (Math.abs(columns.get(i).y - columns.get(c).y) < inhibitionRadius))
-                result.add(i);
+    public IntMatrix1D neighbours(int c) {
+        IntMatrix1D result = new SparseIntMatrix1D(numColumns);
+        int length = 1 ;
+        for(int i = 0; i < numColumns; i++) {
+            if ((Math.abs(columns[i].x - columns[c].x) < inhibitionRadius) &&
+                    (Math.abs(columns[i].y - columns[c].y) < inhibitionRadius)){
+                result.setQuick(length,i);
+                length++;
+            }
         }
+        result.setQuick(0,length);
         return result;
     }
 
@@ -109,11 +121,13 @@ inhibitionRadius колонки c.
    Для заданного списка колонок возвращает их k-ое максимальное значение
 их перекрытий со входом
     */
-    public Double kthScore(List<Integer> cols, Integer k){
-        Double[] overlaps = new Double[cols.size()];
-        //DoubleMatrix1D overlaps;
-        for(int i=0; i<cols.size(); i++) {
-            overlaps[i] = columns.get(cols.get(i)).overlap;
+    public double kthScore(IntMatrix1D cols, int k){
+        double[] overlaps = new double[columns.length];
+        //doubleMatrix1D overlaps;
+
+        for(int i=1; i < cols.getQuick(0)-1; i++) {
+            int ind = cols.get(i);
+            overlaps[i-1] = columns[ind].overlap;
         }
         Arrays.sort(overlaps);
         return overlaps[overlaps.length-k];
@@ -127,17 +141,24 @@ inhibitionRadius колонки c.
     латерального подавления между колонками.
      */
 
-    public Double averageReceptiveFieldSize() {
-        Double xDistance;
-        Double yDistance;
-        Double result = 0.0;
-        for(int i = 0; i < columns.size();i++) {
+    public double averageReceptiveFieldSize() {
+        double result = 0.0;
+
+        ///////
+        double xDistance;
+        double yDistance;
+        for(int i = 0; i < columns.length;i++) {
             xDistance = 0.0;
             yDistance = 0.0;
-            for(Synapse synapse : columns.get(i).potentialSynapses) {
+            for(Synapse synapse : columns[i].potentialSynapses) {
+                if (synapse == null) break;
                 if (synapse.permanence > connectedPerm) {
-                    Double xCalculated = Math.abs(columns.get(i).x.doubleValue() - synapse.c.doubleValue());
-                    Double yCalculated = Math.abs(columns.get(i).y.doubleValue() - synapse.i.doubleValue());
+                    //double xCalculated = Math.abs(columns.get(i).x.doubleValue() - synapse.c.doubleValue());
+                    //double yCalculated = Math.abs(columns.get(i).y.doubleValue() - synapse.i.doubleValue());
+
+                    double xCalculated = Math.abs(columns[i].x - synapse.c);
+                    double yCalculated = Math.abs(columns[i].y - synapse.i);
+
                     xDistance = xDistance > xCalculated ? xDistance : xCalculated;
                     yDistance = yDistance > yCalculated ? yDistance : yCalculated;
                 }
@@ -151,11 +172,11 @@ inhibitionRadius колонки c.
     Возвращает максимальное число циклов активности для всех заданных
     колонок.
      */
-    public Double maxDutyCycle(List<Integer> cols) {
-        Double max = 0.0;
-        for(Integer col: cols) {
-            if (max < columns.get(col).activeDutyCycle);
-            max = columns.get(col).activeDutyCycle;
+    public double maxDutyCycle(IntMatrix1D cols) {
+        double max = 0.0;
+        for(int col = 1; col < cols.getQuick(0)-1; col++) {
+            if (max < columns[col].activeDutyCycle);
+            max = columns[col].activeDutyCycle;
         }
         return max;
     }
@@ -167,7 +188,6 @@ inhibitionRadius колонки c.
     // TODO AP: аналогично с Cortex - надо всю неалгоритмическую работу вывести во вспомогательные классы
     public void loadProperties() throws RegionInitializationException {
         Properties properties = new Properties();
-        //this.xDimension = 20;
         try {
             FileInputStream input = new FileInputStream(filePropName);
             properties.load(input);
@@ -241,25 +261,28 @@ inhibitionRadius колонки c.
     public void saveProperties() throws RegionInitializationException {
         Properties properties = new Properties();
         try {
-                properties.setProperty("desiredLocalActivity",desiredLocalActivity.toString());
-                properties.setProperty("minOverlap",minOverlap.toString());
-                properties.setProperty("connectedPerm",connectedPerm.toString());
-                properties.setProperty("permanenceInc", permanenceInc.toString());
-                properties.setProperty("permanenceDec", permanenceDec.toString());
-                properties.setProperty("activationThreshold", activationThreshold.toString());
-                properties.setProperty("initialPerm",initialPerm.toString());
-                properties.setProperty("minThreshold",minThreshold.toString());
-                properties.setProperty("newSynapseCount",newSynapseCount.toString());
-                properties.setProperty("xDimension",xDimension.toString());
-                properties.setProperty("yDimension",yDimension.toString());
+                properties.setProperty("desiredLocalActivity",String.valueOf(desiredLocalActivity));
+                properties.setProperty("minOverlap",String.valueOf(minOverlap));
+                properties.setProperty("connectedPerm",String.valueOf(connectedPerm));
+                properties.setProperty("permanenceInc", String.valueOf(permanenceInc));
+                properties.setProperty("permanenceDec", String.valueOf(permanenceDec));
+                properties.setProperty("activationThreshold",String.valueOf(activationThreshold));
+                properties.setProperty("initialPerm",String.valueOf(initialPerm));
+                properties.setProperty("minThreshold",String.valueOf(minThreshold));
+                properties.setProperty("newSynapseCount",String.valueOf(newSynapseCount));
+                properties.setProperty("xDimension",String.valueOf(xDimension));
+                properties.setProperty("yDimension",String.valueOf(yDimension));
 
                 FileOutputStream output = new FileOutputStream(filePropName);
                 properties.store(output,"Saved settings");
                 output.close();
 
         } catch (IOException e) {
-            throw new RegionInitializationException("Cannot load properties file " + filePropName, e);
+            throw new RegionInitializationException("Cannot save properties file " + filePropName, e);
         }
     }
-
+//////////////////////////////////////////////////////////
+   public double getInhibitionRadius(){
+        return inhibitionRadius;
+    }
 }

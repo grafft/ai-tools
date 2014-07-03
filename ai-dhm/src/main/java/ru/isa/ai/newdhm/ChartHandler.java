@@ -132,55 +132,55 @@ public class ChartHandler {
         buf += "Cells Activity: \r\n" + "Timestep: " + cfg.crtx.r.totalTime + "\r\n";
         buf += "Inhibition Radius: " + cfg.crtx.r.region.inhibitionRadius + "\r\n";
         if (cfg.crtx.r.activeColumns.size() > 0)
-            buf += "Active Columns: " + cfg.crtx.r.activeColumns.
-                    get(cfg.crtx.r.time - 1 > 0 ? cfg.crtx.r.time - 1 : 0).size() + "\r\n";
+            buf += "Active Columns: " + cfg.crtx.r.activeColumns.viewColumn(cfg.crtx.r.time - 1 > 0 ? cfg.crtx.r.time - 1 : 0).size() + "\r\n";
+                    //get(cfg.crtx.r.time - 1 > 0 ? cfg.crtx.r.time - 1 : 0).size() + "\r\n";
 //                            textPane1.setText(buf + region.dendriteSegments.toString() + "\r\n");
 //                            textPane1.setText(buf + region.learnState.get(region.time).toString() + "\r\n");
 //                            for(int i=0;i<region.xDimension*region.yDimension;i++)
 //                                buf += region.overlap[i] + " ";
         for (int c = 0; c < cfg.crtx.r.region.xDimension * cfg.crtx.r.region.yDimension; c++) {
             if (over) {
-                traceO.addPoint(c, cfg.crtx.r.region.columns.get(c).overlap);
+                traceO.addPoint(c, cfg.crtx.r.region.columns[c].overlap);
             }
             if (adc) {
-                traceADC.addPoint(c, cfg.crtx.r.region.columns.get(c).activeDutyCycle);
+                traceADC.addPoint(c, cfg.crtx.r.region.columns[c].activeDutyCycle);
             }
             if (mdc) {
-                traceMDC.addPoint(c, cfg.crtx.r.region.columns.get(c).minDutyCycle);
+                traceMDC.addPoint(c, cfg.crtx.r.region.columns[c].minDutyCycle);
             }
             if (odc) {
-                traceODC.addPoint(c, cfg.crtx.r.region.columns.get(c).overlapDutyCycle);
+                traceODC.addPoint(c, cfg.crtx.r.region.columns[c].overlapDutyCycle);
             }
             if (bst) {
-                traceBST.addPoint(c, cfg.crtx.r.region.columns.get(c).boost);
+                traceBST.addPoint(c, cfg.crtx.r.region.columns[c].boost);
             }
             for (int i = 0; i < cfg.crtx.r.region.cellsPerColumn; i++) {
                 Boolean val;
                 if (act) {
-                    val = cfg.crtx.r.region.columns.get(c).cells.get(i).activeState.get(time);
+                    val = cfg.crtx.r.region.columns[c].cells[i].activeState.get(time);
                     traceA.addPoint(c, val ? i + 1 * 1.0 : 0.0);
                 }
                 if (learn) {
-                    val = cfg.crtx.r.region.columns.get(c).cells.get(i).learnState.get(time);
+                    val = cfg.crtx.r.region.columns[c].cells[i].learnState.get(time);
                     traceL.addPoint(c, val ? i + 1 * 1.0 : 0.0);
                 }
                 if (predict) {
-                    val = cfg.crtx.r.region.columns.get(c).cells.get(i).predictiveState.get(time);
+                    val = cfg.crtx.r.region.columns[c].cells[i].predictiveState.get(time);
                     traceP.addPoint(c, val ? i + 1 * 1.0 : 0.0);
                 }
 
-                Integer size = cfg.crtx.r.region.columns.get(c).cells.get(i).dendriteSegments.size();  //!!!
+                Integer size = cfg.crtx.r.region.columns[c].cells[i].dendriteSegments.length;  //!!!
                 overalDSCount += size;
                 if (showDistalSegmentsCount) {
                     traceD.addPoint(c, i + 1 * size);
                     buf += "C: " + c + " I: " + i + " N: " + size + " L: " +
-                            cfg.crtx.r.region.columns.get(c).cells.get(i).learnState + " # ";
+                            cfg.crtx.r.region.columns[c].cells[i].learnState + " # ";
                 }
             }
             if (perm) {
                 Integer activeSynapses = 0;
                 for (int s = 0; s < cfg.crtx.r.region.xDimension * cfg.crtx.r.region.yDimension; s++) {
-                    activeSynapses += cfg.crtx.r.region.columns.get(c).potentialSynapses.get(s).permanence >
+                    activeSynapses += cfg.crtx.r.region.columns[c].potentialSynapses[s].permanence >
                             cfg.crtx.r.region.connectedPerm ? 1 : 0;
                 }
                 traceS.addPoint(c, activeSynapses);

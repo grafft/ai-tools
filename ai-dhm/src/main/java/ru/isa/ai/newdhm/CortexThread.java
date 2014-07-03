@@ -15,7 +15,10 @@ public class CortexThread extends Thread {
     }
 
     public void Init(Chart2D chart1, Chart2D chart2, HTMConfiguration configuration) {
-        r.SInitialization();
+                                        /*
+                                        cellsPerColumn ,xDimension,yDimension
+                                         */
+        r.sInitialization();
         chartHandler = new ChartHandler(chart1, chart2, configuration);
     }
 
@@ -23,12 +26,12 @@ public class CortexThread extends Thread {
         this.runs = true;
         while (runs) {
             if (!pause) {
-                r.SOverlap();
-                r.SInhibition();
-                r.SLearning();
-                r.TCellStates();
-                r.TPredictiveStates();
-                r.TLearning();
+                r.sOverlap();
+                r.sInhibition();
+                r.sLearning();
+                r.tCellStates();
+                r.tPredictiveStates();
+                r.tLearning();
                 chartHandler.CollectData();
                 r.timestep();
                 if (makeStep) {
