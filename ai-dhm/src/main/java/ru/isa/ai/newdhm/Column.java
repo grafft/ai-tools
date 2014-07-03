@@ -1,8 +1,5 @@
 package ru.isa.ai.newdhm;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Column {
 
     public int x;
@@ -101,6 +98,7 @@ potentialSynapses(c) у которых значение
                 length++;
             }
         }
+        connectedSynapsesNum = length;
         return result;
     }
 

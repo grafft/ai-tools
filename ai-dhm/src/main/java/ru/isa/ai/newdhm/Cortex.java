@@ -2,7 +2,6 @@ package ru.isa.ai.newdhm;
 
 import cern.colt.matrix.tint.IntMatrix1D;
 import cern.colt.matrix.tint.impl.DenseIntMatrix2D;
-//import cern.colt.matrix.tint.impl.SparseIntMatrix1D;
 import ru.isa.ai.newdhm.applet.ExtensionGUI;
 
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import java.util.List;
 import java.util.Random;
 import cern.colt.matrix.tint.IntMatrix2D;
 import cern.colt.matrix.tbit.BitMatrix;
-//import cern.colt.matrix.tint.impl.SparseIntMatrix2D;
 import cern.colt.matrix.tint.impl.SparseIntMatrix3D;
 
 
@@ -38,7 +36,7 @@ public class Cortex {
         learn
     }
 
-    private Random r = new Random();
+   // private Random r = new Random();
     /////////////////////////////////////////////////////////////////////////
     //  Реализация
     /////////////////////////////////////////////////////////////////////////
@@ -47,7 +45,9 @@ public class Cortex {
 
     }
 
+
     /////////////////////////////////////////////////////////////////////////
+    private int temp; //счетчик входа
 
     // + TODO AP: везде нужно испоьзовать простые int, double и т.п. вместо объектных оберток - это быстрее
     /*
@@ -57,8 +57,13 @@ public class Cortex {
     public int input(int t, int j, int k) {
         // TODO AP: нужно обязательно отделить GUI от бизнес-логики, т.е. от алгоритмов,
         // TODO AP: нужно постараться сохранить идеологию класса ru.isa.ai.dhm.poolers.SpatialPooler - оставить только то, что нужно для реализации алгоритмов - все остальное, GUI генерацию дефолтного входа и т.п. - вынести наржу, в другие классы
-        if (ExtensionGUI.Input == null)
-            return t % 2 > 0 ? rnd.nextInt(2) : Math.sin(j + k + totalTime) > 0 ? 1 : 0;
+        if (ExtensionGUI.Input == null) {
+            int value = t % 2 > 0 ? rnd.nextInt(2) : Math.sin(j + k + totalTime) > 0 ? 1 : 0;
+           /* int value;
+            value = (temp % 2 == 0) ? 0 : 1;
+            temp++;*/
+            return value;
+        }
         else {
             byte[] buffer = ExtensionGUI.Input;
             int l = buffer.length;
@@ -291,8 +296,10 @@ public class Cortex {
                 }
             }
         }
+        else
+            System.out.print(1);
         if (newSynapses) {
-            //Random r = new Random();
+            Random r = new Random();
             List<int[]> learningCells = new ArrayList<>();
             //SparseIntMatrix2D learningCells; ///??
             for (int j = 0; j < region.numColumns; j++) {
@@ -309,7 +316,8 @@ public class Cortex {
             }*/
             for (int k = 0; k < region.newSynapseCount - length; k++) {
                 int[] idx;
-                idx = learningCells.get(r.nextInt(learningCells.size()));
+                //idx = learningCells.get(r.nextInt(learningCells.size()));
+                idx = learningCells.get(r.nextInt(time));
                 activeSynapses[length] = new Synapse(idx[0], idx[1], region.initialPerm);
                 length++;
             }
@@ -534,9 +542,8 @@ public class Cortex {
     а иначе – уменьшается. Значения перманентности ограничены промежутком от 0.0 до 1.0 .
      */
     public void sLearning() {
-        //for (int c : activeColumns.get(time)) {
         for (int c = 1 ; c <= activeColumns.viewRow(time).getQuick(0); c++){
-            for (Synapse s : region.columns[c-1].potentialSynapses) { //так как в activeColumns в [0] лежит длина
+           for (Synapse s: region.columns[activeColumns.viewRow(time).getQuick(c)].potentialSynapses){
                 if (s == null) break;
                 if (input(time, s.c, s.i) > 0) {
                     s.permanence += region.permanenceInc;
@@ -587,11 +594,12 @@ public class Cortex {
             boolean lcChosen = false;
 
             int ind=0;
-            for (Cell i: region.columns[c-1].cells) {
+            int colInd = activeColumns.viewRow(time).getQuick(c);
+            for (Cell i: region.columns[colInd].cells) {
                 if (i == null) break;
                 if (i.predictiveState.get(time - 1 > 0 ? time - 1 : 0)) {
 
-                    int[] s = getActiveSegment(c-1, ind, time - 1 > 0 ? time - 1 : 0, State.active);
+                    int[] s = getActiveSegment(colInd, ind, time - 1 > 0 ? time - 1 : 0, State.active);
                     if (s[2] >= 0 && region.columns[s[0]].cells[s[1]].dendriteSegments[s[2]].sequenceSegment) {
 
                         buPredicted = true;
@@ -607,18 +615,18 @@ public class Cortex {
             }
 
             if (!buPredicted) {
-                for (Cell i:  region.columns[c-1].cells) {
+                for (Cell i:  region.columns[colInd].cells) {
                     if (i== null) break;
                     i.activeState.put(time, true);
                 }
             }
 
             if (!lcChosen) {
-                int[] lc = getBestMatchingCell(c-1, time - 1 > 0 ? time - 1 : 0);
-                Cell i = region.columns[c-1].cells[lc[1]];
+                int[] lc = getBestMatchingCell(colInd, time - 1 > 0 ? time - 1 : 0);
+                Cell i = region.columns[colInd].cells[lc[1]];
                 i.learnState.put(time, true);
                 if (time - 1 >= 0) {
-                    SegmentUpdate sUpdate = getSegmentActiveSynapses(c-1, lc[1], time - 1, lc[2], true);
+                    SegmentUpdate sUpdate = getSegmentActiveSynapses(colInd, lc[1], time - 1, lc[2], true);
                     sUpdate.sequenceSegment = true;
                     i.segmentUpdateList[i.segmentUpdateListNum] = sUpdate;
                     i.segmentUpdateListNum++;

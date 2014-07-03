@@ -7,12 +7,8 @@ import org.apache.logging.log4j.Logger;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
 import cern.colt.matrix.tint.IntMatrix1D;
-import ru.isa.ai.dhm.MathUtils;
 
 public class Region {
     public Column[] columns;

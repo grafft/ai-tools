@@ -1,10 +1,6 @@
 package ru.isa.ai.newdhm;
 
 import cern.colt.bitvector.BitVector;
-import cern.colt.matrix.tbit.BitMatrix;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Cell {
     int index;

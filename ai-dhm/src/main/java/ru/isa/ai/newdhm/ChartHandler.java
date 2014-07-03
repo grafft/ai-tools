@@ -180,7 +180,7 @@ public class ChartHandler {
             }
             if (perm) {
                 Integer activeSynapses = 0;
-                for (int s = 0; s < cfg.crtx.r.region.xDimension * cfg.crtx.r.region.yDimension; s++) {
+                for (int s = 0; s < cfg.crtx.r.region.numColumns; s++) {
                     activeSynapses += cfg.crtx.r.region.columns[c].potentialSynapses[s].permanence >
                             cfg.crtx.r.region.connectedPerm ? 1 : 0;
                 }
