@@ -1,7 +1,5 @@
 package ru.isa.ai.newdhm;
 
-import java.util.List;
-
 public class SegmentUpdate {
 
     public int[] segmentIndex;

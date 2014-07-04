@@ -43,9 +43,9 @@ public class Cell {
         segmentUpdateList = new SegmentUpdate[1000];
         segmentUpdateListNum = 0;
 
-        learnState = new BitVector(1000);
-        predictiveState = new BitVector(1000);
-        activeState = new BitVector(1000);
+        learnState = new BitVector(3);
+        predictiveState = new BitVector(3);
+        activeState = new BitVector(3);
     }
 
     public void clearSegmentUpdateList(){
