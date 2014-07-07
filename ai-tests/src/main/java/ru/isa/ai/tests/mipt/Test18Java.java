@@ -23,7 +23,7 @@ public class Test18Java {
 //
 //        long t1 = System.nanoTime();
 //        System.out.println(values.parallelStream().sorted().count());
-//        System.out.println(String.format("Parallel sort: %d ms", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - t1)));
+//        System.out.println(String.format("Parallel sort: %`d ms", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - t1)));
 
     }
 }

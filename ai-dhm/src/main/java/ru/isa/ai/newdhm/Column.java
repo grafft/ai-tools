@@ -40,6 +40,7 @@ potentialSynapses(c) у которых значение
 перманентности больше чем connectedPerm. То есть это
 прямые входные биты, которые подключены к колонке c.
      */
+    // TODO AP: не забывай писать модификаторы доступа - public или private
     Synapse[] connectedSynapses;
     int connectedSynapsesNum;
     /*
@@ -80,6 +81,7 @@ potentialSynapses(c) у которых значение
         }
         //proximalSegment = new Segment();
 
+        // TODO AP: а почему 1000? в коде нигде не должны быть такие странные числа - если нужна константа - нужно ее определить в одном месте
         potentialSynapses = new Synapse[1000];
         potentialSynapsesNum = 0;
 

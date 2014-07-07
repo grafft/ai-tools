@@ -207,6 +207,7 @@ inhibitionRadius колонки c.
         return max;
     }
 
+    // TODO AP: все методы в Java - с маленькой буквы
     double GetMinLocalActivity(int i){
         return kthScore(neighbours(i), desiredLocalActivity);
     }

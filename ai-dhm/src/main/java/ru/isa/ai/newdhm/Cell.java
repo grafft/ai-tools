@@ -36,12 +36,14 @@ public class Cell {
     public Cell(int i) {
         // column = c;
         index = i;
+
         dendriteSegments = new Segment[1000];
         dendriteSegmentsNum = 0;
 
         segmentUpdateList = new SegmentUpdate[1000];
         segmentUpdateListNum = 0;
 
+        // TODO AP: аналогично - нигде не должно быть таких странных чисел с потолка
         learnState = new BitVector(3);
         predictiveState = new BitVector(3);
         activeState = new BitVector(3);
