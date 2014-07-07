@@ -2,10 +2,8 @@ package ru.isa.ai.newdhm;
 
 import cern.colt.matrix.tint.IntMatrix1D;
 import cern.colt.matrix.tint.impl.DenseIntMatrix2D;
+import cern.colt.matrix.tint.impl.SparseIntMatrix2D;
 import ru.isa.ai.newdhm.applet.ExtensionGUI;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import cern.colt.matrix.tint.IntMatrix2D;
 import cern.colt.matrix.tbit.BitMatrix;
@@ -15,9 +13,6 @@ import cern.colt.matrix.tint.impl.SparseIntMatrix3D;
 public class Cortex {
     public int time = 0;
     public int totalTime = 0;
-
-    public int[] inputDimensions;
-    public int numInputs = 1;
 
     // Список всех колонок
     public Region region = new Region();
@@ -36,7 +31,6 @@ public class Cortex {
         learn
     }
 
-   // private Random r = new Random();
     /////////////////////////////////////////////////////////////////////////
     //  Реализация
     /////////////////////////////////////////////////////////////////////////
@@ -44,10 +38,7 @@ public class Cortex {
     public Cortex() {
 
     }
-
-
     /////////////////////////////////////////////////////////////////////////
-    private int temp; //счетчик входа
 
     // + TODO AP: везде нужно испоьзовать простые int, double и т.п. вместо объектных оберток - это быстрее
     /*
@@ -123,7 +114,6 @@ public class Cortex {
     activeState, или learnState.
      */
     public boolean segmentActive(Segment s, int t, State state) {
-
         BitMatrix list = new BitMatrix(region.numColumns, region.cellsPerColumn);
         list = get2DcolsANDcellsAtT(state, t);
         int counter = 0;
@@ -160,19 +150,19 @@ public class Cortex {
         Segment[] activeSegments = new Segment[region.columns[c].cells[i].dendriteSegmentsNum];
         int length = 0;
         for (Segment segment : region.columns[c].cells[i].dendriteSegments) {
+            if (segment == null) break;
             if (segmentActive(segment, t, state)) {
                 activeSegments[length] = segment;
-                //activeSegments.add(segment);
                 length++;
             }
         }
 
-        //if (activeSegments.size() == 1) {
         if (i == 1) {
             //return new int[]{c, i, region.columns.get(c).cells[i].dendriteSegments.indexOf(activeSegments[0])};
             return new int[]{c, i, firstOccurrenceOfSegment(c, i, activeSegments[0])};
         } else {
             for (Segment seg : activeSegments) {
+                if (seg == null) break;
                 if (seg.sequenceSegment)
                     return new int[]{c, i,firstOccurrenceOfSegment(c,i,seg) };
 
@@ -185,6 +175,7 @@ public class Cortex {
             for (int j = 0; j < length; j++) {
                 int counter = 0;
                 for (Synapse syn : activeSegments[j].synapses) {
+                    if (syn == null) break;
                     if (list.get(syn.c, syn.i) && syn.permanence > region.connectedPerm) {
                         counter++;
                     }
@@ -296,28 +287,22 @@ public class Cortex {
                 }
             }
         }
-        else
-            System.out.print(1);
         if (newSynapses) {
             Random r = new Random();
-            List<int[]> learningCells = new ArrayList<>();
-            //SparseIntMatrix2D learningCells; ///??
+            SparseIntMatrix2D learningCells = new SparseIntMatrix2D(region.numColumns * region.cellsPerColumn, 2);
+            int lenLearningCells = 0;
             for (int j = 0; j < region.numColumns; j++) {
                 for (int k = 0; k < region.cellsPerColumn; k++) {
                     if (region.columns[j].cells[k].learnState.get(t) && !(c == j && i == k)) {
-                        learningCells.add(new int[]{j, k});
+                        learningCells.setQuick(lenLearningCells , 0, j);
+                        learningCells.setQuick(lenLearningCells , 1, k);
+                        lenLearningCells++;
                     }
                 }
-            }/*
-            for (int k = 0; k < region.newSynapseCount - activeSynapses.size(); k++) {
-                int[] idx;
-                idx = learningCells.get(r.nextInt(learningCells.size()));
-                activeSynapses.add(new Synapse(idx[0], idx[1], region.initialPerm));
-            }*/
+            }
             for (int k = 0; k < region.newSynapseCount - length; k++) {
                 int[] idx;
-                //idx = learningCells.get(r.nextInt(learningCells.size()));
-                idx = learningCells.get(r.nextInt(time));
+                idx = learningCells.viewRow(r.nextInt(lenLearningCells - 1)).toArray();
                 activeSynapses[length] = new Synapse(idx[0], idx[1], region.initialPerm);
                 length++;
             }
@@ -341,7 +326,6 @@ public class Cortex {
     public void adaptSegments(SegmentUpdate[] segmentList, boolean positiveReinforcement) {
         for (SegmentUpdate segUpd: segmentList) {
             if (segUpd == null) break;
-            // System.out.print(segUpd.segmentIndex[2] + "\r\n");
             if (segUpd.segmentIndex[2] < 0) {
                 Segment newSegment = new Segment();
                 for (Synapse syn : segUpd.activeSynapses) {
@@ -353,11 +337,7 @@ public class Cortex {
                 Cell i = region.columns[segUpd.segmentIndex[0]].cells[segUpd.segmentIndex[1]];
                 i.dendriteSegments[i.dendriteSegmentsNum] = newSegment;
                 i.dendriteSegmentsNum++;
-                /*
-                int len = region.columns[segUpd.segmentIndex[0]].cells[segUpd.segmentIndex[1]].dendriteSegmentsNum;
-                region.columns[segUpd.segmentIndex[0]].cells[segUpd.segmentIndex[1]].dendriteSegments[len] = newSegment;
-                region.columns[segUpd.segmentIndex[0]].cells[segUpd.segmentIndex[1]].dendriteSegmentsNum++;
-                */
+                region.columns[segUpd.segmentIndex[0]].cells[segUpd.segmentIndex[1]] = i;
             } else {
                 Segment seg = region.columns[segUpd.segmentIndex[0]].cells[segUpd.segmentIndex[1]].dendriteSegments[segUpd.segmentIndex[2]];
                 seg.sequenceSegment = segUpd.sequenceSegment;
@@ -453,10 +433,7 @@ public class Cortex {
             }
         }
 
-        activeColumns = new DenseIntMatrix2D(1000, region.numColumns); //моменты t по вертикали, индексы колонок по горизонтали
-
-        //inputBits = new ArrayList<int[][]>();
-       // inputBits.add(new int[region.xDimension][region.yDimension]);
+        activeColumns = new DenseIntMatrix2D(3, region.numColumns+1); //моменты t по вертикали, индексы колонок по горизонтали
         inputBits = new SparseIntMatrix3D(region.cellsPerColumn,region.xDimension,region.yDimension);
 
         for (Column c : region.columns) {
@@ -518,6 +495,14 @@ public class Cortex {
     Параметр desiredLocalActivity контролирует число колонок, которые останутся победителями.
      */
     public void sInhibition() {
+/*
+       System.out.print("before sInhibition: activeColumns contains:\n");
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 30; j++)
+                System.out.print(activeColumns.get(i, j) + " ");
+            System.out.print("\n");
+        }
+*/
         int i = 0;
         int activeColumnsAtTlength = 1;
         for(Column c : region.columns){
@@ -525,13 +510,20 @@ public class Cortex {
             double minLocalActivity = region.GetMinLocalActivity(i);
             double overlap = c.overlap;
             if (overlap > 0.0 && overlap >= minLocalActivity) {
-                //activeColumns.setQuick(c.x,c.y,i);
                 activeColumns.setQuick(time, activeColumnsAtTlength , i);
                 activeColumnsAtTlength++;
             }
             i++;
         }
         activeColumns.setQuick(time,0,activeColumnsAtTlength-1);
+/*
+            System.out.print("after sInhibition: activeColumns contains:\n");
+            for (int j = 0; j < 3; j++) {
+                for (int q = 0; q < 30; q++)
+                    System.out.print(activeColumns.get(j, q) + " ");
+                System.out.print("\n");
+            }
+*/
     }
 
     /*
@@ -623,13 +615,14 @@ public class Cortex {
 
             if (!lcChosen) {
                 int[] lc = getBestMatchingCell(colInd, time - 1 > 0 ? time - 1 : 0);
-                Cell i = region.columns[colInd].cells[lc[1]];
-                i.learnState.put(time, true);
+                region.columns[colInd].cells[lc[1]].learnState.put(time, true);
                 if (time - 1 >= 0) {
                     SegmentUpdate sUpdate = getSegmentActiveSynapses(colInd, lc[1], time - 1, lc[2], true);
                     sUpdate.sequenceSegment = true;
-                    i.segmentUpdateList[i.segmentUpdateListNum] = sUpdate;
-                    i.segmentUpdateListNum++;
+                    Cell q = region.columns[colInd].cells[lc[1]];
+                    q.segmentUpdateList[q.segmentUpdateListNum] = sUpdate;
+                    q.segmentUpdateListNum++;
+                    region.columns[colInd].cells[lc[1]] = q ;
                 }
             }
         }
@@ -702,13 +695,42 @@ public class Cortex {
         if (totalTime > 2) {
             time--;
             //activeColumns.remove(time - 2);
+/*
+            System.out.print("activeColumns contains 1:\n");
+            for (int i = 0; i < 3; i++){
+                for (int j = 0; j < 30 ; j++)
+                    System.out.print(activeColumns.get(i, j) + " ");
+                System.out.print("\n");
+            }
+*/
+            for (int i = 0; i < 2 ; i++)
+                for (int j = 0 ; j < region.numColumns + 1 ; j++){
+                    activeColumns.setQuick(i, j, activeColumns.getQuick(i+1,j));
+                }
+            for (int j = 0 ; j < region.numColumns + 1 ; j++) {
+                activeColumns.setQuick(2, j, 0);
+            }
+/*
+            System.out.print("activeColumns contains 2:\n");
+            for (int i = 0; i < 3; i++){
+                for (int j = 0; j < 30 ; j++)
+                    System.out.print(activeColumns.getQuick(i, j) + " ");
+                System.out.print("\n");
+            }
+*/
 
-         /*   for (Column c : region.columns)
+            for (Column c : region.columns)
                 for (Cell i : c.cells) {
-                    i.predictiveState.remove(time - 2);
-                    i.learnState.remove(time - 2);
-                    i.activeState.remove(time - 2);
-                }*/
+                    //удаляем 0-ой элемент, сдвигаем остальное
+                    for (int j = 1 ; j < 3 ; j++){
+                        i.predictiveState.put(j-1, i.predictiveState.get(j));
+                        i.learnState.put(j-1, i.learnState.get(j));
+                        i.activeState.put(j-1, i.activeState.get(j));
+                    }
+                    i.predictiveState.put(2,false);
+                    i.learnState.put(2,false);
+                    i.activeState.put(2,false);
+                }
         }
 /*
         for (Column c : region.columns)
