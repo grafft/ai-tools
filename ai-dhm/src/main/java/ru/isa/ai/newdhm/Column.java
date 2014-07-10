@@ -73,6 +73,7 @@ potentialSynapses(c) у которых значение
         this.activeDutyCycle = 0.0;
         this.overlapDutyCycle = 0.0;
         this.minDutyCycle = 0.0;
+        this.minOverlap = 0.0;
 
         cells = new Cell[region.cellsPerColumn];
         for (int i = 0; i < region.cellsPerColumn; i++) {
@@ -80,10 +81,10 @@ potentialSynapses(c) у которых значение
         }
         //proximalSegment = new Segment();
 
-        potentialSynapses = new Synapse[1000];
+        potentialSynapses = new Synapse[region.numColumns];
         potentialSynapsesNum = 0;
 
-        connectedSynapses = new Synapse[1000];
+        connectedSynapses = new Synapse[region.numColumns];
         connectedSynapsesNum = 0;
     }
 
@@ -121,5 +122,6 @@ potentialSynapses(c) у которых значение
     public Double boostFunction() {
         return activeDutyCycle > minDutyCycle ? 1.0 : (1.0 + minDutyCycle * 100);
     }
+
 
 }

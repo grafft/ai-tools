@@ -18,7 +18,7 @@ public class CortexThread extends Thread {
                                         /*
                                         cellsPerColumn ,xDimension,yDimension
                                          */
-        r.sInitialization();
+        r.sInitializationDefault();
         chartHandler = new ChartHandler(chart1, chart2, configuration);
     }
 

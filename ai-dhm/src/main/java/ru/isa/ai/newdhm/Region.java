@@ -95,6 +95,19 @@ public class Region {
         }
 
     }
+
+    public void initParametersForColumns(double minOverlap, double minDutyCycle, double[] initOverlapDuty, double[] initActiveDuty){
+        int i = 0;
+        for(Column c : this.columns){
+            c.minOverlap = minOverlap;
+            c.minDutyCycle = minDutyCycle;
+            c.activeDutyCycle = initActiveDuty[i];
+            c.overlapDutyCycle = initOverlapDuty[i];
+            i++;
+        }
+    }
+
+
     /*
     neighbors(c) -  Список колонок находящихся в радиусе подавления
 inhibitionRadius колонки c.
@@ -311,4 +324,6 @@ inhibitionRadius колонки c.
    public double getInhibitionRadius(){
         return inhibitionRadius;
     }
+
+   public void setInhibitionRadius(double value) {inhibitionRadius = value;}
 }

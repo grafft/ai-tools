@@ -392,7 +392,7 @@ public class Cortex {
 
     Random rnd = new Random();
 
-    void initSynapsesDefault(Column column) {
+    public void initSynapsesDefault(Column column) {
         for (int i = 0; i < region.numColumns; i++) {
             int dimX = rnd.nextInt(region.xDimension);
             int dimY = rnd.nextInt(region.yDimension);
@@ -402,36 +402,23 @@ public class Cortex {
             column.potentialSynapses[column.potentialSynapsesNum] = new Synapse(dimX, dimY, Math.max(perm - adjustment, 0.0));
             column.potentialSynapsesNum++;
         }
-/*
-        int i = 0;
-        while (column.potentialSynapses[i] != null){
-            i++;
-        }
-        System.out.print(i);*/
     }
 
-    // +TODO AP: все методы - с маленькой буквы!
-    public void sInitialization() {
- /*
-       this.inputDimensions = new int[inputDimensions.length];
-        numInputs = 1;
-        for (int i = 0; i < inputDimensions.length; i++) {
-            numInputs *= inputDimensions[i];
-            this.inputDimensions[i] = inputDimensions[i];
-        }
-        this.region.cellsPerColumn = regionDimensions[0];
-        this.region.xDimension = regionDimensions[1];
-        this.region.yDimension = regionDimensions[2];
+    public void initSynapsesTest(Column column, int numInputs, double[] permArr) {
+        for (int i = 0; i < numInputs; i++) {
+            int dimX = rnd.nextInt(region.xDimension);
+            int dimY = rnd.nextInt(region.yDimension);
 
-        region.numColumns = region.xDimension * region.yDimension;
-*/
-        int ind = 0;
-        for (int i = 0; i < region.xDimension; i++) {
-            for (int j = 0; j < region.yDimension; j++) {
-                region.columns[ind] = new Column(region, i, j);
-                ind++;
-            }
+            column.potentialSynapses[column.potentialSynapsesNum] = new Synapse(dimX, dimY, permArr[i]);
+            column.potentialSynapsesNum++;
         }
+    }
+
+
+    // +TODO AP: все методы - с маленькой буквы!
+    public void sInitializationDefault() {
+
+        region.addColumns();
 
         activeColumns = new DenseIntMatrix2D(3, region.numColumns+1); //моменты t по вертикали, индексы колонок по горизонтали
         inputBits = new SparseIntMatrix3D(region.cellsPerColumn,region.xDimension,region.yDimension);
@@ -441,18 +428,30 @@ public class Cortex {
             initSynapsesDefault(c);
         }
 
-       /* for (Column c : region.columns)
-            for (Cell i : c.cells) {
-                i.learnState.add(false);
-                i.activeState.add(false);
-                i.predictiveState.add(false);
-            }*/
-
-        region.inhibitionRadius = region.averageReceptiveFieldSize();
+        updateInhibitionRadius();
         ///////////////////////////
         // loadProperties();
         // checkProperties();
     }
+
+    public void updateInhibitionRadius(){
+        region.inhibitionRadius = region.averageReceptiveFieldSize();
+    }
+
+
+    public void sInitializationTest(int[] inputDim, int[] columnDim) {
+
+        region.xDimension = columnDim[0];
+        region.yDimension = columnDim[1];
+        region.cellsPerColumn = columnDim[2];
+        region.connectedPerm = 0.5;
+        region.addColumns();
+
+        activeColumns = new DenseIntMatrix2D(3, region.numColumns+1); //моменты t по вертикали, индексы колонок по горизонтали
+        inputBits = new SparseIntMatrix3D(region.cellsPerColumn,region.xDimension,region.yDimension);
+    }
+
+
 
     public double updateOverlapDutyCycle(int c) {
         double value = 0.0;
@@ -567,7 +566,7 @@ public class Cortex {
             i++;
         }
 
-        region.inhibitionRadius = region.averageReceptiveFieldSize();
+        updateInhibitionRadius();
     }
 
     /*
