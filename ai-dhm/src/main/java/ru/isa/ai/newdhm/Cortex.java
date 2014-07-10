@@ -475,7 +475,6 @@ public class Cortex {
                 if (input(synapse.c, synapse.i))
                     c.overlap += 1;
                 //c.overlap += inputDefault(time, synapse.c, synapse.i);
-                System.out.print(synapse.c + " " + synapse.i + "\n");
             }
             if (c.overlap < c.minOverlap)
                 c.overlap = 0.0;

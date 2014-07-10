@@ -51,7 +51,8 @@ public class HTMConfiguration {
     private Chart2D chart2D2;
     private JPanel casmiPanel;
     public JCheckBox drawDendritesTimlineCheckBox;
-    private JButton LoadPropertiesFromFile;
+    private JButton LoadPropertiesFromFileButton;
+    private JButton showActiveColumnsButton;
 
     public CortexThread crtx = new CortexThread();
     static HTMConfiguration panel;
@@ -67,7 +68,8 @@ public class HTMConfiguration {
         stopCortexButton.addActionListener(new StopCortexButtonListener());
         makeStepButton.addActionListener(new MakeStepButtonListener());
         showExtendedGUIButton.addActionListener(new ShowExtendedGUIListener());
-        LoadPropertiesFromFile.addActionListener(new LoadPropertiesButtonGUIListener());
+        showActiveColumnsButton.addActionListener(new ShowActiveColumnsListener());
+        LoadPropertiesFromFileButton.addActionListener(new LoadPropertiesButtonGUIListener());
     }
 
     public static void main(String[] args) {
@@ -264,6 +266,19 @@ public class HTMConfiguration {
             frame.setVisible(true);
 
 //              CasmiApplet.launch(crtx.region);
+        }
+    }
+
+    private class ShowActiveColumnsListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            JFrame frame = new JFrame("Active Columns Visualization");
+            ActiveColumnsVisualization cl = new ActiveColumnsVisualization();
+            frame.setContentPane(cl.activeColumnsPanel);
+            frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            frame.pack();
+            frame.setResizable(false);
+            cl.draw();
+            frame.setVisible(true);
         }
     }
 }
