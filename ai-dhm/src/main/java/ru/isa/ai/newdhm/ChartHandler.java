@@ -122,8 +122,8 @@ public class ChartHandler {
         Integer time = cfg.crtx.r.time - 1 > 0 ? cfg.crtx.r.time - 1 : 0;
         if (inp) {
             for (int i = 0; i < cfg.crtx.r.region.xDimension; i++) {
-                for (int j = 0; j < cfg.crtx.r.region.xDimension; j++) {
-                    traceINP.addPoint(i + j, cfg.crtx.r.input(time, i, j));
+                for (int j = 0; j < cfg.crtx.r.region.xDimension; j++) {           ///////////////////////?????????
+                    traceINP.addPoint(i + j, (cfg.crtx.r.input(i,j) == true) ? 1 : 0);
                 }
             }
         }

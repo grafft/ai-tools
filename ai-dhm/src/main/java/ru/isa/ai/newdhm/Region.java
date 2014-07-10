@@ -71,13 +71,9 @@ public class Region {
      */
     public int newSynapseCount;
 
-    ////////////////////////////////////////////////////////
-    // загрузка свойств из файла
-    private final Logger logger = LogManager.getLogger(Region.class.getSimpleName());
-    private final String SP_PROP_FILENAME = "htm.properties";
-    private String filePropName = SP_PROP_FILENAME;
-
     //////////////////////////////////////////////////////////
+    final private int numMemoryCells = 1000;
+
     public Region(){
     }
 
@@ -113,7 +109,7 @@ public class Region {
 inhibitionRadius колонки c.
      */
     public IntMatrix1D neighbours(int c) {
-        IntMatrix1D result = new SparseIntMatrix1D(1000);
+        IntMatrix1D result = new SparseIntMatrix1D(numMemoryCells);
         int length = 1 ;
         for(int i = 0; i < numColumns; i++) {
             if ((Math.abs(columns[i].x - columns[c].x) < inhibitionRadius) &&
@@ -158,7 +154,7 @@ inhibitionRadius колонки c.
 их перекрытий со входом
     */
     public double kthScore(IntMatrix1D cols, int k){
-        double[] overlaps = new double[1000];
+        double[] overlaps = new double[numMemoryCells];
         //doubleMatrix1D overlaps;
 
         int length = 1;
@@ -224,102 +220,6 @@ inhibitionRadius колонки c.
         return kthScore(neighbours(i), desiredLocalActivity);
     }
 
-    // TODO AP: аналогично с Cortex - надо всю неалгоритмическую работу вывести во вспомогательные классы
-    public void loadProperties() throws RegionInitializationException {
-        Properties properties = new Properties();
-        try {
-            FileInputStream input = new FileInputStream(filePropName);
-            properties.load(input);
-            for (String name : properties.stringPropertyNames()) {
-                switch (name) {
-                    case "desiredLocalActivity":
-                        this.desiredLocalActivity = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "minOverlap":
-                        this.minOverlap = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "connectedPerm":
-                        this.connectedPerm = Double.parseDouble(properties.getProperty(name));
-                        break;
-                    case "permanenceInc":
-                        this.permanenceInc = Double.parseDouble(properties.getProperty(name));
-                        break;
-                    case "permanenceDec":
-                        this.permanenceDec = Double.parseDouble(properties.getProperty(name));
-                        break;
-                    case "cellsPerColumn":
-                        this.cellsPerColumn = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "activationThreshold":
-                        this.activationThreshold = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "initialPerm":
-                        this.initialPerm = Double.parseDouble(properties.getProperty(name));
-                        break;
-                    case "minThreshold":
-                        this.minThreshold = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "newSynapseCount":
-                        this.newSynapseCount = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "xDimension":
-                        this.xDimension = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "yDimension":
-                        this.yDimension = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    default:
-                        logger.error("Illegal property name: " + name);
-                        break;
-                }
-            }
-            input.close();
-        } catch (IOException e) {
-            throw new RegionInitializationException("Cannot load properties file " + filePropName, e);
-        } catch (NumberFormatException nfe) {
-            throw new RegionInitializationException("Wrong property value in property file " + filePropName, nfe);
-        }
-    }
-
-
-    /*
-    private void checkProperties() throws RegionInitializationException {
-        if (numColumns <= 0)
-            throw new RegionInitializationException("Column dimensions must be non zero positive values");
-        if (numInputs <= 0)
-            throw new RegionInitializationException("Input dimensions must be non zero positive values");
-        if (numActiveColumnsPerInhArea <= 0 && (localAreaDensity <= 0 || localAreaDensity > 0.5))
-            throw new RegionInitializationException("Or numActiveColumnsPerInhArea > 0 or localAreaDensity > 0 " +
-                    "and localAreaDensity <= 0.5");
-        if (potentialPct <= 0 || potentialPct > 1)
-            throw new RegionInitializationException("potentialPct must be > 0 and <= 1");
-        potentialRadius = potentialRadius > numInputs ? numInputs : potentialRadius;
-    }
-    */
-
-    public void saveProperties() throws RegionInitializationException {
-        Properties properties = new Properties();
-        try {
-                properties.setProperty("desiredLocalActivity",String.valueOf(desiredLocalActivity));
-                properties.setProperty("minOverlap",String.valueOf(minOverlap));
-                properties.setProperty("connectedPerm",String.valueOf(connectedPerm));
-                properties.setProperty("permanenceInc", String.valueOf(permanenceInc));
-                properties.setProperty("permanenceDec", String.valueOf(permanenceDec));
-                properties.setProperty("activationThreshold",String.valueOf(activationThreshold));
-                properties.setProperty("initialPerm",String.valueOf(initialPerm));
-                properties.setProperty("minThreshold",String.valueOf(minThreshold));
-                properties.setProperty("newSynapseCount",String.valueOf(newSynapseCount));
-                properties.setProperty("xDimension",String.valueOf(xDimension));
-                properties.setProperty("yDimension",String.valueOf(yDimension));
-
-                FileOutputStream output = new FileOutputStream(filePropName);
-                properties.store(output,"Saved settings");
-                output.close();
-
-        } catch (IOException e) {
-            throw new RegionInitializationException("Cannot save properties file " + filePropName, e);
-        }
-    }
 //////////////////////////////////////////////////////////
    public double getInhibitionRadius(){
         return inhibitionRadius;

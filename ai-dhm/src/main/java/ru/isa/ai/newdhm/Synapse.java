@@ -1,7 +1,7 @@
 package ru.isa.ai.newdhm;
 
 public class Synapse {
-    public Double permanence;
+    public double permanence;
 
     public int c;
     public int i;

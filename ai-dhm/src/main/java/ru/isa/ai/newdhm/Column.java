@@ -4,7 +4,7 @@ public class Column {
 
     public int x;
     public int y;
-    Cell[] cells;
+    public Cell[] cells;
 
     // public Segment proximalSegment;
 
@@ -32,7 +32,7 @@ public class Column {
     potentialSynapses(c) - Список потенциальных синапсов и их значений
  перманентности
      */
-    Synapse[] potentialSynapses;
+    public Synapse[] potentialSynapses;
     int potentialSynapsesNum;
     /*
     connectedSynapses(c) - Подмножество потенциальных синапсов
@@ -40,8 +40,8 @@ potentialSynapses(c) у которых значение
 перманентности больше чем connectedPerm. То есть это
 прямые входные биты, которые подключены к колонке c.
      */
-    Synapse[] connectedSynapses;
-    int connectedSynapsesNum;
+    public Synapse[] connectedSynapses;
+    public int connectedSynapsesNum;
     /*
     activeDutyCycle(c) Интервальное среднее показывающее как часто колонка c
     была активна после подавления

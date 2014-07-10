@@ -1,6 +1,6 @@
 package ru.isa.ai.newdhm;
 
-import cern.colt.bitvector.BitVector;
+import cern.colt.matrix.tbit.BitVector;
 
 public class Cell {
     int index;
@@ -33,19 +33,22 @@ public class Cell {
     SegmentUpdate[] segmentUpdateList;
     int segmentUpdateListNum;
 
+    final private int numSegments = 1000;
+    final private int numStateCells = 3;
+
     public Cell(int i)
     {
        // column = c;
         index = i;
-        dendriteSegments = new Segment[1000];
+        dendriteSegments = new Segment[numSegments];
         dendriteSegmentsNum = 0;
 
-        segmentUpdateList = new SegmentUpdate[1000];
+        segmentUpdateList = new SegmentUpdate[numSegments];
         segmentUpdateListNum = 0;
 
-        learnState = new BitVector(3);
-        predictiveState = new BitVector(3);
-        activeState = new BitVector(3);
+        learnState = new BitVector(numStateCells);
+        predictiveState = new BitVector(numStateCells);
+        activeState = new BitVector(numStateCells);
     }
 
     public void clearSegmentUpdateList(){
