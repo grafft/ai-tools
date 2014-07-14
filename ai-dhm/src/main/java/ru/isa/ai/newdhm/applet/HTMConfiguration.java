@@ -273,11 +273,11 @@ public class HTMConfiguration {
         public void actionPerformed(ActionEvent e) {
             JFrame frame = new JFrame("Active Columns Visualization");
             ActiveColumnsVisualization cl = new ActiveColumnsVisualization();
-            frame.setContentPane(cl.activeColumnsPanel);
+            frame.setContentPane(cl.activeColumnsPanel_main);
             frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             frame.pack();
-            frame.setResizable(false);
-            cl.draw();
+            //frame.setResizable(false);
+            cl.draw(20, 10);
             frame.setVisible(true);
         }
     }
