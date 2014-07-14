@@ -277,7 +277,7 @@ public class HTMConfiguration {
             frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             frame.pack();
             //frame.setResizable(false);
-            cl.draw(20, 10);
+            cl.draw(20, 10, 20,20);
             frame.setVisible(true);
         }
     }

@@ -15,7 +15,9 @@ public class ActiveColumnsVisualization extends JFrame {
     private JLabel spinnersLabel;
     HighlightableArea ha;
     int squaresNumWidth = 0;
-    int getSquaresNumHeight = 0;
+    int squaresNumHeight = 0;
+    int squaresNumWidth_input = 0;
+    int squaresNumHeight_input = 0;
 
     public ActiveColumnsVisualization(){
         activeColsPanel.setPreferredSize(new Dimension(500, 500));
@@ -53,15 +55,17 @@ public class ActiveColumnsVisualization extends JFrame {
         activeColsPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(5, 5, 5, 5),
                 BorderFactory.createLineBorder(Color.blue)));
-        ha = new HighlightableArea(squaresNumWidth,getSquaresNumHeight,(float)slider1.getValue()/100.0, Color.gray);
+        ha = new HighlightableArea(squaresNumWidth,squaresNumHeight,(float)slider1.getValue()/100.0, Color.gray);
         ha.setBackground(Color.white);
         activeColsPanel.add(ha, BorderLayout.CENTER);
         activeColsPanel.setVisible(true);
     }
 
-    public void draw(int squaresNumWidth_, int getSquaresNumHeight_){
+    public void draw(int squaresNumWidth_, int squaresNumHeight_, int squaresNumWidth_input_, int squaresNumHeight_input_ ){
         squaresNumWidth = squaresNumWidth_;
-        getSquaresNumHeight = getSquaresNumHeight_;
+        squaresNumHeight = squaresNumHeight_;
+        squaresNumWidth_input = squaresNumWidth_input_;
+        squaresNumHeight_input = squaresNumHeight_input_;
         AreaHighlightTest();
     }
 }
@@ -109,6 +113,10 @@ class HighlightableArea extends JPanel {
 
         for (int i = 0; i <= squaresNumPerH; i++) {
             g.drawLine((int)(otstup - dy * i), (int) (dy * i), (int)(getWidth() - dy * i), (int) (dy * i));
+        }
+
+        for (int i = 0; i <= squa; i++){
+           // g.drawLine();
         }
 
         if (hx >= 0 && hy >= 0) {
