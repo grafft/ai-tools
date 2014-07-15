@@ -115,10 +115,6 @@ class HighlightableArea extends JPanel {
             g.drawLine((int)(otstup - dy * i), (int) (dy * i), (int)(getWidth() - dy * i), (int) (dy * i));
         }
 
-       // for (int i = 0; i <= squa; i++){
-           // g.drawLine();
-        //}
-
         if (hx >= 0 && hy >= 0) {
 
             //draw filled rectangle
