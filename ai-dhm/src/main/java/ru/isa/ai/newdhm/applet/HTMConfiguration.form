@@ -456,18 +456,6 @@
           <toolTipText value="Region Y Dimension "/>
         </properties>
       </component>
-      <component id="f456b" class="javax.swing.JCheckBox" binding="inputsGraphicsCheckBox" default-binding="true">
-        <constraints>
-          <grid row="16" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
-            <preferred-size width="191" height="24"/>
-            <maximum-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties>
-          <background awt-color="white"/>
-          <text value="Inputs Graphics"/>
-        </properties>
-      </component>
       <tabbedpane id="64424" binding="tabbedPane1" default-binding="true">
         <constraints>
           <grid row="0" column="2" row-span="22" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
@@ -548,15 +536,7 @@
           </grid>
         </children>
       </tabbedpane>
-      <component id="7258e" class="javax.swing.JCheckBox" binding="drawDendritesTimlineCheckBox" default-binding="true">
-        <constraints>
-          <grid row="17" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Draw Dendrites Timline"/>
-        </properties>
-      </component>
-      <component id="a8d84" class="javax.swing.JButton" binding="LoadPropertiesFromFile">
+      <component id="a8d84" class="javax.swing.JButton" binding="LoadPropertiesFromFileButton">
         <constraints>
           <grid row="21" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
             <preferred-size width="191" height="26"/>
@@ -566,6 +546,36 @@
         <properties>
           <background awt-color="white"/>
           <text value="file - properties"/>
+        </properties>
+      </component>
+      <component id="7258e" class="javax.swing.JCheckBox" binding="drawDendritesTimlineCheckBox" default-binding="true">
+        <constraints>
+          <grid row="18" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Draw Dendrites Timline"/>
+        </properties>
+      </component>
+      <component id="f456b" class="javax.swing.JCheckBox" binding="inputsGraphicsCheckBox" default-binding="true">
+        <constraints>
+          <grid row="17" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="191" height="24"/>
+            <maximum-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties>
+          <background awt-color="white"/>
+          <text value="Inputs Graphics"/>
+        </properties>
+      </component>
+      <component id="83598" class="javax.swing.JButton" binding="showActiveColumnsButton">
+        <constraints>
+          <grid row="16" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <enabled value="false"/>
+          <hideActionText value="false"/>
+          <text value="Show Active Columns"/>
         </properties>
       </component>
     </children>

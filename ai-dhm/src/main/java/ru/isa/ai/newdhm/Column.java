@@ -4,7 +4,7 @@ public class Column {
 
     public int x;
     public int y;
-    Cell[] cells;
+    public Cell[] cells;
 
     // public Segment proximalSegment;
 
@@ -32,7 +32,7 @@ public class Column {
     potentialSynapses(c) - Список потенциальных синапсов и их значений
  перманентности
      */
-    Synapse[] potentialSynapses;
+    public Synapse[] potentialSynapses;
     int potentialSynapsesNum;
     /*
     connectedSynapses(c) - Подмножество потенциальных синапсов
@@ -40,9 +40,8 @@ potentialSynapses(c) у которых значение
 перманентности больше чем connectedPerm. То есть это
 прямые входные биты, которые подключены к колонке c.
      */
-    // TODO AP: не забывай писать модификаторы доступа - public или private
-    Synapse[] connectedSynapses;
-    int connectedSynapsesNum;
+    public Synapse[] connectedSynapses;
+    public int connectedSynapsesNum;
     /*
     activeDutyCycle(c) Интервальное среднее показывающее как часто колонка c
     была активна после подавления
@@ -74,6 +73,7 @@ potentialSynapses(c) у которых значение
         this.activeDutyCycle = 0.0;
         this.overlapDutyCycle = 0.0;
         this.minDutyCycle = 0.0;
+        this.minOverlap = 0.0;
 
         cells = new Cell[region.cellsPerColumn];
         for (int i = 0; i < region.cellsPerColumn; i++) {
@@ -81,11 +81,10 @@ potentialSynapses(c) у которых значение
         }
         //proximalSegment = new Segment();
 
-        // TODO AP: а почему 1000? в коде нигде не должны быть такие странные числа - если нужна константа - нужно ее определить в одном месте
-        potentialSynapses = new Synapse[1000];
+        potentialSynapses = new Synapse[region.numColumns];
         potentialSynapsesNum = 0;
 
-        connectedSynapses = new Synapse[1000];
+        connectedSynapses = new Synapse[region.numColumns];
         connectedSynapsesNum = 0;
     }
 
@@ -123,5 +122,6 @@ potentialSynapses(c) у которых значение
     public Double boostFunction() {
         return activeDutyCycle > minDutyCycle ? 1.0 : (1.0 + minDutyCycle * 100);
     }
+
 
 }

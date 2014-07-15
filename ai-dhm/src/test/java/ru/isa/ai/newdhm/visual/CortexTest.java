@@ -7,6 +7,7 @@ import junit.framework.TestCase;
 import ru.isa.ai.dhm.MathUtils;
 import ru.isa.ai.dhm.poolers.SpatialPooler;
 import ru.isa.ai.dhm.poolers.SpatialPoolerInitializationException;
+import ru.isa.ai.newdhm.Column;
 import ru.isa.ai.newdhm.Cortex;
 import ru.isa.ai.newdhm.Region;
 
@@ -50,56 +51,126 @@ public class CortexTest extends TestCase {
  */
 public void testUpdateInhibitionRadius()
     {
-      /*  Cortex crtx = new Cortex();
-        crtx.sInitialization(new int[]{1,1,1}, new int[]{57,31,2});
+        Cortex c = new Cortex();
+        int numInputs = 1;
+        c.sInitializationTest(new int[]{numInputs,1,1}, new int[]{57,31,2});
+        //sp.setGlobalInhibition(true);
+        for (Column col: c.region.columns) {
+            double permArr[] = {1};
+            c.initSynapsesTest(col, numInputs, permArr);
+        }
+        c.updateInhibitionRadius();
+        assertEquals(c.region.getInhibitionRadius(), 57);
 
-        Method method = crtx.region.class.getDeclaredMethod("averageReceptiveFieldSize");
-        method.setAccessible(true);
-
-        assertEquals(crtx.region.getInhibitionRadius(), 57);
 
         // avgColumnsPerInput = 4
         // avgConnectedSpanForColumn = 3
-        crtx.sInitialization(new int[]{3}, new int[]{12});
-        crtx.region.setGlobalInhibition(false);
-
-        for (int i = 0; i < 12; i++) {
-            DoubleMatrix1D permArr = new DenseDoubleMatrix1D(3);
-            permArr.assign(new double[]{1, 1, 1});
-            sp.setPermanence(i, permArr);
+        numInputs = 3;
+        int numCols = 12;
+        c.sInitializationTest(new int[]{numInputs,1,1}, new int[]{6,2,2});
+        //sp.setGlobalInhibition(false);
+        for (Column col: c.region.columns) {
+            double permArr[] = {1, 1, 1};
+            c.initSynapsesTest(col, numInputs, permArr);
         }
         int trueInhibitionRadius = 6;
         // ((3 * 4) - 1)/2 => round up
-        method.invoke(crtx.region);
-        assertEquals(trueInhibitionRadius, crtx.region.getInhibitionRadius());
+        c.updateInhibitionRadius();
+        assertEquals(c.region.getInhibitionRadius(), trueInhibitionRadius);
+
 
         // avgColumnsPerInput = 1.2
         // avgConnectedSpanForColumn = 0.5
-        crtx.sInitialization(new int[]{5}, new int[]{6});
-        crtx.region.setGlobalInhibition(false);
-
-        for (int i = 0; i < 6; i++) {
-            DoubleMatrix1D permArr = new DenseDoubleMatrix1D(5);
-            permArr.assign(new double[]{i % 2 == 0 ? 1 : 0, 0, 0, 0, 0});
-            sp.setPermanence(i, permArr);
+        numInputs = 5;
+        numCols = 6;
+        c.sInitializationTest(new int[]{numInputs,1,1}, new int[]{3,2,2});
+        //sp.setGlobalInhibition(false);
+        int i = 0;
+        for (Column col: c.region.columns) {
+            double permArr[] = {1, 0, 0, 0, 0};
+            if (i % 2 == 0) {
+                permArr[0] = 0;
+            }
+            i++;
+            c.initSynapsesTest(col, numInputs, permArr);
         }
         trueInhibitionRadius = 1;
-        method.invoke(sp);
-        assertEquals(trueInhibitionRadius, sp.getInhibitionRadius());
+        c.updateInhibitionRadius();
+        assertEquals(c.region.getInhibitionRadius(), trueInhibitionRadius);
 
         // avgColumnsPerInput = 2.4
         // avgConnectedSpanForColumn = 2
-        sp.sInitialization(new int[]{5}, new int[]{12});
-        sp.setGlobalInhibition(false);
+        numInputs = 5;
+        numCols = 12;
+        c.sInitializationTest(new int[]{numInputs,1,1}, new int[]{6,2,2});
+        //sp.setGlobalInhibition(false);
 
-        for (int i = 0; i < 12; i++) {
-            DoubleMatrix1D permArr = new DenseDoubleMatrix1D(5);
-            permArr.assign(new double[]{1, 1, 0, 0, 0});
-            sp.setPermanence(i, permArr);
+        for (Column col: c.region.columns) {
+            double permArr[] = {1, 1, 0, 0, 0};
+            c.initSynapsesTest(col, numInputs, permArr);
         }
         trueInhibitionRadius = 2;
         // ((2.4 * 2) - 1)/2 => round up
-        method.invoke(sp);
-        assertEquals(trueInhibitionRadius, sp.getInhibitionRadius());*/
+        c.updateInhibitionRadius();
+        assertEquals(c.region.getInhibitionRadius(), trueInhibitionRadius);
     }
+
+    public void testUpdateMinDutyCycles()
+    {/*
+        Cortex c = new Cortex();
+        int numColumns = 10;
+        int numInputs = 5;
+        c.sInitializationTest(new int[]{numInputs,1,1}, new int[]{5,2,2});
+        double initOverlapDuty[] = {0.01, 0.001, 0.02, 0.3, 0.012, 0.0512, 0.054, 0.221, 0.0873, 0.309};
+        double initActiveDuty[] = {0.01, 0.045, 0.812, 0.091, 0.001, 0.0003, 0.433, 0.136, 0.211, 0.129};
+        c.region.initParametersForColumns(0.01, 0.02, initOverlapDuty, initActiveDuty );
+        //sp.setGlobalInhibition(true);
+        c.region.setInhibitionRadius(2);
+
+
+        sp.updateMinDutyCycles_();
+        Real resultMinActive[10];
+        Real resultMinOverlap[10];
+        sp.getMinOverlapDutyCycles(resultMinOverlap);
+        sp.getMinActiveDutyCycles(resultMinActive);
+
+
+        sp.updateMinDutyCyclesGlobal_();
+        Real resultMinActiveGlobal[10];
+        Real resultMinOverlapGlobal[10];
+        sp.getMinOverlapDutyCycles(resultMinOverlapGlobal);
+        sp.getMinActiveDutyCycles(resultMinActiveGlobal);
+
+        sp.updateMinDutyCyclesLocal_();
+        Real resultMinActiveLocal[10];
+        Real resultMinOverlapLocal[10];
+        sp.getMinOverlapDutyCycles(resultMinOverlapLocal);
+        sp.getMinActiveDutyCycles(resultMinActiveLocal);
+
+
+        NTA_CHECK(check_vector_eq(resultMinActive, resultMinActiveGlobal,
+                numColumns));
+        NTA_CHECK(!check_vector_eq(resultMinActive, resultMinActiveLocal,
+                numColumns));
+        NTA_CHECK(check_vector_eq(resultMinOverlap, resultMinOverlapGlobal,
+                numColumns));
+        NTA_CHECK(!check_vector_eq(resultMinActive, resultMinActiveLocal,
+                numColumns));
+
+        sp.setGlobalInhibition(false);
+        sp.updateMinDutyCycles_();
+        sp.getMinOverlapDutyCycles(resultMinOverlap);
+        sp.getMinActiveDutyCycles(resultMinActive);
+
+        NTA_CHECK(!check_vector_eq(resultMinActive, resultMinActiveGlobal,
+                numColumns));
+        NTA_CHECK(check_vector_eq(resultMinActive, resultMinActiveLocal,
+                numColumns));
+        NTA_CHECK(!check_vector_eq(resultMinOverlap, resultMinOverlapGlobal,
+                numColumns));
+        NTA_CHECK(check_vector_eq(resultMinActive, resultMinActiveLocal,
+                numColumns));
+*/
+    }
+
 }

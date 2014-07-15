@@ -1,12 +1,19 @@
 package ru.isa.ai.newdhm.applet;
 
 import info.monitorenter.gui.chart.Chart2D;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.isa.ai.newdhm.CortexThread;
 import ru.isa.ai.newdhm.RegionInitializationException;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
+import ru.isa.ai.newdhm.Region;
 
 
 public class HTMConfiguration {
@@ -44,17 +51,27 @@ public class HTMConfiguration {
     private Chart2D chart2D2;
     private JPanel casmiPanel;
     public JCheckBox drawDendritesTimlineCheckBox;
-    private JButton LoadPropertiesFromFile;
+    private JButton LoadPropertiesFromFileButton;
+    private JButton showActiveColumnsButton;
+    private JFrame f ;
 
     public CortexThread crtx = new CortexThread();
     static HTMConfiguration panel;
+    private ActiveColumnsVisualization cl;
+
+    private final String SP_PROP_FILENAME = "htm.properties";
+    private String filePropName = SP_PROP_FILENAME;
+    // загрузка свойств из файла
+
+
 
     public HTMConfiguration () {
         runCortexButton.addActionListener(new RunCortexButtonListener());
         stopCortexButton.addActionListener(new StopCortexButtonListener());
         makeStepButton.addActionListener(new MakeStepButtonListener());
         showExtendedGUIButton.addActionListener(new ShowExtendedGUIListener());
-        LoadPropertiesFromFile.addActionListener(new LoadPropertiesButtonGUIListener());
+        showActiveColumnsButton.addActionListener(new ShowActiveColumnsListener());
+        LoadPropertiesFromFileButton.addActionListener(new LoadPropertiesButtonGUIListener());
     }
 
     public static void main(String[] args) {
@@ -88,11 +105,111 @@ public class HTMConfiguration {
         crtx.Init(chart2D1, chart2D2, panel);
     }
 
+    public void loadProperties() throws RegionInitializationException {
+        Logger logger = LogManager.getLogger(Region.class.getSimpleName());
+        Properties properties = new Properties();
+        try {
+            FileInputStream input = new FileInputStream(filePropName);
+            properties.load(input);
+            for (String name : properties.stringPropertyNames()) {
+                switch (name) {
+                    case "desiredLocalActivity":
+                        crtx.r.region.desiredLocalActivity = Integer.parseInt(properties.getProperty(name));
+                        break;
+                    case "minOverlap":
+                        crtx.r.region.minOverlap = Integer.parseInt(properties.getProperty(name));
+                        break;
+                    case "connectedPerm":
+                        crtx.r.region.connectedPerm = Double.parseDouble(properties.getProperty(name));
+                        break;
+                    case "permanenceInc":
+                        crtx.r.region.permanenceInc = Double.parseDouble(properties.getProperty(name));
+                        break;
+                    case "permanenceDec":
+                        crtx.r.region.permanenceDec = Double.parseDouble(properties.getProperty(name));
+                        break;
+                    case "cellsPerColumn":
+                        crtx.r.region.cellsPerColumn = Integer.parseInt(properties.getProperty(name));
+                        break;
+                    case "activationThreshold":
+                        crtx.r.region.activationThreshold = Integer.parseInt(properties.getProperty(name));
+                        break;
+                    case "initialPerm":
+                        crtx.r.region.initialPerm = Double.parseDouble(properties.getProperty(name));
+                        break;
+                    case "minThreshold":
+                        crtx.r.region.minThreshold = Integer.parseInt(properties.getProperty(name));
+                        break;
+                    case "newSynapseCount":
+                        crtx.r.region.newSynapseCount = Integer.parseInt(properties.getProperty(name));
+                        break;
+                    case "xDimension":
+                        crtx.r.region.xDimension = Integer.parseInt(properties.getProperty(name));
+                        break;
+                    case "yDimension":
+                        crtx.r.region.yDimension = Integer.parseInt(properties.getProperty(name));
+                        break;
+                    default:
+                        logger.error("Illegal property name: " + name);
+                        break;
+                }
+            }
+            input.close();
+        } catch (IOException e) {
+            throw new RegionInitializationException("Cannot load properties file " + filePropName, e);
+        } catch (NumberFormatException nfe) {
+            throw new RegionInitializationException("Wrong property value in property file " + filePropName, nfe);
+        }
+    }
+
+
+    /*
+    private void checkProperties() throws RegionInitializationException {
+        if (numColumns <= 0)
+            throw new RegionInitializationException("Column dimensions must be non zero positive values");
+        if (numInputs <= 0)
+            throw new RegionInitializationException("Input dimensions must be non zero positive values");
+        if (numActiveColumnsPerInhArea <= 0 && (localAreaDensity <= 0 || localAreaDensity > 0.5))
+            throw new RegionInitializationException("Or numActiveColumnsPerInhArea > 0 or localAreaDensity > 0 " +
+                    "and localAreaDensity <= 0.5");
+        if (potentialPct <= 0 || potentialPct > 1)
+            throw new RegionInitializationException("potentialPct must be > 0 and <= 1");
+        potentialRadius = potentialRadius > numInputs ? numInputs : potentialRadius;
+    }
+    */
+
+    public void saveProperties() throws RegionInitializationException {
+        Properties properties = new Properties();
+        try {
+            properties.setProperty("desiredLocalActivity",String.valueOf(crtx.r.region.desiredLocalActivity));
+            properties.setProperty("minOverlap",String.valueOf(crtx.r.region.minOverlap));
+            properties.setProperty("connectedPerm",String.valueOf(crtx.r.region.connectedPerm));
+            properties.setProperty("permanenceInc", String.valueOf(crtx.r.region.permanenceInc));
+            properties.setProperty("permanenceDec", String.valueOf(crtx.r.region.permanenceDec));
+            properties.setProperty("activationThreshold",String.valueOf(crtx.r.region.activationThreshold));
+            properties.setProperty("initialPerm",String.valueOf(crtx.r.region.initialPerm));
+            properties.setProperty("minThreshold",String.valueOf(crtx.r.region.minThreshold));
+            properties.setProperty("newSynapseCount",String.valueOf(crtx.r.region.newSynapseCount));
+            properties.setProperty("xDimension",String.valueOf(crtx.r.region.xDimension));
+            properties.setProperty("yDimension",String.valueOf(crtx.r.region.yDimension));
+
+            FileOutputStream output = new FileOutputStream(filePropName);
+            properties.store(output,"Saved settings");
+            output.close();
+
+        } catch (IOException e) {
+            throw new RegionInitializationException("Cannot save properties file " + filePropName, e);
+        }
+    }
+
+
     public class LoadPropertiesButtonGUIListener implements ActionListener  {
         //crtx = new CortexThread();
+        ////////////////////////////////////////////////////////
+
         public void actionPerformed (ActionEvent event) {
             try{
-                crtx.r.region.loadProperties();
+                loadProperties();
                 textField1.setText(String.valueOf(crtx.r.region.desiredLocalActivity));
                 textField2.setText(String.valueOf(crtx.r.region.minOverlap));
                 textField3.setText(String.valueOf(crtx.r.region.connectedPerm));
@@ -132,6 +249,7 @@ public class HTMConfiguration {
 
     private class MakeStepButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            showActiveColumnsButton.setEnabled(true);
             if (crtx.isRunning())
                 crtx.MakeStep();
             else {
@@ -151,6 +269,18 @@ public class HTMConfiguration {
             frame.setVisible(true);
 
 //              CasmiApplet.launch(crtx.region);
+        }
+    }
+
+    private class ShowActiveColumnsListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            f = new JFrame("Active Columns Visualization");
+            cl = new ActiveColumnsVisualization();
+            f.setContentPane(cl.activeColumnsPanel_main);
+            f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            f.pack();
+            cl.draw(crtx);
+            f.setVisible(true);
         }
     }
 }

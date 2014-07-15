@@ -3,12 +3,9 @@ package ru.isa.ai.newdhm;
 import cern.colt.matrix.tint.IntMatrix1D;
 import cern.colt.matrix.tint.impl.DenseIntMatrix2D;
 import cern.colt.matrix.tint.impl.SparseIntMatrix2D;
-import ru.isa.ai.newdhm.applet.ExtensionGUI;
 import java.util.Random;
 import cern.colt.matrix.tint.IntMatrix2D;
 import cern.colt.matrix.tbit.BitMatrix;
-import cern.colt.matrix.tint.impl.SparseIntMatrix3D;
-
 
 public class Cortex {
     public int time = 0;
@@ -16,17 +13,16 @@ public class Cortex {
 
     // Список всех колонок
     public Region region = new Region();
-
-    //+ TODO AP: в максимуме случаев нужно стараться исопльзовать либо массивы intов (именно примитивных), либо оптимизированные специальные классы типа Sparse...
-    public SparseIntMatrix3D inputBits;
+    public int inputXDim = 0;
+    public int inputYDim = 0;
+    private BitMatrix inputBits;
 
     /*Список индексов колонок – победителей благодаря прямым
     входным данным. (Выход пространственного группировщика)
    */
-    // + TODO AP: нужен, конечно,  IntMatrix2D или Sparse...
     public IntMatrix2D activeColumns;
 
-    public enum State {
+    private enum State {
         active,
         learn
     }
@@ -40,21 +36,17 @@ public class Cortex {
     }
     /////////////////////////////////////////////////////////////////////////
 
-    // + TODO AP: везде нужно испоьзовать простые int, double и т.п. вместо объектных оберток - это быстрее
     /*
     Вход для данного уровня в момент времени t. input(t, j) = 1
 если j-ый бит входа = 1.
      */
-    public int input(int t, int j, int k) {
-        // TODO AP: нужно обязательно отделить GUI от бизнес-логики, т.е. от алгоритмов,
-        // TODO AP: нужно постараться сохранить идеологию класса ru.isa.ai.dhm.poolers.SpatialPooler - оставить только то, что нужно для реализации алгоритмов - все остальное, GUI генерацию дефолтного входа и т.п. - вынести наржу, в другие классы
-        if (ExtensionGUI.Input == null) {
+    private int inputDefault(int t, int j, int k) {
+        //if (ExtensionGUI.Input == null)
+        {
             int value = t % 2 > 0 ? rnd.nextInt(2) : Math.sin(j + k + totalTime) > 0 ? 1 : 0;
-           /* int value;
-            value = (temp % 2 == 0) ? 0 : 1;
-            temp++;*/
             return value;
         }
+        /*
         else {
             byte[] buffer = ExtensionGUI.Input;
             int l = buffer.length;
@@ -66,14 +58,17 @@ public class Cortex {
                     amount++;
             }
             return amount > width / 10 ? 1 : 0;
-        }
+        } */
     }
 
+    public boolean input(int c, int i){
+        return inputBits.get(c,i);
+    }
     /*
     Вычисляет интервальное среднее того, как часто колонка c была активной
      после подавления.
      */
-    public double updateActiveDutyCycle(int c) {
+    private double updateActiveDutyCycle(int c) {
         double value = 0.0;
         IntMatrix1D col = activeColumns.viewRow(time);
         for (int  ind = 1; ind <= col.get(0); ind++ ) {
@@ -88,8 +83,7 @@ public class Cortex {
     }
 
     ////////////////
-    // + TODO AP: массивы boolean - дорого - надо испольовать BitSet и т.п.
-    BitMatrix get2DcolsANDcellsAtT(State state, int t) {
+    private BitMatrix get2DcolsANDcellsAtT(State state, int t) {
         BitMatrix list = new BitMatrix(region.numColumns,region.cellsPerColumn);
         for (int col = 0; col < region.numColumns; col++) {
             int ind_i = 0;
@@ -113,7 +107,7 @@ public class Cortex {
     больше чем activationThreshold. Вид состояний state может быть
     activeState, или learnState.
      */
-    public boolean segmentActive(Segment s, int t, State state) {
+    private boolean segmentActive(Segment s, int t, State state) {
         BitMatrix list = new BitMatrix(region.numColumns, region.cellsPerColumn);
         list = get2DcolsANDcellsAtT(state, t);
         int counter = 0;
@@ -145,8 +139,7 @@ public class Cortex {
     то сегментам последовательностей отдается предпочтение. В противном
     случае предпочтение отдается сегментам с наибольшей активностью.
      */
-    public int[] getActiveSegment(int c, int i, int t, State state) {
-        // +TODO AP: везде надо использовать массивы, где это возможно, вместо списков
+    private int[] getActiveSegment(int c, int i, int t, State state) {
         Segment[] activeSegments = new Segment[region.columns[c].cells[i].dendriteSegmentsNum];
         int length = 0;
         for (Segment segment : region.columns[c].cells[i].dendriteSegments) {
@@ -199,7 +192,7 @@ public class Cortex {
     процедура возвращает индекс сегмента. А если такого не обнаружено, то
     возвращается -1.
      */
-    public int[] getBestMatchingSegment(int c, int i, int t) {
+    private int[] getBestMatchingSegment(int c, int i, int t) {
 
         BitMatrix list = new BitMatrix(region.numColumns, region.cellsPerColumn);
         list = get2DcolsANDcellsAtT(State.active, t);
@@ -228,7 +221,7 @@ public class Cortex {
     сегментом (как это определено выше). Если такой клетки нет, то
     возвращается клетка с минимальным числом сегментов.
      */
-    public int[] getBestMatchingCell(int c, int t) {
+    private int[] getBestMatchingCell(int c, int t) {
         int minSegments = 0;
         int cellIndex = -1;
         int minSegmentsCellIndex = -1;
@@ -275,7 +268,7 @@ public class Cortex {
     случайно выбираются из числа клеток, у которых learnState равно 1 в
     момент времени t.
      */
-    public SegmentUpdate getSegmentActiveSynapses(int c, int i, int t, int s, boolean newSynapses) {
+    private SegmentUpdate getSegmentActiveSynapses(int c, int i, int t, int s, boolean newSynapses) {
         Synapse[] activeSynapses = new Synapse[1000];
         int length = 0;
         if (s >= 0) {
@@ -323,7 +316,7 @@ public class Cortex {
     этого шага любым синапсам из segmentUpdate, которые только что
     появились, добавляется значение initialPerm.
      */
-    public void adaptSegments(SegmentUpdate[] segmentList, boolean positiveReinforcement) {
+    private void adaptSegments(SegmentUpdate[] segmentList, boolean positiveReinforcement) {
         for (SegmentUpdate segUpd: segmentList) {
             if (segUpd == null) break;
             if (segUpd.segmentIndex[2] < 0) {
@@ -390,9 +383,9 @@ public class Cortex {
     к этому центру (т.е. у центра колонки значения перманентности ее синапсов должны быть выше).
      */
 
-    Random rnd = new Random();
+    private Random rnd = new Random();
 
-    void initSynapsesDefault(Column column) {
+    public void initSynapsesDefault(Column column) {
         for (int i = 0; i < region.numColumns; i++) {
             int dimX = rnd.nextInt(region.xDimension);
             int dimY = rnd.nextInt(region.yDimension);
@@ -402,57 +395,58 @@ public class Cortex {
             column.potentialSynapses[column.potentialSynapsesNum] = new Synapse(dimX, dimY, Math.max(perm - adjustment, 0.0));
             column.potentialSynapsesNum++;
         }
-/*
-        int i = 0;
-        while (column.potentialSynapses[i] != null){
-            i++;
-        }
-        System.out.print(i);*/
     }
 
-    // +TODO AP: все методы - с маленькой буквы!
-    public void sInitialization() {
- /*
-       this.inputDimensions = new int[inputDimensions.length];
-        numInputs = 1;
-        for (int i = 0; i < inputDimensions.length; i++) {
-            numInputs *= inputDimensions[i];
-            this.inputDimensions[i] = inputDimensions[i];
-        }
-        this.region.cellsPerColumn = regionDimensions[0];
-        this.region.xDimension = regionDimensions[1];
-        this.region.yDimension = regionDimensions[2];
+    public void initSynapsesTest(Column column, int numInputs, double[] permArr) {
+        for (int i = 0; i < numInputs; i++) {
+            int dimX = rnd.nextInt(region.xDimension);
+            int dimY = rnd.nextInt(region.yDimension);
 
-        region.numColumns = region.xDimension * region.yDimension;
-*/
-        int ind = 0;
-        for (int i = 0; i < region.xDimension; i++) {
-            for (int j = 0; j < region.yDimension; j++) {
-                region.columns[ind] = new Column(region, i, j);
-                ind++;
-            }
+            column.potentialSynapses[column.potentialSynapsesNum] = new Synapse(dimX, dimY, permArr[i]);
+            column.potentialSynapsesNum++;
         }
+    }
+
+    public void sInitializationDefault() {
+
+        region.addColumns();
 
         activeColumns = new DenseIntMatrix2D(3, region.numColumns+1); //моменты t по вертикали, индексы колонок по горизонтали
-        inputBits = new SparseIntMatrix3D(region.cellsPerColumn,region.xDimension,region.yDimension);
+        inputBits = new BitMatrix(region.xDimension, region.yDimension);
+        inputXDim = region.xDimension;
+        inputYDim = region.yDimension;
 
         for (Column c : region.columns) {
             if (c == null) break;
             initSynapsesDefault(c);
         }
 
-       /* for (Column c : region.columns)
-            for (Cell i : c.cells) {
-                i.learnState.add(false);
-                i.activeState.add(false);
-                i.predictiveState.add(false);
-            }*/
-
-        region.inhibitionRadius = region.averageReceptiveFieldSize();
+        updateInhibitionRadius();
         ///////////////////////////
         // loadProperties();
         // checkProperties();
     }
+
+    public void updateInhibitionRadius(){
+        region.inhibitionRadius = region.averageReceptiveFieldSize();
+    }
+
+
+    public void sInitializationTest(int[] inputDim, int[] columnDim) {
+
+        region.xDimension = columnDim[0];
+        region.yDimension = columnDim[1];
+        region.cellsPerColumn = columnDim[2];
+        region.connectedPerm = 0.5;
+        region.addColumns();
+
+        activeColumns = new DenseIntMatrix2D(3, region.numColumns+1); //моменты t по вертикали, индексы колонок по горизонтали
+        inputBits = new BitMatrix(region.xDimension ,region.yDimension);
+        inputXDim = region.xDimension;
+        inputYDim = region.yDimension;
+    }
+
+
 
     public double updateOverlapDutyCycle(int c) {
         double value = 0.0;
@@ -469,6 +463,10 @@ public class Cortex {
     умноженное на фактор ускорения («агрессивности») колонки.
     Если полученное число будет меньше minOverlap, то мы устанавливаем значение перекрытия в ноль.
      */
+    public void setInput2DMatrix(BitMatrix inputAtT){
+         inputBits = inputAtT;
+    }
+
 
     public void sOverlap() {
         for(Column c: region.columns) {
@@ -479,7 +477,9 @@ public class Cortex {
 
             for (Synapse synapse : c.connectedSynapses) {
                 if (synapse == null) break;
-                c.overlap += input(time, synapse.c, synapse.i);
+                if (input(synapse.c, synapse.i))
+                    c.overlap += 1;
+                //c.overlap += inputDefault(time, synapse.c, synapse.i);
             }
             if (c.overlap < c.minOverlap)
                 c.overlap = 0.0;
@@ -537,7 +537,7 @@ public class Cortex {
         for (int c = 1 ; c <= activeColumns.viewRow(time).getQuick(0); c++){
            for (Synapse s: region.columns[activeColumns.viewRow(time).getQuick(c)].potentialSynapses){
                 if (s == null) break;
-                if (input(time, s.c, s.i) > 0) {
+                if (input(s.c, s.i)) {
                     s.permanence += region.permanenceInc;
                     s.permanence = Math.min(s.permanence, 1.0);
                 } else {
@@ -567,7 +567,7 @@ public class Cortex {
             i++;
         }
 
-        region.inhibitionRadius = region.averageReceptiveFieldSize();
+        updateInhibitionRadius();
     }
 
     /*

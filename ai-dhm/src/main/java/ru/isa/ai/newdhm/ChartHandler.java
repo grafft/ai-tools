@@ -4,6 +4,7 @@ import info.monitorenter.gui.chart.Chart2D;
 import info.monitorenter.gui.chart.ITrace2D;
 import info.monitorenter.gui.chart.traces.Trace2DSimple;
 import info.monitorenter.gui.chart.traces.painters.TracePainterDisc;
+import ru.isa.ai.newdhm.applet.ActiveColumnsVisualization;
 import ru.isa.ai.newdhm.applet.HTMConfiguration;
 
 import java.awt.*;
@@ -12,6 +13,10 @@ public class ChartHandler {
     private Chart2D chart2D1;
     private Chart2D chart2D2;
     private HTMConfiguration cfg;
+
+
+      /////////////////////////////////////////////
+
     Boolean showDistalSegmentsCount = false;
     Boolean drawTimeline = false;
     Boolean perm = false;
@@ -122,8 +127,8 @@ public class ChartHandler {
         Integer time = cfg.crtx.r.time - 1 > 0 ? cfg.crtx.r.time - 1 : 0;
         if (inp) {
             for (int i = 0; i < cfg.crtx.r.region.xDimension; i++) {
-                for (int j = 0; j < cfg.crtx.r.region.xDimension; j++) {
-                    traceINP.addPoint(i + j, cfg.crtx.r.input(time, i, j));
+                for (int j = 0; j < cfg.crtx.r.region.xDimension; j++) {           ///////////////////////?????????
+                    traceINP.addPoint(i + j, (cfg.crtx.r.input(i,j) == true) ? 1 : 0);
                 }
             }
         }
@@ -135,6 +140,7 @@ public class ChartHandler {
         int index = cfg.crtx.r.time - 1 > 0 ? cfg.crtx.r.time - 1 : 0;
         buf += "Active Columns: " + cfg.crtx.r.activeColumns.viewRow(index).getQuick(0) + "\r\n";
         for (int c = 0; c < cfg.crtx.r.region.xDimension * cfg.crtx.r.region.yDimension; c++) {
+
             if (over) {
                 traceO.addPoint(c, cfg.crtx.r.region.columns[c].overlap);
             }

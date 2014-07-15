@@ -1,8 +1,7 @@
 package ru.isa.ai.newdhm;
 
 public class Synapse {
-    // TODO AP: все объекты оболчки заменяем на примитивные типы
-    public Double permanence;
+    public double permanence;
 
     public int c;
     public int i;

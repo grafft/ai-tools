@@ -33,24 +33,26 @@ public class Cell {
     SegmentUpdate[] segmentUpdateList;
     int segmentUpdateListNum;
 
-    public Cell(int i) {
-        // column = c;
-        index = i;
+    final private int numSegments = 1000;
+    final private int numStateCells = 3;
 
-        dendriteSegments = new Segment[1000];
+    public Cell(int i)
+    {
+       // column = c;
+        index = i;
+        dendriteSegments = new Segment[numSegments];
         dendriteSegmentsNum = 0;
 
-        segmentUpdateList = new SegmentUpdate[1000];
+        segmentUpdateList = new SegmentUpdate[numSegments];
         segmentUpdateListNum = 0;
 
-        // TODO AP: аналогично - нигде не должно быть таких странных чисел с потолка
-        learnState = new BitVector(3);
-        predictiveState = new BitVector(3);
-        activeState = new BitVector(3);
+        learnState = new BitVector(numStateCells);
+        predictiveState = new BitVector(numStateCells);
+        activeState = new BitVector(numStateCells);
     }
 
-    public void clearSegmentUpdateList() {
-        for (int i = 0; i < segmentUpdateListNum; i++)
+    public void clearSegmentUpdateList(){
+        for (int i = 0 ; i < segmentUpdateListNum; i++)
             segmentUpdateList[i] = null;
 
         segmentUpdateListNum = 0;
