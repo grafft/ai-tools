@@ -13,7 +13,8 @@ public class Cortex {
 
     // Список всех колонок
     public Region region = new Region();
-
+    public int inputXDim = 0;
+    public int inputYDim = 0;
     private BitMatrix inputBits;
 
     /*Список индексов колонок – победителей благодаря прямым
@@ -412,6 +413,8 @@ public class Cortex {
 
         activeColumns = new DenseIntMatrix2D(3, region.numColumns+1); //моменты t по вертикали, индексы колонок по горизонтали
         inputBits = new BitMatrix(region.xDimension, region.yDimension);
+        inputXDim = region.xDimension;
+        inputYDim = region.yDimension;
 
         for (Column c : region.columns) {
             if (c == null) break;
@@ -439,6 +442,8 @@ public class Cortex {
 
         activeColumns = new DenseIntMatrix2D(3, region.numColumns+1); //моменты t по вертикали, индексы колонок по горизонтали
         inputBits = new BitMatrix(region.xDimension ,region.yDimension);
+        inputXDim = region.xDimension;
+        inputYDim = region.yDimension;
     }
 
 

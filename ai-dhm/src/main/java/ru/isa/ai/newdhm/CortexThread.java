@@ -8,6 +8,7 @@ import java.util.Random;
 public class CortexThread extends Thread {
     public Cortex r;// = new Cortex();
     public ChartHandler chartHandler;
+
     private Boolean runs = false;
     private Boolean pause = false;
     private Boolean makeStep = false;
@@ -21,6 +22,7 @@ public class CortexThread extends Thread {
 
         r.sInitializationDefault();
         chartHandler = new ChartHandler(chart1, chart2, configuration);
+
     }
 
     public BitMatrix getInputMatrixAtT(){

@@ -4,8 +4,8 @@ import info.monitorenter.gui.chart.Chart2D;
 import info.monitorenter.gui.chart.ITrace2D;
 import info.monitorenter.gui.chart.traces.Trace2DSimple;
 import info.monitorenter.gui.chart.traces.painters.TracePainterDisc;
-import ru.isa.ai.newdhm.applet.HTMConfiguration;
 import ru.isa.ai.newdhm.applet.ActiveColumnsVisualization;
+import ru.isa.ai.newdhm.applet.HTMConfiguration;
 
 import java.awt.*;
 
@@ -14,7 +14,8 @@ public class ChartHandler {
     private Chart2D chart2D2;
     private HTMConfiguration cfg;
 
-    private ActiveColumnsVisualization colsVis;  /////////////////////////////////////////////
+
+      /////////////////////////////////////////////
 
     Boolean showDistalSegmentsCount = false;
     Boolean drawTimeline = false;

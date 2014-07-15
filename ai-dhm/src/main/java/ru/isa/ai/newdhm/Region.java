@@ -13,7 +13,7 @@ import cern.colt.matrix.tint.IntMatrix1D;
 public class Region {
     public Column[] columns;
 
-    public int numColumns = 1;
+    public int numColumns = 0;
     public int xDimension;
     public int yDimension;
 

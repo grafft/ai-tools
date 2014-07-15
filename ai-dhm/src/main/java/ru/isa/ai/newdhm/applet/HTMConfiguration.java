@@ -53,9 +53,11 @@ public class HTMConfiguration {
     public JCheckBox drawDendritesTimlineCheckBox;
     private JButton LoadPropertiesFromFileButton;
     private JButton showActiveColumnsButton;
+    private JFrame f ;
 
     public CortexThread crtx = new CortexThread();
     static HTMConfiguration panel;
+    private ActiveColumnsVisualization cl;
 
     private final String SP_PROP_FILENAME = "htm.properties";
     private String filePropName = SP_PROP_FILENAME;
@@ -247,6 +249,7 @@ public class HTMConfiguration {
 
     private class MakeStepButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            showActiveColumnsButton.setEnabled(true);
             if (crtx.isRunning())
                 crtx.MakeStep();
             else {
@@ -271,14 +274,13 @@ public class HTMConfiguration {
 
     private class ShowActiveColumnsListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            JFrame frame = new JFrame("Active Columns Visualization");
-            ActiveColumnsVisualization cl = new ActiveColumnsVisualization();
-            frame.setContentPane(cl.activeColumnsPanel_main);
-            frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-            frame.pack();
-            //frame.setResizable(false);
-            cl.draw(20, 10, 20,20);
-            frame.setVisible(true);
+            f = new JFrame("Active Columns Visualization");
+            cl = new ActiveColumnsVisualization();
+            f.setContentPane(cl.activeColumnsPanel_main);
+            f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            f.pack();
+            cl.draw(crtx);
+            f.setVisible(true);
         }
     }
 }

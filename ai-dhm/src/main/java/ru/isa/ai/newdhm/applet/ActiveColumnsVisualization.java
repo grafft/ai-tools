@@ -1,5 +1,6 @@
 package ru.isa.ai.newdhm.applet;
 
+import ru.isa.ai.newdhm.CortexThread;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -18,6 +19,8 @@ public class ActiveColumnsVisualization extends JFrame {
     int squaresNumHeight = 0;
     int squaresNumWidth_input = 0;
     int squaresNumHeight_input = 0;
+    private CortexThread crtx;
+    private int curTime = 0;
 
     public ActiveColumnsVisualization(){
         activeColsPanel.setPreferredSize(new Dimension(500, 500));
@@ -36,8 +39,6 @@ public class ActiveColumnsVisualization extends JFrame {
         slider1.setLabelTable( labelTable );
 
         slider1.setPaintLabels(true);
-
-
     }
 
     private class BoundedChangeListener implements ChangeListener {
@@ -55,18 +56,22 @@ public class ActiveColumnsVisualization extends JFrame {
         activeColsPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(5, 5, 5, 5),
                 BorderFactory.createLineBorder(Color.blue)));
-        ha = new HighlightableArea(squaresNumWidth,squaresNumHeight,(float)slider1.getValue()/100.0, Color.gray);
+        ha = new HighlightableArea(crtx, curTime, squaresNumWidth,squaresNumHeight,(float)slider1.getValue()/100.0);
         ha.setBackground(Color.white);
         activeColsPanel.add(ha, BorderLayout.CENTER);
         activeColsPanel.setVisible(true);
     }
 
-    public void draw(int squaresNumWidth_, int squaresNumHeight_, int squaresNumWidth_input_, int squaresNumHeight_input_ ){
-        squaresNumWidth = squaresNumWidth_;
-        squaresNumHeight = squaresNumHeight_;
-        squaresNumWidth_input = squaresNumWidth_input_;
-        squaresNumHeight_input = squaresNumHeight_input_;
+    public void draw(CortexThread crtx_){
+      if (crtx_.r != null){
+        squaresNumWidth = crtx_.r.region.xDimension;
+        squaresNumHeight = crtx_.r.region.yDimension;
+        squaresNumWidth_input = crtx_.r.inputXDim;
+        squaresNumHeight_input = crtx_.r.inputYDim;
+        crtx = crtx_;
+        curTime = crtx_.r.time - 1 > 0 ? crtx_.r.time - 1 : 0;
         AreaHighlightTest();
+      }
     }
 }
 
@@ -80,21 +85,40 @@ class HighlightableArea extends JPanel {
 
     private int squaresNumPerH = 0;
     private double stepNaklInPerCent = 0.0;
+    private int curTime;
+    private CortexThread crtx;
 
-    private Color highlightColor;
+    public HighlightableArea(CortexThread crtx_, int curTime_, int squaresNumPerW_, int squaresNumPerH_, double stepNaklInPerCent_) {
 
-
-    public HighlightableArea(int squaresNumPerW, int squaresNumPerH, double stepNaklInPerCent, Color highlightColor) {
-        this.squaresNumPerW = squaresNumPerW;
-        this.squaresNumPerH = squaresNumPerH;
-        this.highlightColor = highlightColor;
-        this.stepNaklInPerCent = stepNaklInPerCent;
+        this.squaresNumPerW = squaresNumPerW_;
+        this.squaresNumPerH = squaresNumPerH_;
+        crtx = crtx_;
+        curTime = curTime_;
+        this.stepNaklInPerCent = stepNaklInPerCent_;
         addMouseListener(new MouseHandler());
         addMouseMotionListener(new MouseMotionHandler());
     }
 
     public void paintGrid(){
         this.repaint();
+    }
+
+    private void drawFilledRectangle(Graphics g, int hx, int hy, double dx, double dy, Color color){
+        g.setColor(color);
+
+        int up_left_x = (int)(otstup - hy*dy + dx*hx);
+        int down_left_x = (int)(up_left_x - Math.sqrt((2 * Math.pow(otstup, 2.0) / Math.pow(squaresNumPerH, 2.0)) - Math.pow(dy, 2.0)));
+        int down_right_x = (int)(down_left_x + dx);
+        int up_right_x = (int)(up_left_x + dx);
+
+        int up_left_y = (int)(dy*hy);
+        int down_left_y = (int)(up_left_y + dy);
+        int down_right_y = down_left_y + 1;
+        int up_right_y = up_left_y + 1;
+
+        g.fillPolygon(new int[]{up_left_x, down_left_x, down_right_x, up_right_x },
+                new int[]{up_left_y, down_left_y, down_right_y, up_right_y }
+                ,4);
     }
 
     @Override
@@ -105,38 +129,42 @@ class HighlightableArea extends JPanel {
         double dx = (getWidth() - otstup) / squaresNumPerW;
         double dy = otstup / squaresNumPerH;
 
+        //paint squares in active-columns colors: active col is light, inactive - dark
+         int c = 0 , r = 0;
+         int len = 1;
+         for (int i = 0; i < squaresNumPerW * squaresNumPerH ; i++)
+         {
+             if (i!= 0 && i % squaresNumPerW == 0) {r++; c = 0;}
+
+             if (i == crtx.r.activeColumns.viewRow(curTime).get(len) && len <= crtx.r.activeColumns.viewRow(curTime).get(0)){
+                 drawFilledRectangle(g, c, r, dx, dy, Color.lightGray);
+                 len++;
+             }
+             else{
+                 drawFilledRectangle(g, c, r, dx, dy, Color.gray);
+             }
+
+             c++;
+         }
+
         g.setColor(Color.darkGray);
+        if (squaresNumPerH * squaresNumPerW != 0){
+            for (int i = 0; i <= squaresNumPerW; i++) {
+                g.drawLine((int)(otstup + dx * i), 0, (int) (dx * i), (int)otstup);
+            }
 
-        for (int i = 0; i <= squaresNumPerW; i++) {
-            g.drawLine((int)(otstup + dx * i), 0, (int) (dx * i), (int)otstup);
-        }
-
-        for (int i = 0; i <= squaresNumPerH; i++) {
-            g.drawLine((int)(otstup - dy * i), (int) (dy * i), (int)(getWidth() - dy * i), (int) (dy * i));
-        }
+            for (int i = 0; i <= squaresNumPerH; i++) {
+                g.drawLine((int)(otstup - dy * i), (int) (dy * i), (int)(getWidth() - dy * i), (int) (dy * i));
+            }
 
         if (hx >= 0 && hy >= 0) {
-
             //draw filled rectangle
-            g.setColor(highlightColor);
-
-            int up_left_x = (int)(otstup - hy*dy + dx*hx);
-            int down_left_x = (int)(up_left_x - Math.sqrt((2 * Math.pow(otstup, 2.0) / Math.pow(squaresNumPerH, 2.0)) - Math.pow(dy, 2.0)));
-            int down_right_x = (int)(down_left_x + dx);
-            int up_right_x = (int)(up_left_x + dx);
-
-            int up_left_y = (int)(dy*hy);
-            int down_left_y = (int)(up_left_y + dy);
-            int down_right_y = down_left_y + 1;
-            int up_right_y = up_left_y + 1;
-
-            g.fillPolygon(new int[]{up_left_x, down_left_x, down_right_x, up_right_x },
-                    new int[]{up_left_y, down_left_y, down_right_y, up_right_y }
-                    ,4);
+            drawFilledRectangle(g, hx, hy, dx, dy,Color.blue);
 
             //draw column's links
 
         }
+      }
     }
 
     private class MouseMotionHandler extends MouseMotionAdapter {
@@ -152,7 +180,7 @@ class HighlightableArea extends JPanel {
               if (nx != hx || ny != hy) {
                 hx = nx;
                 hy = ny;
-                System.out.print("x = " + hx + "; y = "+ hy +"\n");
+                  System.out.print("x = " + hx + "; y = "+ hy +"\n");
                   paintGrid();
               }
             }
