@@ -3,10 +3,14 @@ package ru.isa.ai.newdhm;
 import cern.colt.matrix.tbit.BitMatrix;
 import info.monitorenter.gui.chart.Chart2D;
 import ru.isa.ai.newdhm.applet.HTMConfiguration;
+import ru.isa.ai.newdhm.applet.ImageClass;
+
+import java.awt.image.*;
 import java.util.Random;
 
 public class CortexThread extends Thread {
     public Cortex r;// = new Cortex();
+    public ImageClass img;
     public ChartHandler chartHandler;
 
     private Boolean runs = false;
@@ -22,10 +26,16 @@ public class CortexThread extends Thread {
 
         r.sInitializationDefault();
         chartHandler = new ChartHandler(chart1, chart2, configuration);
-
+        img = configuration.getImg();
     }
 
     public BitMatrix getInputMatrixAtT(){
+        BitMatrix matrix = new BitMatrix(img.getW() ,img.getH());
+        matrix = img.getBitMatrix();
+        return matrix;
+    }
+
+    public BitMatrix getInputMatrixAtTDefault(){
         BitMatrix matrix = new BitMatrix(r.region.xDimension ,r.region.yDimension);
         for(int i = 0 ; i < r.region.xDimension; i++)
             for (int j = 0; j < r.region.yDimension; j++){
