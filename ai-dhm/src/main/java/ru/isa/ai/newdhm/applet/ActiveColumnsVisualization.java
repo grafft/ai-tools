@@ -1,5 +1,6 @@
 package ru.isa.ai.newdhm.applet;
 
+import cern.colt.matrix.tbit.BitMatrix;
 import ru.isa.ai.newdhm.CortexThread;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -129,8 +130,17 @@ class HighlightableArea extends JPanel {
         double dx = (getWidth() - otstup) / squaresNumPerW;
         double dy = otstup / squaresNumPerH;
 
+        BitMatrix m = new BitMatrix(crtx.r.region.yDimension , crtx.r.region.xDimension);
+        m = crtx.r.getColumnsMapAtT(curTime);
+        Color c;
+        for (int i = 0; i < crtx.r.inputXDim; i++)
+            for (int j = 0; j <  crtx.r.inputYDim; j++){
+                c = (m.get(j, i) == false) ?  Color.gray : Color.lightGray;
+                drawFilledRectangle(g, i, j, dx, dy, c);
+            }
+
         //paint squares in active-columns colors: active col is light, inactive - dark
-         int c = 0 , r = 0;
+        /* int c = 0 , r = 0;
          int len = 1;
          for (int i = 0; i < squaresNumPerW * squaresNumPerH ; i++)
          {
@@ -145,7 +155,7 @@ class HighlightableArea extends JPanel {
              }
 
              c++;
-         }
+         }*/
 
         g.setColor(Color.darkGray);
         if (squaresNumPerH * squaresNumPerW != 0){
@@ -156,6 +166,8 @@ class HighlightableArea extends JPanel {
             for (int i = 0; i <= squaresNumPerH; i++) {
                 g.drawLine((int)(otstup - dy * i), (int) (dy * i), (int)(getWidth() - dy * i), (int) (dy * i));
             }
+
+        crtx.img.paintAffTranf(g,Math.PI/4,(int)otstup); ///////////////////////////////////////
 
         if (hx >= 0 && hy >= 0) {
             //draw filled rectangle
