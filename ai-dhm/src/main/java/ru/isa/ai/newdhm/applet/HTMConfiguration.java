@@ -7,6 +7,7 @@ import ru.isa.ai.newdhm.CortexThread;
 import ru.isa.ai.newdhm.RegionInitializationException;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
@@ -14,6 +15,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 import ru.isa.ai.newdhm.Region;
+import java.awt.geom.*;
+import java.awt.image.*;
 
 
 public class HTMConfiguration {
@@ -60,9 +63,11 @@ public class HTMConfiguration {
     private ActiveColumnsVisualization cl;
 
     private final String SP_PROP_FILENAME = "htm.properties";
+    private final String IMAGE_PATH = "D:\\work_folder\\image1.png";
     private String filePropName = SP_PROP_FILENAME;
+    private String imagePath = IMAGE_PATH;
     // загрузка свойств из файла
-
+    ImageClass img;
 
 
     public HTMConfiguration () {
@@ -72,6 +77,7 @@ public class HTMConfiguration {
         showExtendedGUIButton.addActionListener(new ShowExtendedGUIListener());
         showActiveColumnsButton.addActionListener(new ShowActiveColumnsListener());
         LoadPropertiesFromFileButton.addActionListener(new LoadPropertiesButtonGUIListener());
+        loadImage();
     }
 
     public static void main(String[] args) {
@@ -81,6 +87,15 @@ public class HTMConfiguration {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+    }
+
+    public void loadImage(){
+        img = new ImageClass();
+        img.load(imagePath);
+    }
+
+    public ImageClass getImg(){
+        return img;
     }
 
     public void InitCortex() {

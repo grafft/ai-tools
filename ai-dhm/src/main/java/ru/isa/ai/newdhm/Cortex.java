@@ -465,6 +465,13 @@ public class Cortex {
      */
     public void setInput2DMatrix(BitMatrix inputAtT){
          inputBits = inputAtT;
+
+        for (int j = 0; j <  inputYDim; j++) {
+            for (int i = 0; i < inputXDim; i++) {
+                System.out.print(inputBits.get(i, j) + " ");
+            }
+            System.out.print("\n");
+        }
     }
 
 
