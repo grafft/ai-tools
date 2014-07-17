@@ -62,7 +62,8 @@ public class Cortex {
     }
 
     public boolean input(int c, int i){
-        return inputBits.get(c,i);
+        boolean val = inputBits.get(i,c);
+        return val;
     }
     /*
     Вычисляет интервальное среднее того, как часто колонка c была активной
@@ -412,7 +413,7 @@ public class Cortex {
         region.addColumns();
 
         activeColumns = new DenseIntMatrix2D(3, region.numColumns+1); //моменты t по вертикали, индексы колонок по горизонтали
-        inputBits = new BitMatrix(region.xDimension, region.yDimension);
+        inputBits = new BitMatrix(region.yDimension, region.xDimension);
         inputXDim = region.xDimension;
         inputYDim = region.yDimension;
 
@@ -441,7 +442,7 @@ public class Cortex {
         region.addColumns();
 
         activeColumns = new DenseIntMatrix2D(3, region.numColumns+1); //моменты t по вертикали, индексы колонок по горизонтали
-        inputBits = new BitMatrix(region.xDimension ,region.yDimension);
+        inputBits = new BitMatrix(region.yDimension , region.xDimension);
         inputXDim = region.xDimension;
         inputYDim = region.yDimension;
     }
@@ -464,14 +465,15 @@ public class Cortex {
     Если полученное число будет меньше minOverlap, то мы устанавливаем значение перекрытия в ноль.
      */
     public void setInput2DMatrix(BitMatrix inputAtT){
-         inputBits = inputAtT;
-
-        for (int j = 0; j <  inputYDim; j++) {
-            for (int i = 0; i < inputXDim; i++) {
-                System.out.print(inputBits.get(i, j) + " ");
+        inputBits = inputAtT;
+        /*
+            for (int i = 0; i < inputXDim; i++){
+                for (int j = 0; j <  inputYDim; j++){
+                System.out.print(((inputBits.get(j, i) == false) ? 0 : 1) + " ");
             }
             System.out.print("\n");
-        }
+        }*/
+        //System.out.print(inputBits.get(4,0));
     }
 
 
@@ -693,6 +695,26 @@ public class Cortex {
                 i.clearSegmentUpdateList();
             }
         }
+    }
+
+    public BitMatrix getColumnsMapAtT(int t){
+        BitMatrix matrix = new BitMatrix(region.yDimension , region.xDimension);
+        int c = 0 , r = 0;
+        int len = 1;
+        for (int i = 0; i < region.numColumns ; i++)
+        {
+            if (i!= 0 && i % region.yDimension == 0) {r++; c = 0;}
+
+            if (i == activeColumns.viewRow(t).get(len) && len <= activeColumns.viewRow(t).get(0)){
+                matrix.put(c , r, true);
+                len++;
+            }
+            else{
+                matrix.put(c , r, false);
+            }
+            c++;
+        }
+        return matrix;
     }
 
     public void timestep() {

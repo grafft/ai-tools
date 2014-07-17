@@ -19,10 +19,9 @@ public class ImageClass extends JPanel {
     public void load(String path) {
         toolkit = Toolkit.getDefaultToolkit();
         tracker = new MediaTracker(this);
-
-        image = toolkit.getImage(path);
-        tracker.addImage(image, 0);
         try {
+            image = toolkit.getImage(path);
+            tracker.addImage(image, 0);
             // load all the image for later use
             tracker.waitForAll();
         } catch (InterruptedException ex) {
