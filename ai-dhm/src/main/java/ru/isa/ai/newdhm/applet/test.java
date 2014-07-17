@@ -33,8 +33,8 @@ public class test extends Frame{
      }
 
     public static BufferedImage enlarge(BufferedImage image, int n) {
-        int w = n * image.getWidth()  + 21;
-        int h = n * image.getHeight() + 11;
+        int w = (n+1) * image.getWidth() +1 ;
+        int h = (n+1) * image.getHeight() + 1;
         BufferedImage enlargedImage =
                 new BufferedImage(w, h, image.getType());
         Color c;
@@ -42,11 +42,11 @@ public class test extends Frame{
         boolean fl = false;
         for (int y=0; y < h; ++y) {
             for (int x = 0; x < w; ++x) {
-                if (y % (w / 20) == 0) {
+                if (y % (w / image.getWidth()) == 0) {
                     c = new Color(0, 0, 0);
                     if (!fl) {q++; fl = true;}
                     enlargedImage.setRGB(x, y, c.getRGB());
-                } else if (x % (w / 20) == 0) {
+                } else if (x % (w / image.getWidth()) == 0) {
                     p++;
                     c = new Color(0, 0, 0);
                     enlargedImage.setRGB(x, y, c.getRGB());
@@ -69,7 +69,7 @@ public class test extends Frame{
         BufferedImage biLarge = new BufferedImage(bi.getWidth() * n, bi.getHeight()* n, BufferedImage.TYPE_INT_RGB);
         biLarge = enlarge(bi, n);
 
-        int bw = biLarge.getWidth(this);
+        /*int bw = biLarge.getWidth(this);
         int bh = biLarge.getHeight(this);
 
 
@@ -88,14 +88,12 @@ public class test extends Frame{
         BufferedImageOp biop = new AffineTransformOp(at,
                 AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
 // Преобразуем изображение, результат заносим в bimg
-        biop.filter(biLarge, bimg);
+        biop.filter(biLarge, bimg);*/
 // Выводим исходное изображение.
-        g2.drawImage(biLarge, null, 10, 30);
+        g2.drawImage(biLarge, null, 100, 300);
 
 // Выводим измененную преобразованием Ыор область bi
-        g2.drawImage(biLarge, biop, w/4+3, 30);
-// Выводим преобразованное внутри области bimg изображение
-  //      g2.drawImage(bimg, null, w / 2 + 3, 30);
+    ///  g2.drawImage(biLarge, biop, w/4+3, 30);
   }
 
     public static void main(String[] args){

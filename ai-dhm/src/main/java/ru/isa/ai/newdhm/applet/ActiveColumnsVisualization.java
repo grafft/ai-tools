@@ -2,11 +2,15 @@ package ru.isa.ai.newdhm.applet;
 
 import cern.colt.matrix.tbit.BitMatrix;
 import ru.isa.ai.newdhm.CortexThread;
+import ru.isa.ai.newdhm.Synapse;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.util.*;
 
 public class ActiveColumnsVisualization extends JFrame {
@@ -15,16 +19,20 @@ public class ActiveColumnsVisualization extends JFrame {
     private JPanel activeColsPanel;
     private JSlider slider1;
     private JLabel spinnersLabel;
-    HighlightableArea ha;
-    int squaresNumWidth = 0;
-    int squaresNumHeight = 0;
-    int squaresNumWidth_input = 0;
-    int squaresNumHeight_input = 0;
+    private JButton buttonUP;
+    private JButton buttonDOWN;
+    private HighlightableArea ha;
+    private int squaresNumWidth = 0;
+    private int squaresNumHeight = 0;
+    private int squaresNumWidth_input = 0;
+    private int squaresNumHeight_input = 0;
     private CortexThread crtx;
     private int curTime = 0;
+    private final int PANEL_DIMENSION_X = 500;
+    private final int PANEL_DIMENSION_Y = 500;
 
     public ActiveColumnsVisualization(){
-        activeColsPanel.setPreferredSize(new Dimension(500, 500));
+        activeColsPanel.setPreferredSize(new Dimension(PANEL_DIMENSION_X, PANEL_DIMENSION_Y));
 
         slider1.addChangeListener(new BoundedChangeListener());
         slider1.setMinorTickSpacing(2);
@@ -40,6 +48,21 @@ public class ActiveColumnsVisualization extends JFrame {
         slider1.setLabelTable( labelTable );
 
         slider1.setPaintLabels(true);
+
+        buttonUP.addActionListener(new ButtonUPListener());
+        buttonDOWN.addActionListener(new ButtonDOWNListener());
+    }
+
+    private class ButtonUPListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+
+            }
+    }
+
+    private class ButtonDOWNListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+
+        }
     }
 
     private class BoundedChangeListener implements ChangeListener {
@@ -88,6 +111,9 @@ class HighlightableArea extends JPanel {
     private double stepNaklInPerCent = 0.0;
     private int curTime;
     private CortexThread crtx;
+    private final int dopuskForImage = 40 ;
+    private int enlargeParameter = 1;
+    private int imageCurrentWidth = 0;
 
     public HighlightableArea(CortexThread crtx_, int curTime_, int squaresNumPerW_, int squaresNumPerH_, double stepNaklInPerCent_) {
 
@@ -104,27 +130,113 @@ class HighlightableArea extends JPanel {
         this.repaint();
     }
 
-    private void drawFilledRectangle(Graphics g, int hx, int hy, double dx, double dy, Color color){
-        g.setColor(color);
+    public Point findPointForLinksVis(Point p1, Point p2, Point pp1, Point pp2){
+        Point p = new Point();
+        int ch_x = (p1.x*pp1.x*p2.y -
+                p2.x*pp1.x*p1.y -
+                p1.x*pp2.x*p2.y +
+                p2.x*pp2.x*p1.y-
+                p1.x*pp1.x*pp2.y+
+                p1.x*pp2.x*pp1.y+
+                p2.x*pp1.x*pp2.y-
+                p2.x*pp2.x*pp1.y);
+        int zn = (pp1.x*p1.y -
+                 p1.x*pp1.y -
+                 pp1.x*p2.y -
+                 pp2.x*p1.y +
+                 p1.x*pp2.y +
+                 p2.x*pp1.y +
+                 pp2.x*p2.y -
+                 p2.x*pp2.y);
+        int ch_y = (p1.x*p2.y*pp1.y -
+                p2.x*pp1.y*p1.y -
+                p1.x*pp2.y*p2.y +
+                p2.x*pp2.y*p1.y-
+                p1.y*pp1.x*pp2.y+
+                p1.y*pp2.x*pp1.y+
+                p2.y*pp1.x*pp2.y-
+                p2.y*pp2.x*pp1.y);
+        p.x = -(int)(ch_x / zn);
+        p.y = -(int)(ch_y / zn);
+        return p;
+    }
 
-        int up_left_x = (int)(otstup - hy*dy + dx*hx);
-        int down_left_x = (int)(up_left_x - Math.sqrt((2 * Math.pow(otstup, 2.0) / Math.pow(squaresNumPerH, 2.0)) - Math.pow(dy, 2.0)));
-        int down_right_x = (int)(down_left_x + dx);
-        int up_right_x = (int)(up_left_x + dx);
+    private void drawFilledRectangle(Graphics2D g2, int hx, int hy, double dx, double dy, Color color, int colInd) {
+        g2.setColor(color);
+        //highlight the square - column
+        int up_left_x = (int) (otstup - hy * dy + dx * hx);
+        int down_left_x = (int) (up_left_x - Math.sqrt((2 * Math.pow(otstup, 2.0) / Math.pow(squaresNumPerH, 2.0)) - Math.pow(dy, 2.0)));
+        int down_right_x = (int) (down_left_x + dx + 1);
+        int up_right_x = (int) (up_left_x + dx + 1);
 
-        int up_left_y = (int)(dy*hy);
-        int down_left_y = (int)(up_left_y + dy);
-        int down_right_y = down_left_y + 1;
-        int up_right_y = up_left_y + 1;
+        int up_left_y = (int) (dy * hy + 0.5);
+        int down_left_y = (int) (up_left_y + dy + 0.5);
+        int down_right_y = down_left_y;
+        int up_right_y = up_left_y;
 
-        g.fillPolygon(new int[]{up_left_x, down_left_x, down_right_x, up_right_x },
-                new int[]{up_left_y, down_left_y, down_right_y, up_right_y }
-                ,4);
+        g2.fillPolygon(new int[]{up_left_x, down_left_x, down_right_x, up_right_x},
+                new int[]{up_left_y, down_left_y, down_right_y, up_right_y}
+                , 4);
+
+        if (colInd >= 0) {
+            //highlight the square - input
+            int input_square_w = imageCurrentWidth / crtx.r.inputYDim; ///////////////////////////
+            for (Synapse s : crtx.r.region.columns[colInd].connectedSynapses) {
+                if (s == null) break;
+
+                int up_left_for_input_x = dopuskForImage + input_square_w * s.i;
+                int up_left_for_input_y = (int) (otstup + dopuskForImage + input_square_w * s.c);
+
+                int up_right_for_input_x = up_left_for_input_x + input_square_w;
+                int up_right_for_input_y = up_left_for_input_y;
+
+                int down_left_for_input_x = up_left_for_input_x;
+                int down_left_for_input_y = up_left_for_input_y + input_square_w;
+
+                int down_right_for_input_x = down_left_for_input_x + input_square_w;
+                int down_right_for_input_y = down_left_for_input_y;
+
+                g2.setColor(Color.blue);
+                g2.fillPolygon(new int[]{up_left_for_input_x, down_left_for_input_x, down_right_for_input_x, up_right_for_input_x},
+                        new int[]{up_left_for_input_y, down_left_for_input_y, down_right_for_input_y, up_right_for_input_y}
+                        , 4);
+                int x1 = down_left_x + (up_right_x - down_left_x) / 2;
+                int y1 = up_left_y + (down_left_y - up_left_y) / 2;
+                int x2 = up_left_for_input_x + (up_right_for_input_x - up_left_for_input_x) / 2;
+                int y2 =  up_left_for_input_y + (down_left_for_input_y - up_left_for_input_y) / 2;
+                //g2.drawLine(x1,y1,x2,y2);
+
+                g2.setColor(Color.yellow);
+                Point potentPoint1;
+                Point potentPoint2;
+                Point pp1_1;
+                Point pp1_2;
+                Point p1 = new Point(x1, y1);
+                Point p2 = new Point(x2, y2);
+                Point pp2 = new Point((int)(getWidth() - otstup),(int)otstup);
+                pp1_1 = new Point(getWidth(), 0);
+                potentPoint1 = findPointForLinksVis(p1,p2, pp1_1, pp2);
+                pp1_2 = new Point(0, (int)otstup);
+                potentPoint2 = findPointForLinksVis(p1,p2, pp1_2, pp2);
+                int sq1 = (int)Math.sqrt(Math.pow(x1 - potentPoint1.x, 2.0) + Math.pow(y1 - potentPoint1.y, 2.0));
+                int sq2 = (int)Math.sqrt(Math.pow(x1 - potentPoint2.x, 2.0) + Math.pow(y1 - potentPoint2.y, 2.0));
+                   if (sq1 <= sq2 && y1 < potentPoint1.y)
+                        g2.drawLine(potentPoint1.x, potentPoint1.y+1, x2, y2);
+                    else
+                        g2.drawLine(potentPoint2.x, potentPoint2.y+1, x2, y2);
+            }
+        }
+    }
+    private void countEnlargeParameter(){
+        int enlargeParameterW = (int)(getWidth() - dopuskForImage * 2) / crtx.img.getW();
+        int enlargeParameterH = (int)(getHeight() - dopuskForImage * 2 - otstup) / crtx.img.getH();
+        enlargeParameter = Math.min(enlargeParameterH, enlargeParameterW);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D)g;
+        super.paintComponent(g2);
 
         this.otstup = getHeight() * stepNaklInPerCent;
         double dx = (getWidth() - otstup) / squaresNumPerW;
@@ -136,45 +248,32 @@ class HighlightableArea extends JPanel {
         for (int i = 0; i < crtx.r.inputXDim; i++)
             for (int j = 0; j <  crtx.r.inputYDim; j++){
                 c = (m.get(j, i) == false) ?  Color.gray : Color.lightGray;
-                drawFilledRectangle(g, i, j, dx, dy, c);
+                drawFilledRectangle(g2, i, j, dx, dy, c , -1);
             }
 
-        //paint squares in active-columns colors: active col is light, inactive - dark
-        /* int c = 0 , r = 0;
-         int len = 1;
-         for (int i = 0; i < squaresNumPerW * squaresNumPerH ; i++)
-         {
-             if (i!= 0 && i % squaresNumPerW == 0) {r++; c = 0;}
-
-             if (i == crtx.r.activeColumns.viewRow(curTime).get(len) && len <= crtx.r.activeColumns.viewRow(curTime).get(0)){
-                 drawFilledRectangle(g, c, r, dx, dy, Color.lightGray);
-                 len++;
-             }
-             else{
-                 drawFilledRectangle(g, c, r, dx, dy, Color.gray);
-             }
-
-             c++;
-         }*/
-
-        g.setColor(Color.darkGray);
+        g2.setColor(Color.darkGray);
         if (squaresNumPerH * squaresNumPerW != 0){
             for (int i = 0; i <= squaresNumPerW; i++) {
-                g.drawLine((int)(otstup + dx * i), 0, (int) (dx * i), (int)otstup);
+                g2.drawLine((int)(otstup + dx * i), 0, (int) (dx * i), (int)otstup);
             }
 
             for (int i = 0; i <= squaresNumPerH; i++) {
-                g.drawLine((int)(otstup - dy * i), (int) (dy * i), (int)(getWidth() - dy * i), (int) (dy * i));
+                g2.drawLine((int)(otstup - dy * i), (int) (dy * i), (int)(getWidth() - dy * i), (int) (dy * i));
             }
-
-        crtx.img.paintAffTranf(g,Math.PI/4,(int)otstup); ///////////////////////////////////////
-
+        /////////////////////////////////////////////////////////////////////
+        //      image painting
+        countEnlargeParameter();
+        imageCurrentWidth = (enlargeParameter + 1) * crtx.img.getW() + 1;
+        BufferedImage enlargedImage =
+                    new BufferedImage((enlargeParameter + 1) * crtx.img.getW() + 1, (enlargeParameter + 1) * crtx.img.getH() + 1, crtx.img.getImageType());
+        enlargedImage = crtx.img.enlarge(enlargeParameter);
+        g2.drawImage(enlargedImage, dopuskForImage, (int)otstup + dopuskForImage, null) ;
+        /////////////////////////////////////////////////////////////////////
         if (hx >= 0 && hy >= 0) {
             //draw filled rectangle
-            drawFilledRectangle(g, hx, hy, dx, dy,Color.blue);
-
             //draw column's links
-
+            int columnInd = hy * squaresNumPerW + hx;
+            drawFilledRectangle(g2, hx, hy, dx, dy,Color.yellow, columnInd);
         }
       }
     }

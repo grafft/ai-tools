@@ -49,7 +49,7 @@ public class CortexThread extends Thread {
         this.runs = true;
         while (runs) {
             if (!pause) {
-                r.setInput2DMatrix(getInputMatrixAtT());
+                r.setInput2DMatrix(getInputMatrixAtT()); //////////////////////////////////
                 r.sOverlap();
                 r.sInhibition();
                 r.sLearning();
