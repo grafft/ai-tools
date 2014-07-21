@@ -21,15 +21,15 @@ public class ActiveColumnsVisualization extends JFrame {
     private JLabel spinnersLabel;
     private JButton buttonUP;
     private JButton buttonDOWN;
+    private JLabel regionLabel;
+    private JLabel numOfRegToDraw;
     private HighlightableArea ha;
-    private int squaresNumWidth = 0;
-    private int squaresNumHeight = 0;
-    private int squaresNumWidth_input = 0;
-    private int squaresNumHeight_input = 0;
     private CortexThread crtx;
     private int curTime = 0;
     private final int PANEL_DIMENSION_X = 500;
     private final int PANEL_DIMENSION_Y = 500;
+    private int indOfUpReg = 0;
+    private int indOfDownReg = 0;
 
     public ActiveColumnsVisualization(){
         activeColsPanel.setPreferredSize(new Dimension(PANEL_DIMENSION_X, PANEL_DIMENSION_Y));
@@ -55,13 +55,29 @@ public class ActiveColumnsVisualization extends JFrame {
 
     private class ButtonUPListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            //inc counter of current region
+            int numOfNextReg = Integer.parseInt(numOfRegToDraw.getText()) + 1;
+            if (numOfNextReg == 1)
+                buttonDOWN.setEnabled(true);
+            numOfRegToDraw.setText(String.valueOf(numOfNextReg));
 
+            draw(crtx, numOfNextReg, numOfNextReg-1);
+            if (numOfNextReg == crtx.getNumOfRegions() - 1)
+                buttonUP.setEnabled(false);
             }
     }
 
     private class ButtonDOWNListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
 
+            int numOfPrevReg = Integer.parseInt(numOfRegToDraw.getText()) - 1;
+            if (numOfPrevReg  == crtx.getNumOfRegions() - 2)
+                buttonUP.setEnabled(true);
+            numOfRegToDraw.setText(String.valueOf(numOfPrevReg));
+
+            draw(crtx, numOfPrevReg, numOfPrevReg-1);
+            if (numOfPrevReg == 0)
+                buttonDOWN.setEnabled(false);
         }
     }
 
@@ -80,21 +96,19 @@ public class ActiveColumnsVisualization extends JFrame {
         activeColsPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(5, 5, 5, 5),
                 BorderFactory.createLineBorder(Color.blue)));
-        ha = new HighlightableArea(crtx, curTime, squaresNumWidth,squaresNumHeight,(float)slider1.getValue()/100.0);
+        ha = new HighlightableArea(crtx, indOfUpReg, indOfDownReg, curTime,(float)slider1.getValue()/100.0);
         ha.setBackground(Color.white);
         activeColsPanel.add(ha, BorderLayout.CENTER);
         activeColsPanel.setVisible(true);
     }
 
-    public void draw(CortexThread crtx_){
-      if (crtx_.r != null){
-        squaresNumWidth = crtx_.r.region.xDimension;
-        squaresNumHeight = crtx_.r.region.yDimension;
-        squaresNumWidth_input = crtx_.r.inputXDim;
-        squaresNumHeight_input = crtx_.r.inputYDim;
-        crtx = crtx_;
-        curTime = crtx_.r.time - 1 > 0 ? crtx_.r.time - 1 : 0;
-        AreaHighlightTest();
+    public void draw(CortexThread crtx_, int up_regInd, int down_regInd){
+      if (crtx_.cr != null){
+            indOfUpReg = up_regInd;
+            indOfDownReg = down_regInd;
+            crtx = crtx_;
+            curTime = crtx_.cr.time - 1 > 0 ? crtx_.cr.time - 1 : 0;
+            AreaHighlightTest();
       }
     }
 }
@@ -103,22 +117,20 @@ class HighlightableArea extends JPanel {
 
     private int hx = -1;
     private int hy = -1;
-
-    private int squaresNumPerW = 0;
     private double otstup = 0.0;
-
-    private int squaresNumPerH = 0;
     private double stepNaklInPerCent = 0.0;
     private int curTime;
     private CortexThread crtx;
     private final int dopuskForImage = 40 ;
     private int enlargeParameter = 1;
     private int imageCurrentWidth = 0;
+    private int indOfUPreg = 0;
+    private int indOfDOWNreg = 0;
 
-    public HighlightableArea(CortexThread crtx_, int curTime_, int squaresNumPerW_, int squaresNumPerH_, double stepNaklInPerCent_) {
+    public HighlightableArea(CortexThread crtx_, int indOfUPreg_, int indOfDOWNreg_, int curTime_, double stepNaklInPerCent_) {
 
-        this.squaresNumPerW = squaresNumPerW_;
-        this.squaresNumPerH = squaresNumPerH_;
+        indOfUPreg = indOfUPreg_;
+        indOfDOWNreg = indOfDOWNreg_;
         crtx = crtx_;
         curTime = curTime_;
         this.stepNaklInPerCent = stepNaklInPerCent_;
@@ -165,7 +177,7 @@ class HighlightableArea extends JPanel {
         g2.setColor(color);
         //highlight the square - column
         int up_left_x = (int) (otstup - hy * dy + dx * hx);
-        int down_left_x = (int) (up_left_x - Math.sqrt((2 * Math.pow(otstup, 2.0) / Math.pow(squaresNumPerH, 2.0)) - Math.pow(dy, 2.0)));
+        int down_left_x = (int) (up_left_x - Math.sqrt((2 * Math.pow(otstup, 2.0) / Math.pow(crtx.cr.regions[indOfUPreg].xDimension, 2.0)) - Math.pow(dy, 2.0)));
         int down_right_x = (int) (down_left_x + dx + 1);
         int up_right_x = (int) (up_left_x + dx + 1);
 
@@ -180,8 +192,8 @@ class HighlightableArea extends JPanel {
 
         if (colInd >= 0) {
             //highlight the square - input
-            int input_square_w = imageCurrentWidth / crtx.r.inputYDim; ///////////////////////////
-            for (Synapse s : crtx.r.region.columns[colInd].connectedSynapses) {
+            int input_square_w = imageCurrentWidth / crtx.cr.inputYDim; ///////////////////////////
+            for (Synapse s : crtx.cr.regions[indOfUPreg].columns[colInd].connectedSynapses) {
                 if (s == null) break;
 
                 int up_left_for_input_x = dopuskForImage + input_square_w * s.i;
@@ -221,9 +233,9 @@ class HighlightableArea extends JPanel {
                 int sq1 = (int)Math.sqrt(Math.pow(x1 - potentPoint1.x, 2.0) + Math.pow(y1 - potentPoint1.y, 2.0));
                 int sq2 = (int)Math.sqrt(Math.pow(x1 - potentPoint2.x, 2.0) + Math.pow(y1 - potentPoint2.y, 2.0));
                    if (sq1 <= sq2 && y1 < potentPoint1.y)
-                        g2.drawLine(potentPoint1.x, potentPoint1.y+1, x2, y2);
+                        g2.drawLine(potentPoint1.x +2, potentPoint1.y+1, x2, y2);
                     else
-                        g2.drawLine(potentPoint2.x, potentPoint2.y+1, x2, y2);
+                        g2.drawLine(potentPoint2.x +2, potentPoint2.y+1, x2, y2);
             }
         }
     }
@@ -239,20 +251,20 @@ class HighlightableArea extends JPanel {
         super.paintComponent(g2);
 
         this.otstup = getHeight() * stepNaklInPerCent;
-        double dx = (getWidth() - otstup) / squaresNumPerW;
-        double dy = otstup / squaresNumPerH;
+        double dx = (getWidth() - otstup) / crtx.cr.regions[indOfUPreg].xDimension;
+        double dy = otstup / crtx.cr.regions[indOfUPreg].yDimension;
 
-        BitMatrix m = new BitMatrix(crtx.r.region.yDimension , crtx.r.region.xDimension);
-        m = crtx.r.getColumnsMapAtT(curTime);
+        BitMatrix m = new BitMatrix(crtx.cr.regions[indOfUPreg].yDimension , crtx.cr.regions[indOfUPreg].xDimension);
+        m = crtx.cr.getColumnsMapAtT(indOfUPreg, curTime);
         Color c;
-        for (int i = 0; i < crtx.r.inputXDim; i++)
-            for (int j = 0; j <  crtx.r.inputYDim; j++){
+        for (int i = 0; i < crtx.cr.inputXDim; i++)
+            for (int j = 0; j <  crtx.cr.inputYDim; j++){
                 c = (m.get(j, i) == false) ?  Color.gray : Color.lightGray;
                 drawFilledRectangle(g2, i, j, dx, dy, c , -1);
             }
 
         g2.setColor(Color.darkGray);
-        if (squaresNumPerH * squaresNumPerW != 0){
+        if (crtx.cr.regions[indOfUPreg].xDimension * crtx.cr.regions[indOfUPreg].yDimension != 0){
             for (int i = 0; i <= squaresNumPerW; i++) {
                 g2.drawLine((int)(otstup + dx * i), 0, (int) (dx * i), (int)otstup);
             }
@@ -260,15 +272,23 @@ class HighlightableArea extends JPanel {
             for (int i = 0; i <= squaresNumPerH; i++) {
                 g2.drawLine((int)(otstup - dy * i), (int) (dy * i), (int)(getWidth() - dy * i), (int) (dy * i));
             }
-        /////////////////////////////////////////////////////////////////////
-        //      image painting
-        countEnlargeParameter();
-        imageCurrentWidth = (enlargeParameter + 1) * crtx.img.getW() + 1;
-        BufferedImage enlargedImage =
+
+        if (regionInd == 0) {
+            /////////////////////////////////////////////////////////////////////
+            //      image painting
+            countEnlargeParameter();
+            imageCurrentWidth = (enlargeParameter + 1) * crtx.img.getW() + 1;
+            BufferedImage enlargedImage =
                     new BufferedImage((enlargeParameter + 1) * crtx.img.getW() + 1, (enlargeParameter + 1) * crtx.img.getH() + 1, crtx.img.getImageType());
-        enlargedImage = crtx.img.enlarge(enlargeParameter);
-        g2.drawImage(enlargedImage, dopuskForImage, (int)otstup + dopuskForImage, null) ;
-        /////////////////////////////////////////////////////////////////////
+            enlargedImage = crtx.img.enlarge(enlargeParameter);
+            g2.drawImage(enlargedImage, dopuskForImage, (int) otstup + dopuskForImage, null);
+            /////////////////////////////////////////////////////////////////////
+        }
+        else
+        {
+
+        }
+
         if (hx >= 0 && hy >= 0) {
             //draw filled rectangle
             //draw column's links

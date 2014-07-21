@@ -1,11 +1,17 @@
 package ru.isa.ai.newdhm.applet;
 
 import cern.colt.matrix.tbit.BitMatrix;
+import org.apache.xmlgraphics.image.codec.png.PNGEncodeParam;
 
 import java.awt.*;
 import java.awt.image.*;
 import javax.swing.*;
-import java.awt.geom.*;
+import java.net.URL;
+import javax.imageio.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Logger;
+
 
 public class ImageClass extends JPanel {
     private BufferedImage bi = null;
@@ -17,24 +23,63 @@ public class ImageClass extends JPanel {
     private Image image;
     private int imageType;
 
+    /*
+     Если задан относительный путь, то он отсчитывается относительно корневой папки с классами или папки с jar-архивом.
+     Это работает и при загрузке из JAR-архива (только для относительного пути).
+     @param path полный/относительный путь к картинке.
+     */
     public void load(String path) {
+        Image im = null;
+        URL url = getClass().getResource(path);
+        if (url != null) {
+            // Если относительный путь в папке с классми.
+            try {
+                im = ImageIO.read(url);
+            } catch (IOException ex) {
+            }
+            if (im!=null)
+                loadBufferedIm(im);
+        } else {
+            // Если полный путь.
+            loadImage(path);
+            if (image == null) {
+                // Если относительный путь от корневой папки проекта или папки где лежит JAR-архив.
+                File f = new File(path);
+                if (f.isFile() && f.exists())
+                    loadImage(f.getAbsolutePath());
+            }
+        }
+    }
+
+    public void loadImage(String path) {
+        Image im = null;
         toolkit = Toolkit.getDefaultToolkit();
         tracker = new MediaTracker(this);
         try {
-            image = toolkit.getImage(path);
-            tracker.addImage(image, 0);
+            im = toolkit.getImage(path);
+            tracker.addImage(im, 0);
             // load all the image for later use
             tracker.waitForAll();
         } catch (InterruptedException ex) {
         }
+        if (im.getWidth(this) != -1) loadBufferedIm(im);
+    }
 
+    public void setBufferedImage(BufferedImage im){
+        image = null;
+        width = im.getWidth(this);
+        height = im.getHeight(this);
+        bi = im;
+        Graphics2D big = bi.createGraphics();
+        //  // Выводим изображение image в графический контекст
+        big.drawImage(bi, 0, 0, this);
+        imageType = bi.getType();
+    }
+
+    public void loadBufferedIm(Image im) {
+        image = im;
         width = image.getWidth(this);
         height = image.getHeight(this);
-
-       /* byte[] bw = {(byte) 0xff, (byte) 0};
-        IndexColorModel blackAndWhite = new IndexColorModel(
-                1, 2, bw, bw, bw);
-        bi = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY, blackAndWhite);*/
 
         bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D big = bi.createGraphics();
@@ -49,6 +94,22 @@ public class ImageClass extends JPanel {
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public BufferedImage createBufferedImFromBitMatrix(BitMatrix m, int w, int h){
+        BufferedImage im = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+
+        Color col_black = new Color(0,0,0);
+        Color col_white = new Color(255, 255, 255);
+        for (int j = 0; j < h; j++)
+            for (int i = 0; i < w; i++) {
+                if (m.get(i, j) == false)
+                    im.setRGB(i, j, col_black.getRGB());
+                else
+                    im.setRGB(i, j, col_white.getRGB());
+            }
+
+        return im;
     }
 
     public boolean handleSinglePixel(int x, int y, int pixel) {
