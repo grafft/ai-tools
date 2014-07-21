@@ -103,14 +103,12 @@ public class ImageClass extends JPanel {
     public BufferedImage createBufferedImFromBitMatrix(BitMatrix m, int w, int h){
         BufferedImage im = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 
-        Color col_black = new Color(0,0,0);
-        Color col_white = new Color(255, 255, 255);
         for (int j = 0; j < h; j++)
             for (int i = 0; i < w; i++) {
                 if (m.get(i, j) == true)
-                    im.setRGB(i, j, col_black.getRGB());
+                    im.setRGB(i, j, Color.gray.getRGB());
                 else
-                    im.setRGB(i, j, col_white.getRGB());
+                    im.setRGB(i, j, Color.lightGray.getRGB());
             }
 
         return im;

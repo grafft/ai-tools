@@ -8,13 +8,11 @@ import ru.isa.ai.newdhm.RegionInitializationException;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 import ru.isa.ai.newdhm.Region;
+import javax.swing.event.DocumentEvent;
 
 public class HTMConfiguration {
     private JTextField textField1;
@@ -113,252 +111,24 @@ public class HTMConfiguration {
         previousRegSettingsButton.addActionListener(new PreviousRegSettingsButtonListener());
         nextRegSettingsButton.addActionListener(new NextRegSettingsButtonListener());
         //text - editors
-        textField1.addPropertyChangeListener(new textField1PropertyChangeListener());
-        textField2.addPropertyChangeListener(new textField2PropertyChangeListener());
-        textField3.addPropertyChangeListener(new textField3PropertyChangeListener());
-        textField4.addPropertyChangeListener(new textField4PropertyChangeListener());
-        textField5.addPropertyChangeListener(new textField5PropertyChangeListener());
-        textField6.addPropertyChangeListener(new textField6PropertyChangeListener());
-        textField7.addPropertyChangeListener(new textField7PropertyChangeListener());
-        textField8.addPropertyChangeListener(new textField8PropertyChangeListener());
-        textField9.addPropertyChangeListener(new textField9PropertyChangeListener());
-        textField10.addPropertyChangeListener(new textField10PropertyChangeListener());
-        textField11.addPropertyChangeListener(new textField11PropertyChangeListener());
-        textField12.addPropertyChangeListener(new textField12PropertyChangeListener());
+        textField1.getDocument().addDocumentListener(new DocumentListener1());
+        textField2.getDocument().addDocumentListener(new DocumentListener2());
+        textField3.getDocument().addDocumentListener(new DocumentListener3());
+        textField4.getDocument().addDocumentListener(new DocumentListener4());
+        textField5.getDocument().addDocumentListener(new DocumentListener5());
+        textField6.getDocument().addDocumentListener(new DocumentListener6());
+        textField7.getDocument().addDocumentListener(new DocumentListener7());
+        textField8.getDocument().addDocumentListener(new DocumentListener8());
+        textField9.getDocument().addDocumentListener(new DocumentListener9());
+        textField10.getDocument().addDocumentListener(new DocumentListener10());
+        textField11.getDocument().addDocumentListener(new DocumentListener11());
+        textField12.getDocument().addDocumentListener(new DocumentListener12());
 
         // from 1 to 10, in 1.0 steps start value 1.0
         SpinnerNumberModel model = new SpinnerNumberModel(1, 1, 10, 1);
         spinnerNumRegs.setModel(model);
 
         loadImage();
-    }
-
-    private class textField12PropertyChangeListener implements PropertyChangeListener{
-        public void propertyChange(PropertyChangeEvent e){
-            String propertyName = e.getPropertyName();
-            if ("text".equals(propertyName)){
-                int num_of_reg =Integer.parseInt(numOfReg.getText());
-                double new_value = 0.0;
-                try{
-                    new_value = Double.parseDouble(textField12.getText());
-                }
-                catch(NumberFormatException ex){
-                    System.out.print("Wrong property[11] (region y dimension) for region " + numOfReg );
-                    new_value = REGION_Y_DIMENSION_DEFAULT;
-                    textField12.setText(String.valueOf(new_value));
-                }
-                settings[num_of_reg].initialParameters[11] = new_value;
-            }
-        }
-    }
-
-    private class textField11PropertyChangeListener implements PropertyChangeListener{
-        public void propertyChange(PropertyChangeEvent e){
-            String propertyName = e.getPropertyName();
-            if ("text".equals(propertyName)){
-                int num_of_reg =Integer.parseInt(numOfReg.getText());
-                double new_value = 0.0;
-                try{
-                    new_value = Double.parseDouble(textField11.getText());
-                }
-                catch(NumberFormatException ex){
-                    System.out.print("Wrong property[10] (region x dimension) for region " + numOfReg );
-                    new_value = REGION_X_DIMENSION_DEFAULT;
-                    textField11.setText(String.valueOf(new_value));
-                }
-                settings[num_of_reg].initialParameters[10] = new_value;
-            }
-        }
-    }
-
-    private class textField10PropertyChangeListener implements PropertyChangeListener{
-        public void propertyChange(PropertyChangeEvent e){
-            String propertyName = e.getPropertyName();
-            if ("text".equals(propertyName)){
-                int num_of_reg =Integer.parseInt(numOfReg.getText());
-                double new_value = 0.0;
-                try{
-                    new_value = Double.parseDouble(textField10.getText());
-                }
-                catch(NumberFormatException ex){
-                    System.out.print("Wrong property[9] (new synapses count) for region " + numOfReg );
-                    new_value = NEW_SYNAPSES_COUNT_DEFAULT;
-                    textField10.setText(String.valueOf(new_value));
-                }
-                settings[num_of_reg].initialParameters[9] = new_value;
-            }
-        }
-    }
-
-    private class textField9PropertyChangeListener implements PropertyChangeListener{
-        public void propertyChange(PropertyChangeEvent e){
-            String propertyName = e.getPropertyName();
-            if ("text".equals(propertyName)){
-                int num_of_reg =Integer.parseInt(numOfReg.getText());
-                double new_value = 0.0;
-                try{
-                    new_value = Double.parseDouble(textField9.getText());
-                }
-                catch(NumberFormatException ex){
-                    System.out.print("Wrong property[8] (minimal threshold) for region " + numOfReg );
-                    new_value = MINIMAL_THRESHOLD_DEFAULT;
-                    textField9.setText(String.valueOf(new_value));
-                }
-                settings[num_of_reg].initialParameters[8] = new_value;
-            }
-        }
-    }
-
-    private class textField8PropertyChangeListener implements PropertyChangeListener{
-        public void propertyChange(PropertyChangeEvent e){
-            String propertyName = e.getPropertyName();
-            if ("text".equals(propertyName)){
-                int num_of_reg =Integer.parseInt(numOfReg.getText());
-                double new_value = 0.0;
-                try{
-                    new_value = Double.parseDouble(textField8.getText());
-                }
-                catch(NumberFormatException ex){
-                    System.out.print("Wrong property[7] (initial permanence) for region " + numOfReg );
-                    new_value = INITIAL_PERMANENCE_DEFAULT;
-                    textField8.setText(String.valueOf(new_value));
-                }
-                settings[num_of_reg].initialParameters[7] = new_value;
-            }
-        }
-    }
-
-    private class textField7PropertyChangeListener implements PropertyChangeListener{
-        public void propertyChange(PropertyChangeEvent e){
-            String propertyName = e.getPropertyName();
-            if ("text".equals(propertyName)){
-                int num_of_reg =Integer.parseInt(numOfReg.getText());
-                double new_value = 0.0;
-                try{
-                    new_value = Double.parseDouble(textField7.getText());
-                }
-                catch(NumberFormatException ex){
-                    System.out.print("Wrong property[6] (activation treshold) for region " + numOfReg );
-                    new_value = ACTIVATION_THRESHOLD_DEFAULT;
-                    textField7.setText(String.valueOf(new_value));
-                }
-                settings[num_of_reg].initialParameters[6] = new_value;
-            }
-        }
-    }
-
-    private class textField6PropertyChangeListener implements PropertyChangeListener{
-        public void propertyChange(PropertyChangeEvent e){
-            String propertyName = e.getPropertyName();
-            if ("text".equals(propertyName)){
-                int num_of_reg =Integer.parseInt(numOfReg.getText());
-                double new_value = 0.0;
-                try{
-                    new_value = Double.parseDouble(textField6.getText());
-                }
-                catch(NumberFormatException ex){
-                    System.out.print("Wrong property[5] (cells per column) for region " + numOfReg );
-                    new_value = CELLS_PER_COLUMN_DEFAULT;
-                    textField6.setText(String.valueOf(new_value));
-                }
-                settings[num_of_reg].initialParameters[5] = new_value;
-            }
-        }
-    }
-
-    private class textField5PropertyChangeListener implements PropertyChangeListener{
-        public void propertyChange(PropertyChangeEvent e){
-            String propertyName = e.getPropertyName();
-            if ("text".equals(propertyName)){
-                int num_of_reg =Integer.parseInt(numOfReg.getText());
-                double new_value = 0.0;
-                try{
-                    new_value = Double.parseDouble(textField5.getText());
-                }
-                catch(NumberFormatException ex){
-                    System.out.print("Wrong property[4] (permanence dec) for region " + numOfReg );
-                    new_value = PERMANENCE_DEC_DEFAULT;
-                    textField5.setText(String.valueOf(new_value));
-                }
-                settings[num_of_reg].initialParameters[4] = new_value;
-            }
-        }
-    }
-
-    private class textField4PropertyChangeListener implements PropertyChangeListener{
-        public void propertyChange(PropertyChangeEvent e){
-            String propertyName = e.getPropertyName();
-            if ("text".equals(propertyName)){
-                int num_of_reg =Integer.parseInt(numOfReg.getText());
-                double new_value = 0.0;
-                try{
-                    new_value = Double.parseDouble(textField4.getText());
-                }
-                catch(NumberFormatException ex){
-                    System.out.print("Wrong property[3] (permanence inc) for region " + numOfReg );
-                    new_value = PERMANENCE_INC_DEFAULT;
-                    textField4.setText(String.valueOf(new_value));
-                }
-                settings[num_of_reg].initialParameters[3] = new_value;
-            }
-        }
-    }
-
-    private class textField3PropertyChangeListener implements PropertyChangeListener{
-        public void propertyChange(PropertyChangeEvent e){
-            String propertyName = e.getPropertyName();
-            if ("text".equals(propertyName)){
-                int num_of_reg =Integer.parseInt(numOfReg.getText());
-                double new_value = 0.0;
-                try{
-                    new_value = Double.parseDouble(textField3.getText());
-                }
-                catch(NumberFormatException ex){
-                    System.out.print("Wrong property[2] (connected permission) for region " + numOfReg );
-                    new_value = CONNECTED_PERMISSION_DEFAULT;
-                    textField3.setText(String.valueOf(new_value));
-                }
-                settings[num_of_reg].initialParameters[2] = new_value;
-            }
-        }
-    }
-
-    private class textField2PropertyChangeListener implements PropertyChangeListener{
-        public void propertyChange(PropertyChangeEvent e){
-            String propertyName = e.getPropertyName();
-            if ("text".equals(propertyName)){
-                int num_of_reg =Integer.parseInt(numOfReg.getText());
-                double new_value = 0.0;
-                try{
-                    new_value = Double.parseDouble(textField2.getText());
-                }
-                catch(NumberFormatException ex){
-                    System.out.print("Wrong property[1] (minimal overlap) for region " + numOfReg );
-                    new_value = MINIMAL_OVERLAP_DEFAULT;
-                    textField2.setText(String.valueOf(new_value));
-                }
-                settings[num_of_reg].initialParameters[1] = new_value;
-            }
-        }
-    }
-
-    private class textField1PropertyChangeListener implements PropertyChangeListener{
-        public void propertyChange(PropertyChangeEvent e){
-            String propertyName = e.getPropertyName();
-            if ("text".equals(propertyName)){
-                int num_of_reg =Integer.parseInt(numOfReg.getText());
-                double new_value = 0.0;
-                try{
-                    new_value = Double.parseDouble(textField1.getText());
-                }
-                catch(NumberFormatException ex){
-                    System.out.print("Wrong property[0] (desired local activity) for region " + numOfReg );
-                    new_value = DESIRED_LOCAL_ACTIVITY_DEFAULT;
-                    textField1.setText(String.valueOf(new_value));
-                }
-                settings[num_of_reg].initialParameters[0] = new_value;
-            }
-        }
     }
 
     private class PutNumOfRegionsButtonListener implements ActionListener {
@@ -689,6 +459,464 @@ public class HTMConfiguration {
             cl.setSettings(crtx);
             cl.draw(0, -1);
             f.setVisible(true);
+        }
+    }
+
+    //////////////////////////////////////////////////////////////////////////////
+    private class DocumentListener1 implements javax.swing.event.DocumentListener{
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        private void updateLabel(DocumentEvent e) {
+            java.awt.EventQueue.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+
+                    int num_of_reg =Integer.parseInt(numOfReg.getText());
+                    double new_value = 0.0;
+                    try{
+                        new_value = Double.parseDouble(textField1.getText());
+                    }
+                    catch(NumberFormatException ex){
+                        System.out.print("Wrong property[0] (desired local activity) for region " + numOfReg );
+                        new_value = DESIRED_LOCAL_ACTIVITY_DEFAULT;
+                        textField1.setText(String.valueOf(new_value));
+                    }
+                    settings[num_of_reg].initialParameters[0] = new_value;
+                }
+            });
+        }
+    }
+
+    private class DocumentListener12 implements javax.swing.event.DocumentListener{
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        private void updateLabel(DocumentEvent e) {
+            java.awt.EventQueue.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    int num_of_reg =Integer.parseInt(numOfReg.getText());
+                    double new_value = 0.0;
+                    try{
+                        new_value = Double.parseDouble(textField12.getText());
+                    }
+                    catch(NumberFormatException ex){
+                        System.out.print("Wrong property[11] (region y dimension) for region " + numOfReg );
+                        new_value = REGION_Y_DIMENSION_DEFAULT;
+                        textField12.setText(String.valueOf(new_value));
+                    }
+                    settings[num_of_reg].initialParameters[11] = new_value;
+                }
+            });
+        }
+    }
+
+    private class DocumentListener11 implements javax.swing.event.DocumentListener{
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        private void updateLabel(DocumentEvent e) {
+            java.awt.EventQueue.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    int num_of_reg =Integer.parseInt(numOfReg.getText());
+                    double new_value = 0.0;
+                    try{
+                        new_value = Double.parseDouble(textField11.getText());
+                    }
+                    catch(NumberFormatException ex){
+                        System.out.print("Wrong property[10] (region x dimension) for region " + numOfReg );
+                        new_value = REGION_X_DIMENSION_DEFAULT;
+                        textField11.setText(String.valueOf(new_value));
+                    }
+                    settings[num_of_reg].initialParameters[10] = new_value;
+                }
+            });
+        }
+    }
+
+    private class DocumentListener10 implements javax.swing.event.DocumentListener{
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        private void updateLabel(DocumentEvent e) {
+            java.awt.EventQueue.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    int num_of_reg =Integer.parseInt(numOfReg.getText());
+                    double new_value = 0.0;
+                    try{
+                        new_value = Double.parseDouble(textField10.getText());
+                    }
+                    catch(NumberFormatException ex){
+                        System.out.print("Wrong property[9] (new synapses count) for region " + numOfReg );
+                        new_value = NEW_SYNAPSES_COUNT_DEFAULT;
+                        textField10.setText(String.valueOf(new_value));
+                    }
+                    settings[num_of_reg].initialParameters[9] = new_value;
+                }
+            });
+        }
+    }
+
+    private class DocumentListener9 implements javax.swing.event.DocumentListener{
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        private void updateLabel(DocumentEvent e) {
+            java.awt.EventQueue.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    int num_of_reg =Integer.parseInt(numOfReg.getText());
+                    double new_value = 0.0;
+                    try{
+                        new_value = Double.parseDouble(textField9.getText());
+                    }
+                    catch(NumberFormatException ex){
+                        System.out.print("Wrong property[8] (minimal threshold) for region " + numOfReg );
+                        new_value = MINIMAL_THRESHOLD_DEFAULT;
+                        textField9.setText(String.valueOf(new_value));
+                    }
+                    settings[num_of_reg].initialParameters[8] = new_value;
+                }
+            });
+        }
+    }
+
+    private class DocumentListener8 implements javax.swing.event.DocumentListener{
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        private void updateLabel(DocumentEvent e) {
+            java.awt.EventQueue.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    int num_of_reg =Integer.parseInt(numOfReg.getText());
+                    double new_value = 0.0;
+                    try{
+                        new_value = Double.parseDouble(textField8.getText());
+                    }
+                    catch(NumberFormatException ex){
+                        System.out.print("Wrong property[7] (initial permanence) for region " + numOfReg );
+                        new_value = INITIAL_PERMANENCE_DEFAULT;
+                        textField8.setText(String.valueOf(new_value));
+                    }
+                    settings[num_of_reg].initialParameters[7] = new_value;
+                }
+            });
+        }
+    }
+
+    private class DocumentListener7 implements javax.swing.event.DocumentListener{
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        private void updateLabel(DocumentEvent e) {
+            java.awt.EventQueue.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    int num_of_reg =Integer.parseInt(numOfReg.getText());
+                    double new_value = 0.0;
+                    try{
+                        new_value = Double.parseDouble(textField7.getText());
+                    }
+                    catch(NumberFormatException ex){
+                        System.out.print("Wrong property[6] (activation treshold) for region " + numOfReg );
+                        new_value = ACTIVATION_THRESHOLD_DEFAULT;
+                        textField7.setText(String.valueOf(new_value));
+                    }
+                    settings[num_of_reg].initialParameters[6] = new_value;
+                }
+            });
+        }
+    }
+
+    private class DocumentListener6 implements javax.swing.event.DocumentListener{
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        private void updateLabel(DocumentEvent e) {
+            java.awt.EventQueue.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    int num_of_reg =Integer.parseInt(numOfReg.getText());
+                    double new_value = 0.0;
+                    try{
+                        new_value = Double.parseDouble(textField6.getText());
+                    }
+                    catch(NumberFormatException ex){
+                        System.out.print("Wrong property[5] (cells per column) for region " + numOfReg );
+                        new_value = CELLS_PER_COLUMN_DEFAULT;
+                        textField6.setText(String.valueOf(new_value));
+                    }
+                    settings[num_of_reg].initialParameters[5] = new_value;
+                }
+            });
+        }
+    }
+
+    private class DocumentListener5 implements javax.swing.event.DocumentListener{
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        private void updateLabel(DocumentEvent e) {
+            java.awt.EventQueue.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    int num_of_reg =Integer.parseInt(numOfReg.getText());
+                    double new_value = 0.0;
+                    try{
+                        new_value = Double.parseDouble(textField5.getText());
+                    }
+                    catch(NumberFormatException ex){
+                        System.out.print("Wrong property[4] (permanence dec) for region " + numOfReg );
+                        new_value = PERMANENCE_DEC_DEFAULT;
+                        textField5.setText(String.valueOf(new_value));
+                    }
+                    settings[num_of_reg].initialParameters[4] = new_value;
+                }
+            });
+        }
+    }
+
+    private class DocumentListener4 implements javax.swing.event.DocumentListener{
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        private void updateLabel(DocumentEvent e) {
+            java.awt.EventQueue.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    int num_of_reg =Integer.parseInt(numOfReg.getText());
+                    double new_value = 0.0;
+                    try{
+                        new_value = Double.parseDouble(textField4.getText());
+                    }
+                    catch(NumberFormatException ex){
+                        System.out.print("Wrong property[3] (permanence inc) for region " + numOfReg );
+                        new_value = PERMANENCE_INC_DEFAULT;
+                        textField4.setText(String.valueOf(new_value));
+                    }
+                    settings[num_of_reg].initialParameters[3] = new_value;
+                }
+            });
+        }
+    }
+
+    private class DocumentListener3 implements javax.swing.event.DocumentListener{
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        private void updateLabel(DocumentEvent e) {
+            java.awt.EventQueue.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    int num_of_reg =Integer.parseInt(numOfReg.getText());
+                    double new_value = 0.0;
+                    try{
+                        new_value = Double.parseDouble(textField3.getText());
+                    }
+                    catch(NumberFormatException ex){
+                        System.out.print("Wrong property[2] (connected permission) for region " + numOfReg );
+                        new_value = CONNECTED_PERMISSION_DEFAULT;
+                        textField3.setText(String.valueOf(new_value));
+                    }
+                    settings[num_of_reg].initialParameters[2] = new_value;
+                }
+            });
+        }
+    }
+
+    private class DocumentListener2 implements javax.swing.event.DocumentListener{
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            updateLabel(e);
+        }
+
+        private void updateLabel(DocumentEvent e) {
+            java.awt.EventQueue.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    int num_of_reg =Integer.parseInt(numOfReg.getText());
+                    double new_value = 0.0;
+                    try{
+                        new_value = Double.parseDouble(textField2.getText());
+                    }
+                    catch(NumberFormatException ex){
+                        System.out.print("Wrong property[1] (minimal overlap) for region " + numOfReg );
+                        new_value = MINIMAL_OVERLAP_DEFAULT;
+                        textField2.setText(String.valueOf(new_value));
+                    }
+                    settings[num_of_reg].initialParameters[1] = new_value;
+                }
+            });
         }
     }
 }
