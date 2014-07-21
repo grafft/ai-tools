@@ -76,9 +76,9 @@ public class HTMConfiguration {
     private ActiveColumnsVisualization cl;
 
     private final String SP_PROP_FILENAME = "htm.properties";
-    private final String IMAGE_PATH =  "src/main/resources/image1.png"; //"D:\\work_folder\\image1.png";
+    private final String IMAGE_PATH = "src/main/resources/image1.png"; //"D:\\work_folder\\image1.png";
     private String filePropName = SP_PROP_FILENAME;
-    private String imagePath = IMAGE_PATH;
+    private String imagePath; // = IMAGE_PATH;
 
     //group of default values for properties
     private final double DESIRED_LOCAL_ACTIVITY_DEFAULT = 20.0;
@@ -99,6 +99,7 @@ public class HTMConfiguration {
     final private int NUM_OF_PARAMETERS_FOR_1_REG = 12;
 
     public HTMConfiguration () {
+        imagePath = HTMConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "image1.png";
         //buttons
         stopCortexButton.addActionListener(new StopCortexButtonListener());
         makeStepButton.addActionListener(new MakeStepButtonListener());
@@ -685,7 +686,8 @@ public class HTMConfiguration {
             f.setContentPane(cl.activeColumnsPanel_main);
             f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             f.pack();
-            cl.draw(crtx, 0, -1);
+            cl.setSettings(crtx);
+            cl.draw(0, -1);
             f.setVisible(true);
         }
     }

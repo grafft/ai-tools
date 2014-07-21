@@ -62,7 +62,7 @@ public class ActiveColumnsVisualization extends JFrame {
 
             indOfUpReg++;
             indOfDownReg++;
-            draw(crtx, indOfUpReg, indOfDownReg);
+            draw(indOfUpReg, indOfDownReg);
             if (numOfNextReg == crtx.getNumOfRegions() - 1)
                 buttonUP.setEnabled(false);
             }
@@ -78,7 +78,7 @@ public class ActiveColumnsVisualization extends JFrame {
 
             indOfUpReg--;
             indOfDownReg--;
-            draw(crtx, indOfUpReg, indOfDownReg);
+            draw(indOfUpReg, indOfDownReg);
             if (numOfPrevReg == 0)
                 buttonDOWN.setEnabled(false);
         }
@@ -105,16 +105,19 @@ public class ActiveColumnsVisualization extends JFrame {
         activeColsPanel.setVisible(true);
     }
 
-    public void setSettings(){
-
+    public void setSettings(CortexThread crtx_){
+        if (crtx_.cr != null){
+            crtx = crtx_;
+            if (crtx.getNumOfRegions() > 1)
+                buttonUP.setEnabled(true);
+        }
     }
 
-    public void draw(CortexThread crtx_, int up_regInd, int down_regInd){
-      if (crtx_.cr != null){
+    public void draw(int up_regInd, int down_regInd){
+      if (crtx.cr != null){
             indOfUpReg = up_regInd;
             indOfDownReg = down_regInd;
-            crtx = crtx_;
-            curTime = crtx_.cr.time - 1 > 0 ? crtx_.cr.time - 1 : 0;
+            curTime = crtx.cr.time - 1 > 0 ? crtx.cr.time - 1 : 0;
             if (ha != null)
                 activeColsPanel.remove(ha);
             AreaHighlightTest();
