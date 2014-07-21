@@ -61,7 +61,7 @@ public class ChartHandler {
         drawTimeline = cfg.drawDendritesTimlineCheckBox.isSelected();
 
         this.chart2D1.removeAllTraces();
-        //this.chart2D2.removeAllTraces();
+
         if (act) {
             chart2D1.addTrace(traceA);
             traceA.setColor(Color.CYAN);
@@ -120,77 +120,82 @@ public class ChartHandler {
         }
     }
 
-    public void CollectData() {
+    public void CollectData(int regInd) {
         for (ITrace2D trace2D : chart2D1.getTraces()) {
             trace2D.removeAllPoints();
         }
-        Integer time = cfg.crtx.r.time - 1 > 0 ? cfg.crtx.r.time - 1 : 0;
+        Integer time = cfg.crtx.cr.time - 1 > 0 ? cfg.crtx.cr.time - 1 : 0;
         if (inp) {
-            for (int i = 0; i < cfg.crtx.r.region.xDimension; i++) {
-                for (int j = 0; j < cfg.crtx.r.region.xDimension; j++) {           ///////////////////////?????????
-                    traceINP.addPoint(i + j, (cfg.crtx.r.input(i,j) == true) ? 1 : 0);
+            /*
+            for (int i = 0; i < cfg.crtx.cr.regions[regInd].xDimension; i++) {
+                for (int j = 0; j < cfg.crtx.cr.regions[regInd].xDimension; j++) {           ///////////////////////?????????
+                    traceINP.addPoint(i + j, (cfg.crtx.cr.input(i,j) == true) ? 1 : 0);
+                }*/
+                for (int j = 0; j < cfg.crtx.cr.regions[regInd].getYDim(); j++) {
+                    for (int i = 0; i < cfg.crtx.cr.regions[regInd].getXDim(); i++) {           ///////////////////////?????????
+                        traceINP.addPoint(i + j, (cfg.crtx.cr.input(i,j) == true) ? 1 : 0);
                 }
             }
         }
         String buf = "";
         int overalDSCount = 0;
-        buf += "Cells Activity: \r\n" + "Timestep: " + cfg.crtx.r.totalTime + "\r\n";
-        buf += "Inhibition Radius: " + cfg.crtx.r.region.inhibitionRadius + "\r\n";
+        buf += "Cells Activity: \r\n" + "Timestep: " + cfg.crtx.cr.totalTime + "\r\n";
+        buf += "Inhibition Radius: " + cfg.crtx.cr.regions[regInd].inhibitionRadius + "\r\n";
         //if (cfg.crtx.r.activeColumns.size() > 0)
-        int index = cfg.crtx.r.time - 1 > 0 ? cfg.crtx.r.time - 1 : 0;
-        buf += "Active Columns: " + cfg.crtx.r.activeColumns.viewRow(index).getQuick(0) + "\r\n";
-        for (int c = 0; c < cfg.crtx.r.region.xDimension * cfg.crtx.r.region.yDimension; c++) {
+        int index = cfg.crtx.cr.time - 1 > 0 ? cfg.crtx.cr.time - 1 : 0;
+        buf += "Active Columns: " + cfg.crtx.cr.regions[regInd].activeColumns.viewRow(index).getQuick(0) + "\r\n";
+        for (int c = 0; c < cfg.crtx.cr.regions[regInd].getXDim() * cfg.crtx.cr.regions[regInd].getYDim(); c++) {
 
             if (over) {
-                traceO.addPoint(c, cfg.crtx.r.region.columns[c].overlap);
+                traceO.addPoint(c, cfg.crtx.cr.regions[regInd].columns[c].overlap);
             }
             if (adc) {
-                traceADC.addPoint(c, cfg.crtx.r.region.columns[c].activeDutyCycle);
+                traceADC.addPoint(c, cfg.crtx.cr.regions[regInd].columns[c].activeDutyCycle);
             }
             if (mdc) {
-                traceMDC.addPoint(c, cfg.crtx.r.region.columns[c].minDutyCycle);
+                traceMDC.addPoint(c, cfg.crtx.cr.regions[regInd].columns[c].minDutyCycle);
             }
             if (odc) {
-                traceODC.addPoint(c, cfg.crtx.r.region.columns[c].overlapDutyCycle);
+                traceODC.addPoint(c, cfg.crtx.cr.regions[regInd].columns[c].overlapDutyCycle);
             }
             if (bst) {
-                traceBST.addPoint(c, cfg.crtx.r.region.columns[c].boost);
+                traceBST.addPoint(c, cfg.crtx.cr.regions[regInd].columns[c].boost);
             }
-            for (int i = 0; i < cfg.crtx.r.region.cellsPerColumn; i++) {
+            for (int i = 0; i < cfg.crtx.cr.regions[regInd].cellsPerColumn; i++) {
                 Boolean val;
                 if (act) {
-                    val = cfg.crtx.r.region.columns[c].cells[i].activeState.get(time);
+                    val = cfg.crtx.cr.regions[regInd].columns[c].cells[i].activeState.get(time);
                     traceA.addPoint(c, val ? i + 1 * 1.0 : 0.0);
                 }
                 if (learn) {
-                    val = cfg.crtx.r.region.columns[c].cells[i].learnState.get(time);
+                    val = cfg.crtx.cr.regions[regInd].columns[c].cells[i].learnState.get(time);
                     traceL.addPoint(c, val ? i + 1 * 1.0 : 0.0);
                 }
                 if (predict) {
-                    val = cfg.crtx.r.region.columns[c].cells[i].predictiveState.get(time);
+                    val = cfg.crtx.cr.regions[regInd].columns[c].cells[i].predictiveState.get(time);
                     traceP.addPoint(c, val ? i + 1 * 1.0 : 0.0);
                 }
 
-                Integer size = cfg.crtx.r.region.columns[c].cells[i].dendriteSegmentsNum;   //dendriteSegments.length;  //!!!
+                Integer size = cfg.crtx.cr.regions[regInd].columns[c].cells[i].dendriteSegmentsNum;   //dendriteSegments.length;  //!!!
                 overalDSCount += size;
                 if (showDistalSegmentsCount) {
                     traceD.addPoint(c, i + 1 * size);
                     buf += "C: " + c + " I: " + i + " N: " + size + " L: " +
-                            cfg.crtx.r.region.columns[c].cells[i].learnState + " # ";
+                            cfg.crtx.cr.regions[regInd].columns[c].cells[i].learnState + " # ";
                 }
             }
             if (perm) {
                 Integer activeSynapses = 0;
-                for (int s = 0; s < cfg.crtx.r.region.numColumns; s++) {
-                    activeSynapses += cfg.crtx.r.region.columns[c].potentialSynapses[s].permanence >
-                            cfg.crtx.r.region.connectedPerm ? 1 : 0;
+                for (int s = 0; s < cfg.crtx.cr.regions[regInd].numColumns; s++) {
+                    activeSynapses += cfg.crtx.cr.regions[regInd].columns[c].potentialSynapses[s].permanence >
+                            cfg.crtx.cr.regions[regInd].connectedPerm ? 1 : 0;
                 }
                 traceS.addPoint(c, activeSynapses);
             }
             buf += "\r\n";
         }
         if (drawTimeline)
-            traceTMLN.addPoint(cfg.crtx.r.totalTime, overalDSCount);
+            traceTMLN.addPoint(cfg.crtx.cr.totalTime, overalDSCount);
         buf += "Overall Dendrite Segments Count: " + overalDSCount + "\r\n";
         cfg.textPane1.setText(buf);
     }

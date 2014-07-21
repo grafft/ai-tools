@@ -1,21 +1,20 @@
 package ru.isa.ai.newdhm;
 
 import cern.colt.matrix.tint.impl.SparseIntMatrix1D;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Properties;
 import cern.colt.matrix.tint.IntMatrix1D;
+import cern.colt.matrix.tint.IntMatrix2D;
 
 public class Region {
     public Column[] columns;
 
     public int numColumns = 0;
-    public int xDimension;
-    public int yDimension;
+    private int xDimension;
+    private int yDimension;
+
+    /*Список индексов колонок – победителей благодаря прямым
+    входным данным. (Выход пространственного группировщика)
+   */
+    public IntMatrix2D activeColumns;
 
     //Число клеток в каждой из колонок.
     public int cellsPerColumn;
@@ -72,9 +71,23 @@ public class Region {
     public int newSynapseCount;
 
     //////////////////////////////////////////////////////////
-    final private int numMemoryCells = 1000;
+    final private int NUM_MEMORY_CELLS = 1000;
 
-    public Region(){
+    public Region(double[] parameters){
+        this.desiredLocalActivity = (int)parameters[0];
+        this.minOverlap = (int)parameters[1];
+        this.connectedPerm = parameters[2];
+        this.permanenceInc = parameters[3];
+        this.permanenceDec = parameters[4];
+        this.cellsPerColumn = (int)parameters[5];
+        this.activationThreshold = (int)parameters[6];
+        this.initialPerm = parameters[7];
+        this.minThreshold = (int)parameters[8];
+        this.newSynapseCount = (int)parameters[9];
+        this.xDimension = (int)parameters[10];
+        this.yDimension = (int)parameters[11];
+
+        addColumns();
     }
 
     public void addColumns(){
@@ -109,7 +122,7 @@ public class Region {
 inhibitionRadius колонки c.
      */
     public IntMatrix1D neighbours(int c) {
-        IntMatrix1D result = new SparseIntMatrix1D(numMemoryCells);
+        IntMatrix1D result = new SparseIntMatrix1D(NUM_MEMORY_CELLS);
         int length = 1 ;
         for(int i = 0; i < numColumns; i++) {
             if ((Math.abs(columns[i].x - columns[c].x) < inhibitionRadius) &&
@@ -154,7 +167,7 @@ inhibitionRadius колонки c.
 их перекрытий со входом
     */
     public double kthScore(IntMatrix1D cols, int k){
-        double[] overlaps = new double[numMemoryCells];
+        double[] overlaps = new double[NUM_MEMORY_CELLS];
         //doubleMatrix1D overlaps;
 
         int length = 1;
@@ -225,6 +238,7 @@ inhibitionRadius колонки c.
    public double getInhibitionRadius(){
         return inhibitionRadius;
     }
-
-   public void setInhibitionRadius(double value) {inhibitionRadius = value;}
+   public void setInhibitionRadius(double value) {inhibitionRadius = value; }
+   public int getXDim() {return this.xDimension; }
+   public int getYDim() {return this.yDimension; }
 }

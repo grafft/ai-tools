@@ -6,21 +6,20 @@ import cern.colt.matrix.tint.impl.SparseIntMatrix2D;
 import java.util.Random;
 import cern.colt.matrix.tint.IntMatrix2D;
 import cern.colt.matrix.tbit.BitMatrix;
+import com.sun.scenario.Settings;
+import ru.isa.ai.newdhm.applet.HTMConfiguration;
 
 public class Cortex {
     public int time = 0;
     public int totalTime = 0;
 
     // Список всех колонок
-    public Region region = new Region();
-    public int inputXDim = 0;
-    public int inputYDim = 0;
+    public Region[] regions;
+    private int numRegions;
+    private int inputXDim = 0;
+    private int inputYDim = 0;
     private BitMatrix inputBits;
-
-    /*Список индексов колонок – победителей благодаря прямым
-    входным данным. (Выход пространственного группировщика)
-   */
-    public IntMatrix2D activeColumns;
+    private final int SYNAPSE_MEM_SIZE = 1000;
 
     private enum State {
         active,
@@ -31,64 +30,58 @@ public class Cortex {
     //  Реализация
     /////////////////////////////////////////////////////////////////////////
 
-    public Cortex() {
-
+    public Cortex(int numRegions_, HTMConfiguration.Settings[] settings) {
+        numRegions = numRegions_;
+        regions = new Region[numRegions];
+        for(int i = 0; i < numRegions; i++){
+            regions[i] = new Region(settings[i].initialParameters);
+        }
     }
     /////////////////////////////////////////////////////////////////////////
+
+    public int getInputXDim(){
+        return inputXDim;
+    }
+
+    public int getInputYDim(){
+        return inputYDim;
+    }
 
     /*
     Вход для данного уровня в момент времени t. input(t, j) = 1
 если j-ый бит входа = 1.
      */
     private int inputDefault(int t, int j, int k) {
-        //if (ExtensionGUI.Input == null)
-        {
             int value = t % 2 > 0 ? rnd.nextInt(2) : Math.sin(j + k + totalTime) > 0 ? 1 : 0;
             return value;
-        }
-        /*
-        else {
-            byte[] buffer = ExtensionGUI.Input;
-            int l = buffer.length;
-            int width = l / region.xDimension;
-            int height = 256 / region.yDimension;
-            int amount = 0;
-            for (int i = j * width; i < (j + 1) * width; i++) {
-                if ((k + 1) * height - 128 < buffer[j] && buffer[j] > k * height - 128)
-                    amount++;
-            }
-            return amount > width / 10 ? 1 : 0;
-        } */
     }
 
     public boolean input(int c, int i){
-        boolean val = inputBits.get(i,c);
+        boolean val = inputBits.get(c,i);
         return val;
     }
     /*
     Вычисляет интервальное среднее того, как часто колонка c была активной
      после подавления.
      */
-    private double updateActiveDutyCycle(int c) {
+    private double updateActiveDutyCycle(int regInd, int c) {
         double value = 0.0;
-        IntMatrix1D col = activeColumns.viewRow(time);
+        IntMatrix1D col = regions[regInd].activeColumns.viewRow(time);
         for (int  ind = 1; ind <= col.get(0); ind++ ) {
             if (c == ind -1){
-            //if (c == ind) {
                 value = 1.0;
                 break;
             }
         }
-       // return (value + totalTime.floatValue() * region.columns.get(c).activeDutyCycle) / (totalTime.floatValue() + 1.0);
-        return (value + totalTime * region.columns[c].activeDutyCycle) / (totalTime + 1.0);
+        return (value + totalTime * regions[regInd].columns[c].activeDutyCycle) / (totalTime + 1.0);
     }
 
     ////////////////
-    private BitMatrix get2DcolsANDcellsAtT(State state, int t) {
-        BitMatrix list = new BitMatrix(region.numColumns,region.cellsPerColumn);
-        for (int col = 0; col < region.numColumns; col++) {
+    private BitMatrix get2DcolsANDcellsAtT(int regInd, State state, int t) {
+        BitMatrix list = new BitMatrix(regions[regInd].numColumns,regions[regInd].cellsPerColumn);
+        for (int col = 0; col < regions[regInd].numColumns; col++) {
             int ind_i = 0;
-            for (Cell i : region.columns[col].cells) {
+            for (Cell i : regions[regInd].columns[col].cells) {
                 if (state.equals(State.active)) {
                     list.put(col, ind_i, i.activeState.get(t));
 
@@ -108,26 +101,26 @@ public class Cortex {
     больше чем activationThreshold. Вид состояний state может быть
     activeState, или learnState.
      */
-    private boolean segmentActive(Segment s, int t, State state) {
-        BitMatrix list = new BitMatrix(region.numColumns, region.cellsPerColumn);
-        list = get2DcolsANDcellsAtT(state, t);
+    private boolean segmentActive(int regInd, Segment s, int t, State state) {
+        BitMatrix list = new BitMatrix(regions[regInd].numColumns, regions[regInd].cellsPerColumn);
+        list = get2DcolsANDcellsAtT(regInd, state, t);
         int counter = 0;
         for (Synapse syn : s.synapses) {
             if (syn == null) break;
-            if (list.get(syn.c, syn.i) && syn.permanence > region.connectedPerm) {
+            if (list.get(syn.c, syn.i) && syn.permanence > regions[regInd].connectedPerm) {
                 counter++;
             }
         }
-        return counter > region.activationThreshold;
+        return counter > regions[regInd].activationThreshold;
     }
 
 
     //////////////////
-    private int firstOccurrenceOfSegment(int c, int i, Segment seg){
+    private int firstOccurrenceOfSegment(int regInd, int c, int i, Segment seg){
         boolean flag = false;
         int ind = 0;
-        while(!flag && ind < region.columns[c].cells[i].dendriteSegmentsNum ){
-            if (region.columns[c].cells[i].dendriteSegments[ind] == seg)
+        while(!flag && ind < regions[regInd].columns[c].cells[i].dendriteSegmentsNum ){
+            if (regions[regInd].columns[c].cells[i].dendriteSegments[ind] == seg)
                 flag = true;
             ind++;
         }
@@ -140,12 +133,12 @@ public class Cortex {
     то сегментам последовательностей отдается предпочтение. В противном
     случае предпочтение отдается сегментам с наибольшей активностью.
      */
-    private int[] getActiveSegment(int c, int i, int t, State state) {
-        Segment[] activeSegments = new Segment[region.columns[c].cells[i].dendriteSegmentsNum];
+    private int[] getActiveSegment(int regInd, int c, int i, int t, State state) {
+        Segment[] activeSegments = new Segment[regions[regInd].columns[c].cells[i].dendriteSegmentsNum];
         int length = 0;
-        for (Segment segment : region.columns[c].cells[i].dendriteSegments) {
+        for (Segment segment : regions[regInd].columns[c].cells[i].dendriteSegments) {
             if (segment == null) break;
-            if (segmentActive(segment, t, state)) {
+            if (segmentActive(regInd, segment, t, state)) {
                 activeSegments[length] = segment;
                 length++;
             }
@@ -153,24 +146,24 @@ public class Cortex {
 
         if (i == 1) {
             //return new int[]{c, i, region.columns.get(c).cells[i].dendriteSegments.indexOf(activeSegments[0])};
-            return new int[]{c, i, firstOccurrenceOfSegment(c, i, activeSegments[0])};
+            return new int[]{c, i, firstOccurrenceOfSegment(regInd ,c, i, activeSegments[0])};
         } else {
             for (Segment seg : activeSegments) {
                 if (seg == null) break;
                 if (seg.sequenceSegment)
-                    return new int[]{c, i,firstOccurrenceOfSegment(c,i,seg) };
+                    return new int[]{c, i,firstOccurrenceOfSegment(regInd, c, i, seg) };
 
             }
 
-            BitMatrix list = new BitMatrix(region.numColumns, region.cellsPerColumn);
-            list = get2DcolsANDcellsAtT(state, t);
+            BitMatrix list = new BitMatrix(regions[regInd].numColumns, regions[regInd].cellsPerColumn);
+            list = get2DcolsANDcellsAtT(regInd, state, t);
             int maxActivity = 0;
             int result = -1;
             for (int j = 0; j < length; j++) {
                 int counter = 0;
                 for (Synapse syn : activeSegments[j].synapses) {
                     if (syn == null) break;
-                    if (list.get(syn.c, syn.i) && syn.permanence > region.connectedPerm) {
+                    if (list.get(syn.c, syn.i) && syn.permanence > regions[regInd].connectedPerm) {
                         counter++;
                     }
                 }
@@ -193,15 +186,15 @@ public class Cortex {
     процедура возвращает индекс сегмента. А если такого не обнаружено, то
     возвращается -1.
      */
-    private int[] getBestMatchingSegment(int c, int i, int t) {
+    private int[] getBestMatchingSegment(int regInd, int c, int i, int t) {
 
-        BitMatrix list = new BitMatrix(region.numColumns, region.cellsPerColumn);
-        list = get2DcolsANDcellsAtT(State.active, t);
+        BitMatrix list = new BitMatrix(regions[regInd].numColumns, regions[regInd].cellsPerColumn);
+        list = get2DcolsANDcellsAtT(regInd , State.active, t);
         int maxActivity = 0;
         int result = -1;
-        for (int j = 0; j < region.columns[c].cells[i].dendriteSegmentsNum; j++) {
+        for (int j = 0; j < regions[regInd].columns[c].cells[i].dendriteSegmentsNum; j++) {
             int counter = 0;
-            Segment segment = region.columns[c].cells[i].dendriteSegments[j];
+            Segment segment = regions[regInd].columns[c].cells[i].dendriteSegments[j];
 
             for (Synapse syn : segment.synapses) {
                 if (syn == null) break;
@@ -214,7 +207,7 @@ public class Cortex {
                 result = j;
             }
         }
-        return maxActivity > region.minThreshold ? new int[]{c, i, result} : new int[]{c, i, -1};
+        return maxActivity > regions[regInd].minThreshold ? new int[]{c, i, result} : new int[]{c, i, -1};
     }
 
     /*
@@ -222,20 +215,20 @@ public class Cortex {
     сегментом (как это определено выше). Если такой клетки нет, то
     возвращается клетка с минимальным числом сегментов.
      */
-    private int[] getBestMatchingCell(int c, int t) {
+    private int[] getBestMatchingCell(int regInd, int c, int t) {
         int minSegments = 0;
         int cellIndex = -1;
         int minSegmentsCellIndex = -1;
 
-        BitMatrix list = new BitMatrix(region.numColumns, region.cellsPerColumn);
-        list =  get2DcolsANDcellsAtT(State.active, t);
+        BitMatrix list = new BitMatrix(regions[regInd].numColumns, regions[regInd].cellsPerColumn);
+        list =  get2DcolsANDcellsAtT(regInd, State.active, t);
         int maxActivity = 0;
         int result = -1;
 
-        for (int i = 0; i < region.cellsPerColumn; i++) {
-            for (int j = 0; j < region.columns[c].cells[i].dendriteSegmentsNum; j++) {
+        for (int i = 0; i < regions[regInd].cellsPerColumn; i++) {
+            for (int j = 0; j < regions[regInd].columns[c].cells[i].dendriteSegmentsNum; j++) {
                 int counter = 0;
-                Segment segment = region.columns[c].cells[i].dendriteSegments[j];
+                Segment segment = regions[regInd].columns[c].cells[i].dendriteSegments[j];
 
                 for (Synapse syn : segment.synapses) {
                     if (syn == null) break;
@@ -249,12 +242,12 @@ public class Cortex {
                     cellIndex = i;
                 }
             }
-            if (minSegments == 0 || minSegments > region.columns[c].cells[i].dendriteSegmentsNum) {
-                minSegments = region.columns[c].cells[i].dendriteSegmentsNum;
+            if (minSegments == 0 || minSegments > regions[regInd].columns[c].cells[i].dendriteSegmentsNum) {
+                minSegments = regions[regInd].columns[c].cells[i].dendriteSegmentsNum;
                 minSegmentsCellIndex = i;
             }
         }
-        return maxActivity > region.minThreshold ? new int[]{c, cellIndex, result} : new int[]{c, minSegmentsCellIndex, -1};
+        return maxActivity > regions[regInd].minThreshold ? new int[]{c, cellIndex, result} : new int[]{c, minSegmentsCellIndex, -1};
     }
 
     /*
@@ -269,13 +262,13 @@ public class Cortex {
     случайно выбираются из числа клеток, у которых learnState равно 1 в
     момент времени t.
      */
-    private SegmentUpdate getSegmentActiveSynapses(int c, int i, int t, int s, boolean newSynapses) {
-        Synapse[] activeSynapses = new Synapse[1000];
+    private SegmentUpdate getSegmentActiveSynapses(int regInd, int c, int i, int t, int s, boolean newSynapses) {
+        Synapse[] activeSynapses = new Synapse[SYNAPSE_MEM_SIZE];
         int length = 0;
         if (s >= 0) {
-            for (Synapse syn : region.columns[c].cells[i].dendriteSegments[s].synapses) {
+            for (Synapse syn : regions[regInd].columns[c].cells[i].dendriteSegments[s].synapses) {
                 if (syn == null) break;
-                if (region.columns[syn.c].cells[syn.i].activeState.get(t)) {
+                if (regions[regInd].columns[syn.c].cells[syn.i].activeState.get(t)) {
                     activeSynapses[length] = syn;
                     length++;
                 }
@@ -283,21 +276,21 @@ public class Cortex {
         }
         if (newSynapses) {
             Random r = new Random();
-            SparseIntMatrix2D learningCells = new SparseIntMatrix2D(region.numColumns * region.cellsPerColumn, 2);
+            SparseIntMatrix2D learningCells = new SparseIntMatrix2D(regions[regInd].numColumns * regions[regInd].cellsPerColumn, 2);
             int lenLearningCells = 0;
-            for (int j = 0; j < region.numColumns; j++) {
-                for (int k = 0; k < region.cellsPerColumn; k++) {
-                    if (region.columns[j].cells[k].learnState.get(t) && !(c == j && i == k)) {
+            for (int j = 0; j < regions[regInd].numColumns; j++) {
+                for (int k = 0; k < regions[regInd].cellsPerColumn; k++) {
+                    if (regions[regInd].columns[j].cells[k].learnState.get(t) && !(c == j && i == k)) {
                         learningCells.setQuick(lenLearningCells , 0, j);
                         learningCells.setQuick(lenLearningCells , 1, k);
                         lenLearningCells++;
                     }
                 }
             }
-            for (int k = 0; k < region.newSynapseCount - length; k++) {
+            for (int k = 0; k < regions[regInd].newSynapseCount - length; k++) {
                 int[] idx;
                 idx = learningCells.viewRow(r.nextInt(lenLearningCells - 1)).toArray();
-                activeSynapses[length] = new Synapse(idx[0], idx[1], region.initialPerm);
+                activeSynapses[length] = new Synapse(idx[0], idx[1], regions[regInd].initialPerm);
                 length++;
             }
 
@@ -317,7 +310,7 @@ public class Cortex {
     этого шага любым синапсам из segmentUpdate, которые только что
     появились, добавляется значение initialPerm.
      */
-    private void adaptSegments(SegmentUpdate[] segmentList, boolean positiveReinforcement) {
+    private void adaptSegments(int regInd, SegmentUpdate[] segmentList, boolean positiveReinforcement) {
         for (SegmentUpdate segUpd: segmentList) {
             if (segUpd == null) break;
             if (segUpd.segmentIndex[2] < 0) {
@@ -328,12 +321,12 @@ public class Cortex {
                     newSegment.synapsesNum++;
                 }
                 newSegment.sequenceSegment = segUpd.sequenceSegment;
-                Cell i = region.columns[segUpd.segmentIndex[0]].cells[segUpd.segmentIndex[1]];
+                Cell i = regions[regInd].columns[segUpd.segmentIndex[0]].cells[segUpd.segmentIndex[1]];
                 i.dendriteSegments[i.dendriteSegmentsNum] = newSegment;
                 i.dendriteSegmentsNum++;
-                region.columns[segUpd.segmentIndex[0]].cells[segUpd.segmentIndex[1]] = i;
+                regions[regInd].columns[segUpd.segmentIndex[0]].cells[segUpd.segmentIndex[1]] = i;
             } else {
-                Segment seg = region.columns[segUpd.segmentIndex[0]].cells[segUpd.segmentIndex[1]].dendriteSegments[segUpd.segmentIndex[2]];
+                Segment seg = regions[regInd].columns[segUpd.segmentIndex[0]].cells[segUpd.segmentIndex[1]].dendriteSegments[segUpd.segmentIndex[2]];
                 seg.sequenceSegment = segUpd.sequenceSegment;
                 for (Synapse syn : seg.synapses) {
                     if (syn == null) break;
@@ -346,14 +339,14 @@ public class Cortex {
 
                     if (flag) {
                         if (positiveReinforcement)
-                            syn.permanence += region.permanenceInc;
+                            syn.permanence += regions[regInd].permanenceInc;
                         else
-                            syn.permanence -= region.permanenceDec;
+                            syn.permanence -= regions[regInd].permanenceDec;
                     } else {
                         if (positiveReinforcement)
-                            syn.permanence -= region.permanenceDec;
+                            syn.permanence -= regions[regInd].permanenceDec;
                         else
-                            syn.permanence += region.permanenceInc;
+                            syn.permanence += regions[regInd].permanenceInc;
                     }
                 }
                 for (Synapse syn : segUpd.activeSynapses) {
@@ -386,22 +379,22 @@ public class Cortex {
 
     private Random rnd = new Random();
 
-    public void initSynapsesDefault(Column column) {
-        for (int i = 0; i < region.numColumns; i++) {
-            int dimX = rnd.nextInt(region.xDimension);
-            int dimY = rnd.nextInt(region.yDimension);
-            double perm = region.connectedPerm + region.connectedPerm / 2.0 - (rnd.nextDouble() / 10.0);
-            double adjustment = Math.sqrt((((column.x - dimX)) ^ 2 + ((column.y - dimY)) ^ 2) / (region.xDimension + region.yDimension));
+    public void initSynapsesDefault(int regInd, Column column) {
+        for (int i = 0; i < regions[regInd].numColumns; i++) {
+            int dimX = rnd.nextInt(regions[regInd].getXDim());
+            int dimY = rnd.nextInt(regions[regInd].getYDim());
+            double perm = regions[regInd].connectedPerm + regions[regInd].connectedPerm / 2.0 - (rnd.nextDouble() / 10.0);
+            double adjustment = Math.sqrt((((column.x - dimX)) ^ 2 + ((column.y - dimY)) ^ 2) / (regions[regInd].getXDim() + regions[regInd].getYDim()));
 
             column.potentialSynapses[column.potentialSynapsesNum] = new Synapse(dimX, dimY, Math.max(perm - adjustment, 0.0));
             column.potentialSynapsesNum++;
         }
     }
 
-    public void initSynapsesTest(Column column, int numInputs, double[] permArr) {
+    public void initSynapsesTest(int regInd, Column column, int numInputs, double[] permArr) {
         for (int i = 0; i < numInputs; i++) {
-            int dimX = rnd.nextInt(region.xDimension);
-            int dimY = rnd.nextInt(region.yDimension);
+            int dimX = rnd.nextInt(regions[regInd].getXDim());
+            int dimY = rnd.nextInt(regions[regInd].getYDim());
 
             column.potentialSynapses[column.potentialSynapsesNum] = new Synapse(dimX, dimY, permArr[i]);
             column.potentialSynapsesNum++;
@@ -410,51 +403,50 @@ public class Cortex {
 
     public void sInitializationDefault() {
 
-        region.addColumns();
+        for (int i = 0 ; i < numRegions; i++) {
+            regions[i].addColumns();
+            regions[i].activeColumns = new DenseIntMatrix2D(3, regions[i].numColumns + 1); //моменты t по вертикали, индексы колонок по горизонтали
+            inputBits = new BitMatrix(regions[i].getXDim(), regions[i].getYDim());
+            inputXDim = regions[i].getXDim();
+            inputYDim = regions[i].getYDim();
 
-        activeColumns = new DenseIntMatrix2D(3, region.numColumns+1); //моменты t по вертикали, индексы колонок по горизонтали
-        inputBits = new BitMatrix(region.yDimension, region.xDimension);
-        inputXDim = region.xDimension;
-        inputYDim = region.yDimension;
+            for (Column c : regions[i].columns) {
+                if (c == null) break;
+                initSynapsesDefault(i, c);
+            }
 
-        for (Column c : region.columns) {
-            if (c == null) break;
-            initSynapsesDefault(c);
+            updateInhibitionRadius(i);
         }
-
-        updateInhibitionRadius();
-        ///////////////////////////
-        // loadProperties();
-        // checkProperties();
     }
 
-    public void updateInhibitionRadius(){
-        region.inhibitionRadius = region.averageReceptiveFieldSize();
+    public void updateInhibitionRadius(int i){
+        regions[i].inhibitionRadius = regions[i].averageReceptiveFieldSize();
     }
 
 
     public void sInitializationTest(int[] inputDim, int[] columnDim) {
+        /*for (int i = 0 ; i < numRegions; i++) {
+            regions[i].xDimension = columnDim[0];
+            regions[i].yDimension = columnDim[1];
+            regions[i].cellsPerColumn = columnDim[2];
+            regions[i].connectedPerm = 0.5;
+            regions[i].addColumns();
 
-        region.xDimension = columnDim[0];
-        region.yDimension = columnDim[1];
-        region.cellsPerColumn = columnDim[2];
-        region.connectedPerm = 0.5;
-        region.addColumns();
-
-        activeColumns = new DenseIntMatrix2D(3, region.numColumns+1); //моменты t по вертикали, индексы колонок по горизонтали
-        inputBits = new BitMatrix(region.yDimension , region.xDimension);
-        inputXDim = region.xDimension;
-        inputYDim = region.yDimension;
+            regions[i].activeColumns = new DenseIntMatrix2D(3, regions[i].numColumns + 1); //моменты t по вертикали, индексы колонок по горизонтали
+            inputBits = new BitMatrix(regions[i].yDimension, regions[i].xDimension);
+            inputXDim = regions[i].xDimension;
+            inputYDim = regions[i].yDimension;
+        }*/
     }
 
 
 
-    public double updateOverlapDutyCycle(int c) {
+    public double updateOverlapDutyCycle(int regInd, int c) {
         double value = 0.0;
-        if (region.columns[c].overlap > region.minOverlap) {
+        if (regions[regInd].columns[c].overlap > regions[regInd].minOverlap) {
             value = 1.0;
         }
-        return (value + totalTime * region.columns[c].overlapDutyCycle) / (totalTime + 1);
+        return (value + totalTime * regions[regInd].columns[c].overlapDutyCycle) / (totalTime + 1);
     }
 
     /*
@@ -466,6 +458,7 @@ public class Cortex {
      */
     public void setInput2DMatrix(BitMatrix inputAtT){
         inputBits = inputAtT;
+
         /*
             for (int i = 0; i < inputXDim; i++){
                 for (int j = 0; j <  inputYDim; j++){
@@ -477,8 +470,8 @@ public class Cortex {
     }
 
 
-    public void sOverlap() {
-        for(Column c: region.columns) {
+    public void sOverlap(int regInd) {
+        for(Column c: regions[regInd].columns) {
             if (c == null) break;
             c.overlap = 0.0;
 
@@ -503,7 +496,7 @@ public class Cortex {
     На второй фазе вычисляется какие из колонок остаются победителями после применения взаимного подавления.
     Параметр desiredLocalActivity контролирует число колонок, которые останутся победителями.
      */
-    public void sInhibition() {
+    public void sInhibition(int regInd) {
 /*
        System.out.print("before sInhibition: activeColumns contains:\n");
         for (int i = 0; i < 3; i++) {
@@ -514,17 +507,17 @@ public class Cortex {
 */
         int i = 0;
         int activeColumnsAtTlength = 1;
-        for(Column c : region.columns){
+        for(Column c : regions[regInd].columns){
             if (c == null) break;
-            double minLocalActivity = region.GetMinLocalActivity(i);
+            double minLocalActivity = regions[regInd].GetMinLocalActivity(i);
             double overlap = c.overlap;
             if (overlap > 0.0 && overlap >= minLocalActivity) {
-                activeColumns.setQuick(time, activeColumnsAtTlength , i);
+                regions[regInd].activeColumns.setQuick(time, activeColumnsAtTlength, i);
                 activeColumnsAtTlength++;
             }
             i++;
         }
-        activeColumns.setQuick(time,0,activeColumnsAtTlength-1);
+        regions[regInd].activeColumns.setQuick(time, 0, activeColumnsAtTlength - 1);
 /*
             System.out.print("after sInhibition: activeColumns contains:\n");
             for (int j = 0; j < 3; j++) {
@@ -542,15 +535,15 @@ public class Cortex {
         Для победивших колонок, если их синапс был активен, его значение перманентности увеличивается,
     а иначе – уменьшается. Значения перманентности ограничены промежутком от 0.0 до 1.0 .
      */
-    public void sLearning() {
-        for (int c = 1 ; c <= activeColumns.viewRow(time).getQuick(0); c++){
-           for (Synapse s: region.columns[activeColumns.viewRow(time).getQuick(c)].potentialSynapses){
+    public void sLearning(int regInd) {
+        for (int c = 1 ; c <= regions[regInd].activeColumns.viewRow(time).getQuick(0); c++){
+           for (Synapse s: regions[regInd].columns[regions[regInd].activeColumns.viewRow(time).getQuick(c)].potentialSynapses){
                 if (s == null) break;
                 if (input(s.c, s.i)) {
-                    s.permanence += region.permanenceInc;
+                    s.permanence += regions[regInd].permanenceInc;
                     s.permanence = Math.min(s.permanence, 1.0);
                 } else {
-                    s.permanence -= region.permanenceDec;
+                    s.permanence -= regions[regInd].permanenceDec;
                     s.permanence = Math.max(s.permanence, 0.0);
                 }
             }
@@ -563,20 +556,20 @@ public class Cortex {
         в overlapDutyCycle), увеличиваются их значения перманентности.
     */
         int i = 0;
-        for (Column c : region.columns) {
+        for (Column c : regions[regInd].columns) {
             if (c == null) break;
-            c.minDutyCycle = 0.01 * region.maxDutyCycle(region.neighbours(i));
-            c.activeDutyCycle = updateActiveDutyCycle(i);
+            c.minDutyCycle = 0.01 * regions[regInd].maxDutyCycle(regions[regInd].neighbours(i));
+            c.activeDutyCycle = updateActiveDutyCycle(regInd, i);
             c.boost = c.boostFunction();
-            c.overlapDutyCycle = updateOverlapDutyCycle(i);
+            c.overlapDutyCycle = updateOverlapDutyCycle(regInd, i);
 
             if (c.overlapDutyCycle < c.minDutyCycle) {
-                c.increasePermanences(0.1 * region.connectedPerm);
+                c.increasePermanences(0.1 * regions[regInd].connectedPerm);
             }
             i++;
         }
 
-        updateInhibitionRadius();
+        updateInhibitionRadius(regInd);
     }
 
     /*
@@ -589,24 +582,24 @@ public class Cortex {
     Если же текущий прямой вход снизу не был предсказан, тогда все клетки становятся активными и кроме того, клетка, лучше всего соответствующая
     входным данным, выбирается для обучения, причем ей добавляется новый латеральный дендритный сегмент.
      */
-    public void tCellStates() {
-        for (int c = 1 ; c <= activeColumns.viewRow(time).getQuick(0); c++){
+    public void tCellStates(int regInd) {
+        for (int c = 1 ; c <= regions[regInd].activeColumns.viewRow(time).getQuick(0); c++){
             boolean buPredicted = false;
             boolean lcChosen = false;
 
             int ind=0;
-            int colInd = activeColumns.viewRow(time).getQuick(c);
-            for (Cell i: region.columns[colInd].cells) {
+            int colInd = regions[regInd].activeColumns.viewRow(time).getQuick(c);
+            for (Cell i: regions[regInd].columns[colInd].cells) {
                 if (i == null) break;
                 if (i.predictiveState.get(time - 1 > 0 ? time - 1 : 0)) {
 
-                    int[] s = getActiveSegment(colInd, ind, time - 1 > 0 ? time - 1 : 0, State.active);
-                    if (s[2] >= 0 && region.columns[s[0]].cells[s[1]].dendriteSegments[s[2]].sequenceSegment) {
+                    int[] s = getActiveSegment(regInd, colInd, ind, time - 1 > 0 ? time - 1 : 0, State.active);
+                    if (s[2] >= 0 && regions[regInd].columns[s[0]].cells[s[1]].dendriteSegments[s[2]].sequenceSegment) {
 
                         buPredicted = true;
                         i.activeState.put(time, true);
 
-                        if (segmentActive(region.columns[s[0]].cells[s[1]].dendriteSegments[s[2]], time - 1 > 0 ? time - 1 : 0, State.learn)) {
+                        if (segmentActive(regInd, regions[regInd].columns[s[0]].cells[s[1]].dendriteSegments[s[2]], time - 1 > 0 ? time - 1 : 0, State.learn)) {
                             lcChosen = true;
                             i.learnState.put(time, true);
                         }
@@ -616,22 +609,22 @@ public class Cortex {
             }
 
             if (!buPredicted) {
-                for (Cell i:  region.columns[colInd].cells) {
+                for (Cell i:  regions[regInd].columns[colInd].cells) {
                     if (i== null) break;
                     i.activeState.put(time, true);
                 }
             }
 
             if (!lcChosen) {
-                int[] lc = getBestMatchingCell(colInd, time - 1 > 0 ? time - 1 : 0);
-                region.columns[colInd].cells[lc[1]].learnState.put(time, true);
+                int[] lc = getBestMatchingCell(regInd, colInd, time - 1 > 0 ? time - 1 : 0);
+                regions[regInd].columns[colInd].cells[lc[1]].learnState.put(time, true);
                 if (time - 1 >= 0) {
-                    SegmentUpdate sUpdate = getSegmentActiveSynapses(colInd, lc[1], time - 1, lc[2], true);
+                    SegmentUpdate sUpdate = getSegmentActiveSynapses(regInd,colInd, lc[1], time - 1, lc[2], true);
                     sUpdate.sequenceSegment = true;
-                    Cell q = region.columns[colInd].cells[lc[1]];
+                    Cell q = regions[regInd].columns[colInd].cells[lc[1]];
                     q.segmentUpdateList[q.segmentUpdateListNum] = sUpdate;
                     q.segmentUpdateListNum++;
-                    region.columns[colInd].cells[lc[1]] = q ;
+                    regions[regInd].columns[colInd].cells[lc[1]] = q ;
                 }
             }
         }
@@ -647,23 +640,23 @@ public class Cortex {
         б) усиление сегментов которые могли бы предсказать данную активацию, т.е. сегментов которые соответствуют (возможно, пока слабо)
         активности на предыдущем временном шаге.
     */
-    public void tPredictiveStates() {
+    public void tPredictiveStates(int regInd) {
         int ind_c = 0;
-        for (Column c: region.columns) {
+        for (Column c: regions[regInd].columns) {
             if (c == null) break;
             int ind_i = 0;
             for (Cell i : c.cells){
                 if (i == null) break;
                 for (int s = 0; s < i.dendriteSegmentsNum; s++) {
-                    if (segmentActive(i.dendriteSegments[s], time, State.active)) {
+                    if (segmentActive(regInd, i.dendriteSegments[s], time, State.active)) {
                         i.predictiveState.put(time, true);
                         //a
-                        SegmentUpdate activeUpdate = getSegmentActiveSynapses(ind_c, ind_i, time, s, false);
+                        SegmentUpdate activeUpdate = getSegmentActiveSynapses(regInd, ind_c, ind_i, time, s, false);
                         i.segmentUpdateList[i.segmentUpdateListNum] = activeUpdate;
                         i.segmentUpdateListNum++;
                         //б
-                        int[] predSegment = getBestMatchingSegment(ind_c, ind_i, time - 1 > 0 ? time - 1 : 0);
-                        SegmentUpdate predUpdate = getSegmentActiveSynapses(ind_c, ind_i, time - 1 > 0 ? time - 1 : 0, predSegment[2], true);
+                        int[] predSegment = getBestMatchingSegment(regInd, ind_c, ind_i, time - 1 > 0 ? time - 1 : 0);
+                        SegmentUpdate predUpdate = getSegmentActiveSynapses(regInd, ind_c, ind_i, time - 1 > 0 ? time - 1 : 0, predSegment[2], true);
                         i.segmentUpdateList[i.segmentUpdateListNum] = predUpdate;
                         i.segmentUpdateListNum++;
                     }
@@ -681,31 +674,32 @@ public class Cortex {
     в том случае если колонка клетки активирована прямым входом и эта клетка выбрана в качестве кандидатки для обучения .
     В противном случае, если клетка по каким-либо причинам перестала предсказывать, мы ослабляем ее латеральные сегменты
      */
-    public void tLearning() {
-        for (Column c: region.columns) {
+    public void tLearning(int regInd) {
+        for (Column c: regions[regInd].columns) {
             if (c == null) break;
             for (Cell i : c.cells) {
                 if (i == null) break;
                 if (i.learnState.get(time)) {
-                    adaptSegments(i.segmentUpdateList, true);
+                    adaptSegments(regInd, i.segmentUpdateList, true);
                 } else if (!i.predictiveState.get(time) &&
                         i.predictiveState.get(time - 1 > 0 ? time - 1 : 0)) {
-                    adaptSegments(i.segmentUpdateList, false);
+                    adaptSegments(regInd, i.segmentUpdateList, false);
                 }
                 i.clearSegmentUpdateList();
             }
         }
     }
 
-    public BitMatrix getColumnsMapAtT(int t){
-        BitMatrix matrix = new BitMatrix(region.yDimension , region.xDimension);
+    public BitMatrix getColumnsMapAtT(int regInd, int t){
+        BitMatrix matrix = new BitMatrix(regions[regInd].getXDim() , regions[regInd].getYDim());
         int c = 0 , r = 0;
         int len = 1;
-        for (int i = 0; i < region.numColumns ; i++)
-        {
-            if (i!= 0 && i % region.yDimension == 0) {r++; c = 0;}
 
-            if (i == activeColumns.viewRow(t).get(len) && len <= activeColumns.viewRow(t).get(0)){
+        for (int i = 0; i < regions[regInd].numColumns ; i++)
+        {
+            if (i!= 0 && i % regions[regInd].getXDim() == 0) {r++; c = 0;}
+
+            if (i == regions[regInd].activeColumns.viewRow(t).get(len) && len <= regions[regInd].activeColumns.viewRow(t).get(0)){
                 matrix.put(c , r, true);
                 len++;
             }
@@ -717,28 +711,34 @@ public class Cortex {
         return matrix;
     }
 
+    public void interactRegions(){
+        for (int i = 0; i < numRegions; i++){
+            sOverlap(i);
+            sInhibition(i);
+            sLearning(i);
+            tCellStates(i);
+            tPredictiveStates(i);
+            tLearning(i);
+            //change input matrix
+            inputBits = getColumnsMapAtT(i, time);
+        }
+    }
+
     public void timestep() {
         time++;
         totalTime++;
 
         if (totalTime > 2) {
             time--;
-            //activeColumns.remove(time - 2);
-/*
-            System.out.print("activeColumns contains 1:\n");
-            for (int i = 0; i < 3; i++){
-                for (int j = 0; j < 30 ; j++)
-                    System.out.print(activeColumns.get(i, j) + " ");
-                System.out.print("\n");
-            }
-*/
-            for (int i = 0; i < 2 ; i++)
-                for (int j = 0 ; j < region.numColumns + 1 ; j++){
-                    activeColumns.setQuick(i, j, activeColumns.getQuick(i+1,j));
+            for (Region region : regions) {
+                if (region == null) break;
+                for (int i = 0; i < 2; i++)
+                    for (int j = 0; j < region.numColumns + 1; j++) {
+                        region.activeColumns.setQuick(i, j, region.activeColumns.getQuick(i + 1, j));
+                    }
+                for (int j = 0; j < region.numColumns + 1; j++) {
+                    region.activeColumns.setQuick(2, j, 0);
                 }
-            for (int j = 0 ; j < region.numColumns + 1 ; j++) {
-                activeColumns.setQuick(2, j, 0);
-            }
 /*
             System.out.print("activeColumns contains 2:\n");
             for (int i = 0; i < 3; i++){
@@ -748,18 +748,19 @@ public class Cortex {
             }
 */
 
-            for (Column c : region.columns)
-                for (Cell i : c.cells) {
-                    //удаляем 0-ой элемент, сдвигаем остальное
-                    for (int j = 1 ; j < 3 ; j++){
-                        i.predictiveState.put(j-1, i.predictiveState.get(j));
-                        i.learnState.put(j-1, i.learnState.get(j));
-                        i.activeState.put(j-1, i.activeState.get(j));
+                for (Column c : region.columns)
+                    for (Cell i : c.cells) {
+                        //удаляем 0-ой элемент, сдвигаем остальное
+                        for (int j = 1; j < 3; j++) {
+                            i.predictiveState.put(j - 1, i.predictiveState.get(j));
+                            i.learnState.put(j - 1, i.learnState.get(j));
+                            i.activeState.put(j - 1, i.activeState.get(j));
+                        }
+                        i.predictiveState.put(2, false);
+                        i.learnState.put(2, false);
+                        i.activeState.put(2, false);
                     }
-                    i.predictiveState.put(2,false);
-                    i.learnState.put(2,false);
-                    i.activeState.put(2,false);
-                }
+            }
         }
 /*
         for (Column c : region.columns)
