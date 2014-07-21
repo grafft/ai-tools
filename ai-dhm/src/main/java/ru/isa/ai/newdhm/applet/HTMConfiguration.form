@@ -291,7 +291,7 @@
           <background awt-color="white"/>
           <enabled value="false"/>
           <horizontalAlignment value="11"/>
-          <text value="10"/>
+          <text value="20"/>
           <toolTipText value="Region X Dimension"/>
         </properties>
       </component>
@@ -306,7 +306,7 @@
           <background awt-color="white"/>
           <enabled value="false"/>
           <horizontalAlignment value="11"/>
-          <text value="20"/>
+          <text value="10"/>
           <toolTipText value="Region Y Dimension "/>
         </properties>
       </component>
@@ -314,7 +314,7 @@
         <constraints>
           <grid row="2" column="3" row-span="30" col-span="2" vsize-policy="3" hsize-policy="7" anchor="8" fill="2" indent="0" use-parent-layout="false">
             <minimum-size width="150" height="150"/>
-            <preferred-size width="600" height="400"/>
+            <preferred-size width="500" height="400"/>
           </grid>
         </constraints>
         <properties/>

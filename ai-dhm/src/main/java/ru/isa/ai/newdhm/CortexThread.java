@@ -45,9 +45,9 @@ public class CortexThread extends Thread {
     }
 
     public BitMatrix getInputMatrixAtTDefault(int ind){
-        BitMatrix matrix = new BitMatrix(cr.regions[ind].xDimension ,cr.regions[ind].yDimension);
-        for(int i = 0 ; i < cr.regions[ind].xDimension; i++)
-            for (int j = 0; j < cr.regions[ind].yDimension; j++){
+        BitMatrix matrix = new BitMatrix(cr.regions[ind].getXDim() ,cr.regions[ind].getYDim());
+        for(int i = 0 ; i < cr.regions[ind].getXDim(); i++)
+            for (int j = 0; j < cr.regions[ind].getYDim(); j++){
                 int value = cr.time % 2 > 0 ? rnd.nextInt(2) : Math.sin(i + j + cr.totalTime) > 0 ? 1 : 0;
                 matrix.put(i, j, (value == 1) ? true : false);
             }

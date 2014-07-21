@@ -76,6 +76,10 @@ public class ImageClass extends JPanel {
         imageType = bi.getType();
     }
 
+    public BufferedImage getBufferedImage(){
+        return bi;
+    }
+
     public void loadBufferedIm(Image im) {
         image = im;
         width = image.getWidth(this);
@@ -103,7 +107,7 @@ public class ImageClass extends JPanel {
         Color col_white = new Color(255, 255, 255);
         for (int j = 0; j < h; j++)
             for (int i = 0; i < w; i++) {
-                if (m.get(i, j) == false)
+                if (m.get(i, j) == true)
                     im.setRGB(i, j, col_black.getRGB());
                 else
                     im.setRGB(i, j, col_white.getRGB());

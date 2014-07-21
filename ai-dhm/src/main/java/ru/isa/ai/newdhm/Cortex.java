@@ -16,8 +16,8 @@ public class Cortex {
     // Список всех колонок
     public Region[] regions;
     private int numRegions;
-    public int inputXDim = 0;
-    public int inputYDim = 0;
+    private int inputXDim = 0;
+    private int inputYDim = 0;
     private BitMatrix inputBits;
     private final int SYNAPSE_MEM_SIZE = 1000;
 
@@ -39,6 +39,14 @@ public class Cortex {
     }
     /////////////////////////////////////////////////////////////////////////
 
+    public int getInputXDim(){
+        return inputXDim;
+    }
+
+    public int getInputYDim(){
+        return inputYDim;
+    }
+
     /*
     Вход для данного уровня в момент времени t. input(t, j) = 1
 если j-ый бит входа = 1.
@@ -49,7 +57,7 @@ public class Cortex {
     }
 
     public boolean input(int c, int i){
-        boolean val = inputBits.get(i,c);
+        boolean val = inputBits.get(c,i);
         return val;
     }
     /*
@@ -373,10 +381,10 @@ public class Cortex {
 
     public void initSynapsesDefault(int regInd, Column column) {
         for (int i = 0; i < regions[regInd].numColumns; i++) {
-            int dimX = rnd.nextInt(regions[regInd].xDimension);
-            int dimY = rnd.nextInt(regions[regInd].yDimension);
+            int dimX = rnd.nextInt(regions[regInd].getXDim());
+            int dimY = rnd.nextInt(regions[regInd].getYDim());
             double perm = regions[regInd].connectedPerm + regions[regInd].connectedPerm / 2.0 - (rnd.nextDouble() / 10.0);
-            double adjustment = Math.sqrt((((column.x - dimX)) ^ 2 + ((column.y - dimY)) ^ 2) / (regions[regInd].xDimension + regions[regInd].yDimension));
+            double adjustment = Math.sqrt((((column.x - dimX)) ^ 2 + ((column.y - dimY)) ^ 2) / (regions[regInd].getXDim() + regions[regInd].getYDim()));
 
             column.potentialSynapses[column.potentialSynapsesNum] = new Synapse(dimX, dimY, Math.max(perm - adjustment, 0.0));
             column.potentialSynapsesNum++;
@@ -385,8 +393,8 @@ public class Cortex {
 
     public void initSynapsesTest(int regInd, Column column, int numInputs, double[] permArr) {
         for (int i = 0; i < numInputs; i++) {
-            int dimX = rnd.nextInt(regions[regInd].xDimension);
-            int dimY = rnd.nextInt(regions[regInd].yDimension);
+            int dimX = rnd.nextInt(regions[regInd].getXDim());
+            int dimY = rnd.nextInt(regions[regInd].getYDim());
 
             column.potentialSynapses[column.potentialSynapsesNum] = new Synapse(dimX, dimY, permArr[i]);
             column.potentialSynapsesNum++;
@@ -398,9 +406,9 @@ public class Cortex {
         for (int i = 0 ; i < numRegions; i++) {
             regions[i].addColumns();
             regions[i].activeColumns = new DenseIntMatrix2D(3, regions[i].numColumns + 1); //моменты t по вертикали, индексы колонок по горизонтали
-            inputBits = new BitMatrix(regions[i].yDimension, regions[i].xDimension);
-            inputXDim = regions[i].xDimension;
-            inputYDim = regions[i].yDimension;
+            inputBits = new BitMatrix(regions[i].getXDim(), regions[i].getYDim());
+            inputXDim = regions[i].getXDim();
+            inputYDim = regions[i].getYDim();
 
             for (Column c : regions[i].columns) {
                 if (c == null) break;
@@ -683,12 +691,13 @@ public class Cortex {
     }
 
     public BitMatrix getColumnsMapAtT(int regInd, int t){
-        BitMatrix matrix = new BitMatrix(regions[regInd].yDimension , regions[regInd].xDimension);
+        BitMatrix matrix = new BitMatrix(regions[regInd].getXDim() , regions[regInd].getYDim());
         int c = 0 , r = 0;
         int len = 1;
+
         for (int i = 0; i < regions[regInd].numColumns ; i++)
         {
-            if (i!= 0 && i % regions[regInd].yDimension == 0) {r++; c = 0;}
+            if (i!= 0 && i % regions[regInd].getXDim() == 0) {r++; c = 0;}
 
             if (i == regions[regInd].activeColumns.viewRow(t).get(len) && len <= regions[regInd].activeColumns.viewRow(t).get(0)){
                 matrix.put(c , r, true);

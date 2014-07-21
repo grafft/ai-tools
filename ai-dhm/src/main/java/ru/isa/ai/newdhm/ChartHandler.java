@@ -126,9 +126,14 @@ public class ChartHandler {
         }
         Integer time = cfg.crtx.cr.time - 1 > 0 ? cfg.crtx.cr.time - 1 : 0;
         if (inp) {
+            /*
             for (int i = 0; i < cfg.crtx.cr.regions[regInd].xDimension; i++) {
                 for (int j = 0; j < cfg.crtx.cr.regions[regInd].xDimension; j++) {           ///////////////////////?????????
                     traceINP.addPoint(i + j, (cfg.crtx.cr.input(i,j) == true) ? 1 : 0);
+                }*/
+                for (int j = 0; j < cfg.crtx.cr.regions[regInd].getYDim(); j++) {
+                    for (int i = 0; i < cfg.crtx.cr.regions[regInd].getXDim(); i++) {           ///////////////////////?????????
+                        traceINP.addPoint(i + j, (cfg.crtx.cr.input(i,j) == true) ? 1 : 0);
                 }
             }
         }
@@ -139,7 +144,7 @@ public class ChartHandler {
         //if (cfg.crtx.r.activeColumns.size() > 0)
         int index = cfg.crtx.cr.time - 1 > 0 ? cfg.crtx.cr.time - 1 : 0;
         buf += "Active Columns: " + cfg.crtx.cr.regions[regInd].activeColumns.viewRow(index).getQuick(0) + "\r\n";
-        for (int c = 0; c < cfg.crtx.cr.regions[regInd].xDimension * cfg.crtx.cr.regions[regInd].yDimension; c++) {
+        for (int c = 0; c < cfg.crtx.cr.regions[regInd].getXDim() * cfg.crtx.cr.regions[regInd].getYDim(); c++) {
 
             if (over) {
                 traceO.addPoint(c, cfg.crtx.cr.regions[regInd].columns[c].overlap);

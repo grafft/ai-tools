@@ -8,8 +8,8 @@ public class Region {
     public Column[] columns;
 
     public int numColumns = 0;
-    public int xDimension;
-    public int yDimension;
+    private int xDimension;
+    private int yDimension;
 
     /*Список индексов колонок – победителей благодаря прямым
     входным данным. (Выход пространственного группировщика)
@@ -237,6 +237,7 @@ inhibitionRadius колонки c.
    public double getInhibitionRadius(){
         return inhibitionRadius;
     }
-
-   public void setInhibitionRadius(double value) {inhibitionRadius = value;}
+   public void setInhibitionRadius(double value) {inhibitionRadius = value; }
+   public int getXDim() {return this.xDimension; }
+   public int getYDim() {return this.yDimension; }
 }

@@ -91,8 +91,8 @@ public class HTMConfiguration {
     private final double INITIAL_PERMANENCE_DEFAULT = 0.1;
     private final double MINIMAL_THRESHOLD_DEFAULT = 4.0;
     private final double NEW_SYNAPSES_COUNT_DEFAULT = 30.0;
-    private final double REGION_X_DIMENSION_DEFAULT = 10.0;
-    private final double REGION_Y_DIMENSION_DEFAULT = 20.0;
+    private final double REGION_X_DIMENSION_DEFAULT = 20.0;
+    private final double REGION_Y_DIMENSION_DEFAULT = 10.0;
 
     // загрузка свойств из файла
     ImageClass img;
@@ -124,6 +124,10 @@ public class HTMConfiguration {
         textField10.addPropertyChangeListener(new textField10PropertyChangeListener());
         textField11.addPropertyChangeListener(new textField11PropertyChangeListener());
         textField12.addPropertyChangeListener(new textField12PropertyChangeListener());
+
+        // from 1 to 10, in 1.0 steps start value 1.0
+        SpinnerNumberModel model = new SpinnerNumberModel(1, 1, 10, 1);
+        spinnerNumRegs.setModel(model);
 
         loadImage();
     }
@@ -355,10 +359,6 @@ public class HTMConfiguration {
             }
         }
     }
-
-
-//флаг из инитид - поднят, если все настройки заданы корректно и вообще заданы для конкретного региона
-//если все флаги подняты, значит кортекс может отрабатывать
 
     private class PutNumOfRegionsButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -674,6 +674,7 @@ public class HTMConfiguration {
                 crtx.MakeStep();
                 if (numOfRegions > 1)
                     UPButton.setEnabled(true);
+                makeStepButton.setEnabled(false);
             }
     }
 
@@ -684,7 +685,7 @@ public class HTMConfiguration {
             f.setContentPane(cl.activeColumnsPanel_main);
             f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             f.pack();
-            cl.draw(crtx, 0);
+            cl.draw(crtx, 0, -1);
             f.setVisible(true);
         }
     }
