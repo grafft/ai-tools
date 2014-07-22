@@ -592,8 +592,8 @@
         </constraints>
         <properties>
           <background color="-986896"/>
-          <enabled value="false"/>
-          <text value="Load settings from file"/>
+          <enabled value="true"/>
+          <text value="Load settings from files"/>
         </properties>
       </component>
       <component id="89c19" class="javax.swing.JButton" binding="setSettingsButton">
@@ -694,6 +694,15 @@
           <background awt-color="white"/>
           <enabled value="false"/>
           <text value="Stop Cortex"/>
+        </properties>
+      </component>
+      <component id="8cfab" class="javax.swing.JButton" binding="savePropertiesToFileButton">
+        <constraints>
+          <grid row="16" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <enabled value="false"/>
+          <text value="Save settings to files"/>
         </properties>
       </component>
     </children>
