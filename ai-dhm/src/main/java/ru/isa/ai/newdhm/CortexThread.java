@@ -1,7 +1,7 @@
 package ru.isa.ai.newdhm;
 
 import cern.colt.matrix.tbit.BitMatrix;
-import com.sun.scenario.Settings;
+//import com.sun.scenario.Settings;
 import info.monitorenter.gui.chart.Chart2D;
 import ru.isa.ai.newdhm.applet.HTMConfiguration;
 import ru.isa.ai.newdhm.applet.ImageClass;
