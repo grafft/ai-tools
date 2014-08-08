@@ -29,9 +29,10 @@ public class CortexThread extends Thread {
     }
 
     public void Init(Chart2D chart1, Chart2D chart2, HTMConfiguration configuration) {
-        cr.sInitializationDefault();
-        chartHandler = new ChartHandler(chart1, chart2, configuration);
         img = configuration.getImg();
+        cr.sInitializationDefault(img.getW(), img.getH());
+        chartHandler = new ChartHandler(chart1, chart2, configuration);
+
     }
 
     public void drawOnChart(int regInd){
