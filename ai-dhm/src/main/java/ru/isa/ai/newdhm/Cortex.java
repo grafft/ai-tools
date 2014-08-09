@@ -16,8 +16,8 @@ public class Cortex {
     // Список всех колонок
     public Region[] regions;
     private int numRegions;
-    private int inputXDim = 0;
-    private int inputYDim = 0;
+    private int inputImageXDim = 0;
+    private int inputImageYDim = 0;
     private BitMatrix inputBits;
     private final int SYNAPSE_MEM_SIZE = 1000;
 
@@ -38,14 +38,6 @@ public class Cortex {
         }
     }
     /////////////////////////////////////////////////////////////////////////
-
-    public int getInputXDim(){
-        return inputXDim;
-    }
-
-    public int getInputYDim(){
-        return inputYDim;
-    }
 
     /*
     Вход для данного уровня в момент времени t. input(t, j) = 1
@@ -406,27 +398,21 @@ public class Cortex {
     public void sInitializationDefault(int inputW, int inputH) {
 
         inputBits = new BitMatrix(inputW, inputH);
-        inputXDim = inputW;
-        inputYDim = inputH;
+        inputImageXDim = inputW;
+        inputImageYDim = inputH;
 
         for (int i = 0 ; i < numRegions; i++) {
             regions[i].addColumns();
             regions[i].activeColumns = new DenseIntMatrix2D(3, regions[i].numColumns + 1); //моменты t по вертикали, индексы колонок по горизонтали
 
-            int x_dim = 0;
-            int y_dim = 0;
-            if (i == 0) {
-                x_dim = inputXDim;
-                y_dim = inputYDim;
-            }
-            else{
-                x_dim = regions[i-1].getXDim();
-                y_dim = regions[i-1].getYDim();
-            }
+            if (i == 0)
+                regions[i].setInputDimensions(inputImageXDim, inputImageYDim);
+            else
+                regions[i].setInputDimensions(regions[i-1].getXDim(), regions[i-1].getYDim());
 
             for (Column c : regions[i].columns) {
                 if (c == null) break;
-                initSynapsesDefault(i, c, x_dim, y_dim);
+                initSynapsesDefault(i, c, regions[i].getInputXDim(), regions[i].getInputYDim());
             }
 
             updateInhibitionRadius(i);
@@ -473,8 +459,8 @@ public class Cortex {
     public void setInput2DMatrix(BitMatrix inputAtT){
         inputBits = new BitMatrix(inputAtT.columns(),inputAtT.rows());
         inputBits = inputAtT;
-        inputXDim = inputAtT.columns();
-        inputYDim = inputAtT.rows();
+        inputImageXDim = inputAtT.columns();
+        inputImageYDim = inputAtT.rows();
         /*
             for (int i = 0; i < inputXDim; i++){
                 for (int j = 0; j <  inputYDim; j++){
@@ -729,8 +715,8 @@ public class Cortex {
 
     private void setNewInputMatrix(int i){
         inputBits = new BitMatrix(regions[i].getXDim() , regions[i].getYDim());
-        inputXDim = regions[i].getXDim();
-        inputYDim = regions[i].getYDim();
+        inputImageXDim = regions[i].getXDim();
+        inputImageYDim = regions[i].getYDim();
         inputBits = getColumnsMapAtT(i, time);
     }
 
