@@ -162,8 +162,8 @@ class HighlightableArea extends JPanel {
             this.down_squaresNumPerH = crtx.cr.regions[indOfDOWNreg].getYDim();
         }
         else {
-            this.down_squaresNumPerW = crtx.cr.getInputXDim();
-            this.down_squaresNumPerH = crtx.cr.getInputYDim();
+            this.down_squaresNumPerW = crtx.cr.regions[0].getInputXDim();
+            this.down_squaresNumPerH = crtx.cr.regions[0].getInputYDim();
         }
 
         addMouseListener(new MouseHandler());
@@ -173,6 +173,9 @@ class HighlightableArea extends JPanel {
     public void paintGrid(){
         this.repaint();
     }
+
+    /*
+    //DO NOT DELETE !!!
 
     public Point findPointForLinksVis(Point p1, Point p2, Point pp1, Point pp2){
         Point p = new Point();
@@ -204,6 +207,7 @@ class HighlightableArea extends JPanel {
         p.y = -(int)(ch_y / zn);
         return p;
     }
+    */
 
     private void drawFilledRectangle(Graphics2D g2, int hx, int hy, double dx, double dy, Color color, int colInd) {
         g2.setColor(color);
@@ -240,10 +244,14 @@ class HighlightableArea extends JPanel {
                 int down_right_for_input_x = down_left_for_input_x + input_square_w;
                 int down_right_for_input_y = down_left_for_input_y;
 
-                g2.setColor(Color.blue);
-                g2.fillPolygon(new int[]{up_left_for_input_x, down_left_for_input_x, down_right_for_input_x, up_right_for_input_x},
+                g2.setColor(Color.red);
+               /* g2.fillPolygon(new int[]{up_left_for_input_x, down_left_for_input_x, down_right_for_input_x, up_right_for_input_x},
                         new int[]{up_left_for_input_y, down_left_for_input_y, down_right_for_input_y, up_right_for_input_y}
-                        , 4);
+                        , 4); */
+                g2.fillOval((up_right_for_input_x - up_left_for_input_x)/2 + up_left_for_input_x , (down_left_for_input_y - up_left_for_input_y) /2 + up_left_for_input_y , 4,4);
+                /*
+                //draw lines and "sun", DO NOT DELETE !!!
+
                 int x1 = down_left_x + (up_right_x - down_left_x) / 2;
                 int y1 = up_left_y + (down_left_y - up_left_y) / 2;
                 int x2 = up_left_for_input_x + (up_right_for_input_x - up_left_for_input_x) / 2;
@@ -268,6 +276,7 @@ class HighlightableArea extends JPanel {
                         g2.drawLine(potentPoint1.x +2, potentPoint1.y+1, x2, y2);
                     else
                         g2.drawLine(potentPoint2.x +2, potentPoint2.y+1, x2, y2);
+                */
             }
         }
     }
@@ -290,8 +299,8 @@ class HighlightableArea extends JPanel {
         BitMatrix m = new BitMatrix(up_squaresNumPerW , up_squaresNumPerH);
         m = crtx.cr.getColumnsMapAtT(indOfUPreg, curTime);
         Color c;
-        for (int j = 0; j <  crtx.cr.getInputYDim(); j++)
-            for (int i = 0; i < crtx.cr.getInputXDim(); i++)
+        for (int j = 0; j <  crtx.cr.regions[indOfUPreg].getYDim(); j++)  //////////////////////////!!!!!!!!!!!!!!!!!!!
+            for (int i = 0; i < crtx.cr.regions[indOfUPreg].getXDim(); i++)
             {
                 c = (m.get(i, j) == false) ?  Color.gray : Color.lightGray;
                 drawFilledRectangle(g2, i, j, dx, dy, c , -1);

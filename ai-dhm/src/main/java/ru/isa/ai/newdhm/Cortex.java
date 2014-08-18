@@ -16,8 +16,8 @@ public class Cortex {
     // Список всех колонок
     public Region[] regions;
     private int numRegions;
-    private int inputXDim = 0;
-    private int inputYDim = 0;
+    private int inputImageXDim = 0;
+    private int inputImageYDim = 0;
     private BitMatrix inputBits;
     private final int SYNAPSE_MEM_SIZE = 1000;
 
@@ -38,14 +38,6 @@ public class Cortex {
         }
     }
     /////////////////////////////////////////////////////////////////////////
-
-    public int getInputXDim(){
-        return inputXDim;
-    }
-
-    public int getInputYDim(){
-        return inputYDim;
-    }
 
     /*
     Вход для данного уровня в момент времени t. input(t, j) = 1
@@ -379,10 +371,12 @@ public class Cortex {
 
     private Random rnd = new Random();
 
-    public void initSynapsesDefault(int regInd, Column column) {
+    public void initSynapsesDefault(int regInd, Column column, int x_dim, int y_dim) {
         for (int i = 0; i < regions[regInd].numColumns; i++) {
-            int dimX = rnd.nextInt(regions[regInd].getXDim());
-            int dimY = rnd.nextInt(regions[regInd].getYDim());
+            //int dimX = rnd.nextInt(regions[regInd].getXDim());
+            //int dimY = rnd.nextInt(regions[regInd].getYDim());
+            int dimX = rnd.nextInt(x_dim);
+            int dimY = rnd.nextInt(y_dim);
             double perm = regions[regInd].connectedPerm + regions[regInd].connectedPerm / 2.0 - (rnd.nextDouble() / 10.0);
             double adjustment = Math.sqrt((((column.x - dimX)) ^ 2 + ((column.y - dimY)) ^ 2) / (regions[regInd].getXDim() + regions[regInd].getYDim()));
 
@@ -401,18 +395,24 @@ public class Cortex {
         }
     }
 
-    public void sInitializationDefault() {
+    public void sInitializationDefault(int inputW, int inputH) {
+
+        inputBits = new BitMatrix(inputW, inputH);
+        inputImageXDim = inputW;
+        inputImageYDim = inputH;
 
         for (int i = 0 ; i < numRegions; i++) {
             regions[i].addColumns();
             regions[i].activeColumns = new DenseIntMatrix2D(3, regions[i].numColumns + 1); //моменты t по вертикали, индексы колонок по горизонтали
-            inputBits = new BitMatrix(regions[i].getXDim(), regions[i].getYDim());
-            inputXDim = regions[i].getXDim();
-            inputYDim = regions[i].getYDim();
+
+            if (i == 0)
+                regions[i].setInputDimensions(inputImageXDim, inputImageYDim);
+            else
+                regions[i].setInputDimensions(regions[i-1].getXDim(), regions[i-1].getYDim());
 
             for (Column c : regions[i].columns) {
                 if (c == null) break;
-                initSynapsesDefault(i, c);
+                initSynapsesDefault(i, c, regions[i].getInputXDim(), regions[i].getInputYDim());
             }
 
             updateInhibitionRadius(i);
@@ -457,8 +457,10 @@ public class Cortex {
     Если полученное число будет меньше minOverlap, то мы устанавливаем значение перекрытия в ноль.
      */
     public void setInput2DMatrix(BitMatrix inputAtT){
+        inputBits = new BitMatrix(inputAtT.columns(),inputAtT.rows());
         inputBits = inputAtT;
-
+        inputImageXDim = inputAtT.columns();
+        inputImageYDim = inputAtT.rows();
         /*
             for (int i = 0; i < inputXDim; i++){
                 for (int j = 0; j <  inputYDim; j++){
@@ -711,6 +713,13 @@ public class Cortex {
         return matrix;
     }
 
+    private void setNewInputMatrix(int i){
+        inputBits = new BitMatrix(regions[i].getXDim() , regions[i].getYDim());
+        inputImageXDim = regions[i].getXDim();
+        inputImageYDim = regions[i].getYDim();
+        inputBits = getColumnsMapAtT(i, time);
+    }
+
     public void interactRegions(){
         for (int i = 0; i < numRegions; i++){
             sOverlap(i);
@@ -720,7 +729,7 @@ public class Cortex {
             tPredictiveStates(i);
             tLearning(i);
             //change input matrix
-            inputBits = getColumnsMapAtT(i, time);
+            setNewInputMatrix(i);
         }
     }
 

@@ -9,16 +9,17 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 import ru.isa.ai.newdhm.Region;
 import javax.swing.event.DocumentEvent;
+import java.io.File;
 
 public class HTMConfiguration {
+    //text fields
     private JTextField textField1;
     private JTextField textField2;
-    private JPanel mainPanel;
-    private JButton runCortexButton;
     private JTextField textField3;
     private JTextField textField4;
     private JTextField textField5;
@@ -29,9 +30,22 @@ public class HTMConfiguration {
     private JTextField textField10;
     private JTextField textField11;
     private JTextField textField12;
-    public JTextPane textPane1;
-    private Chart2D chart2D1;
+
+    //buttons
+    private JButton runCortexButton;
     private JButton stopCortexButton;
+    private JButton makeStepButton;
+    private JButton loadPropertiesFromFileButton;
+    private JButton showActiveColumnsButton;
+    private JButton setSettingsButton;
+    private JButton putNumOfRegionsButton;
+    private JButton UPButton;
+    private JButton DOWNButton;
+    private JButton previousRegSettingsButton;
+    private JButton nextRegSettingsButton;
+    private JButton savePropertiesToFileButton;
+
+    //check boxes
     public JCheckBox showDendritesGraphCheckBox;
     public JCheckBox showSynapsesPermanenceCheckBox;
     public JCheckBox showActiveCellsCheckBox;
@@ -42,41 +56,49 @@ public class HTMConfiguration {
     public JCheckBox showMinDutyCycleCheckBox;
     public JCheckBox showBoostCheckBox;
     public JCheckBox showOverlapsDutyCycleCheckBox;
-    private JButton makeStepButton;
     public JCheckBox inputsGraphicsCheckBox;
-    private JTabbedPane tabbedPane1;
-    private Chart2D chart2D2;
-    private JPanel casmiPanel;
     public JCheckBox drawDendritesTimlineCheckBox;
-    private JButton loadPropertiesFromFileButton;
-    private JButton showActiveColumnsButton;
+
+    //labels
     private JLabel numRegions;
-    private JSpinner spinnerNumRegs;
-    private JButton putNumOfRegionsButton;
     private JLabel numOfRegToInit;
-    private JButton setSettingsButton;
     private JLabel setVisualizParameters;
     private JLabel ruleTheMainProcess;
     private JLabel regionNum;
-    private JButton UPButton;
-    private JButton DOWNButton;
-    private JButton previousRegSettingsButton;
-    private JButton nextRegSettingsButton;
     private JLabel numOfReg;
     private JLabel regToDraw;
+
+    //panels
+    private JPanel mainPanel;
+    public JTextPane textPane1;
+    private JTabbedPane tabbedPane1;
+
+    //charts
+    private Chart2D chart2D1;
+    private Chart2D chart2D2;
+
+    //spinners
+    private JSpinner spinnerNumRegs;
+    private JPanel ActiveColsVisGenView;
+    private JPanel ActiveColsSelectedView;
+
+    //frames
     private JFrame f;
+
+    //HTM Comfiguration properties
     private int numOfRegions;
     private Settings[] settings;
-    private boolean[] regIsInited;
-    //final private int REGIONS_AMOUNT = 1;
-    public CortexThread crtx ;//= new CortexThread(REGIONS_AMOUNT);
+    public CortexThread crtx;
     static HTMConfiguration panel;
     private ActiveColumnsVisualization cl;
+    public ImageClass img;
+    final private int NUM_OF_PARAMETERS_FOR_1_REG = 12;
+    final private int MAX_NUM_OF_REGIONS = 10;
 
-    private final String SP_PROP_FILENAME = "htm.properties";
-    private final String IMAGE_PATH = "src/main/resources/image1.png"; //"D:\\work_folder\\image1.png";
-    private String filePropName = SP_PROP_FILENAME;
-    private String imagePath; // = IMAGE_PATH;
+    private String filePropName;
+    private String imagePath;
+    private String PROPERTY_POSTFIX = ".properties";
+    private String path;
 
     //group of default values for properties
     private final double DESIRED_LOCAL_ACTIVITY_DEFAULT = 20.0;
@@ -92,12 +114,10 @@ public class HTMConfiguration {
     private final double REGION_X_DIMENSION_DEFAULT = 20.0;
     private final double REGION_Y_DIMENSION_DEFAULT = 10.0;
 
-    // загрузка свойств из файла
-    ImageClass img;
-    final private int NUM_OF_PARAMETERS_FOR_1_REG = 12;
-
     public HTMConfiguration () {
-        imagePath = HTMConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "image1.png";
+        path = HTMConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        imagePath = path + "image1.png";
+
         //buttons
         stopCortexButton.addActionListener(new StopCortexButtonListener());
         makeStepButton.addActionListener(new MakeStepButtonListener());
@@ -110,6 +130,8 @@ public class HTMConfiguration {
         setSettingsButton.addActionListener(new SetSettingsButtonListener());
         previousRegSettingsButton.addActionListener(new PreviousRegSettingsButtonListener());
         nextRegSettingsButton.addActionListener(new NextRegSettingsButtonListener());
+        savePropertiesToFileButton.addActionListener(new SavePropertiesToFileButtonListener());
+
         //text - editors
         textField1.getDocument().addDocumentListener(new DocumentListener1());
         textField2.getDocument().addDocumentListener(new DocumentListener2());
@@ -125,23 +147,22 @@ public class HTMConfiguration {
         textField12.getDocument().addDocumentListener(new DocumentListener12());
 
         // from 1 to 10, in 1.0 steps start value 1.0
-        SpinnerNumberModel model = new SpinnerNumberModel(1, 1, 10, 1);
+        SpinnerNumberModel model = new SpinnerNumberModel(1, 1, MAX_NUM_OF_REGIONS, 1);
         spinnerNumRegs.setModel(model);
 
         loadImage();
     }
 
-    private class PutNumOfRegionsButtonListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            numOfRegions = (Integer)spinnerNumRegs.getValue();
-            if  (numOfRegions > 0) {
-                //crtx = new CortexThread(numOfRegions, settings);
-                //regIsInited = new boolean[numOfRegions];
-                settings = new Settings[numOfRegions];
-                for (int i = 0; i < numOfRegions; i++){
-                    settings[i] = new Settings();
-                }
+    private void prepareInterfaceAndValues(int numOfRegions_, boolean textFieldsAvailable){
+        numOfRegions = numOfRegions_;
+        if  (numOfRegions > 0) {
 
+            settings = new Settings[numOfRegions];
+            for (int i = 0; i < numOfRegions; i++) {
+                settings[i] = new Settings();
+            }
+
+            if (textFieldsAvailable){
                 /////////////////////////////////////////////////////
                 //edits for settings  should be enabled
                 textField1.setEnabled(true);
@@ -156,14 +177,20 @@ public class HTMConfiguration {
                 textField10.setEnabled(true);
                 textField11.setEnabled(true);
                 textField12.setEnabled(true);
-                //////////////////////////////////////////////////////
-                //buttons
-                if (numOfRegions > 1) nextRegSettingsButton.setEnabled(true);
-                setSettingsButton.setEnabled(true);
-                putNumOfRegionsButton.setEnabled(false);
-                loadPropertiesFromFileButton.setEnabled(true);
             }
 
+            //buttons
+            if (numOfRegions > 1) nextRegSettingsButton.setEnabled(true);
+            setSettingsButton.setEnabled(true);
+            putNumOfRegionsButton.setEnabled(false);
+            spinnerNumRegs.setEnabled(false);
+        }
+    }
+
+    private class PutNumOfRegionsButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            prepareInterfaceAndValues((Integer)spinnerNumRegs.getValue(), true);
+            savePropertiesToFileButton.setEnabled(true);
         }
     }
 
@@ -309,62 +336,90 @@ public class HTMConfiguration {
     }
 
     public void loadProperties() throws RegionInitializationException { //загрузка данных в массив settings[]
-        Logger logger = LogManager.getLogger(Region.class.getSimpleName());
-        Properties properties = new Properties();
-        try {
-            FileInputStream input = new FileInputStream(filePropName);
-            properties.load(input);/*
-            for (String name : properties.stringPropertyNames()) {
-                switch (name) {
-                    case "desiredLocalActivity":
-                        crtx.cr.region.desiredLocalActivity = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "minOverlap":
-                        crtx.cr.region.minOverlap = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "connectedPerm":
-                        crtx.cr.region.connectedPerm = Double.parseDouble(properties.getProperty(name));
-                        break;
-                    case "permanenceInc":
-                        crtx.cr.region.permanenceInc = Double.parseDouble(properties.getProperty(name));
-                        break;
-                    case "permanenceDec":
-                        crtx.cr.region.permanenceDec = Double.parseDouble(properties.getProperty(name));
-                        break;
-                    case "cellsPerColumn":
-                        crtx.cr.region.cellsPerColumn = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "activationThreshold":
-                        crtx.cr.region.activationThreshold = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "initialPerm":
-                        crtx.cr.region.initialPerm = Double.parseDouble(properties.getProperty(name));
-                        break;
-                    case "minThreshold":
-                        crtx.cr.region.minThreshold = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "newSynapseCount":
-                        crtx.cr.region.newSynapseCount = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "xDimension":
-                        crtx.cr.region.xDimension = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "yDimension":
-                        crtx.cr.region.yDimension = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    default:
-                        logger.error("Illegal property name: " + name);
-                        break;
-                }
-            }*/
-            input.close();
-        } catch (IOException e) {
-            throw new RegionInitializationException("Cannot load properties file " + filePropName, e);
-        } catch (NumberFormatException nfe) {
-            throw new RegionInitializationException("Wrong property value in property file " + filePropName, nfe);
-        }
-    }
 
+        File listFile = new File(path);
+        File exportFiles[] = listFile.listFiles();
+        String[] names = new String[exportFiles.length];
+        int numOfFilesWithSettings = 0;
+        for (int i = 0; i < names.length; i++) {
+            if (exportFiles[i].getName().contains(PROPERTY_POSTFIX)) {
+                names[i] = exportFiles[i].getName();
+                numOfFilesWithSettings++;
+            }
+        }
+        /*
+        for (int i = 1; i <= numOfFilesWithSettings; i++){
+            System.out.print(names[i]+ "\n");
+        }*/
+
+        prepareInterfaceAndValues(numOfFilesWithSettings, true);
+        spinnerNumRegs.setValue(numOfFilesWithSettings);
+
+        Logger logger = LogManager.getLogger(Region.class.getSimpleName());
+
+        if (numOfFilesWithSettings != 0) {
+            for (int i = 0; i < numOfFilesWithSettings; i++) {
+                Properties properties = new Properties();
+                try {
+                    filePropName = path + names[i + 1];
+                    FileInputStream input = new FileInputStream(filePropName);
+                    properties.load(input);
+                    for (String name : properties.stringPropertyNames()) {
+                        switch (name) {
+                            case "desiredLocalActivity":
+                                settings[i].initialParameters[0] = Double.parseDouble(properties.getProperty(name));
+                                break;
+                            case "minOverlap":
+                                settings[i].initialParameters[1] = Double.parseDouble(properties.getProperty(name));
+                                break;
+                            case "connectedPerm":
+                                settings[i].initialParameters[2] = Double.parseDouble(properties.getProperty(name));
+                                break;
+                            case "permanenceInc":
+                                settings[i].initialParameters[3] = Double.parseDouble(properties.getProperty(name));
+                                break;
+                            case "permanenceDec":
+                                settings[i].initialParameters[4] = Double.parseDouble(properties.getProperty(name));
+                                break;
+                            case "cellsPerColumn":
+                                settings[i].initialParameters[5] = Double.parseDouble(properties.getProperty(name));
+                                break;
+                            case "activationThreshold":
+                                settings[i].initialParameters[6] = Double.parseDouble(properties.getProperty(name));
+                                break;
+                            case "initialPerm":
+                                settings[i].initialParameters[7] = Double.parseDouble(properties.getProperty(name));
+                                break;
+                            case "minThreshold":
+                                settings[i].initialParameters[8] = Double.parseDouble(properties.getProperty(name));
+                                break;
+                            case "newSynapseCount":
+                                settings[i].initialParameters[9] = Double.parseDouble(properties.getProperty(name));
+                                break;
+                            case "xDimension":
+                                settings[i].initialParameters[10] = Double.parseDouble(properties.getProperty(name));
+                                break;
+                            case "yDimension":
+                                settings[i].initialParameters[11] = Double.parseDouble(properties.getProperty(name));
+                                break;
+                            default:
+                                logger.error("Illegal property name: " + name);
+                                break;
+                        }
+                    }
+                    input.close();
+                } catch (IOException e) {
+                    throw new RegionInitializationException("Cannot load properties file " + filePropName, e);
+                } catch (NumberFormatException nfe) {
+                    throw new RegionInitializationException("Wrong property value in property file " + filePropName, nfe);
+                }
+            }
+        }
+
+        setSettingsButton.doClick();
+        setSettingsButton.setEnabled(false);
+        savePropertiesToFileButton.setEnabled(true);
+    }
 
     /*
     private void checkProperties() throws RegionInitializationException {
@@ -382,33 +437,47 @@ public class HTMConfiguration {
     */
 
     public void saveProperties() throws RegionInitializationException {
-        Properties properties = new Properties();/*
-        try {
-            properties.setProperty("desiredLocalActivity",String.valueOf(crtx.cr.region.desiredLocalActivity));
-            properties.setProperty("minOverlap",String.valueOf(crtx.cr.region.minOverlap));
-            properties.setProperty("connectedPerm",String.valueOf(crtx.cr.region.connectedPerm));
-            properties.setProperty("permanenceInc", String.valueOf(crtx.cr.region.permanenceInc));
-            properties.setProperty("permanenceDec", String.valueOf(crtx.cr.region.permanenceDec));
-            properties.setProperty("activationThreshold",String.valueOf(crtx.cr.region.activationThreshold));
-            properties.setProperty("initialPerm",String.valueOf(crtx.cr.region.initialPerm));
-            properties.setProperty("minThreshold",String.valueOf(crtx.cr.region.minThreshold));
-            properties.setProperty("newSynapseCount",String.valueOf(crtx.cr.region.newSynapseCount));
-            properties.setProperty("xDimension",String.valueOf(crtx.cr.region.xDimension));
-            properties.setProperty("yDimension",String.valueOf(crtx.cr.region.yDimension));
+        int numOfFiles = (Integer)spinnerNumRegs.getValue();
 
-            FileOutputStream output = new FileOutputStream(filePropName);
-            properties.store(output,"Saved settings");
-            output.close();
+        for (int i = 0; i < numOfFiles; i++) {
+            Properties properties = new Properties();
+            try {
+                properties.setProperty("desiredLocalActivity",String.valueOf(settings[i].initialParameters[0]));
+                properties.setProperty("minOverlap",String.valueOf(settings[i].initialParameters[1]));
+                properties.setProperty("connectedPerm",String.valueOf(settings[i].initialParameters[2]));
+                properties.setProperty("permanenceInc", String.valueOf(settings[i].initialParameters[3]));
+                properties.setProperty("permanenceDec", String.valueOf(settings[i].initialParameters[4]));
+                properties.setProperty("cellsPerColumn", String.valueOf(settings[i].initialParameters[5]));
+                properties.setProperty("activationThreshold",String.valueOf(settings[i].initialParameters[6]));
+                properties.setProperty("initialPerm",String.valueOf(settings[i].initialParameters[7]));
+                properties.setProperty("minThreshold",String.valueOf(settings[i].initialParameters[8]));
+                properties.setProperty("newSynapseCount",String.valueOf(settings[i].initialParameters[9]));
+                properties.setProperty("xDimension",String.valueOf(settings[i].initialParameters[10]));
+                properties.setProperty("yDimension",String.valueOf(settings[i].initialParameters[11]));
 
-        } catch (IOException e) {
-            throw new RegionInitializationException("Cannot save properties file " + filePropName, e);
-        }*/
+                filePropName = path + "htm" + String.valueOf(i) + PROPERTY_POSTFIX;
+                FileOutputStream output = new FileOutputStream(filePropName);
+                properties.store(output,"Saved settings");
+                output.close();
+
+            } catch (IOException e) {
+                throw new RegionInitializationException("Cannot save properties file " + filePropName, e);
+            }
+            }
+    }
+
+    private class SavePropertiesToFileButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            try{
+                saveProperties();
+            }
+            catch (RegionInitializationException ex){
+                System.out.println("caught " + ex);
+            }
+        }
     }
 
     public class LoadPropertiesButtonGUIListener implements ActionListener  {
-        //crtx = new CortexThread();
-        ////////////////////////////////////////////////////////
-
         public void actionPerformed (ActionEvent event) {
             try{
                 loadProperties();
@@ -419,7 +488,6 @@ public class HTMConfiguration {
                     System.out.println("caught " + e);
             }
         }
-
     }
 
     public class RunCortexButtonListener implements ActionListener {
