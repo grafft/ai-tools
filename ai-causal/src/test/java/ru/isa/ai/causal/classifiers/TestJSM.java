@@ -3,6 +3,7 @@ package ru.isa.ai.causal.classifiers;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import ru.isa.ai.causal.jsm.AbstractJSMAnalyzer;
 import ru.isa.ai.causal.jsm.AnshakovJSMAnalyzer;
 import ru.isa.ai.causal.jsm.BooleanArrayUtils;
 
@@ -25,7 +26,7 @@ public class TestJSM extends TestCase{
     public void testJSM() {
         List<BitSet> arrays = new ArrayList<>();
         AnshakovJSMAnalyzer analyzer = new AnshakovJSMAnalyzer(null, null);
-        AnshakovJSMAnalyzer.FactBase factBase = analyzer.new FactBase();
+        AnshakovJSMAnalyzer.FactBase factBase = new AbstractJSMAnalyzer.FactBase();
         BitSet firstUnique = new BitSet(4);
         firstUnique.set(0);
         firstUnique.set(3);
@@ -58,7 +59,7 @@ public class TestJSM extends TestCase{
 
     public void testIntersection(){
         AnshakovJSMAnalyzer analyzer = new AnshakovJSMAnalyzer(null, null);
-        AnshakovJSMAnalyzer.FactBase factBase = analyzer.new FactBase();
+        AnshakovJSMAnalyzer.FactBase factBase = new AbstractJSMAnalyzer.FactBase();
 
         factBase.plusExamples.put(0, BitSet.valueOf(new byte[]{0b0000001}));
         factBase.plusExamples.put(1, BitSet.valueOf(new byte[]{0b0000011}));
@@ -76,7 +77,7 @@ public class TestJSM extends TestCase{
 
     public void testReasons(){
         AnshakovJSMAnalyzer analyzer = new AnshakovJSMAnalyzer(null, null);
-        AnshakovJSMAnalyzer.FactBase factBase = analyzer.new FactBase();
+        AnshakovJSMAnalyzer.FactBase factBase = new AbstractJSMAnalyzer.FactBase();
 
         factBase.plusExamples.put(0, BitSet.valueOf(new byte[]{0b0001001}));
         factBase.plusExamples.put(1, BitSet.valueOf(new byte[]{0b0001011}));
