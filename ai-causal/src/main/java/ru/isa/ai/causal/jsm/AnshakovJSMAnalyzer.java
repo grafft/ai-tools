@@ -15,15 +15,15 @@ public class AnshakovJSMAnalyzer extends AbstractJSMAnalyzer {
         super(classDescription, data);
     }
 
-    public List<Intersection> reasons(FactBase factBase, int deep) {
-        List<Intersection> hypothesis = new ArrayList<>();
+    public List<JSMIntersection> reasons(JSMFactBase factBase, int deep) {
+        List<JSMIntersection> hypothesis = new ArrayList<>();
 
         // 1. Находим минимальные пересечения над объектами, обладающими свойством
-        List<Intersection> intersections = searchIntersection(factBase.plusExamples, true);
+        List<JSMIntersection> intersections = searchIntersection(factBase.plusExamples, true);
         // упорядочиваем их по убыванию мощности множеств образующих
         Collections.sort(intersections);
         // 2. Для любого минимального пересечения:
-        for (Intersection intersection : intersections) {
+        for (JSMIntersection intersection : intersections) {
             // 2.1. Ищем объект из объектов, не обладающих свойством, в который входит это пересечение (его индекс)
             int minusObject = -1;
             for (Map.Entry<Integer, BitSet> entry : factBase.minusExamples.entrySet()) {
@@ -37,7 +37,7 @@ public class AnshakovJSMAnalyzer extends AbstractJSMAnalyzer {
                 hypothesis.add(intersection);
             } else {
                 // положительные примеры - это множество образующих с вычтенным пересечением
-                FactBase newFactBase = new FactBase();
+                JSMFactBase newFactBase = new JSMFactBase();
                 for (Integer objectId : intersection.generators) {
                     newFactBase.plusExamples.put(objectId, BooleanArrayUtils.andNot(factBase.plusExamples.get(objectId), intersection.value));
                 }
@@ -46,9 +46,9 @@ public class AnshakovJSMAnalyzer extends AbstractJSMAnalyzer {
                     newFactBase.minusExamples.put(entry.getKey(), BooleanArrayUtils.andNot(entry.getValue(), intersection.value));
                 }
                 // с полученными новыми мнжествами примеров и усеченным универсумом - ищем причины
-                List<Intersection> toAdd = reasons(newFactBase, deep + 1);
-                for (Intersection inter : toAdd) {
-                    Intersection clone = intersection.clone();
+                List<JSMIntersection> toAdd = reasons(newFactBase, deep + 1);
+                for (JSMIntersection inter : toAdd) {
+                    JSMIntersection clone = intersection.clone();
                     clone.add(inter);
                     if (BooleanArrayUtils.cardinality(clone.value) <= maxHypothesisLength) {
                         hypothesis.add(clone);
@@ -59,7 +59,7 @@ public class AnshakovJSMAnalyzer extends AbstractJSMAnalyzer {
         // 3. Включаем в гипотезы объекты, не входящие во множество образующих ни одного минимального пересечения
         for (Map.Entry<Integer, BitSet> entry : factBase.plusExamples.entrySet()) {
             boolean toAdd = true;
-            for (Intersection inter : intersections) {
+            for (JSMIntersection inter : intersections) {
                 if (inter.generators.contains(entry.getKey())) {
                     toAdd = false;
                     break;
@@ -67,10 +67,10 @@ public class AnshakovJSMAnalyzer extends AbstractJSMAnalyzer {
             }
             // если его размер не слишеом велик
             if (toAdd && BooleanArrayUtils.cardinality(entry.getValue()) <= maxHypothesisLength)
-                hypothesis.add(new Intersection(entry.getValue(), entry.getKey()));
+                hypothesis.add(new JSMIntersection(entry.getValue(), entry.getKey()));
         }
         // 4. Исключаем из гипотез те гипотезы, которые являются надмножествами других
-        List<Intersection> toDel = new ArrayList<>();
+        List<JSMIntersection> toDel = new ArrayList<>();
         for (int i = 0; i < hypothesis.size(); i++) {
             for (int j = 0; j < hypothesis.size(); j++) {
                 if (i != j && BooleanArrayUtils.include(hypothesis.get(i).value, hypothesis.get(j).value)) {
@@ -79,20 +79,20 @@ public class AnshakovJSMAnalyzer extends AbstractJSMAnalyzer {
                 }
             }
         }
-        for (Intersection inter : toDel)
+        for (JSMIntersection inter : toDel)
             hypothesis.remove(inter);
         return hypothesis;
     }
 
-    public List<Intersection> searchIntersection(Map<Integer, BitSet> objectMap, boolean check) {
-        List<Intersection> intersections = new ArrayList<>();
+    public List<JSMIntersection> searchIntersection(Map<Integer, BitSet> objectMap, boolean check) {
+        List<JSMIntersection> intersections = new ArrayList<>();
 
         Map<Integer, BitSet> objects = new HashMap<>();
         int firstKey = -1;
-        Intersection intersection = null;
+        JSMIntersection intersection = null;
         for (Map.Entry<Integer, BitSet> entry : objectMap.entrySet()) {
             if (firstKey == -1) {
-                intersection = new Intersection(entry.getValue(), entry.getKey());
+                intersection = new JSMIntersection(entry.getValue(), entry.getKey());
                 firstKey = entry.getKey();
             } else {
                 objects.put(entry.getKey(), entry.getValue());
@@ -121,8 +121,8 @@ public class AnshakovJSMAnalyzer extends AbstractJSMAnalyzer {
             // в случае несовпадения результата с имнимальным пересечением исключить последнее из
             // множества минимальных пересечений
             if (check) {
-                List<Intersection> toDel = new ArrayList<>();
-                for (Intersection inter : intersections) {
+                List<JSMIntersection> toDel = new ArrayList<>();
+                for (JSMIntersection inter : intersections) {
                     List<BitSet> generators = new ArrayList<>();
                     for (Map.Entry<Integer, BitSet> entry : objectMap.entrySet()) {
                         if (inter.generators.contains(entry.getKey()))
@@ -132,7 +132,7 @@ public class AnshakovJSMAnalyzer extends AbstractJSMAnalyzer {
                     if (!BooleanArrayUtils.equals(inter.value, result))
                         toDel.add(inter);
                 }
-                for (Intersection inter : toDel)
+                for (JSMIntersection inter : toDel)
                     intersections.remove(inter);
             }
         }

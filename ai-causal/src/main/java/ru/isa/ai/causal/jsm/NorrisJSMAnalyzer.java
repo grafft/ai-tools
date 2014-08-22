@@ -3,10 +3,7 @@ package ru.isa.ai.causal.jsm;
 import ru.isa.ai.causal.classifiers.AQClassDescription;
 import weka.core.Instances;
 
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Author: Aleksandr Panov
@@ -20,68 +17,75 @@ public class NorrisJSMAnalyzer extends AbstractJSMAnalyzer {
     }
 
     @Override
-    public List<Intersection> reasons(FactBase factBase, int deep) {
-        List<Intersection> plusInter = searchIntersection(factBase.plusExamples);
-        List<Intersection> toRemove = new ArrayList<>();
-        for (Intersection inter : plusInter) {
+    public List<JSMIntersection> reasons(JSMFactBase factBase, int deep) {
+        List<JSMIntersection> plusInter = searchIntersection(factBase.plusExamples);
+        List<JSMIntersection> toRemove = new ArrayList<>();
+        for (JSMIntersection inter : plusInter) {
             if (inter.generators.size() < minGeneratrixSize)
                 toRemove.add(inter);
         }
         plusInter.removeAll(toRemove);
         toRemove.clear();
-        List<Intersection> minusInter = searchIntersection(factBase.minusExamples);
-        for (Intersection inter : minusInter) {
+        List<JSMIntersection> minusInter = searchIntersection(factBase.minusExamples);
+        for (JSMIntersection inter : minusInter) {
             if (inter.generators.size() < minGeneratrixSize)
                 toRemove.add(inter);
         }
         minusInter.removeAll(toRemove);
         toRemove.clear();
-        for (Intersection interP : plusInter) {
-            for (Intersection interM : minusInter) {
+        for (JSMIntersection interP : plusInter) {
+            for (JSMIntersection interM : minusInter) {
                 if (interP.equals(interM) || BooleanArrayUtils.include(interM.value, interP.value)
                         || BooleanArrayUtils.include(interP.value, interM.value))
                     toRemove.add(interP);
             }
         }
         plusInter.removeAll(toRemove);
-        return null;
+        return plusInter;
     }
 
-    public List<Intersection> searchIntersection(Map<Integer, BitSet> objectMap) {
-        List<Intersection> intersections = new ArrayList<>();
-        for (Map.Entry<Integer, BitSet> entry : objectMap.entrySet()) {
-            if (intersections.size() == 0) {
-                intersections.add(new Intersection(entry.getValue(), entry.getKey()));
+    public List<JSMIntersection> searchIntersection(Map<Integer, BitSet> examples) {
+        List<JSMIntersection> hypotheses = new ArrayList<>();
+        Map<Integer, BitSet> viewedExamples = new HashMap<>();
+        for (Map.Entry<Integer, BitSet> example : examples.entrySet()) {
+            if (hypotheses.size() == 0) {
+                hypotheses.add(new JSMIntersection(example.getValue(), example.getKey()));
             } else {
-                boolean flag = false;
-                for (Intersection inter : intersections) {
-                    if (inter.value.equals(entry.getValue())) {
-                        inter.generators.add(entry.getKey());
-                        flag = true;
-                    } else if (BooleanArrayUtils.include(entry.getValue(), inter.value)) {
-                        inter.generators.add(entry.getKey());
-                    } else if (BooleanArrayUtils.include(inter.value, entry.getValue())) {
-                        inter.generators.add(entry.getKey());
-                        flag = true;
+                List<JSMIntersection> toAdd = new ArrayList<>();
+                for (JSMIntersection hyp : hypotheses) {
+                    if (hyp.value.equals(example.getValue()) || BooleanArrayUtils.include(example.getValue(), hyp.value)) {
+                        hyp.generators.add(example.getKey());
                     } else {
-                        BitSet result = BooleanArrayUtils.and(inter.value, entry.getValue());
-                        boolean toAdd = true;
-                        for (Integer parent : inter.generators) {
-                            if (!BooleanArrayUtils.include(objectMap.get(parent), result)) {
-                                toAdd = false;
-                                break;
+                        BitSet result = BooleanArrayUtils.and(hyp.value, example.getValue());
+                        if (BooleanArrayUtils.cardinality(result) > 0) {
+                            boolean addHyp = true;
+                            for (Map.Entry<Integer, BitSet> ex : viewedExamples.entrySet()) {
+                                if (BooleanArrayUtils.include(ex.getValue(), result) && !hyp.generators.contains(ex.getKey())) {
+                                    addHyp = false;
+                                    break;
+                                }
                             }
-                        }
-                        if (BooleanArrayUtils.cardinality(result) > 0 && toAdd) {
-                            Intersection newInter = new Intersection(result, inter.generators);
-                            newInter.generators.add(entry.getKey());
+                            if (addHyp) {
+                                JSMIntersection newInter = new JSMIntersection(result, hyp.generators);
+                                newInter.generators.add(example.getKey());
+                                toAdd.add(newInter);
+                            }
                         }
                     }
                 }
-                if (flag)
-                    intersections.add(new Intersection(entry.getValue(), entry.getKey()));
+                hypotheses.addAll(toAdd);
+                boolean addExample = true;
+                for (Map.Entry<Integer, BitSet> ex : viewedExamples.entrySet()) {
+                    if(BooleanArrayUtils.include(ex.getValue(), example.getValue())){
+                        addExample = false;
+                        break;
+                    }
+                }
+                if (addExample)
+                    hypotheses.add(new JSMIntersection(example.getValue(), example.getKey()));
+                viewedExamples.put(example.getKey(), example.getValue());
             }
         }
-        return intersections;
+        return hypotheses;
     }
 }
