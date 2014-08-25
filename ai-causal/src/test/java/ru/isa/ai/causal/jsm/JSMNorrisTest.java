@@ -87,4 +87,18 @@ public class JSMNorrisTest extends TestCase {
         assertEquals(BitSet.valueOf(new byte[]{0b0001001}), intersections.get(0).value);
         assertEquals(BitSet.valueOf(new byte[]{0b0000101}), intersections.get(1).value);
     }
+
+    public void testNorrisExample(){
+        NorrisJSMAnalyzer analyzer = new NorrisJSMAnalyzer(null, null);
+        analyzer.setMaxHypothesisLength(1);
+        JSMFactBase factBase = new JSMFactBase();
+
+        factBase.plusExamples.put(0, BitSet.valueOf(new byte[]{0b01100}));
+        factBase.plusExamples.put(1, BitSet.valueOf(new byte[]{0b10110}));
+        factBase.plusExamples.put(2, BitSet.valueOf(new byte[]{0b11010}));
+        factBase.plusExamples.put(3, BitSet.valueOf(new byte[]{0b00101}));
+
+        List<JSMIntersection> intersections = analyzer.searchIntersection(factBase.plusExamples);
+        assertEquals(7, intersections.size());
+    }
 }

@@ -1,9 +1,6 @@
 package ru.isa.ai.causal.jsm;
 
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Author: Aleksandr Panov
@@ -21,7 +18,7 @@ public class JSMIntersection implements Comparable<JSMIntersection>, Cloneable {
 
     protected JSMIntersection(BitSet value, List<Integer> generators) {
         this.value = value;
-        generators.addAll(generators);
+        this.generators.addAll(generators);
     }
 
     public void intersect(Map<Integer, BitSet> objects) {
@@ -32,6 +29,10 @@ public class JSMIntersection implements Comparable<JSMIntersection>, Cloneable {
                 generators.add(entry.getKey());
             }
         }
+    }
+
+    public BitSet intersect(BitSet inter){
+        return BooleanArrayUtils.and(value, inter);
     }
 
     public void add(JSMIntersection toAdd) {
@@ -47,7 +48,8 @@ public class JSMIntersection implements Comparable<JSMIntersection>, Cloneable {
 
         JSMIntersection that = (JSMIntersection) o;
 
-        return BooleanArrayUtils.equals(value, that.value);
+        return BooleanArrayUtils.equals(value, that.value) && this.generators.containsAll(that.generators) &&
+                that.generators.containsAll(this.generators);
     }
 
     @Override
