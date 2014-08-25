@@ -1,6 +1,6 @@
 package ru.isa.ai.causal.classifiers;
 
-import ru.isa.ai.causal.jsm.JSMAnalyzer;
+import ru.isa.ai.causal.jsm.AnshakovJSMAnalyzer;
 import ru.isa.ai.causal.jsm.JSMHypothesis;
 import weka.core.Instances;
 import weka.core.converters.CSVLoader;
@@ -40,7 +40,7 @@ public class TestAccumAQ {
 
         for (AQClassDescription description : classDescriptions) {
             System.out.println(description.toString());
-            JSMAnalyzer analyzer = new JSMAnalyzer(description, data);
+            AnshakovJSMAnalyzer analyzer = new AnshakovJSMAnalyzer(description, data);
             List<JSMHypothesis> hypothesises = analyzer.evaluateCauses();
 
             int classIndex = data.classAttribute().indexOfValue(description.getClassName());

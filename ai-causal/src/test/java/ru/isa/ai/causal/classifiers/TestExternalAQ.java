@@ -1,6 +1,6 @@
 package ru.isa.ai.causal.classifiers;
 
-import ru.isa.ai.causal.jsm.JSMAnalyzer;
+import ru.isa.ai.causal.jsm.AnshakovJSMAnalyzer;
 import ru.isa.ai.causal.jsm.JSMHypothesis;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
@@ -26,7 +26,7 @@ public class TestExternalAQ {
         Map<String, List<AQRule>> rules = cl.getClassRules();
 
         for (Map.Entry<String, List<AQRule>> entry : rules.entrySet()) {
-            JSMAnalyzer analyzer = new JSMAnalyzer(AQClassDescription.createFromRules(entry.getValue(), 100, entry.getKey()), tmpInst);
+            AnshakovJSMAnalyzer analyzer = new AnshakovJSMAnalyzer(AQClassDescription.createFromRules(entry.getValue(), 100, entry.getKey()), tmpInst);
             System.out.println("Causes for class " + entry.getKey() + ": ");
             List<JSMHypothesis> hypothesises = analyzer.evaluateCauses();
             for (JSMHypothesis hypothesis : hypothesises) {

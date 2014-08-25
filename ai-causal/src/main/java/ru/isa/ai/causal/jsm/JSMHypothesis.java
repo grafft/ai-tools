@@ -19,8 +19,8 @@ public class JSMHypothesis {
         this.keyProperty = keyProperty;
     }
 
-    public void addValue(Set<CRProperty> val) {
-        value.put(value.size(), val);
+    public void addValue(Integer prior, Set<CRProperty> val) {
+        value.put(prior, val);
     }
 
     public CRProperty getKeyProperty() {
@@ -38,7 +38,7 @@ public class JSMHypothesis {
 
         int totalCounter = 0;
         for (Map.Entry<Integer, Set<CRProperty>> entry : value.entrySet()) {
-            builder.append("\t").append(entry.getKey()).append(": ");
+            builder.append("\t").append(entry.getKey()).append("[").append(entry.getKey()).append("]: ");
             int counter = 0;
             for (CRProperty prop : entry.getValue()) {
                 builder.append("(").append(prop).append(")");

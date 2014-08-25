@@ -11,6 +11,9 @@ public class Region {
     private int xDimension;
     private int yDimension;
 
+    private int input_xDimension;
+    private int input_yDimension;
+
     /*Список индексов колонок – победителей благодаря прямым
     входным данным. (Выход пространственного группировщика)
    */
@@ -229,6 +232,7 @@ inhibitionRadius колонки c.
         return max;
     }
 
+    // TODO AP: все методы в Java - с маленькой буквы
     double GetMinLocalActivity(int i){
         return kthScore(neighbours(i), desiredLocalActivity);
     }
@@ -238,6 +242,9 @@ inhibitionRadius колонки c.
         return inhibitionRadius;
     }
    public void setInhibitionRadius(double value) {inhibitionRadius = value; }
+   public void setInputDimensions(int x, int y) {input_xDimension = x; input_yDimension = y;}
+   public int getInputXDim() {return input_xDimension; }
+   public int getInputYDim() {return input_yDimension; }
    public int getXDim() {return this.xDimension; }
    public int getYDim() {return this.yDimension; }
 }

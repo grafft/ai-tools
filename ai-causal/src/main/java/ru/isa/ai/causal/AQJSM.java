@@ -4,8 +4,10 @@ import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.isa.ai.causal.classifiers.*;
-import ru.isa.ai.causal.jsm.JSMAnalyzer;
+import ru.isa.ai.causal.jsm.AbstractJSMAnalyzer;
+import ru.isa.ai.causal.jsm.AnshakovJSMAnalyzer;
 import ru.isa.ai.causal.jsm.JSMHypothesis;
+import ru.isa.ai.causal.jsm.NorrisJSMAnalyzer;
 import weka.core.Instances;
 import weka.core.converters.CSVLoader;
 import weka.core.converters.ConverterUtils;
@@ -168,7 +170,7 @@ public class AQJSM {
                     case jsm:
                         for (AQClassDescription description : classDescriptions) {
                             if (classes.isEmpty() || classes.contains(description.getClassName())) {
-                                JSMAnalyzer analyzer = new JSMAnalyzer(description, data);
+                                AbstractJSMAnalyzer analyzer = new NorrisJSMAnalyzer(description, data);
                                 analyzer.setMaxHypothesisLength(maxHypothesisLength);
                                 List<JSMHypothesis> hypothesises = analyzer.evaluateCauses();
                             }

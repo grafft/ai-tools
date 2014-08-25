@@ -70,7 +70,6 @@ public class HTMConfiguration {
 
     //panels
     private JPanel mainPanel;
-    private JPanel casmiPanel;
     public JTextPane textPane1;
     private JTabbedPane tabbedPane1;
 
@@ -80,6 +79,8 @@ public class HTMConfiguration {
 
     //spinners
     private JSpinner spinnerNumRegs;
+    private JPanel ActiveColsVisGenView;
+    private JPanel ActiveColsSelectedView;
 
     //frames
     private JFrame f;
