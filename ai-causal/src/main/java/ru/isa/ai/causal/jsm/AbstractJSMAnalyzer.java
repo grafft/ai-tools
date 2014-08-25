@@ -6,10 +6,7 @@ import ru.isa.ai.causal.classifiers.AQClassDescription;
 import ru.isa.ai.causal.classifiers.CRProperty;
 import weka.core.Instances;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Author: Aleksandr Panov
@@ -51,13 +48,19 @@ public abstract class AbstractJSMAnalyzer {
                         ", minus_ex=" + factBase.minusExamples.size() + ", univer=" + factBase.universe.size() + "]");
                 JSMHypothesis cause = new JSMHypothesis(property);
                 List<JSMIntersection> hypothesis = reasons(factBase, 0);
+                Collections.sort(hypothesis, new Comparator<JSMIntersection>() {
+                    @Override
+                    public int compare(JSMIntersection o1, JSMIntersection o2) {
+                        return Integer.compare(o1.generators.size(), o2.generators.size());
+                    }
+                });
                 for (JSMIntersection intersection : hypothesis) {
                     Set<CRProperty> causeProps = new HashSet<>();
                     for (int i = 0; i < intersection.value.length(); i++)
                         if (intersection.value.get(i))
                             causeProps.add(otherProps.get(i));
                     if (causeProps.size() > 0)
-                        cause.addValue(causeProps);
+                        cause.addValue(intersection.generators.size(), causeProps);
                 }
                 if (cause.getValue().size() > 0) {
                     causes.add(cause);

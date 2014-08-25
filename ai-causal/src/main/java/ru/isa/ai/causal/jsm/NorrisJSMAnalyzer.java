@@ -35,7 +35,7 @@ public class NorrisJSMAnalyzer extends AbstractJSMAnalyzer {
         toRemove.clear();
         for (JSMIntersection interP : plusInter) {
             for (JSMIntersection interM : minusInter) {
-                if (interP.equals(interM) || BooleanArrayUtils.include(interM.value, interP.value)
+                if (BooleanArrayUtils.include(interM.value, interP.value)
                         || BooleanArrayUtils.include(interP.value, interM.value))
                     toRemove.add(interP);
             }
