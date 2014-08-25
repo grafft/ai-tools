@@ -6,7 +6,7 @@ import cern.colt.matrix.tint.impl.SparseIntMatrix2D;
 import java.util.Random;
 import cern.colt.matrix.tint.IntMatrix2D;
 import cern.colt.matrix.tbit.BitMatrix;
-import com.sun.scenario.Settings;
+//import com.sun.scenario.Settings;
 import ru.isa.ai.newdhm.applet.HTMConfiguration;
 
 public class Cortex {
