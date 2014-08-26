@@ -10,6 +10,7 @@ import ru.isa.ai.dhm.poolers.SpatialPoolerInitializationException;
 import ru.isa.ai.newdhm.Column;
 import ru.isa.ai.newdhm.Cortex;
 import ru.isa.ai.newdhm.Region;
+import ru.isa.ai.newdhm.applet.HTMConfiguration;
 
 import java.lang.reflect.Method;
 
@@ -50,33 +51,46 @@ public class CortexTest extends TestCase {
     testSerialize();
  */
 public void testUpdateInhibitionRadius()
-    {/*
-        Cortex c = new Cortex();
+    {
+        System.out.print("Asdad");
+
+        HTMConfiguration conf=new HTMConfiguration();
+        HTMConfiguration.Settings[] set=new HTMConfiguration.Settings[1];
+        /*looks like a strange thing for me... */
+        set[0]= conf.new Settings();
+
+        //c.sInitializationTest(new int[]{numInputs,1,1}, new int[]{57,31,2});
+        set[0].initialParameters[2]=0.5; // connectedPerm
+        set[0].initialParameters[5]=2; // cells per column
+        set[0].initialParameters[10]=57; //xColumnDim
+        set[0].initialParameters[11]=31; //yColumnDim
+
+        Cortex c = new Cortex(1,set);
         int numInputs = 1;
-        c.sInitializationTest(new int[]{numInputs,1,1}, new int[]{57,31,2});
+
         //sp.setGlobalInhibition(true);
-        for (Column col: c.region.columns) {
+        for (Column col: c.regions[0].columns) {
             double permArr[] = {1};
-            c.initSynapsesTest(col, numInputs, permArr);
+            c.initSynapsesTest(0, col, numInputs, permArr);
         }
-        c.updateInhibitionRadius();
-        assertEquals(c.region.getInhibitionRadius(), 57);
+        c.updateInhibitionRadius(0);
+        assertEquals(c.regions[0].getInhibitionRadius(), 57);
 
-
+       /*
         // avgColumnsPerInput = 4
         // avgConnectedSpanForColumn = 3
         numInputs = 3;
         int numCols = 12;
         c.sInitializationTest(new int[]{numInputs,1,1}, new int[]{6,2,2});
         //sp.setGlobalInhibition(false);
-        for (Column col: c.region.columns) {
+        for (Column col: c.regions[0].columns) {
             double permArr[] = {1, 1, 1};
-            c.initSynapsesTest(col, numInputs, permArr);
+            c.initSynapsesTest(0,col, numInputs, permArr);
         }
         int trueInhibitionRadius = 6;
         // ((3 * 4) - 1)/2 => round up
-        c.updateInhibitionRadius();
-        assertEquals(c.region.getInhibitionRadius(), trueInhibitionRadius);
+        c.updateInhibitionRadius(0);
+        assertEquals(c.regions[0].getInhibitionRadius(), trueInhibitionRadius);
 
 
         // avgColumnsPerInput = 1.2
@@ -86,17 +100,17 @@ public void testUpdateInhibitionRadius()
         c.sInitializationTest(new int[]{numInputs,1,1}, new int[]{3,2,2});
         //sp.setGlobalInhibition(false);
         int i = 0;
-        for (Column col: c.region.columns) {
+        for (Column col: c.regions[0].columns) {
             double permArr[] = {1, 0, 0, 0, 0};
             if (i % 2 == 0) {
                 permArr[0] = 0;
             }
             i++;
-            c.initSynapsesTest(col, numInputs, permArr);
+            c.initSynapsesTest(0,col, numInputs, permArr);
         }
         trueInhibitionRadius = 1;
-        c.updateInhibitionRadius();
-        assertEquals(c.region.getInhibitionRadius(), trueInhibitionRadius);
+        c.updateInhibitionRadius(0);
+        assertEquals(c.regions[0].getInhibitionRadius(), trueInhibitionRadius);
 
         // avgColumnsPerInput = 2.4
         // avgConnectedSpanForColumn = 2
@@ -105,15 +119,15 @@ public void testUpdateInhibitionRadius()
         c.sInitializationTest(new int[]{numInputs,1,1}, new int[]{6,2,2});
         //sp.setGlobalInhibition(false);
 
-        for (Column col: c.region.columns) {
+        for (Column col: c.regions[0].columns) {
             double permArr[] = {1, 1, 0, 0, 0};
-            c.initSynapsesTest(col, numInputs, permArr);
+            c.initSynapsesTest(0,col, numInputs, permArr);
         }
         trueInhibitionRadius = 2;
         // ((2.4 * 2) - 1)/2 => round up
-        c.updateInhibitionRadius();
-        assertEquals(c.region.getInhibitionRadius(), trueInhibitionRadius);
-        */
+        c.updateInhibitionRadius(0);
+        assertEquals(c.regions[0].getInhibitionRadius(), trueInhibitionRadius);
+         */
     }
 
     public void testUpdateMinDutyCycles()

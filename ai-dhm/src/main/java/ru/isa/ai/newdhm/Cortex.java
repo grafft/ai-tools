@@ -425,7 +425,7 @@ public class Cortex {
 
 
     public void sInitializationTest(int[] inputDim, int[] columnDim) {
-        /*for (int i = 0 ; i < numRegions; i++) {
+     /*   for (int i = 0 ; i < numRegions; i++) {
             regions[i].xDimension = columnDim[0];
             regions[i].yDimension = columnDim[1];
             regions[i].cellsPerColumn = columnDim[2];
