@@ -48,12 +48,6 @@ public abstract class AbstractJSMAnalyzer {
                         ", minus_ex=" + factBase.minusExamples.size() + ", univer=" + factBase.universe.size() + "]");
                 JSMHypothesis cause = new JSMHypothesis(property);
                 List<JSMIntersection> hypothesis = reasons(factBase, 0);
-                Collections.sort(hypothesis, new Comparator<JSMIntersection>() {
-                    @Override
-                    public int compare(JSMIntersection o1, JSMIntersection o2) {
-                        return Integer.compare(o1.generators.size(), o2.generators.size());
-                    }
-                });
                 for (JSMIntersection intersection : hypothesis) {
                     Set<CRProperty> causeProps = new HashSet<>();
                     for (int i = 0; i < intersection.value.length(); i++)

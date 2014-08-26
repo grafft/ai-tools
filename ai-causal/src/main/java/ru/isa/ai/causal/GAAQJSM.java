@@ -6,8 +6,9 @@ import org.apache.logging.log4j.Logger;
 import ru.isa.ai.causal.classifiers.AQClassDescription;
 import ru.isa.ai.causal.classifiers.AQClassifierException;
 import ru.isa.ai.causal.classifiers.ga.GAAQClassifier;
-import ru.isa.ai.causal.jsm.AnshakovJSMAnalyzer;
+import ru.isa.ai.causal.jsm.AbstractJSMAnalyzer;
 import ru.isa.ai.causal.jsm.JSMHypothesis;
+import ru.isa.ai.causal.jsm.NorrisJSMAnalyzer;
 import weka.core.Instances;
 import weka.core.converters.CSVLoader;
 import weka.core.converters.ConverterUtils;
@@ -41,7 +42,7 @@ public class GAAQJSM {
 
             CommandLine line = parser.parse(options, args);
             if (line.hasOption("h") || !line.hasOption("f")) {
-                formatter.printHelp("aqjsm", options);
+                formatter.printHelp("gaaqjsm", options);
             } else {
                 String dataFile = line.getOptionValue("f");
                 int maxHypothesisLength = Integer.parseInt(line.getOptionValue("l", "3"));
@@ -71,10 +72,12 @@ public class GAAQJSM {
                     loader.setFieldSeparator("\t");
                     loader.setNominalAttributes("29");
                     loader.setNominalLabelSpecs(new String[]{"29:1,2,3"});
-                    //loader.setNominalAttributes("1-3");
-                    //loader.setNominalLabelSpecs(new String[]{"1:1,2,3", "2:1,2", "3:1,2"});
                     ConverterUtils.DataSource trainSource = new ConverterUtils.DataSource(loader);
                     data = trainSource.getDataSet(28);
+
+                    //loader.setNominalAttributes("1-3");
+                    //loader.setNominalLabelSpecs(new String[]{"1:1,2,3", "2:1,2", "3:1,2"});
+                    //ConverterUtils.DataSource trainSource = new ConverterUtils.DataSource(loader);
                     //data = trainSource.getDataSet(0);
                 } else {
                     throw new AQClassifierException("Not supported file extension: " + dataFile);
@@ -86,7 +89,7 @@ public class GAAQJSM {
                 Collection<AQClassDescription> classDescriptions = classifier.getDescriptions();
                 for (AQClassDescription description : classDescriptions) {
                     if (classes.isEmpty() || classes.contains(description.getClassName())) {
-                        AnshakovJSMAnalyzer analyzer = new AnshakovJSMAnalyzer(description, data);
+                        AbstractJSMAnalyzer analyzer = new NorrisJSMAnalyzer(description, data);
                         analyzer.setMaxHypothesisLength(maxHypothesisLength);
                         List<JSMHypothesis> hypothesises = analyzer.evaluateCauses();
                     }

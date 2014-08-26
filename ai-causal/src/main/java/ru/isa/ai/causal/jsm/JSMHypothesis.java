@@ -5,6 +5,7 @@ import ru.isa.ai.causal.classifiers.CRProperty;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Author: Aleksandr Panov
@@ -13,7 +14,7 @@ import java.util.Set;
  */
 public class JSMHypothesis {
     private CRProperty keyProperty;
-    private Map<Integer, Set<CRProperty>> value = new HashMap<>();
+    private Map<Integer, Set<CRProperty>> value = new TreeMap<>();
 
     public JSMHypothesis(CRProperty keyProperty) {
         this.keyProperty = keyProperty;
