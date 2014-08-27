@@ -1,10 +1,7 @@
 package ru.isa.ai.causal.data;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Author: Aleksandr Panov
@@ -16,69 +13,63 @@ public class MIMICDataConverter {
         BufferedReader readerData = new BufferedReader(new FileReader(MIMICDataConverter.class.getResource("/all_data.txt").getPath()));
         BufferedReader readerFeature = new BufferedReader(new FileReader(MIMICDataConverter.class.getResource("/all_features.txt").getPath()));
 
-        Map<Integer, String> features = new HashMap<>();
+        TreeMap<Integer, String> features = new TreeMap<>();
         Map<Integer, Integer> featuresStats = new HashMap<>();
-        List<double[]> objects = new ArrayList<>();
+        List<String> objects = new ArrayList<>();
+        List<String> strings = new ArrayList<>();
         String line;
-        int featureCounter = 0;
         while ((line = readerFeature.readLine()) != null) {
             String parts[] = line.split("\t");
-            features.put(featureCounter, parts[1]);
-            featureCounter++;
+            int num = Integer.parseInt(parts[0]);
+            if (num == 0 || (!parts[1].startsWith("DISEASE") && !parts[1].startsWith("MAIN DISEASE")))
+                features.put(num, parts[1].replace("%",""));
         }
 
+        int duplicate = 0;
         while ((line = readerData.readLine()) != null) {
             String parts[] = line.split("\t");
-            double[] object = new double[features.size()];
+            StringBuilder string = new StringBuilder();
             int counter = 0;
             for (int key : features.keySet()) {
-                if (!parts[counter].equals("-")) {
-                    object[counter] = Double.parseDouble(parts[counter]);
+                if (counter != 0)
+                    string.append("\t");
+                if (!parts[key].equals("-")) {
+                    string.append(parts[key]);
                     if (featuresStats.get(key) == null)
                         featuresStats.put(key, 1);
                     else
                         featuresStats.put(key, featuresStats.get(key) + 1);
                 } else {
-                    object[counter] = Double.MAX_VALUE;
+                    string.append("?");
                 }
                 counter++;
             }
-            objects.add(object);
+            String object = string.substring(string.indexOf("\t") + 1);
+            if (!objects.contains(object)) {
+                strings.add(string.toString());
+                objects.add(object);
+            } else
+                duplicate++;
         }
         readerData.close();
         readerFeature.close();
 
-        PrintWriter writer = new PrintWriter(new FileWriter("all_data_norm.csv"));
+        PrintWriter writer = new PrintWriter(new FileWriter("all_data_norm.gqj"));
+        writer.println(0);
+        writer.println(1);
+        writer.println("1:1-10");
         StringBuilder featureBuilder = new StringBuilder();
         int counter = 0;
-        List<Integer> acceptedFeatures = new ArrayList<>();
         for (int key : features.keySet()) {
-            if (featuresStats.get(key) != null && featuresStats.get(key) > objects.size() * 0.9) {
-                if (counter != 0)
-                    featureBuilder.append("\t");
-                featureBuilder.append(features.get(key));
-                acceptedFeatures.add(key);
-                counter++;
-            }
+            if (counter != 0)
+                featureBuilder.append("\t");
+            featureBuilder.append(features.get(key));
+            counter++;
         }
         writer.println(featureBuilder.toString());
-        for (double[] object : objects) {
-            StringBuilder objectBuilder = new StringBuilder();
-            boolean toWrite = true;
-            int counterAcc = 0;
-            for (int key : acceptedFeatures) {
-                if (counterAcc != 0)
-                    objectBuilder.append("\t");
-                if (object[key] == Double.MAX_VALUE) {
-                    toWrite = false;
-                    break;
-                } else {
-                    objectBuilder.append(object[key]);
-                }
-                counterAcc++;
-            }
-            if (toWrite)
-                writer.println(objectBuilder.toString());
+
+        for (String object : strings) {
+            writer.println(object);
         }
         writer.flush();
         writer.close();

@@ -26,6 +26,7 @@ import java.util.List;
  */
 public class GAAQJSM {
     private static final Logger logger = LogManager.getLogger(GAAQJSM.class.getSimpleName());
+    private static int classIndex;
 
     public static void main(String[] args) {
         Options options = new Options();
@@ -44,7 +45,7 @@ public class GAAQJSM {
             if (line.hasOption("h") || !line.hasOption("f")) {
                 formatter.printHelp("gaaqjsm", options);
             } else {
-                String dataFile = line.getOptionValue("f");
+                final String dataFile = line.getOptionValue("f");
                 int maxHypothesisLength = Integer.parseInt(line.getOptionValue("l", "3"));
                 int maxUniverseSize = Integer.parseInt(line.getOptionValue("u", "10"));
                 List<String> classes = new ArrayList<>();
@@ -57,28 +58,46 @@ public class GAAQJSM {
                     Instances train = trainSource.getStructure();
                     int actualClassIndex = train.numAttributes() - 1;
                     data = trainSource.getDataSet(actualClassIndex);
-                } else if (dataFile.toLowerCase().endsWith("csv")) {
+                } else if (dataFile.toLowerCase().endsWith("gqj")) {
                     CSVLoader loader = new CSVLoader() {
                         @Override
-                        public void setSource(InputStream input) throws IOException {
+                        public void setSource(File file){
+                            setRetrieval(NONE);
                             m_structure = null;
                             m_sourceFile = null;
                             m_File = null;
 
-                            m_sourceReader = new BufferedReader(new InputStreamReader(input, "cp1251"));
+                            try {
+                                m_sourceReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "cp1251"));
+                                classIndex = Integer.parseInt(m_sourceReader.readLine());
+                                String nominalAttrs = m_sourceReader.readLine();
+                                m_NominalAttributes.setRanges(nominalAttrs);
+                                String nominalLabels = m_sourceReader.readLine();
+                                setNominalLabelSpecs(nominalLabels.split(";"));
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void reset() throws IOException {
+                            m_structure = null;
+                            m_rowBuffer = null;
+                            if (m_dataDumper != null) {
+                                // close the uneeded temp files (if necessary)
+                                m_dataDumper.close();
+                                m_dataDumper = null;
+                            }
                         }
                     };
                     loader.setSource(new File(dataFile));
                     loader.setFieldSeparator("\t");
-//                    loader.setNominalAttributes("29");
-//                    loader.setNominalLabelSpecs(new String[]{"29:1,2,3"});
-//                    ConverterUtils.DataSource trainSource = new ConverterUtils.DataSource(loader);
-//                    data = trainSource.getDataSet(28);
-
-                    loader.setNominalAttributes("1-3");
-                    loader.setNominalLabelSpecs(new String[]{"1:1,2,3", "2:1,2", "3:1,2"});
                     ConverterUtils.DataSource trainSource = new ConverterUtils.DataSource(loader);
-                    data = trainSource.getDataSet(0);
+                    data = trainSource.getDataSet(classIndex);
                 } else {
                     throw new AQClassifierException("Not supported file extension: " + dataFile);
                 }
