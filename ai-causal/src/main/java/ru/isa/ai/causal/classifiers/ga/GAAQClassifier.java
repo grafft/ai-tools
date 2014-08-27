@@ -42,7 +42,7 @@ public class GAAQClassifier extends AbstractClassifier {
         // attributes
         result.enable(Capabilities.Capability.NOMINAL_ATTRIBUTES);
         result.enable(Capabilities.Capability.NUMERIC_ATTRIBUTES);
-
+        result.enable(Capabilities.Capability.MISSING_VALUES);
         // class
         result.enable(Capabilities.Capability.NOMINAL_CLASS);
 

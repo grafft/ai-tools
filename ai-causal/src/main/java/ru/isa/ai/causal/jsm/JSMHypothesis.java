@@ -2,10 +2,7 @@ package ru.isa.ai.causal.jsm;
 
 import ru.isa.ai.causal.classifiers.CRProperty;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Author: Aleksandr Panov
@@ -14,7 +11,12 @@ import java.util.TreeMap;
  */
 public class JSMHypothesis {
     private CRProperty keyProperty;
-    private Map<Integer, Set<CRProperty>> value = new TreeMap<>();
+    private Map<Integer, Set<CRProperty>> value = new TreeMap<>(new Comparator<Integer>() {
+        @Override
+        public int compare(Integer o1, Integer o2) {
+            return -o1.compareTo(o2);
+        }
+    });
 
     public JSMHypothesis(CRProperty keyProperty) {
         this.keyProperty = keyProperty;
