@@ -6,7 +6,7 @@ import cern.colt.matrix.tint.impl.SparseIntMatrix2D;
 import java.util.Random;
 import cern.colt.matrix.tint.IntMatrix2D;
 import cern.colt.matrix.tbit.BitMatrix;
-import com.sun.scenario.Settings;
+//import com.sun.scenario.Settings;
 import ru.isa.ai.newdhm.applet.HTMConfiguration;
 
 public class Cortex {
@@ -425,7 +425,7 @@ public class Cortex {
 
 
     public void sInitializationTest(int[] inputDim, int[] columnDim) {
-        /*for (int i = 0 ; i < numRegions; i++) {
+     /*   for (int i = 0 ; i < numRegions; i++) {
             regions[i].xDimension = columnDim[0];
             regions[i].yDimension = columnDim[1];
             regions[i].cellsPerColumn = columnDim[2];
