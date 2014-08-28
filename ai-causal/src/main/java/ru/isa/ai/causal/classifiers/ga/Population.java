@@ -367,10 +367,13 @@ public class Population {
         double fit;
 
         boolean found = false;
+        boolean significant = false;
+        boolean missingvalue = false;
+        
         for (int[] aFobj : fobj) {
             found = true;
             for (int j = 0; j < genot.numGenes; ++j) {
-                if ((genot.genes[j] & aFobj[j]) == 0 && genot.genes[j] != 0) {
+                if (aFobj[j] != Integer.MAX_VALUE && (genot.genes[j] & aFobj[j]) == 0 && genot.genes[j] != 0) {
                     found = false;
                     break;
                 }
@@ -384,27 +387,41 @@ public class Population {
 
         int num = 0;
         int num0 = 0;
+        int num0_miss = 0;
         for (int[] aTobj : tobj) {
             found = true;
+            significant = false;
             for (int j = 0; j < genot.numGenes; ++j) {
-                if ((genot.genes[j] & aTobj[j]) == 0 && genot.genes[j] != 0) {
+            	if (aTobj[j] != Integer.MAX_VALUE && (genot.genes[j] & aTobj[j]) == 0 && genot.genes[j] != 0) {
                     found = false;
                     break;
                 }
+            	else if(aTobj[j] != Integer.MAX_VALUE && genot.genes[j] != 0)//если значение хотя бы одного атрибута не пропущено
+                	significant = true;
             }
-            if (found)
-                ++num;
+            if (found && significant)
+        		++num;
         }
         for (int[] aTobj0 : tobj0) {
             found = true;
+            significant = false;
+            missingvalue = false;
             for (int j = 0; j < genot.numGenes; ++j) {
-                if ((genot.genes[j] & aTobj0[j]) == 0 && genot.genes[j] != 0) {
+            	if (aTobj0[j] != Integer.MAX_VALUE && (genot.genes[j] & aTobj0[j]) == 0 && genot.genes[j] != 0) {
                     found = false;
                     break;
                 }
+            	else if(aTobj0[j] != Integer.MAX_VALUE && genot.genes[j] != 0)//если значение хотя бы одного атрибута не пропущено
+                	significant = true;
+                else if(aTobj0[j] == Integer.MAX_VALUE && genot.genes[j] != 0)
+                	missingvalue = true;
             }
-            if (found)
-                ++num0;
+            if (found && significant){
+            	if(!missingvalue)
+            		++num0;
+            	else
+            		++num0_miss;
+            }
         }
         int num_ones = 0;
         for (int i = 0; i < genot.numGenes; ++i) {
@@ -413,10 +430,11 @@ public class Population {
                     ++num_ones;
         }
 
+        double big_value = 1000.0; 
         if(num!=0)
-            fit = num0 * 1000.0 + num - num_ones / 1000.0;
+        	fit = num0 * big_value + num0_miss * 0.25 * big_value + num - num_ones / big_value;
         else
-            fit = num0 - num_ones / 1000.0;
+            fit = num0 - num_ones / big_value;
 
         //fit = num * 1000.0 + num0 - num_ones / 1000.0;
         return fit;
