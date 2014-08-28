@@ -4,6 +4,7 @@ import ru.isa.ai.causal.classifiers.CRProperty;
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.Utils;
 
 import java.util.*;
 
@@ -23,35 +24,43 @@ public class JSMFactBase {
 
         Attribute keyAttr = data.attribute(keyProperty.getFeature().getName());
         for (Instance event : data) {
-            BitSet objectVector = new BitSet(properties.size());
-            for (int i = 0; i < properties.size(); i++) {
-                Attribute attr = data.attribute(properties.get(i).getFeature().getName());
-                switch (attr.type()) {
+            double keyVal = event.value(keyAttr.index());
+            if (!Utils.isMissingValue(keyVal)) {
+                boolean isCover = false;
+                BitSet objectVector = new BitSet(properties.size());
+                for (int i = 0; i < properties.size(); i++) {
+                    Attribute attr = data.attribute(properties.get(i).getFeature().getName());
+                    double val = event.value(attr.index());
+                    if (Utils.isMissingValue(val)) {
+                        objectVector.set(i, false);
+                    } else {
+                        switch (attr.type()) {
+                            case Attribute.NOMINAL:
+                                String value = attr.value((int) val);
+                                objectVector.set(i, properties.get(i).coverNominal(value));
+                                break;
+                            case Attribute.NUMERIC:
+                                objectVector.set(i, properties.get(i).cover(val));
+                                break;
+                        }
+                    }
+                }
+                switch (keyAttr.type()) {
                     case Attribute.NOMINAL:
-                        String value = attr.value((int) event.value(attr.index()));
-                        objectVector.set(i, properties.get(i).coverNominal(value));
+                        String value = keyAttr.value((int) keyVal);
+                        isCover = keyProperty.coverNominal(value);
                         break;
                     case Attribute.NUMERIC:
-                        objectVector.set(i, properties.get(i).cover(event.value(attr.index())));
+                        isCover = keyProperty.cover(keyVal);
                         break;
                 }
-            }
-            boolean isCover = false;
-            switch (keyAttr.type()) {
-                case Attribute.NOMINAL:
-                    String value = keyAttr.value((int) event.value(keyAttr.index()));
-                    isCover = keyProperty.coverNominal(value);
-                    break;
-                case Attribute.NUMERIC:
-                    isCover = keyProperty.cover(event.value(keyAttr.index()));
-                    break;
-            }
-            if (isCover) {
-                if (!factBase.plusExamples.containsValue(objectVector))
-                    factBase.plusExamples.put(data.indexOf(event), objectVector);
-            } else {
-                if (!factBase.minusExamples.containsValue(objectVector))
-                    factBase.minusExamples.put(data.indexOf(event), objectVector);
+                if (isCover) {
+                    if (!factBase.plusExamples.containsValue(objectVector))
+                        factBase.plusExamples.put(data.indexOf(event), objectVector);
+                } else {
+                    if (!factBase.minusExamples.containsValue(objectVector))
+                        factBase.minusExamples.put(data.indexOf(event), objectVector);
+                }
             }
         }
         return factBase;

@@ -122,9 +122,10 @@ public class GAAQClassifier extends AbstractClassifier {
                 while (attrEventEnu.hasMoreElements()) {
                     Attribute attr = attrEventEnu.nextElement();
                     int value = 0;
+                    double numVal = instance.value(attr.index());
                     switch (attr.type()) {
                         case Attribute.NOMINAL:
-                            value = (int) Math.pow(2.0, instance.value(attr.index()));
+                            value = (int) Math.pow(2.0, numVal);
 
                             if (!featureMap.containsKey(attrCounter)) {
                                 CRFeature feature = new CRFeature(attr.name());
@@ -132,7 +133,6 @@ public class GAAQClassifier extends AbstractClassifier {
                             }
                             break;
                         case Attribute.NUMERIC:
-                            double numVal = instance.value(attr.index());
                             double min = testData.attributeStats(attr.index()).numericStats.min;
                             double max = testData.attributeStats(attr.index()).numericStats.max;
                             double inter = max - min;
