@@ -1,7 +1,7 @@
 package ru.isa.ai.dhm.visual;
 
 import junit.framework.TestCase;
-import ru.isa.ai.dhm.HTMSettings;
+import ru.isa.ai.dhm.RegionSettings;
 import ru.isa.ai.dhm.core.Column;
 import ru.isa.ai.dhm.core.Cortex;
 
@@ -46,9 +46,9 @@ public void testUpdateInhibitionRadius()
         System.out.print("Asdad");
 
         HTMConfiguration conf=new HTMConfiguration();
-        HTMSettings[] set=new HTMSettings[1];
+        RegionSettings[] set=new RegionSettings[1];
         /*looks like a strange thing for me... */
-        set[0]= new HTMSettings();
+        set[0]= new RegionSettings();
 
         //c.sInitializationTest(new int[]{numInputs,1,1}, new int[]{57,31,2});
         set[0].initialParameters[2]=0.5; // connectedPerm

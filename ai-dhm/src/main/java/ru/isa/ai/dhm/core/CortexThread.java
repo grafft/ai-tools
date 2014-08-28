@@ -3,7 +3,7 @@ package ru.isa.ai.dhm.core;
 import cern.colt.matrix.tbit.BitMatrix;
 //import com.sun.scenario.Settings;
 import info.monitorenter.gui.chart.Chart2D;
-import ru.isa.ai.dhm.HTMSettings;
+import ru.isa.ai.dhm.RegionSettings;
 import ru.isa.ai.dhm.visual.ChartHandler;
 import ru.isa.ai.dhm.visual.HTMConfiguration;
 import ru.isa.ai.dhm.visual.ImageClass;
@@ -21,7 +21,7 @@ public class CortexThread extends Thread {
     private Boolean makeStep = false;
     private Random rnd = new Random();
 
-    public CortexThread(int numRegions, HTMSettings[] settings) {
+    public CortexThread(int numRegions, RegionSettings[] settings) {
         this.numRegions = numRegions;
         cr = new Cortex(this.numRegions, settings);
     }
