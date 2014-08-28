@@ -22,12 +22,17 @@ public class MIMICDataConverter {
             String parts[] = line.split("\t");
             int num = Integer.parseInt(parts[0]);
             if (num == 0 || (!parts[1].startsWith("DISEASE") && !parts[1].startsWith("MAIN DISEASE")))
-                features.put(num, parts[1].replace("%",""));
+                features.put(num, parts[1].replace("%", ""));
         }
 
         int duplicate = 0;
+        int skipped = 0;
         while ((line = readerData.readLine()) != null) {
             String parts[] = line.split("\t");
+            if (parts[454].equals("1")) {
+                skipped++;
+                continue;
+            }
             StringBuilder string = new StringBuilder();
             int counter = 0;
             for (int key : features.keySet()) {
@@ -73,5 +78,7 @@ public class MIMICDataConverter {
         }
         writer.flush();
         writer.close();
+
+        System.out.println("Duplicates=" + duplicate + ", skipped=" + skipped);
     }
 }
