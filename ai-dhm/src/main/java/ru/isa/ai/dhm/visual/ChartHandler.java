@@ -132,7 +132,7 @@ public class ChartHandler {
                 }*/
                 for (int j = 0; j < cfg.crtx.cr.regions[regInd].getYDim(); j++) {
                     for (int i = 0; i < cfg.crtx.cr.regions[regInd].getXDim(); i++) {           ///////////////////////?????????
-                        traceINP.addPoint(i + j, (cfg.crtx.cr.input(i,j) == true) ? 1 : 0);
+                        //traceINP.addPoint(i + j, (cfg.crtx.cr.input(i,j) == true) ? 1 : 0); // TODO AP: comment by refactoring!
                 }
             }
         }

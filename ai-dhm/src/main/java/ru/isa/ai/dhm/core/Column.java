@@ -1,5 +1,7 @@
 package ru.isa.ai.dhm.core;
 
+import cern.colt.matrix.tbit.BitMatrix;
+
 public class Column {
 
     public int x;
@@ -93,7 +95,6 @@ potentialSynapses(c) у которых значение
         Synapse[] result = new Synapse[this.potentialSynapsesNum];
         int length = 0;
         for (Synapse synapse : this.potentialSynapses) {
-            if (synapse == null) break;
             if (synapse.permanence > region.connectedPerm) {
                 result[length] = synapse;
                 length++;
@@ -124,4 +125,14 @@ potentialSynapses(c) у которых значение
     }
 
 
+    public void overlap(BitMatrix inputBits) {
+        overlap = 0.0;
+        connectedSynapses = connectedSynapses();
+        for (Synapse synapse : connectedSynapses) {
+            if (inputBits.get(synapse.c, synapse.i))
+                overlap += 1;
+        }
+        if (overlap < minOverlap) overlap = 0.0;
+        else overlap *= boost;
+    }
 }

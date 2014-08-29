@@ -48,15 +48,11 @@ public class CortexThread extends Thread {
         img = configuration.getImg();
         cr.sInitializationDefault(img.getW(), img.getH());
         chartHandler = new ChartHandler(chart1, chart2, configuration);
-
     }
 
     public int getNumOfRegions() {
         return numRegions;
     }
-
-
-
 
     public void drawOnChart(int regInd) {
         chartHandler.collectData(regInd);
@@ -73,7 +69,7 @@ public class CortexThread extends Thread {
         for (int i = 0; i < cr.regions[ind].getXDim(); i++)
             for (int j = 0; j < cr.regions[ind].getYDim(); j++) {
                 int value = cr.time % 2 > 0 ? rnd.nextInt(2) : Math.sin(i + j + cr.totalTime) > 0 ? 1 : 0;
-                matrix.put(i, j, (value == 1) ? true : false);
+                matrix.put(i, j, value == 1);
             }
         return matrix;
     }
@@ -86,18 +82,18 @@ public class CortexThread extends Thread {
         return pause;
     }
 
-    public void MakeStep() {
+    public void thdMakeStep() {
         if (!runs)
             this.start();
         this.pause = false;
         this.makeStep = true;
     }
 
-    public void Continue() {
+    public void thdContinue() {
         this.pause = false;
     }
 
-    public void Quit() {
+    public void thdQuit() {
         this.runs = false;
     }
 }

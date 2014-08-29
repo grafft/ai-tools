@@ -51,10 +51,11 @@ public void testUpdateInhibitionRadius()
         set[0]= new RegionSettings();
 
         //c.sInitializationTest(new int[]{numInputs,1,1}, new int[]{57,31,2});
-        set[0].initialParameters[2]=0.5; // connectedPerm
-        set[0].initialParameters[5]=2; // cells per column
-        set[0].initialParameters[10]=57; //xColumnDim
-        set[0].initialParameters[11]=31; //yColumnDim
+        // TODO AP: comment by refactoring!
+//        set[0].initialParameters[2]=0.5; // connectedPerm
+//        set[0].initialParameters[5]=2; // cells per column
+//        set[0].initialParameters[10]=57; //xColumnDim
+//        set[0].initialParameters[11]=31; //yColumnDim
 
         Cortex c = new Cortex(1,set);
         int numInputs = 1;

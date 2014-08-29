@@ -26,6 +26,8 @@ public class Cortex {
     private int inputImageYDim = 0;
     private BitMatrix inputBits;
 
+    private Random rnd = new Random();
+
     /////////////////////////////////////////////////////////////////////////
     //  Реализация
     /////////////////////////////////////////////////////////////////////////
@@ -34,8 +36,89 @@ public class Cortex {
         this.numRegions = numRegions;
         regions = new Region[numRegions];
         for (int i = 0; i < numRegions; i++) {
-            regions[i] = new Region(settings[i].initialParameters);
+            //regions[i] = new Region(settings[i].initialParameters);
         }
+    }
+
+    public void interactRegions() {
+        for (int i = 0; i < numRegions; i++) {
+            /*
+                Фаза 1: Перекрытие (Overlap)
+                Первая фаза вычисляет значение перекрытия каждой колонки с заданным входным вектором (данными).
+                Перекрытие для каждой колонки это просто число действующих синапсов подключенных к активным входным битам,
+                умноженное на фактор ускорения («агрессивности») колонки.
+                Если полученное число будет меньше minOverlap, то мы устанавливаем значение перекрытия в ноль.
+            */
+            sOverlap(i);
+            /*
+                Фаза 2: Ингибирование (подавление)
+                На второй фазе вычисляется какие из колонок остаются победителями после применения взаимного подавления.
+                Параметр desiredLocalActivity контролирует число колонок, которые останутся победителями.
+            */
+            sInhibition(i);
+            /*
+            Фаза 3:
+                Здесь обновляются значения перманентности всех синапсов, если это необходимо, равно как и фактор ускорения («агрессивности»)
+            колонки вместе с ее радиусом подавления.
+                Для победивших колонок, если их синапс был активен, его значение перманентности увеличивается,
+            а иначе – уменьшается. Значения перманентности ограничены промежутком от 0.0 до 1.0 .
+             */
+            sLearning(i);
+
+            tCellStates(i);
+            tPredictiveStates(i);
+            tLearning(i);
+            //change input matrix
+            setNewInputMatrix(i);
+        }
+    }
+
+    public void timestep() {
+        time++;
+        totalTime++;
+
+        if (totalTime > 2) {
+            time--;
+            for (Region region : regions) {
+                if (region == null) break;
+                for (int i = 0; i < 2; i++)
+                    for (int j = 0; j < region.numColumns + 1; j++) {
+                        region.activeColumns.setQuick(i, j, region.activeColumns.getQuick(i + 1, j));
+                    }
+                for (int j = 0; j < region.numColumns + 1; j++) {
+                    region.activeColumns.setQuick(2, j, 0);
+                }
+/*
+            System.out.print("activeColumns contains 2:\n");
+            for (int i = 0; i < 3; i++){
+                for (int j = 0; j < 30 ; j++)
+                    System.out.print(activeColumns.getQuick(i, j) + " ");
+                System.out.print("\n");
+            }
+*/
+
+                for (Column c : region.columns)
+                    for (Cell i : c.cells) {
+                        //удаляем 0-ой элемент, сдвигаем остальное
+                        for (int j = 1; j < 3; j++) {
+                            i.predictiveState.put(j - 1, i.predictiveState.get(j));
+                            i.learnState.put(j - 1, i.learnState.get(j));
+                            i.activeState.put(j - 1, i.activeState.get(j));
+                        }
+                        i.predictiveState.put(2, false);
+                        i.learnState.put(2, false);
+                        i.activeState.put(2, false);
+                    }
+            }
+        }
+/*
+        for (Column c : region.columns)
+            for (Cell i : c.cells) {
+                i.predictiveState.add(false);
+                i.learnState.add(false);
+                i.activeState.add(false);
+            }
+   */
     }
     /////////////////////////////////////////////////////////////////////////
 
@@ -45,10 +128,6 @@ public class Cortex {
      */
     private int inputDefault(int t, int j, int k) {
         return t % 2 > 0 ? rnd.nextInt(2) : Math.sin(j + k + totalTime) > 0 ? 1 : 0;
-    }
-
-    public boolean input(int c, int i) {
-        return inputBits.get(c, i);
     }
 
     /*
@@ -368,8 +447,6 @@ public class Cortex {
     к этому центру (т.е. у центра колонки значения перманентности ее синапсов должны быть выше).
      */
 
-    private Random rnd = new Random();
-
     public void initSynapsesDefault(int regInd, Column column, int x_dim, int y_dim) {
         for (int i = 0; i < regions[regInd].numColumns; i++) {
             //int dimX = rnd.nextInt(regions[regInd].getXDim());
@@ -447,13 +524,6 @@ public class Cortex {
         return (value + totalTime * regions[regInd].columns[c].overlapDutyCycle) / (totalTime + 1);
     }
 
-    /*
-    Фаза 1: Перекрытие (Overlap)
-    Первая фаза вычисляет значение перекрытия каждой колонки с заданным входным вектором (данными).
-    Перекрытие для каждой колонки это просто число действующих синапсов подключенных к активным входным битам,
-    умноженное на фактор ускорения («агрессивности») колонки.
-    Если полученное число будет меньше minOverlap, то мы устанавливаем значение перекрытия в ноль.
-     */
     public void setInput2DMatrix(BitMatrix inputAtT) {
         inputBits = new BitMatrix(inputAtT.columns(), inputAtT.rows());
         inputBits = inputAtT;
@@ -469,33 +539,12 @@ public class Cortex {
         //System.out.print(inputBits.get(4,0));
     }
 
-
+    /////////////////////////Computing cycle implementation//////////////////////
     public void sOverlap(int regInd) {
-        for (Column c : regions[regInd].columns) {
-            if (c == null) break;
-            c.overlap = 0.0;
-
-            c.connectedSynapses = c.connectedSynapses();
-
-            for (Synapse synapse : c.connectedSynapses) {
-                if (synapse == null) break;
-                if (input(synapse.c, synapse.i))
-                    c.overlap += 1;
-                //c.overlap += inputDefault(time, synapse.c, synapse.i);
-            }
-            if (c.overlap < c.minOverlap)
-                c.overlap = 0.0;
-            else
-                c.overlap *= c.boost;
-
-        }
+        for (Column c : regions[regInd].columns)
+            c.overlap(inputBits);
     }
 
-    /*
-    Фаза 2: Ингибирование (подавление)
-    На второй фазе вычисляется какие из колонок остаются победителями после применения взаимного подавления.
-    Параметр desiredLocalActivity контролирует число колонок, которые останутся победителями.
-     */
     public void sInhibition(int regInd) {
 /*
        System.out.print("before sInhibition: activeColumns contains:\n");
@@ -509,7 +558,7 @@ public class Cortex {
         int activeColumnsAtTlength = 1;
         for (Column c : regions[regInd].columns) {
             if (c == null) break;
-            double minLocalActivity = regions[regInd].GetMinLocalActivity(i);
+            double minLocalActivity = regions[regInd].getMinLocalActivity(i);
             double overlap = c.overlap;
             if (overlap > 0.0 && overlap >= minLocalActivity) {
                 regions[regInd].activeColumns.setQuick(time, activeColumnsAtTlength, i);
@@ -528,18 +577,11 @@ public class Cortex {
 */
     }
 
-    /*
-    Фаза 3:
-        Здесь обновляются значения перманентности всех синапсов, если это необходимо, равно как и фактор ускорения («агрессивности»)
-    колонки вместе с ее радиусом подавления.
-        Для победивших колонок, если их синапс был активен, его значение перманентности увеличивается,
-    а иначе – уменьшается. Значения перманентности ограничены промежутком от 0.0 до 1.0 .
-     */
     public void sLearning(int regInd) {
         for (int c = 1; c <= regions[regInd].activeColumns.viewRow(time).getQuick(0); c++) {
             for (Synapse s : regions[regInd].columns[regions[regInd].activeColumns.viewRow(time).getQuick(c)].potentialSynapses) {
                 if (s == null) break;
-                if (input(s.c, s.i)) {
+                if (inputBits.get(s.c, s.i)) {
                     s.permanence += regions[regInd].permanenceInc;
                     s.permanence = Math.min(s.permanence, 1.0);
                 } else {
@@ -719,64 +761,4 @@ public class Cortex {
         inputBits = getColumnsMapAtT(i, time);
     }
 
-    public void interactRegions() {
-        for (int i = 0; i < numRegions; i++) {
-            sOverlap(i);
-            sInhibition(i);
-            sLearning(i);
-            tCellStates(i);
-            tPredictiveStates(i);
-            tLearning(i);
-            //change input matrix
-            setNewInputMatrix(i);
-        }
-    }
-
-    public void timestep() {
-        time++;
-        totalTime++;
-
-        if (totalTime > 2) {
-            time--;
-            for (Region region : regions) {
-                if (region == null) break;
-                for (int i = 0; i < 2; i++)
-                    for (int j = 0; j < region.numColumns + 1; j++) {
-                        region.activeColumns.setQuick(i, j, region.activeColumns.getQuick(i + 1, j));
-                    }
-                for (int j = 0; j < region.numColumns + 1; j++) {
-                    region.activeColumns.setQuick(2, j, 0);
-                }
-/*
-            System.out.print("activeColumns contains 2:\n");
-            for (int i = 0; i < 3; i++){
-                for (int j = 0; j < 30 ; j++)
-                    System.out.print(activeColumns.getQuick(i, j) + " ");
-                System.out.print("\n");
-            }
-*/
-
-                for (Column c : region.columns)
-                    for (Cell i : c.cells) {
-                        //удаляем 0-ой элемент, сдвигаем остальное
-                        for (int j = 1; j < 3; j++) {
-                            i.predictiveState.put(j - 1, i.predictiveState.get(j));
-                            i.learnState.put(j - 1, i.learnState.get(j));
-                            i.activeState.put(j - 1, i.activeState.get(j));
-                        }
-                        i.predictiveState.put(2, false);
-                        i.learnState.put(2, false);
-                        i.activeState.put(2, false);
-                    }
-            }
-        }
-/*
-        for (Column c : region.columns)
-            for (Cell i : c.cells) {
-                i.predictiveState.add(false);
-                i.learnState.add(false);
-                i.activeState.add(false);
-            }
-   */
-    }
 }

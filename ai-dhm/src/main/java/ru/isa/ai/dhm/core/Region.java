@@ -76,31 +76,31 @@ public class Region {
     //////////////////////////////////////////////////////////
     final private int NUM_MEMORY_CELLS = 1000;
 
-    public Region(double[] parameters){
-        this.desiredLocalActivity = (int)parameters[0];
-        this.minOverlap = (int)parameters[1];
+    public Region(double[] parameters) {
+        this.desiredLocalActivity = (int) parameters[0];
+        this.minOverlap = (int) parameters[1];
         this.connectedPerm = parameters[2];
         this.permanenceInc = parameters[3];
         this.permanenceDec = parameters[4];
-        this.cellsPerColumn = (int)parameters[5];
-        this.activationThreshold = (int)parameters[6];
+        this.cellsPerColumn = (int) parameters[5];
+        this.activationThreshold = (int) parameters[6];
         this.initialPerm = parameters[7];
-        this.minThreshold = (int)parameters[8];
-        this.newSynapseCount = (int)parameters[9];
-        this.xDimension = (int)parameters[10];
-        this.yDimension = (int)parameters[11];
+        this.minThreshold = (int) parameters[8];
+        this.newSynapseCount = (int) parameters[9];
+        this.xDimension = (int) parameters[10];
+        this.yDimension = (int) parameters[11];
 
         addColumns();
     }
 
-    public void addColumns(){
+    public void addColumns() {
         numColumns = xDimension * yDimension;
 
         columns = new Column[numColumns];
 
         int ind = 0;
         for (int i = 0; i < xDimension; i++) {
-            for (int j = 0;j < yDimension; j++) {
+            for (int j = 0; j < yDimension; j++) {
                 columns[ind] = new Column(this, i, j);
                 ind++;
             }
@@ -108,9 +108,9 @@ public class Region {
 
     }
 
-    public void initParametersForColumns(double minOverlap, double minDutyCycle, double[] initOverlapDuty, double[] initActiveDuty){
+    public void initParametersForColumns(double minOverlap, double minDutyCycle, double[] initOverlapDuty, double[] initActiveDuty) {
         int i = 0;
-        for(Column c : this.columns){
+        for (Column c : this.columns) {
             c.minOverlap = minOverlap;
             c.minDutyCycle = minDutyCycle;
             c.activeDutyCycle = initActiveDuty[i];
@@ -126,26 +126,23 @@ inhibitionRadius колонки c.
      */
     public IntMatrix1D neighbours(int c) {
         IntMatrix1D result = new SparseIntMatrix1D(NUM_MEMORY_CELLS);
-        int length = 1 ;
-        for(int i = 0; i < numColumns; i++) {
+        int length = 1;
+        for (int i = 0; i < numColumns; i++) {
             if ((Math.abs(columns[i].x - columns[c].x) < inhibitionRadius) &&
-                    (Math.abs(columns[i].y - columns[c].y) < inhibitionRadius)){
-                result.setQuick(length,i);
+                    (Math.abs(columns[i].y - columns[c].y) < inhibitionRadius)) {
+                result.setQuick(length, i);
                 length++;
             }
         }
-        result.setQuick(0,length-1);
+        result.setQuick(0, length - 1);
         return result;
     }
 
 
-    private int partition (double[] array, int start, int end)
-    {
+    private int partition(double[] array, int start, int end) {
         int marker = start;
-        for ( int i = start; i <= end; i++ )
-        {
-            if ( array[i] <= array[end] )
-            {
+        for (int i = start; i <= end; i++) {
+            if (array[i] <= array[end]) {
                 double temp = array[marker];
                 array[marker] = array[i];
                 array[i] = temp;
@@ -155,26 +152,25 @@ inhibitionRadius колонки c.
         return marker - 1;
     }
 
-    private void quicksort (double[] array, int start, int end)
-    {
-        if ( start >= end )
-        {
+    private void quicksort(double[] array, int start, int end) {
+        if (start >= end) {
             return;
         }
-        int pivot = partition (array, start, end);
-        quicksort (array, start, pivot-1);
-        quicksort (array, pivot+1, end);
+        int pivot = partition(array, start, end);
+        quicksort(array, start, pivot - 1);
+        quicksort(array, pivot + 1, end);
     }
+
     /*
    Для заданного списка колонок возвращает их k-ое максимальное значение
 их перекрытий со входом
     */
-    public double kthScore(IntMatrix1D cols, int k){
+    public double kthScore(IntMatrix1D cols, int k) {
         double[] overlaps = new double[NUM_MEMORY_CELLS];
         //doubleMatrix1D overlaps;
 
         int length = 1;
-        for(int i=1; i <= cols.getQuick(0); i++) {
+        for (int i = 1; i <= cols.getQuick(0); i++) {
             overlaps[i] = columns[cols.get(i)].overlap;
             length++;
         }
@@ -198,10 +194,10 @@ inhibitionRadius колонки c.
         ///////
         double xDistance;
         double yDistance;
-        for(int i = 0; i < numColumns; i++) {
+        for (int i = 0; i < numColumns; i++) {
             xDistance = 0.0;
             yDistance = 0.0;
-            for(Synapse synapse : columns[i].potentialSynapses) {
+            for (Synapse synapse : columns[i].potentialSynapses) {
                 if (synapse == null) break;
                 if (synapse.permanence > connectedPerm) {
                     //double xCalculated = Math.abs(columns.get(i).x.doubleValue() - synapse.c.doubleValue());
@@ -214,7 +210,7 @@ inhibitionRadius колонки c.
                     yDistance = yDistance > yCalculated ? yDistance : yCalculated;
                 }
             }
-            result = (Math.sqrt(xDistance*xDistance + yDistance*yDistance) + i * result ) / (i+1);
+            result = (Math.sqrt(xDistance * xDistance + yDistance * yDistance) + i * result) / (i + 1);
         }
         return result;
     }
@@ -225,26 +221,45 @@ inhibitionRadius колонки c.
      */
     public double maxDutyCycle(IntMatrix1D cols) {
         double max = 0.0;
-        for(int col = 1; col < cols.getQuick(0)-1; col++) {
-            if (max < columns[col].activeDutyCycle);
-            max = columns[col].activeDutyCycle;
+        for (int col = 1; col < cols.getQuick(0) - 1; col++) {
+            if (max < columns[col].activeDutyCycle)
+                max = columns[col].activeDutyCycle;
         }
         return max;
     }
 
     // TODO AP: все методы в Java - с маленькой буквы
-    double GetMinLocalActivity(int i){
+    double getMinLocalActivity(int i) {
         return kthScore(neighbours(i), desiredLocalActivity);
     }
 
-//////////////////////////////////////////////////////////
-   public double getInhibitionRadius(){
+    //////////////////////////////////////////////////////////
+    public double getInhibitionRadius() {
         return inhibitionRadius;
     }
-   public void setInhibitionRadius(double value) {inhibitionRadius = value; }
-   public void setInputDimensions(int x, int y) {input_xDimension = x; input_yDimension = y;}
-   public int getInputXDim() {return input_xDimension; }
-   public int getInputYDim() {return input_yDimension; }
-   public int getXDim() {return this.xDimension; }
-   public int getYDim() {return this.yDimension; }
+
+    public void setInhibitionRadius(double value) {
+        inhibitionRadius = value;
+    }
+
+    public void setInputDimensions(int x, int y) {
+        input_xDimension = x;
+        input_yDimension = y;
+    }
+
+    public int getInputXDim() {
+        return input_xDimension;
+    }
+
+    public int getInputYDim() {
+        return input_yDimension;
+    }
+
+    public int getXDim() {
+        return this.xDimension;
+    }
+
+    public int getYDim() {
+        return this.yDimension;
+    }
 }
