@@ -8,8 +8,7 @@ import java.util.Random;
  * Time: 14:24
  */
 public class Synapse {
-    private int index;
-    private int columnIndex;
+    private int inputSource;
 
     private double permanence;
     private int sourceInput;
@@ -40,9 +39,8 @@ public class Synapse {
     private double synPermMin = 0.0;
     private double synPermMax = 1.0;
 
-    public Synapse(int index, int columnIndex) {
-        this.index = index;
-        this.columnIndex = columnIndex;
+    public Synapse(int sourceIndex) {
+        this.inputSource = sourceIndex;
         this.permTrimThreshold = permanenceInc / 2.0;
         this.permBelowStimulusInc = permConnected / 10.0;
     }
@@ -61,6 +59,16 @@ public class Synapse {
         permanence += permBelowStimulusInc;
     }
 
+    public void increasePermanence() {
+        permanence += permanenceInc;
+        clip(false);
+    }
+
+    public void decreasePermanence() {
+        permanence -= permanenceDec;
+        clip(true);
+    }
+
     public boolean isConnected() {
         return permanence > permConnected;
     }
@@ -68,15 +76,11 @@ public class Synapse {
     public void clip(boolean trim) {
         double minVal = trim ? permTrimThreshold : synPermMin;
         double value = permanence > synPermMax ? synPermMax : permanence;
-        permanence =  value < minVal ? synPermMin : value;
+        permanence = value < minVal ? synPermMin : value;
     }
 
-    public int getIndex() {
-        return index;
-    }
-
-    public int getColumnIndex() {
-        return columnIndex;
+    public int getInputSource() {
+        return inputSource;
     }
 
     public double getPermanence() {
@@ -94,4 +98,5 @@ public class Synapse {
     public void setSourceInput(int sourceInput) {
         this.sourceInput = sourceInput;
     }
+
 }

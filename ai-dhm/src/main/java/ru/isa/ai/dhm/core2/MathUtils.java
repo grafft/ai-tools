@@ -4,6 +4,7 @@ import cern.colt.matrix.tbit.BitMatrix;
 import cern.colt.matrix.tbit.BitVector;
 import cern.colt.matrix.tdouble.DoubleMatrix1D;
 import cern.colt.matrix.tdouble.DoubleMatrix2D;
+import cern.colt.matrix.tint.IntMatrix1D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,5 +120,9 @@ public final class MathUtils {
         for (int i = 0; i < arr.length; i++)
             if (arr[i] > 0)
                 potential.set(i);
+    }
+
+    public static int kthScore(IntMatrix1D overlaps, int k) {
+        return overlaps.viewSorted().getQuick((int) overlaps.size() - k - 1);
     }
 }
