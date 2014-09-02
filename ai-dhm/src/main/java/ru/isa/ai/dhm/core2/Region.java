@@ -2,7 +2,6 @@ package ru.isa.ai.dhm.core2;
 
 import cern.colt.function.tint.IntProcedure;
 import cern.colt.matrix.tbit.BitVector;
-import cern.colt.matrix.tdouble.DoubleMatrix1D;
 import cern.colt.matrix.tint.IntMatrix1D;
 import cern.colt.matrix.tint.impl.DenseIntMatrix1D;
 import com.google.common.primitives.Ints;
@@ -23,28 +22,47 @@ public class Region {
      * likely to oscillate.
      */
     private long dutyCyclePeriod = 1000;
+    /**
+     * The maximum overlap boost factor. Each column's
+     * overlap gets multiplied by a boost factor before it gets
+     * considered for inhibition. The actual boost factor for a column
+     * is a number between 1.0 and maxBoost. A boost factor of 1.0 is
+     * used if the duty cycle is >= minOverlapDutyCycle, maxBoost is
+     * used if the duty cycle is 0, and any duty cycle in between is
+     * linearly extrapolated from these 2 endpoints.
+     */
+    private double maxBoost = 10.0;
+
     private int desiredLocalActivity;
     private List<Region> childRegions = new ArrayList<>();
     private List<Region> parentRegions = new ArrayList<>();
     private Map<Integer, Column> columns = new HashMap<>();
     private BitVector activeColumns;
-    private RegionSettings settings;
     private IntMatrix1D overlaps;
+
+    private int numColumns;
+    private int xDimension;
+    private int yDimension;
+    private int numInputs;
+    private int xInput;
+    private int yInput;
     private int iterationNum = 0;
 
-    private DoubleMatrix1D activeDutyCycles;
-    private DoubleMatrix1D overlapDutyCycles;
-    private DoubleMatrix1D minActiveDutyCycle;
-    private DoubleMatrix1D minOverlapDutyCycle;
-
     public Region(RegionSettings settings) {
-        this.settings = settings;
+        this.xDimension = settings.xDimension;
+        this.yDimension = settings.yDimension;
+        this.numColumns = settings.xDimension * settings.yDimension;
+        this.xInput = settings.xInput;
+        this.yInput = settings.yInput;
+        this.numInputs = settings.xInput * settings.yInput;
         this.desiredLocalActivity = settings.desiredLocalActivity;
-        for (int i = 0; i < settings.numColumns; i++) {
-            columns.put(i, new Column(i, settings));
+        for (int i = 0; i < settings.xDimension; i++) {
+            for (int j = 0; j < settings.yDimension; j++) {
+                columns.put(i, new Column(i, new int[]{i, j}, settings));
+            }
         }
-        activeColumns = new BitVector(settings.numColumns);
-        overlaps = new DenseIntMatrix1D(settings.numColumns);
+        activeColumns = new BitVector(numColumns);
+        overlaps = new DenseIntMatrix1D(numColumns);
     }
 
     public void initialization() {
@@ -73,24 +91,24 @@ public class Region {
         });
         long period = dutyCyclePeriod > iterationNum ? iterationNum : dutyCyclePeriod;
         for (Column column : columns.values()) {
-            activeDutyCycles.setQuick(column.getIndex(),
-                    (activeDutyCycles.getQuick(column.getIndex()) * (period - 1) + (activeColumns.getQuick(column.getIndex()) ? 0 : 1)) / period);
-            double newOverlap = (overlapDutyCycles.getQuick(column.getIndex()) * (period - 1) + (overlaps.getQuick(column.getIndex()) > 0 ? 0 : 1)) / period;
-            overlapDutyCycles.setQuick(column.getIndex(), newOverlap);
+            double newActive = (column.getActiveDutyCycles() * (period - 1) + (activeColumns.getQuick(column.getIndex()) ? 0 : 1)) / period;
+            column.setActiveDutyCycles(newActive);
+            double newOverlap = (column.getOverlapDutyCycles() * (period - 1) + (overlaps.getQuick(column.getIndex()) > 0 ? 0 : 1)) / period;
+            column.setOverlapDutyCycles(newOverlap);
 
             double maxActiveDuty = 0;
             double maxOverlapDuty = 0;
             for (int index : getNeighbors(column)) {
-                maxActiveDuty = Math.max(maxActiveDuty, activeDutyCycles.getQuick(index));
-                maxOverlapDuty = Math.max(maxOverlapDuty, overlapDutyCycles.getQuick(index));
+                maxActiveDuty = Math.max(maxActiveDuty, columns.get(index).getActiveDutyCycles());
+                maxOverlapDuty = Math.max(maxOverlapDuty, columns.get(index).getOverlapDutyCycles());
             }
 
             double minDutyCycle = 0.01 * maxActiveDuty;
             if (newOverlap < minDutyCycle)
                 column.stimulate();
 
-            //column.setBoost();
-            //column.setInhibitionRadius(averageReceptieveFieldSize());
+            column.setBoost(boostFunction(newActive, minDutyCycle));
+            column.setInhibitionRadius(averageReceptiveFieldSize());
         }
     }
 
@@ -102,19 +120,56 @@ public class Region {
         }
     }
 
-    private int[] getNeighbors(Column column) {
-        List<Integer> neighbors = new ArrayList<>();
-        for (int i = column.getIndex() - column.getInhibitionRadius(); i < column.getIndex() + column.getInhibitionRadius(); i++) {
-            if (i >= 0 && i < columns.size())
-                neighbors.add(i);
-        }
-        return Ints.toArray(neighbors);
-    }
-
     private void sOverlap(BitVector input) {
         for (Column column : columns.values()) {
             overlaps.setQuick(column.getIndex(), column.overlapCalculating(input));
         }
+    }
+
+    private int[] getNeighbors(Column column) {
+        List<Integer> neighbors = new ArrayList<>();
+        for (int i = column.getCoords()[0] - column.getInhibitionRadius(); i < column.getCoords()[0] + column.getInhibitionRadius(); i++) {
+            if (i >= 0 && i < xDimension) {
+                for (int j = column.getCoords()[1] - column.getInhibitionRadius(); j < column.getCoords()[1] + column.getInhibitionRadius(); j++) {
+                    if (j >= 0 && j < yDimension) {
+                        neighbors.add(i * yDimension + j);
+                    }
+                }
+            }
+        }
+        return Ints.toArray(neighbors);
+    }
+
+    private int averageReceptiveFieldSize() {
+        final List<Integer> listX = new ArrayList<>();
+        final List<Integer> listY = new ArrayList<>();
+        for (final Column column : columns.values()) {
+            final BitVector connected = column.getProximalSegment().getConnectedSynapses();
+            connected.forEachIndexFromToInState(0, connected.size() - 1, true, new IntProcedure() {
+                @Override
+                public boolean apply(int element) {
+                    int inputIndex = column.getProximalSegment().getPotentialSynapses().get(element).getInputSource();
+                    listX.add(inputIndex / yInput);
+                    listY.add(inputIndex - (inputIndex / yInput) * yInput);
+                    return true;
+                }
+            });
+        }
+
+        int sumX = 0;
+        for (Integer value : listX)
+            sumX += value;
+        int sumY = 0;
+        for (Integer value : listY)
+            sumY += value;
+        return sumX / listX.size() > sumY / listY.size() ? sumX / listX.size() : sumY / listY.size();
+    }
+
+    private double boostFunction(double activeValue, double minDutyCycle) {
+        double value = 1;
+        if (activeValue < minDutyCycle)
+            value = ((1 - maxBoost) / minDutyCycle * activeValue) + maxBoost;
+        return value;
     }
 
     public void addParent(Region parent) {

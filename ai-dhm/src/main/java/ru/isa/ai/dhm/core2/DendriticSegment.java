@@ -54,7 +54,7 @@ public class DendriticSegment {
     private double boostFactor;
 
     public DendriticSegment(RegionSettings settings) {
-        numInputs = settings.numInputs;
+        this.numInputs = settings.xInput * settings.yInput;
         minOverlap = settings.minOverlap;
         connectedSynapses = new BitVector(numInputs);
         connectedInputs = new BitVector(numInputs);
@@ -144,7 +144,7 @@ public class DendriticSegment {
     }
 
     public void stimulate() {
-        for(Synapse synapse : potentialSynapses.values()){
+        for (Synapse synapse : potentialSynapses.values()) {
             synapse.stimulatePermanence();
         }
     }
@@ -171,4 +171,11 @@ public class DendriticSegment {
         boostFactor = val;
     }
 
+    public BitVector getConnectedSynapses() {
+        return connectedSynapses;
+    }
+
+    public Map<Integer, Synapse> getPotentialSynapses() {
+        return potentialSynapses;
+    }
 }

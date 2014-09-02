@@ -1,5 +1,7 @@
 package ru.isa.ai.dhm.core2;
 
+import cern.colt.matrix.tbit.BitVector;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,13 +13,19 @@ import java.util.List;
 public class Neocortex {
     private List<Region> regions = new ArrayList<>();
 
-    public Neocortex() {
-        for(Region region : regions){
+    public void initialization() {
+        for (Region region : regions) {
             region.initialization();
         }
     }
 
-    public void addRegion(Region region){
+    public void iterate(BitVector input) {
+        for (Region region : regions) {
+            region.compute(input);
+        }
+    }
+
+    public void addRegion(Region region) {
         regions.add(region);
     }
 }

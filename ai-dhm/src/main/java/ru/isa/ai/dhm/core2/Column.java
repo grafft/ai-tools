@@ -12,7 +12,11 @@ import java.util.*;
  */
 public class Column {
     private int index;
+    private int[] coords;
     private int inhibitionRadius;
+
+    private double activeDutyCycles = 0;
+    private double overlapDutyCycles = 0;
 
     private DendriticSegment proximalSegment;
 
@@ -20,8 +24,9 @@ public class Column {
 
     private Random random = new Random();
 
-    public Column(int index, RegionSettings settings) {
+    public Column(int index, int[] coords, RegionSettings settings) {
         this.index = index;
+        this.coords = coords;
         cells = new Cell[settings.cellsPerColumn];
         proximalSegment = new DendriticSegment(settings);
     }
@@ -31,7 +36,7 @@ public class Column {
         proximalSegment.initPermanences();
     }
 
-    public int overlapCalculating(BitVector input){
+    public int overlapCalculating(BitVector input) {
         return proximalSegment.overlapCalculating(input);
     }
 
@@ -51,7 +56,7 @@ public class Column {
         return proximalSegment.getOverlap();
     }
 
-    public void setBoost(double val){
+    public void setBoost(double val) {
         proximalSegment.setBoostFactor(val);
     }
 
@@ -61,5 +66,29 @@ public class Column {
 
     public void setInhibitionRadius(int inhibitionRadius) {
         this.inhibitionRadius = inhibitionRadius;
+    }
+
+    public double getActiveDutyCycles() {
+        return activeDutyCycles;
+    }
+
+    public void setActiveDutyCycles(double activeDutyCycles) {
+        this.activeDutyCycles = activeDutyCycles;
+    }
+
+    public double getOverlapDutyCycles() {
+        return overlapDutyCycles;
+    }
+
+    public void setOverlapDutyCycles(double overlapDutyCycles) {
+        this.overlapDutyCycles = overlapDutyCycles;
+    }
+
+    public int[] getCoords() {
+        return coords;
+    }
+
+    public DendriticSegment getProximalSegment() {
+        return proximalSegment;
     }
 }

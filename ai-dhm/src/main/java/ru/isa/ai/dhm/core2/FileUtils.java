@@ -15,7 +15,7 @@ public class FileUtils {
 
     public static Neocortex loadFromPropFiles(String path) throws RegionSettingsException {
         File dir = new File(path);
-        if (dir != null && dir.isDirectory()) {
+        if (dir.exists() && dir.isDirectory()) {
             Neocortex cortex = new Neocortex();
             for (File file : new File(path).listFiles()) {
                 if (file.getName().contains(PROPERTY_POSTFIX)) {
@@ -26,6 +26,7 @@ public class FileUtils {
                     }
                 }
             }
+            cortex.initialization();
             return cortex;
         } else {
             throw new RegionSettingsException("Cannot find directory " + path);

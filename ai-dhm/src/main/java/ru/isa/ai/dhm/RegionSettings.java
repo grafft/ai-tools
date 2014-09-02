@@ -11,9 +11,12 @@ import java.util.Properties;
  * Time: 12:02
  */
 public final class RegionSettings {
-    public int numInputs = 200;
+    public int xDimension = 10;
+    public int yDimension = 10;
 
-    public int numColumns = 100;
+    public int xInput = 33;
+    public int yInput = 33;
+
     public int cellsPerColumn = 4;
     public int newSynapseCount = 10;
 
@@ -29,11 +32,11 @@ public final class RegionSettings {
     public void saveIntoFile(String filePropName) throws RegionSettingsException {
         Properties properties = new Properties();
         try {
-            properties.setProperty("xDimension", String.valueOf(numInputs));
-            properties.setProperty("yDimension", String.valueOf(numColumns));
+            properties.setProperty("xDimension", String.valueOf(xDimension));
+            properties.setProperty("yDimension", String.valueOf(yDimension));
             properties.setProperty("cellsPerColumn", String.valueOf(cellsPerColumn));
-            properties.setProperty("newSynapseCount", String.valueOf(newSynapseCount));            
-            
+            properties.setProperty("newSynapseCount", String.valueOf(newSynapseCount));
+
             properties.setProperty("desiredLocalActivity", String.valueOf(desiredLocalActivity));
             properties.setProperty("minOverlap", String.valueOf(minOverlap));
             properties.setProperty("connectedPerm", String.valueOf(connectedPerm));
@@ -60,11 +63,11 @@ public final class RegionSettings {
             properties.load(input);
             for (String name : properties.stringPropertyNames()) {
                 switch (name) {
-                    case "numInputs":
-                        settings.numInputs = Integer.parseInt(properties.getProperty(name));
+                    case "xDimension":
+                        settings.xDimension = Integer.parseInt(properties.getProperty(name));
                         break;
-                    case "numColumns":
-                        settings.numColumns = Integer.parseInt(properties.getProperty(name));
+                    case "yDimension":
+                        settings.yDimension = Integer.parseInt(properties.getProperty(name));
                         break;
                     case "cellsPerColumn":
                         settings.cellsPerColumn = Integer.parseInt(properties.getProperty(name));
