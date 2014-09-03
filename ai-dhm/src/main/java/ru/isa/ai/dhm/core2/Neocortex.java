@@ -21,7 +21,10 @@ public class Neocortex {
 
     public void iterate(BitVector input) {
         for (Region region : regions) {
-            region.compute(input);
+            BitVector activeColumns = region.spatialPooling(input);
+            region.activeCalculation();
+            region.predictiveCalculation();
+            region.learning();
         }
     }
 

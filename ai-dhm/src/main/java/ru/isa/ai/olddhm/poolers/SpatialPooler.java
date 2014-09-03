@@ -26,7 +26,7 @@ import java.util.*;
  * etc.
  * <p/>
  * The primary public interfaces to this function are the "initialize"
- * and "compute" methods.
+ * and "spatialPooling" methods.
  * <p/>
  * Example usage:
  * <p/>
@@ -34,7 +34,7 @@ import java.util.*;
  * sp.initialize(inputDimensions, columnDimensions, <parameters>);<p/>
  * while (true) {<p/>
  * <get input vector><p/>
- * sp.compute(inputVector, learn, activeColumns)<p/>
+ * sp.spatialPooling(inputVector, learn, activeColumns)<p/>
  * <do something with output><p/>
  * }
  */

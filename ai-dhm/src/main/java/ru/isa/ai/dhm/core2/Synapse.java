@@ -9,9 +9,7 @@ import java.util.Random;
  */
 public class Synapse {
     private int inputSource;
-
     private double permanence;
-    private int sourceInput;
 
     private Random random = new Random();
     /**
@@ -89,14 +87,6 @@ public class Synapse {
 
     public void setPermanence(double permanence) {
         this.permanence = permanence;
-    }
-
-    public int getSourceInput() {
-        return sourceInput;
-    }
-
-    public void setSourceInput(int sourceInput) {
-        this.sourceInput = sourceInput;
     }
 
 }

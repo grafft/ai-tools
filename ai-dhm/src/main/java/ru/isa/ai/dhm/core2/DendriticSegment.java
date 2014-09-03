@@ -18,6 +18,7 @@ public class DendriticSegment {
 
     private int numInputs;
     private Random random = new Random();
+
     /**
      * This parameter deteremines the extent of the
      * input that each column can potentially be connected to. This
@@ -178,4 +179,5 @@ public class DendriticSegment {
     public Map<Integer, Synapse> getPotentialSynapses() {
         return potentialSynapses;
     }
+
 }

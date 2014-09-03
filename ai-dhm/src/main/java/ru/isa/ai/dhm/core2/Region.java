@@ -37,6 +37,7 @@ public class Region {
     private List<Region> childRegions = new ArrayList<>();
     private List<Region> parentRegions = new ArrayList<>();
     private Map<Integer, Column> columns = new HashMap<>();
+    private Map<Integer, Cell> allCells = new HashMap<>();
     private BitVector activeColumns;
     private IntMatrix1D overlaps;
 
@@ -58,8 +59,15 @@ public class Region {
         this.desiredLocalActivity = settings.desiredLocalActivity;
         for (int i = 0; i < settings.xDimension; i++) {
             for (int j = 0; j < settings.yDimension; j++) {
-                columns.put(i, new Column(i, new int[]{i, j}, settings));
+                Column column = new Column(i * yDimension + j, new int[]{i, j}, settings);
+                columns.put(i, column);
+                for (Cell cell : column.getCells()) {
+                    allCells.put(cell.getIndex(), cell);
+                }
             }
+        }
+        for (Column column : columns.values()) {
+            column.setOtherCells(allCells);
         }
         activeColumns = new BitVector(numColumns);
         overlaps = new DenseIntMatrix1D(numColumns);
@@ -72,7 +80,7 @@ public class Region {
         }
     }
 
-    public BitVector compute(BitVector input) {
+    public BitVector spatialPooling(BitVector input) {
         iterationNum++;
         sOverlap(input);
         sInhibition();
@@ -172,6 +180,28 @@ public class Region {
         return value;
     }
 
+    public void activeCalculation() {
+        activeColumns.forEachIndexFromToInState(0, activeColumns.size() - 1, true, new IntProcedure() {
+            @Override
+            public boolean apply(int element) {
+                columns.get(element).updateActiveCells();
+                return true;
+            }
+        });
+    }
+
+    public void predictiveCalculation() {
+        for (Column column : columns.values()) {
+            column.updatePredictiveCells();
+        }
+    }
+
+    public void learning() {
+        for (Column column : columns.values()) {
+            column.predictiveLearning();
+        }
+    }
+
     public void addParent(Region parent) {
         parentRegions.add(parent);
     }
@@ -179,4 +209,5 @@ public class Region {
     public void addChild(Region child) {
         childRegions.add(child);
     }
+
 }
