@@ -11,11 +11,11 @@ import java.util.Properties;
  * Time: 12:02
  */
 public final class RegionSettings {
-    public int xDimension = 10;
-    public int yDimension = 10;
+    public int xDimension = 30;
+    public int yDimension = 30;
 
-    public int xInput = 33;
-    public int yInput = 33;
+    public int xInput = 100;
+    public int yInput = 100;
 
     public int cellsPerColumn = 4;
     public int newSynapseCount = 10;
@@ -111,5 +111,9 @@ public final class RegionSettings {
         } catch (NumberFormatException nfe) {
             throw new RegionSettingsException("Wrong property value in property file " + filePropName, nfe);
         }
+    }
+
+    public static RegionSettings getDefaultSettings(){
+        return new RegionSettings();
     }
 }

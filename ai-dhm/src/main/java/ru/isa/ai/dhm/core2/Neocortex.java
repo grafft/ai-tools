@@ -20,8 +20,9 @@ public class Neocortex {
     }
 
     public void iterate(BitVector input) {
+        BitVector newInput = input;
         for (Region region : regions) {
-            BitVector activeColumns = region.spatialPooling(input);
+            newInput = region.spatialPooling(newInput);
             region.activeCalculation();
             region.predictiveCalculation();
             region.learning();
@@ -30,5 +31,9 @@ public class Neocortex {
 
     public void addRegion(Region region) {
         regions.add(region);
+    }
+
+    public List<Region> getRegions() {
+        return regions;
     }
 }

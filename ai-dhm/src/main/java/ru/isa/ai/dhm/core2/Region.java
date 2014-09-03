@@ -60,7 +60,7 @@ public class Region {
         for (int i = 0; i < settings.xDimension; i++) {
             for (int j = 0; j < settings.yDimension; j++) {
                 Column column = new Column(i * yDimension + j, new int[]{i, j}, settings);
-                columns.put(i, column);
+                columns.put(column.getIndex(), column);
                 for (Cell cell : column.getCells()) {
                     allCells.put(cell.getIndex(), cell);
                 }
@@ -210,4 +210,11 @@ public class Region {
         childRegions.add(child);
     }
 
+    public Map<Integer, Column> getColumns() {
+        return columns;
+    }
+
+    public BitVector getActiveColumns() {
+        return activeColumns;
+    }
 }
