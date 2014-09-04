@@ -3,7 +3,10 @@ package ru.isa.ai.dhm.core2;
 import cern.colt.matrix.tbit.BitVector;
 import ru.isa.ai.dhm.RegionSettings;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Author: Aleksandr Panov
@@ -13,40 +16,74 @@ import java.util.*;
 public class Column {
     private int index;
     private int[] coords;
-    private int inhibitionRadius;
+    private boolean isActive;
 
-    private double activeDutyCycles = 0;
-    private double overlapDutyCycles = 0;
-
+    private int inhibitionRadius = 10;
     private int newSynapsesCount = 10;
+    private int minOverlap;
+    private double maxBoost = 10.0;
 
-    private DendriticSegment proximalSegment;
+    private ProximalSegment proximalSegment;
     private Map<Integer, Cell> otherCells;
 
     private Cell[] cells;
     private Map<Integer, List<SegmentUpdate>> toUpdate = new HashMap<>();
+    private int[] neighbors;
+
+    private double activeDutyCycle = 0;
+    private double overlapDutyCycle = 0;
 
     public Column(int index, int[] coords, RegionSettings settings) {
         this.index = index;
         this.coords = coords;
+        this.minOverlap = settings.minOverlap;
         cells = new Cell[settings.cellsPerColumn];
         for (int i = 0; i < cells.length; i++) {
             cells[i] = new Cell(index * settings.cellsPerColumn + i);
         }
-        proximalSegment = new DendriticSegment(settings);
+        proximalSegment = new ProximalSegment(settings);
     }
 
-    public void initialization(double ration) {
-        proximalSegment.initPotentialSynapses(ration);
-        proximalSegment.initPermanences();
+    /**
+     * Инициализация колнки - создание начального списка потенциальных синапсов
+     *
+     * @param inputCenterX
+     * @param inputCenterY
+     */
+    public void initialization(int inputCenterX, int inputCenterY) {
+        proximalSegment.initSynapses(inputCenterX, inputCenterY);
     }
 
     public int overlapCalculating(BitVector input) {
         return proximalSegment.overlapCalculating(input);
     }
 
-    public void learning() {
-        proximalSegment.learning();
+    public void learning(BitVector input) {
+        proximalSegment.updateSynapses(input);
+    }
+
+    public void updateOverlapDutyCycle(int period) {
+        overlapDutyCycle = (overlapDutyCycle * (period - 1) + (getOverlap()) > minOverlap ? 1 : 0) / period;
+    }
+
+    public void updateActiveDutyCycle(int period) {
+        activeDutyCycle = (activeDutyCycle * (period - 1) + (isActive ? 1 : 0)) / period;
+    }
+
+    /**
+     * Если activeDutyCycle больше minValue, то значение ускорения равно 1. Ускорение начинает линейно увеличиваться
+     * как только activeDutyCycle колонки падает ниже minDutyCycle.
+     * @param minValue
+     */
+    public void updateBoostFactor(double minValue) {
+        double value = 1;
+        if (activeDutyCycle < minValue)
+            value = 1 + (minValue - activeDutyCycle) * (maxBoost - 1) / minValue;
+        proximalSegment.setBoostFactor(value);
+    }
+
+    public int getReceptiveFieldSize() {
+        return proximalSegment.getReceptieveFieldSize();
     }
 
     public void stimulate() {
@@ -183,10 +220,6 @@ public class Column {
         return proximalSegment.getOverlap();
     }
 
-    public void setBoost(double val) {
-        proximalSegment.setBoostFactor(val);
-    }
-
     public int getInhibitionRadius() {
         return inhibitionRadius;
     }
@@ -195,27 +228,11 @@ public class Column {
         this.inhibitionRadius = inhibitionRadius;
     }
 
-    public double getActiveDutyCycles() {
-        return activeDutyCycles;
-    }
-
-    public void setActiveDutyCycles(double activeDutyCycles) {
-        this.activeDutyCycles = activeDutyCycles;
-    }
-
-    public double getOverlapDutyCycles() {
-        return overlapDutyCycles;
-    }
-
-    public void setOverlapDutyCycles(double overlapDutyCycles) {
-        this.overlapDutyCycles = overlapDutyCycles;
-    }
-
     public int[] getCoords() {
         return coords;
     }
 
-    public DendriticSegment getProximalSegment() {
+    public ProximalSegment getProximalSegment() {
         return proximalSegment;
     }
 
@@ -225,6 +242,30 @@ public class Column {
 
     public Cell[] getCells() {
         return cells;
+    }
+
+    public void setNeighbors(int[] neighbors) {
+        this.neighbors = neighbors;
+    }
+
+    public int[] getNeighbors() {
+        return neighbors;
+    }
+
+    public double getActiveDutyCycle() {
+        return activeDutyCycle;
+    }
+
+    public double getOverlapDutyCycle() {
+        return overlapDutyCycle;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
     }
 
     private class SegmentUpdate {

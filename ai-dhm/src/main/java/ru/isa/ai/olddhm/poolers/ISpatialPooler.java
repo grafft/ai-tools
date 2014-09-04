@@ -29,19 +29,19 @@ public interface ISpatialPooler {
      * This is the main workshorse method of the SpatialPooler class. This
      * method takes an input vector and computes the set of output active
      * columns. If 'learn' is set to True, this method also performs
-     * learning.
+     * updateRelations.
      * @param inputVector  An array of integer 0's and 1's that comprises
      *                     the input to the spatial pooler. The length of the
      *                     array must match the total number of input bits implied by
      *                     the constructor (also returned by the method getNumInputs). In
      *                     cases where the input is multi-dimensional, inputVector is a
      *                     flattened array of inputs.
-     * @param learn        A boolean value indicating whether learning should be
+     * @param learn        A boolean value indicating whether updateRelations should be
      *                     performed. Learning entails updating the permanence values of
      *                     the synapses, duty cycles, etc. Learning is typically on but
-     *                     setting learning to 'off' is useful for analyzing the current
+     *                     setting updateRelations to 'off' is useful for analyzing the current
      *                     state of the SP. For example, you might want to feed in various
-     *                     inputs and examine the resulting SDR's. Note that if learning
+     *                     inputs and examine the resulting SDR's. Note that if updateRelations
      *                     is off, boosting is turned off and columns that have never won
      *                     will be removed from activeVector.
      * @param activeVector An array representing the winning columns after

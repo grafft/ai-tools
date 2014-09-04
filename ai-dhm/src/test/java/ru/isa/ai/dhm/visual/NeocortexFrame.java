@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 
 /**
  * Author: Aleksandr Panov
@@ -86,12 +87,12 @@ public class NeocortexFrame extends JFrame {
         stButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(!timer.isRunning()){
+                if (!timer.isRunning()) {
                     timer.start();
-                    ((JButton)e.getSource()).setText("Stop");
-                }else{
+                    ((JButton) e.getSource()).setText("Stop");
+                } else {
                     timer.stop();
-                    ((JButton)e.getSource()).setText("Start");
+                    ((JButton) e.getSource()).setText("Start");
                 }
             }
         });
@@ -119,12 +120,10 @@ public class NeocortexFrame extends JFrame {
     private void initCortex() {
         settings = RegionSettings.getDefaultSettings();
         neocortex = new Neocortex();
-        Region region1 = new Region(settings);
-        Region region2 = new Region(settings);
-        region2.addParent(region1);
-        region1.addChild(region2);
-        neocortex.addRegion(region2);
-        neocortex.addRegion(region1);
+        Region region1 = neocortex.addRegion(settings, null);
+        java.util.List<Region> children = new ArrayList<>();
+        children.add(region1);
+        neocortex.addRegion(settings, children);
         neocortex.initialization();
     }
 

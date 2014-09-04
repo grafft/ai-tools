@@ -27,54 +27,47 @@ public class Synapse {
     private double permanenceInc = 0.1;
     /**
      * The amount by which the permanence of an
-     * inactive synapse is decremented in each learning step.
+     * inactive synapse is decremented in each updateRelations step.
      */
     private double permanenceDec = 0.01;
 
     private double initConnectedPct = 0.5;
     private double permTrimThreshold;
-    private double permBelowStimulusInc;
-    private double synPermMin = 0.0;
-    private double synPermMax = 1.0;
+    private double stimulusInc;
 
     public Synapse(int sourceIndex) {
         this.inputSource = sourceIndex;
         this.permTrimThreshold = permanenceInc / 2.0;
-        this.permBelowStimulusInc = permConnected / 10.0;
+        this.stimulusInc = permConnected / 10.0;
     }
 
+    /**
+     * Случайные значения преманентности должны быть из малого диапазона около connectedPerm
+     */
     public void initPermanence() {
-        double value;
         if (random.nextDouble() <= initConnectedPct)
-            value = MathUtils.roundWithPrecision(permConnected + random.nextDouble() * permanenceInc / 4.0);
+            permanence = permConnected + random.nextDouble() * permanenceInc / 4.0;
         else
-            value = MathUtils.roundWithPrecision(permConnected * random.nextDouble());
-
-        permanence = value < permTrimThreshold ? 0 : value;
+            permanence = permConnected - random.nextDouble() * permanenceInc / 4.0;
     }
 
     public void stimulatePermanence() {
-        permanence += permBelowStimulusInc;
+        permanence += stimulusInc;
+        permanence = permanence > 1 ? 1 : permanence;
     }
 
     public void increasePermanence() {
         permanence += permanenceInc;
-        clip(false);
+        permanence = permanence > 1 ? 1 : permanence;
     }
 
     public void decreasePermanence() {
         permanence -= permanenceDec;
-        clip(true);
+        permanence = permanence < 0 ? 0 : permanence;
     }
 
     public boolean isConnected() {
         return permanence > permConnected;
-    }
-
-    public void clip(boolean trim) {
-        double minVal = trim ? permTrimThreshold : synPermMin;
-        double value = permanence > synPermMax ? synPermMax : permanence;
-        permanence = value < minVal ? synPermMin : value;
     }
 
     public int getInputSource() {

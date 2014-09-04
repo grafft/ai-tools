@@ -7,7 +7,10 @@ import cern.colt.matrix.tint.impl.DenseIntMatrix1D;
 import com.google.common.primitives.Ints;
 import ru.isa.ai.dhm.RegionSettings;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Author: Aleksandr Panov
@@ -21,17 +24,7 @@ public class Region {
      * boost. Shorter values make it potentially more unstable and
      * likely to oscillate.
      */
-    private long dutyCyclePeriod = 1000;
-    /**
-     * The maximum overlap boost factor. Each column's
-     * overlap gets multiplied by a boost factor before it gets
-     * considered for inhibition. The actual boost factor for a column
-     * is a number between 1.0 and maxBoost. A boost factor of 1.0 is
-     * used if the duty cycle is >= minOverlapDutyCycle, maxBoost is
-     * used if the duty cycle is 0, and any duty cycle in between is
-     * linearly extrapolated from these 2 endpoints.
-     */
-    private double maxBoost = 10.0;
+    private int dutyCyclePeriod = 1000;
 
     private int desiredLocalActivity;
     private List<Region> childRegions = new ArrayList<>();
@@ -42,24 +35,34 @@ public class Region {
     private IntMatrix1D overlaps;
 
     private int numColumns;
-    private int xDimension;
-    private int yDimension;
-    private int numInputs;
     private int xInput;
     private int yInput;
+    private int xDimension;
+    private int yDimension;
+
     private int iterationNum = 0;
 
     public Region(RegionSettings settings) {
         this.xDimension = settings.xDimension;
         this.yDimension = settings.yDimension;
-        this.numColumns = settings.xDimension * settings.yDimension;
         this.xInput = settings.xInput;
         this.yInput = settings.yInput;
-        this.numInputs = settings.xInput * settings.yInput;
         this.desiredLocalActivity = settings.desiredLocalActivity;
+
         for (int i = 0; i < settings.xDimension; i++) {
             for (int j = 0; j < settings.yDimension; j++) {
                 Column column = new Column(i * yDimension + j, new int[]{i, j}, settings);
+                List<Integer> neighbors = new ArrayList<>();
+                for (int k = column.getCoords()[0] - column.getInhibitionRadius(); k < column.getCoords()[0] + column.getInhibitionRadius(); k++) {
+                    if (k >= 0 && k < xDimension) {
+                        for (int m = column.getCoords()[1] - column.getInhibitionRadius(); m < column.getCoords()[1] + column.getInhibitionRadius(); m++) {
+                            if (m >= 0 && m < yDimension) {
+                                neighbors.add(k * yDimension + m);
+                            }
+                        }
+                    }
+                }
+                column.setNeighbors(Ints.toArray(neighbors));
                 columns.put(column.getIndex(), column);
                 for (Cell cell : column.getCells()) {
                     allCells.put(cell.getIndex(), cell);
@@ -73,114 +76,104 @@ public class Region {
         overlaps = new DenseIntMatrix1D(numColumns);
     }
 
+    /**
+     * Иниуиализация региона, для каждой колнки создается начальный список потенцильаных синапсов
+     */
     public void initialization() {
         for (Column column : columns.values()) {
-            double pctOfInput = column.getIndex() / Math.max(columns.size() - 1, 1.0);
-            column.initialization(pctOfInput);
+            int inputCenterX = (column.getCoords()[0] + 1) * (xInput / (xDimension + 1));
+            int inputCenterY = (column.getCoords()[1] + 1) * (yInput / (yDimension + 1));
+            column.initialization(inputCenterX, inputCenterY);
         }
     }
 
-    public BitVector spatialPooling(BitVector input) {
+    /**
+     * Обработка входного сигнала
+     *
+     * @param input
+     * @return
+     */
+    public BitVector forwardInputProcessing(BitVector input) {
         iterationNum++;
-        sOverlap(input);
-        sInhibition();
-        sLearning();
+        overlapPhase(input);
+        inhibitionPhase();
+        learningPhase(input);
 
         return activeColumns;
     }
 
-    private void sLearning() {
+    /**
+     * Вычисление значения перекрытия каждой колонки с заданным входным вектором.
+     *
+     * @param input
+     */
+    private void overlapPhase(BitVector input) {
+        for (Column column : columns.values()) {
+            int overlap = column.overlapCalculating(input);
+            overlaps.setQuick(column.getIndex(), overlap);
+        }
+    }
+
+    /**
+     * Вычисление колонок, остающихся победителями после применения взаимного подавления.
+     */
+    private void inhibitionPhase() {
+        for (Column column : columns.values()) {
+            IntMatrix1D neighborOverlaps = overlaps.viewSelection(column.getNeighbors());
+            double minLocalOverlap = MathUtils.kthScore(neighborOverlaps, desiredLocalActivity);
+            if (column.getOverlap() > 0 && column.getOverlap() >= minLocalOverlap) {
+                column.setActive(true);
+                activeColumns.set(column.getIndex());
+            } else {
+                column.setActive(false);
+            }
+        }
+    }
+
+    /**
+     * Обновление значений перманентности, фактора ускорения и радиуса подавления колонок.
+     * Механизм ускорения работает в том случае, если колонка не побеждает достаточно долго (activeDutyCycle).
+     * Если колонка плохо перекрывается с входным сигналом достоачно долго (overlapDutyCycle), то увеличиваются
+     * перманентности.
+     */
+    private void learningPhase(final BitVector input) {
         activeColumns.forEachIndexFromToInState(0, activeColumns.size() - 1, true, new IntProcedure() {
             @Override
             public boolean apply(int element) {
-                columns.get(element).learning();
+                columns.get(element).learning(input);
                 return true;
             }
         });
-        long period = dutyCyclePeriod > iterationNum ? iterationNum : dutyCyclePeriod;
+        int period = dutyCyclePeriod > iterationNum ? iterationNum : dutyCyclePeriod;
         for (Column column : columns.values()) {
-            double newActive = (column.getActiveDutyCycles() * (period - 1) + (activeColumns.getQuick(column.getIndex()) ? 0 : 1)) / period;
-            column.setActiveDutyCycles(newActive);
-            double newOverlap = (column.getOverlapDutyCycles() * (period - 1) + (overlaps.getQuick(column.getIndex()) > 0 ? 0 : 1)) / period;
-            column.setOverlapDutyCycles(newOverlap);
-
             double maxActiveDuty = 0;
-            double maxOverlapDuty = 0;
-            for (int index : getNeighbors(column)) {
-                maxActiveDuty = Math.max(maxActiveDuty, columns.get(index).getActiveDutyCycles());
-                maxOverlapDuty = Math.max(maxOverlapDuty, columns.get(index).getOverlapDutyCycles());
+            for (int index : column.getNeighbors()) {
+                double activity = columns.get(index).getActiveDutyCycle();
+                maxActiveDuty = maxActiveDuty > activity ? maxActiveDuty : activity;
             }
-
             double minDutyCycle = 0.01 * maxActiveDuty;
-            if (newOverlap < minDutyCycle)
+
+            column.updateActiveDutyCycle(period);
+            column.updateBoostFactor(minDutyCycle);
+
+            column.updateOverlapDutyCycle(period);
+            if (column.getOverlapDutyCycle() < minDutyCycle)
                 column.stimulate();
 
-            column.setBoost(boostFunction(newActive, minDutyCycle));
             column.setInhibitionRadius(averageReceptiveFieldSize());
         }
     }
 
-    private void sInhibition() {
-        for (Column column : columns.values()) {
-            double minLocalActivity = MathUtils.kthScore(overlaps.viewSelection(getNeighbors(column)), desiredLocalActivity);
-            if (minLocalActivity > 0 && column.getOverlap() >= minLocalActivity)
-                activeColumns.set(column.getIndex());
-        }
-    }
-
-    private void sOverlap(BitVector input) {
-        for (Column column : columns.values()) {
-            overlaps.setQuick(column.getIndex(), column.overlapCalculating(input));
-        }
-    }
-
-    private int[] getNeighbors(Column column) {
-        List<Integer> neighbors = new ArrayList<>();
-        for (int i = column.getCoords()[0] - column.getInhibitionRadius(); i < column.getCoords()[0] + column.getInhibitionRadius(); i++) {
-            if (i >= 0 && i < xDimension) {
-                for (int j = column.getCoords()[1] - column.getInhibitionRadius(); j < column.getCoords()[1] + column.getInhibitionRadius(); j++) {
-                    if (j >= 0 && j < yDimension) {
-                        neighbors.add(i * yDimension + j);
-                    }
-                }
-            }
-        }
-        return Ints.toArray(neighbors);
-    }
-
     private int averageReceptiveFieldSize() {
-        final List<Integer> listX = new ArrayList<>();
-        final List<Integer> listY = new ArrayList<>();
+        int sum = 0;
         for (final Column column : columns.values()) {
-            final BitVector connected = column.getProximalSegment().getConnectedSynapses();
-            connected.forEachIndexFromToInState(0, connected.size() - 1, true, new IntProcedure() {
-                @Override
-                public boolean apply(int element) {
-                    int inputIndex = column.getProximalSegment().getPotentialSynapses().get(element).getInputSource();
-                    listX.add(inputIndex / yInput);
-                    listY.add(inputIndex - (inputIndex / yInput) * yInput);
-                    return true;
-                }
-            });
+            sum += column.getReceptiveFieldSize();
         }
 
-        int sumX = 0;
-        for (Integer value : listX)
-            sumX += value;
-        int sumY = 0;
-        for (Integer value : listY)
-            sumY += value;
-        return sumX / listX.size() > sumY / listY.size() ? sumX / listX.size() : sumY / listY.size();
+        return sum / columns.size();
     }
 
-    private double boostFunction(double activeValue, double minDutyCycle) {
-        double value = 1;
-        if (activeValue < minDutyCycle)
-            value = ((1 - maxBoost) / minDutyCycle * activeValue) + maxBoost;
-        return value;
-    }
-
-    public void activeCalculation() {
+    public void updateActiveCells() {
         activeColumns.forEachIndexFromToInState(0, activeColumns.size() - 1, true, new IntProcedure() {
             @Override
             public boolean apply(int element) {
@@ -190,13 +183,13 @@ public class Region {
         });
     }
 
-    public void predictiveCalculation() {
+    public void updatePredictiveCells() {
         for (Column column : columns.values()) {
             column.updatePredictiveCells();
         }
     }
 
-    public void learning() {
+    public void updateRelations() {
         for (Column column : columns.values()) {
             column.predictiveLearning();
         }

@@ -1,6 +1,7 @@
 package ru.isa.ai.dhm.core2;
 
 import cern.colt.matrix.tbit.BitVector;
+import ru.isa.ai.dhm.RegionSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
  */
 public class Neocortex {
     private List<Region> regions = new ArrayList<>();
+    private List<RegionSettings> regionSettings = new ArrayList<>();
 
     public void initialization() {
         for (Region region : regions) {
@@ -22,15 +24,22 @@ public class Neocortex {
     public void iterate(BitVector input) {
         BitVector newInput = input;
         for (Region region : regions) {
-            newInput = region.spatialPooling(newInput);
-            region.activeCalculation();
-            region.predictiveCalculation();
-            region.learning();
+            newInput = region.forwardInputProcessing(newInput);
+            region.updateActiveCells();
+            region.updatePredictiveCells();
+            region.updateRelations();
         }
     }
 
-    public void addRegion(Region region) {
+    public Region addRegion(RegionSettings settings, List<Region> children) {
+        Region region = new Region(settings);
+        if (children != null) {
+            for (Region child : children)
+                region.addChild(child);
+        }
+        regionSettings.add(settings);
         regions.add(region);
+        return region;
     }
 
     public List<Region> getRegions() {
