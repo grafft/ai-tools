@@ -77,9 +77,13 @@ public class Cell {
         return bestSegment;
     }
 
-    public void updateSegments(Map<Integer, Cell> cells) {
+    public void updateHistory(Map<Integer, Cell> cells) {
         for (DistalSegment segment : distalSegments) {
             segment.updateHistory(cells);
+        }
+        for (int i = historyDeep - 1; i > 0; i--) {
+            stateHistory[i] = stateHistory[i - 1];
+            learnHistory[i] = learnHistory[i - 1];
         }
     }
 

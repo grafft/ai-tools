@@ -186,9 +186,8 @@ public class Column {
         for (SegmentUpdate su : segmentUpdates) {
             su.segment.updateSynapses(su.synapses, reinforcement);
         }
-
         for (Cell cell : cells) {
-            cell.updateSegments(otherCells);
+            cell.updateHistory(otherCells);
         }
     }
 
