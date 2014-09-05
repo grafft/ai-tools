@@ -1,7 +1,7 @@
 package ru.isa.ai.dhm.core;
 
 import cern.colt.matrix.tbit.BitVector;
-import ru.isa.ai.dhm.RegionSettings;
+import ru.isa.ai.dhm.DHMSettings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,30 +14,26 @@ import java.util.Map;
  * Time: 14:24
  */
 public class Column {
+    private DHMSettings settings;
+
     private int index;
     private int[] coords;
     private boolean isActive;
-
-    private int inhibitionRadius = 10;
-    private int newSynapsesCount = 10;
-    private int minOverlap;
-    private double maxBoost = 10.0;
-    private double initialPerm = 0.1;
 
     private ProximalSegment proximalSegment;
     private Map<Integer, Cell> otherCells;
 
     private Cell[] cells;
     private Map<Integer, List<SegmentUpdate>> toUpdate = new HashMap<>();
-    private int[] neighbors;
+    private List<Integer> neighbors = new ArrayList<>();
 
     private double activeDutyCycle = 0;
     private double overlapDutyCycle = 0;
 
-    public Column(int index, int[] coords, RegionSettings settings) {
+    public Column(int index, int[] coords, DHMSettings settings) {
+        this.settings = settings;
         this.index = index;
         this.coords = coords;
-        this.minOverlap = settings.minOverlap;
         cells = new Cell[settings.cellsPerColumn];
         for (int i = 0; i < cells.length; i++) {
             cells[i] = new Cell(index * settings.cellsPerColumn + i);
@@ -48,11 +44,24 @@ public class Column {
     /**
      * Инициализация колнки - создание начального списка потенциальных синапсов
      *
-     * @param inputCenterX
-     * @param inputCenterY
+     * @param inputCenterX - центр рецептивного поля
+     * @param inputCenterY - центр рецептивного поля
      */
     public void initialization(int inputCenterX, int inputCenterY) {
         proximalSegment.initSynapses(inputCenterX, inputCenterY);
+        updateNeighbors(settings.initialInhibitionRadius);
+    }
+
+    public void updateNeighbors(int inhibitionRadius) {
+        for (int k = getCoords()[0] - inhibitionRadius; k < getCoords()[0] + inhibitionRadius; k++) {
+            if (k >= 0 && k < settings.xDimension) {
+                for (int m = getCoords()[1] - inhibitionRadius; m < getCoords()[1] + inhibitionRadius; m++) {
+                    if (m >= 0 && m < settings.yDimension) {
+                        neighbors.add(k * settings.yDimension + m);
+                    }
+                }
+            }
+        }
     }
 
     public int overlapCalculating(BitVector input) {
@@ -64,7 +73,7 @@ public class Column {
     }
 
     public void updateOverlapDutyCycle(int period) {
-        overlapDutyCycle = (overlapDutyCycle * (period - 1) + (getOverlap()) > minOverlap ? 1 : 0) / period;
+        overlapDutyCycle = (overlapDutyCycle * (period - 1) + (getOverlap()) > settings.minOverlap ? 1 : 0) / period;
     }
 
     public void updateActiveDutyCycle(int period) {
@@ -75,12 +84,12 @@ public class Column {
      * Если activeDutyCycle больше minValue, то значение ускорения равно 1. Ускорение начинает линейно увеличиваться
      * как только activeDutyCycle колонки падает ниже minDutyCycle.
      *
-     * @param minValue
+     * @param minValue - минимальнео число активных циклов
      */
     public void updateBoostFactor(double minValue) {
         double value = 1;
         if (activeDutyCycle < minValue)
-            value = 1 + (minValue - activeDutyCycle) * (maxBoost - 1) / minValue;
+            value = 1 + (minValue - activeDutyCycle) * (settings.maxBoost - 1) / minValue;
         proximalSegment.setBoostFactor(value);
     }
 
@@ -179,8 +188,8 @@ public class Column {
      * своих перманентностей. Все остальные синапсы уменьшают свои перманентности. В противном случае синапсы на
      * обновление уменьшают свои перманентности. Для новых синапсов назначается перманентность, равная initialPerm.
      *
-     * @param segmentUpdates
-     * @param reinforcement
+     * @param segmentUpdates - список изменений
+     * @param reinforcement  - тип обучения
      */
     private void adaptSegments(List<SegmentUpdate> segmentUpdates, boolean reinforcement) {
         for (SegmentUpdate su : segmentUpdates) {
@@ -198,11 +207,11 @@ public class Column {
      * Такие синапсы случайно выбираются из числа клеток, которые были назначены для обучения в текущий момент времени
      * или в предыдущий (historyLevel = 1).
      *
-     * @param cells
-     * @param s
-     * @param historyLevel
-     * @param addNewSynapses
-     * @return
+     * @param cells          - все окружающие клетки
+     * @param s              - сегмент на обновление (null ели новый)
+     * @param historyLevel   - время
+     * @param addNewSynapses - добавлять ли новые синапсы
+     * @return - список изменений
      */
     private SegmentUpdate createSegmentUpdate(Map<Integer, Cell> cells, DistalSegment s, int historyLevel, boolean addNewSynapses) {
         final SegmentUpdate su = new SegmentUpdate();
@@ -220,9 +229,9 @@ public class Column {
                 if (cell.getLearnHistory()[historyLevel])
                     cellsToLearn.add(cell);
             }
-            for (int i = 0; i < newSynapsesCount - su.synapses.size(); i++) {
+            for (int i = 0; i < settings.newSynapsesCount - su.synapses.size(); i++) {
                 int index = (int) (cellsToLearn.size() * Math.random());
-                Synapse synapse = new Synapse(cellsToLearn.get(index).getIndex(), initialPerm);
+                Synapse synapse = new Synapse(settings, cellsToLearn.get(index).getIndex(), settings.initialPerm);
                 su.synapses.add(cellsToLearn.get(index).getIndex());
                 su.segment.addSynapse(synapse);
             }
@@ -234,7 +243,7 @@ public class Column {
      * Возвращается клетка с самым соответсвующим входу сегментом. Если такой клетки нет, то возвращается клетка с
      * минимальным количеством сегментов.
      *
-     * @return
+     * @return - лучше всего подходящая клетка
      */
     private Cell getBestMatchingCell(int historyLevel) {
         Cell bestMatching = null;
@@ -261,20 +270,8 @@ public class Column {
         return proximalSegment.getOverlap();
     }
 
-    public int getInhibitionRadius() {
-        return inhibitionRadius;
-    }
-
-    public void setInhibitionRadius(int inhibitionRadius) {
-        this.inhibitionRadius = inhibitionRadius;
-    }
-
     public int[] getCoords() {
         return coords;
-    }
-
-    public ProximalSegment getProximalSegment() {
-        return proximalSegment;
     }
 
     public void setOtherCells(Map<Integer, Cell> otherCells) {
@@ -285,11 +282,7 @@ public class Column {
         return cells;
     }
 
-    public void setNeighbors(int[] neighbors) {
-        this.neighbors = neighbors;
-    }
-
-    public int[] getNeighbors() {
+    public List<Integer> getNeighbors() {
         return neighbors;
     }
 

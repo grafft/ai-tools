@@ -1,7 +1,7 @@
 package ru.isa.ai.dhm.core;
 
 import cern.colt.matrix.tbit.BitVector;
-import ru.isa.ai.dhm.RegionSettings;
+import ru.isa.ai.dhm.DHMSettings;
 
 import java.util.*;
 
@@ -11,79 +11,43 @@ import java.util.*;
  * Time: 10:30
  */
 public class ProximalSegment {
-    private Map<Integer, Synapse> potentialSynapses = new HashMap<>();
-
-    private int xInput;
-    private int yInput;
-    private Random random = new Random();
-
-    /**
-     * This parameter deteremines the extent of the
-     * input that each column can potentially be connected to. This
-     * can be thought of as the input bits that are visible to each
-     * column, or a 'receptive field' of the field of vision. A large
-     * enough value will result in global coverage, meaning
-     * that each column can potentially be connected to every input
-     * bit. This parameter defines a square (or hyper square) area: a
-     * column will have a max square potential pool with sides of
-     * length (2 * potentialRadius + 1).
-     */
-    private int potentialRadius = 16;
-    /**
-     * The percent of the inputs, within a column's
-     * potential radius, that a column can be connected to. If set to
-     * 1, the column will be connected to every input within its
-     * potential radius. This parameter is used to give each column a
-     * unique potential pool when a large potentialRadius causes
-     * overlap between the columns. At initialization time we choose
-     * ((2*potentialRadius + 1)^(# inputDimensions) * connectedPct)
-     * input bits to comprise the column's potential pool.
-     */
-    private double connectedPct = 0.5;
-    /**
-     * This is a number specifying the minimum
-     * number of potentialSynapses that must be active in order for a column to
-     * turn ON. The purpose of this is to prevent noisy input from
-     * activating columns.
-     */
-    private long stimulusThreshold = 0;
-    private int minOverlap;
+    private DHMSettings settings;
 
     private int overlap;
     private double boostFactor;
+    private Map<Integer, Synapse> potentialSynapses = new HashMap<>();
 
-    public ProximalSegment(RegionSettings settings) {
-        this.xInput = settings.xInput;
-        this.yInput = settings.yInput;
-        minOverlap = settings.minOverlap;
+    private Random random = new Random();
+
+    public ProximalSegment(DHMSettings settings) {
+        this.settings = settings;
     }
 
     // TODO AP: реализовать уменьшение перманентности при удалении от геометрического центра подключенных входов
-
     /**
      * Создание начального списка потенциальных синапсов, состоящего из случайного множества входных битов,
      * выбранных из пространства входных данных. Каждый входной бит предтсавлен синапсом с некоторым случайным
      * значением перманентности.
      *
-     * @param xCenter
-     * @param yCenter
+     * @param xCenter - центр рецептивного поля
+     * @param yCenter - центр рецептивного поля
      */
     public void initSynapses(int xCenter, int yCenter) {
         List<Integer> indices = new ArrayList<>();
-        for (int i = xCenter - potentialRadius; i <= xCenter + potentialRadius; i++) {
-            if (i >= 0 && i < xInput) {
-                for (int j = yCenter - potentialRadius; j <= yCenter + potentialRadius; j++) {
-                    if (j >= 0 && j < yInput)
-                        indices.add(i * yInput + j);
+        for (int i = xCenter - settings.potentialRadius; i <= xCenter + settings.potentialRadius; i++) {
+            if (i >= 0 && i < settings.xInput) {
+                for (int j = yCenter - settings.potentialRadius; j <= yCenter + settings.potentialRadius; j++) {
+                    if (j >= 0 && j < settings.yInput)
+                        indices.add(i * settings.yInput + j);
                 }
             }
         }
 
         Collections.shuffle(indices, random);
-        int numPotential = (int) Math.round(indices.size() * connectedPct);
+        int numPotential = (int) Math.round(indices.size() * settings.connectedPct);
         for (int i = 0; i < numPotential; i++) {
             int index = indices.get(i);
-            Synapse synapse = new Synapse(index);
+            Synapse synapse = new Synapse(settings, index);
             synapse.initPermanence();
             potentialSynapses.put(index, synapse);
         }
@@ -93,15 +57,15 @@ public class ProximalSegment {
      * Перекрытие - это просто число действующих синапсов подключенных к активным входным битам, умноженное на
      * фактор ускорения. Если полученное значение мньше minOverlap, то перекрытие устанавливается в 0.
      *
-     * @param input
-     * @return
+     * @param input - входной сигнал
+     * @return значение перекрытия
      */
     public int overlapCalculating(BitVector input) {
         overlap = 0;
         for (int key : potentialSynapses.keySet())
             overlap += input.get(key) ? 1 : 0;
 
-        overlap *= overlap < minOverlap ? 0 : boostFactor;
+        overlap *= overlap < settings.minOverlap ? 0 : boostFactor;
         return overlap;
     }
 
@@ -109,7 +73,7 @@ public class ProximalSegment {
      * Есил синапс был активен (через него шел сигнал от входного вектора), его значение преманентности увеличивается,
      * а иначе - уменьшается.
      *
-     * @param input
+     * @param input - входнйо сигнал
      */
     public void updateSynapses(BitVector input) {
         for (Synapse synapse : potentialSynapses.values()) {
@@ -136,7 +100,7 @@ public class ProximalSegment {
         int maxY = -1;
         for (Synapse synapse : potentialSynapses.values()) {
             if (synapse.isConnected()) {
-                int x = synapse.getInputSource() / yInput;
+                int x = synapse.getInputSource() / settings.yInput;
                 int y = synapse.getInputSource() - x;
                 if (x > maxX)
                     maxX = x;
@@ -160,9 +124,5 @@ public class ProximalSegment {
 
     public void setBoostFactor(double val) {
         boostFactor = val;
-    }
-
-    public Map<Integer, Synapse> getPotentialSynapses() {
-        return potentialSynapses;
     }
 }

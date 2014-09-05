@@ -1,5 +1,7 @@
 package ru.isa.ai.dhm.core;
 
+import ru.isa.ai.dhm.DHMSettings;
+
 import java.util.Random;
 
 /**
@@ -8,43 +10,20 @@ import java.util.Random;
  * Time: 14:24
  */
 public class Synapse {
+    private DHMSettings settings;
     private int inputSource;
     private double permanence;
 
     private Random random = new Random();
-    /**
-     * The default connected threshold. Any synapse
-     * whose permanence value is above the connected threshold is
-     * a "connected synapse", meaning it can contribute to
-     * the cell's firing.
-     */
-    private double permConnected = 0.1;
 
-    /**
-     * The amount by which the permanence of an
-     * active synapse is incremented in each round.
-     */
-    private double permanenceInc = 0.1;
-    /**
-     * The amount by which the permanence of an
-     * inactive synapse is decremented in each updateRelations step.
-     */
-    private double permanenceDec = 0.01;
 
-    private double initConnectedPct = 0.5;
-    private double permTrimThreshold;
-    private double stimulusInc;
-
-    public Synapse(int sourceIndex) {
+    public Synapse(DHMSettings settings, int sourceIndex) {
+        this.settings = settings;
         this.inputSource = sourceIndex;
-        this.permTrimThreshold = permanenceInc / 2.0;
-        this.stimulusInc = permConnected / 10.0;
     }
 
-    public Synapse(int sourceIndex, double initPermanence) {
-        this.inputSource = sourceIndex;
-        this.permTrimThreshold = permanenceInc / 2.0;
-        this.stimulusInc = permConnected / 10.0;
+    public Synapse(DHMSettings settings, int sourceIndex, double initPermanence) {
+        this(settings, sourceIndex);
         this.permanence = initPermanence;
     }
 
@@ -52,29 +31,29 @@ public class Synapse {
      * Случайные значения преманентности должны быть из малого диапазона около connectedPerm
      */
     public void initPermanence() {
-        if (random.nextDouble() <= initConnectedPct)
-            permanence = permConnected + random.nextDouble() * permanenceInc / 4.0;
+        if (random.nextDouble() <= settings.initConnectedPct)
+            permanence = settings.permConnected + random.nextDouble() * settings.permanenceInc / 4.0;
         else
-            permanence = permConnected - random.nextDouble() * permanenceInc / 4.0;
+            permanence = settings.permConnected - random.nextDouble() * settings.permanenceInc / 4.0;
     }
 
     public void stimulatePermanence() {
-        permanence += stimulusInc;
+        permanence += settings.stimulusInc;
         permanence = permanence > 1 ? 1 : permanence;
     }
 
     public void increasePermanence() {
-        permanence += permanenceInc;
+        permanence += settings.permanenceInc;
         permanence = permanence > 1 ? 1 : permanence;
     }
 
     public void decreasePermanence() {
-        permanence -= permanenceDec;
+        permanence -= settings.permanenceDec;
         permanence = permanence < 0 ? 0 : permanence;
     }
 
     public boolean isConnected() {
-        return permanence > permConnected;
+        return permanence > settings.permConnected;
     }
 
     public int getInputSource() {

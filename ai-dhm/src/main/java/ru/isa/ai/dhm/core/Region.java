@@ -5,8 +5,8 @@ import cern.colt.matrix.tbit.BitVector;
 import cern.colt.matrix.tint.IntMatrix1D;
 import cern.colt.matrix.tint.impl.DenseIntMatrix1D;
 import com.google.common.primitives.Ints;
+import ru.isa.ai.dhm.DHMSettings;
 import ru.isa.ai.dhm.MathUtils;
-import ru.isa.ai.dhm.RegionSettings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,51 +19,22 @@ import java.util.Map;
  * Time: 14:24
  */
 public class Region {
-    /**
-     * The period used to calculate duty cycles.
-     * Higher values make it take longer to respond to changes in
-     * boost. Shorter values make it potentially more unstable and
-     * likely to oscillate.
-     */
-    private int dutyCyclePeriod = 1000;
+    private DHMSettings settings;
 
-    private int desiredLocalActivity;
     private List<Region> childRegions = new ArrayList<>();
-    private List<Region> parentRegions = new ArrayList<>();
     private Map<Integer, Column> columns = new HashMap<>();
-    private Map<Integer, Cell> allCells = new HashMap<>();
     private BitVector activeColumns;
     private IntMatrix1D overlaps;
 
-    private int numColumns;
-    private int xInput;
-    private int yInput;
-    private int xDimension;
-    private int yDimension;
-
     private int iterationNum = 0;
 
-    public Region(RegionSettings settings) {
-        this.xDimension = settings.xDimension;
-        this.yDimension = settings.yDimension;
-        this.xInput = settings.xInput;
-        this.yInput = settings.yInput;
-        this.desiredLocalActivity = settings.desiredLocalActivity;
+    public Region(DHMSettings settings) {
+        this.settings = settings;
 
+        Map<Integer, Cell> allCells = new HashMap<>();
         for (int i = 0; i < settings.xDimension; i++) {
             for (int j = 0; j < settings.yDimension; j++) {
-                Column column = new Column(i * yDimension + j, new int[]{i, j}, settings);
-                List<Integer> neighbors = new ArrayList<>();
-                for (int k = column.getCoords()[0] - column.getInhibitionRadius(); k < column.getCoords()[0] + column.getInhibitionRadius(); k++) {
-                    if (k >= 0 && k < xDimension) {
-                        for (int m = column.getCoords()[1] - column.getInhibitionRadius(); m < column.getCoords()[1] + column.getInhibitionRadius(); m++) {
-                            if (m >= 0 && m < yDimension) {
-                                neighbors.add(k * yDimension + m);
-                            }
-                        }
-                    }
-                }
-                column.setNeighbors(Ints.toArray(neighbors));
+                Column column = new Column(i * settings.yDimension + j, new int[]{i, j}, settings);
                 columns.put(column.getIndex(), column);
                 for (Cell cell : column.getCells()) {
                     allCells.put(cell.getIndex(), cell);
@@ -73,8 +44,8 @@ public class Region {
         for (Column column : columns.values()) {
             column.setOtherCells(allCells);
         }
-        activeColumns = new BitVector(numColumns);
-        overlaps = new DenseIntMatrix1D(numColumns);
+        activeColumns = new BitVector(settings.xDimension * settings.yDimension);
+        overlaps = new DenseIntMatrix1D(settings.xDimension * settings.yDimension);
     }
 
     /**
@@ -82,8 +53,8 @@ public class Region {
      */
     public void initialization() {
         for (Column column : columns.values()) {
-            int inputCenterX = (column.getCoords()[0] + 1) * (xInput / (xDimension + 1));
-            int inputCenterY = (column.getCoords()[1] + 1) * (yInput / (yDimension + 1));
+            int inputCenterX = (column.getCoords()[0] + 1) * (settings.xInput / (settings.xDimension + 1));
+            int inputCenterY = (column.getCoords()[1] + 1) * (settings.yInput / (settings.yDimension + 1));
             column.initialization(inputCenterX, inputCenterY);
         }
     }
@@ -91,8 +62,8 @@ public class Region {
     /**
      * Обработка входного сигнала
      *
-     * @param input
-     * @return
+     * @param input - выходной сигнал
+     * @return индексы активных колонки
      */
     public BitVector forwardInputProcessing(BitVector input) {
         iterationNum++;
@@ -106,7 +77,7 @@ public class Region {
     /**
      * Вычисление значения перекрытия каждой колонки с заданным входным вектором.
      *
-     * @param input
+     * @param input - входной сигнал
      */
     private void overlapPhase(BitVector input) {
         for (Column column : columns.values()) {
@@ -120,8 +91,8 @@ public class Region {
      */
     private void inhibitionPhase() {
         for (Column column : columns.values()) {
-            IntMatrix1D neighborOverlaps = overlaps.viewSelection(column.getNeighbors());
-            double minLocalOverlap = MathUtils.kthScore(neighborOverlaps, desiredLocalActivity);
+            IntMatrix1D neighborOverlaps = overlaps.viewSelection(Ints.toArray(column.getNeighbors()));
+            double minLocalOverlap = MathUtils.kthScore(neighborOverlaps, settings.desiredLocalActivity);
             if (column.getOverlap() > 0 && column.getOverlap() >= minLocalOverlap) {
                 column.setActive(true);
                 activeColumns.set(column.getIndex());
@@ -145,7 +116,7 @@ public class Region {
                 return true;
             }
         });
-        int period = dutyCyclePeriod > iterationNum ? iterationNum : dutyCyclePeriod;
+        int period = settings.dutyCyclePeriod > iterationNum ? iterationNum : settings.dutyCyclePeriod;
         for (Column column : columns.values()) {
             double maxActiveDuty = 0;
             for (int index : column.getNeighbors()) {
@@ -161,13 +132,14 @@ public class Region {
             if (column.getOverlapDutyCycle() < minDutyCycle)
                 column.stimulate();
 
-            column.setInhibitionRadius(averageReceptiveFieldSize());
+            column.updateNeighbors(averageReceptiveFieldSize());
         }
     }
 
     /**
      * Средний радиус подключенных рецептивных полей всех колонок
-     * @return
+     *
+     * @return средний радиус по всем клонкам
      */
     private int averageReceptiveFieldSize() {
         int sum = 0;
@@ -208,6 +180,10 @@ public class Region {
 
     public void addChild(Region child) {
         childRegions.add(child);
+    }
+
+    public List<Region> getChildRegions() {
+        return childRegions;
     }
 
     public Map<Integer, Column> getColumns() {

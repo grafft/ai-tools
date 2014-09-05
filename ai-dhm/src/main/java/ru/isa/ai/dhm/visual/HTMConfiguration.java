@@ -1,7 +1,7 @@
 package ru.isa.ai.dhm.visual;
 
 import info.monitorenter.gui.chart.Chart2D;
-import ru.isa.ai.dhm.RegionSettings;
+import ru.isa.ai.dhm.DHMSettings;
 import ru.isa.ai.dhm.RegionSettingsException;
 import ru.isa.ai.dhm.oldcore.CortexThread;
 
@@ -82,7 +82,7 @@ public class HTMConfiguration {
 
     //HTM Comfiguration properties
     private int numOfRegions;
-    private RegionSettings[] settings;
+    private DHMSettings[] settings;
     public CortexThread crtx;
     public ImageClass img;
 
@@ -206,9 +206,9 @@ public class HTMConfiguration {
         this.numOfRegions = numOfRegions;
         if (this.numOfRegions > 0) {
 
-            settings = new RegionSettings[this.numOfRegions];
+            settings = new DHMSettings[this.numOfRegions];
             for (int i = 0; i < this.numOfRegions; i++) {
-                settings[i] = new RegionSettings();
+                settings[i] = new DHMSettings();
             }
 
             if (textFieldsAvailable) {

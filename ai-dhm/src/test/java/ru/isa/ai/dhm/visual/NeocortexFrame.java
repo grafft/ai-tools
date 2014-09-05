@@ -1,7 +1,7 @@
 package ru.isa.ai.dhm.visual;
 
 import cern.colt.matrix.tbit.BitVector;
-import ru.isa.ai.dhm.RegionSettings;
+import ru.isa.ai.dhm.DHMSettings;
 import ru.isa.ai.dhm.core.Column;
 import ru.isa.ai.dhm.core.Neocortex;
 import ru.isa.ai.dhm.core.Region;
@@ -22,10 +22,8 @@ import java.util.ArrayList;
  * Time: 14:00
  */
 public class NeocortexFrame extends JFrame {
-
-    private static final int INPUT_SIZE = 100;
     private Neocortex neocortex;
-    private RegionSettings settings;
+    private DHMSettings settings;
     private BasicStroke regionStroke = new BasicStroke(2.0f);
     private BasicStroke columnStroke = new BasicStroke(1.0f);
     private Color activeColor = Color.RED;
@@ -58,18 +56,27 @@ public class NeocortexFrame extends JFrame {
         infoPanel.setMinimumSize(size);
         infoPanel.setLayout(new GridLayout(10, 1, 7, 7));
         infoPanel.setBorder(LineBorder.createBlackLineBorder());
-        JButton stepButton = new JButton("Step");
-        JButton stButton = new JButton("Start");
+        final JButton stepButton = new JButton("Step");
+        final JButton stButton = new JButton("Start");
         stepButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                BitVector input = new BitVector(settings.xInput * settings.yInput);
+            public void actionPerformed(final ActionEvent e) {
+                ((JButton) e.getSource()).setEnabled(false);
+                stButton.setEnabled(false);
+                final BitVector input = new BitVector(settings.xInput * settings.yInput);
                 for (int i = 0; i < settings.xInput * settings.yInput; i++) {
                     if (Math.random() > 0.3)
                         input.set(i);
                 }
-                neocortex.iterate(input);
-                getContentPane().repaint();
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        neocortex.iterate(input);
+                        ((JButton) e.getSource()).setEnabled(true);
+                        stButton.setEnabled(true);
+                        getContentPane().repaint();
+                    }
+                };
             }
         });
         final Timer timer = new Timer(1000, new ActionListener() {
@@ -90,6 +97,7 @@ public class NeocortexFrame extends JFrame {
                 if (!timer.isRunning()) {
                     timer.start();
                     ((JButton) e.getSource()).setText("Stop");
+                    stepButton.setEnabled(false);
                 } else {
                     timer.stop();
                     ((JButton) e.getSource()).setText("Start");
@@ -118,7 +126,7 @@ public class NeocortexFrame extends JFrame {
     }
 
     private void initCortex() {
-        settings = RegionSettings.getDefaultSettings();
+        settings = DHMSettings.getDefaultSettings();
         neocortex = new Neocortex();
         Region region1 = neocortex.addRegion(settings, null);
         java.util.List<Region> children = new ArrayList<>();

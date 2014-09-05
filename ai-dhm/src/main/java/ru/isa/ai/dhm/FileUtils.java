@@ -19,7 +19,7 @@ public class FileUtils {
             for (File file : new File(path).listFiles()) {
                 if (file.getName().contains(PROPERTY_POSTFIX)) {
                     try {
-                        RegionSettings settings = RegionSettings.loadFromFile(file.getPath());
+                        DHMSettings settings = DHMSettings.loadFromFile(file.getPath());
                         cortex.addRegion(settings, null);
                     } catch (RegionSettingsException e) {
                         e.printStackTrace();

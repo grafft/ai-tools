@@ -4,7 +4,7 @@ import cern.colt.matrix.tbit.BitMatrix;
 import cern.colt.matrix.tint.IntMatrix1D;
 import cern.colt.matrix.tint.impl.DenseIntMatrix2D;
 import cern.colt.matrix.tint.impl.SparseIntMatrix2D;
-import ru.isa.ai.dhm.RegionSettings;
+import ru.isa.ai.dhm.DHMSettings;
 
 import java.util.Random;
 
@@ -32,7 +32,7 @@ public class Cortex {
     //  Реализация
     /////////////////////////////////////////////////////////////////////////
 
-    public Cortex(int numRegions, RegionSettings[] settings) {
+    public Cortex(int numRegions, DHMSettings[] settings) {
         this.numRegions = numRegions;
         regions = new Region[numRegions];
         for (int i = 0; i < numRegions; i++) {

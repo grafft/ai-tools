@@ -10,24 +10,82 @@ import java.util.Properties;
  * Date: 28.08.2014
  * Time: 12:02
  */
-public final class RegionSettings {
+public final class DHMSettings {
     public int xDimension = 30;
     public int yDimension = 30;
-
     public int xInput = 100;
     public int yInput = 100;
 
     public int cellsPerColumn = 4;
     public int newSynapseCount = 10;
 
-    public int desiredLocalActivity = 20;
+    /**
+     *  Параметр, контролирующий число колонок победителей
+     */
+    public int desiredLocalActivity = 10;
     public int minOverlap = 50;
     public double connectedPerm = 0.2;
-    public double permanenceInc = 0.1;
-    public double permanenceDec = 0.1;
     public double activationThreshold = 10.0;
     public double initialPerm = 0.1;
     public double minThreshold = 4.0;
+    public int newSynapsesCount = 10;
+    public double maxBoost = 10.0;
+    /**
+     * This parameter deteremines the extent of the
+     * input that each column can potentially be connected to. This
+     * can be thought of as the input bits that are visible to each
+     * column, or a 'receptive field' of the field of vision. A large
+     * enough value will result in global coverage, meaning
+     * that each column can potentially be connected to every input
+     * bit. This parameter defines a square (or hyper square) area: a
+     * column will have a max square potential pool with sides of
+     * length (2 * potentialRadius + 1).
+     */
+    public int potentialRadius = 16;
+    /**
+     * The percent of the inputs, within a column's
+     * potential radius, that a column can be connected to. If set to
+     * 1, the column will be connected to every input within its
+     * potential radius. This parameter is used to give each column a
+     * unique potential pool when a large potentialRadius causes
+     * overlap between the columns. At initialization time we choose
+     * ((2*potentialRadius + 1)^(# inputDimensions) * connectedPct)
+     * input bits to comprise the column's potential pool.
+     */
+    public double connectedPct = 0.5;
+    /**
+     * This is a number specifying the minimum
+     * number of potentialSynapses that must be active in order for a column to
+     * turn ON. The purpose of this is to prevent noisy input from
+     * activating columns.
+     */
+    public long stimulusThreshold = 0;
+
+    /**
+     * Длина периода подсчета рабочих циклов
+     */
+    public int dutyCyclePeriod = 1000;
+    /**
+     * The default connected threshold. Any synapse
+     * whose permanence value is above the connected threshold is
+     * a "connected synapse", meaning it can contribute to
+     * the cell's firing.
+     */
+    public double permConnected = 0.1;
+
+    /**
+     * The amount by which the permanence of an
+     * active synapse is incremented in each round.
+     */
+    public double permanenceInc = 0.1;
+    /**
+     * The amount by which the permanence of an
+     * inactive synapse is decremented in each updateRelations step.
+     */
+    public double permanenceDec = 0.01;
+    public double initConnectedPct = 0.5;
+    public double stimulusInc;
+    public int initialInhibitionRadius = 10;
 
     public void saveIntoFile(String filePropName) throws RegionSettingsException {
         Properties properties = new Properties();
@@ -55,9 +113,9 @@ public final class RegionSettings {
         }
     }
 
-    public static RegionSettings loadFromFile(String filePropName) throws RegionSettingsException {
+    public static DHMSettings loadFromFile(String filePropName) throws RegionSettingsException {
         Properties properties = new Properties();
-        RegionSettings settings = new RegionSettings();
+        DHMSettings settings = new DHMSettings();
         try {
             FileInputStream input = new FileInputStream(filePropName);
             properties.load(input);
@@ -113,7 +171,7 @@ public final class RegionSettings {
         }
     }
 
-    public static RegionSettings getDefaultSettings(){
-        return new RegionSettings();
+    public static DHMSettings getDefaultSettings(){
+        return new DHMSettings();
     }
 }
