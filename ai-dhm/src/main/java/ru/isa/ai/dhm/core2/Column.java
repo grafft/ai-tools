@@ -73,6 +73,7 @@ public class Column {
     /**
      * Если activeDutyCycle больше minValue, то значение ускорения равно 1. Ускорение начинает линейно увеличиваться
      * как только activeDutyCycle колонки падает ниже minDutyCycle.
+     *
      * @param minValue
      */
     public void updateBoostFactor(double minValue) {
@@ -90,49 +91,64 @@ public class Column {
         proximalSegment.stimulate();
     }
 
+    /**
+     * Если ткущий прямой вход снизу был предсказан какой-либо из клекто, тогда эти клетки становятся активными.
+     * Если этот сегмент стал активным из-за клеток выбранных для обучения, тогда такая клетка также выбирается
+     * для обучения. Если же текущий вход не был предсказан, тогда все клетки становятся активными и кроме того,
+     * лучше всего подходящая под входные данные клетка вбирается для обучения с добавлением нового латерального
+     * сегмента.
+     */
     public void updateActiveCells() {
         boolean wasPredicted = false;
         boolean toLearn = false;
         for (Cell cell : cells) {
-            if (cell.getPreviousState() == Cell.State.predictive) {
-                DistalSegment s = cell.getActiveSegment(false);
+            if (cell.getStateHistory()[1] == Cell.State.predictive) {
+                DistalSegment s = cell.getMostActiveSegment(false, 1);
                 if (s.isSequenceSegment()) {
                     wasPredicted = true;
-                    cell.setCurrentState(Cell.State.active);
-                    if (s.segmentActive(true)) {
+                    cell.getStateHistory()[0] = Cell.State.active;
+                    if (s.isActiveInState(true, 1)) {
                         toLearn = true;
-                        cell.setToLearn(true);
+                        cell.getLearnHistory()[0] = true;
                     }
                 }
             }
         }
         if (!wasPredicted) {
             for (Cell cell : cells) {
-                cell.setCurrentState(Cell.State.active);
+                cell.getStateHistory()[0] = Cell.State.active;
             }
         }
         if (!toLearn) {
-            Cell bestCell = getBestMatchingCell();
-            bestCell.setToLearn(true);
-            SegmentUpdate sUpdate = getSegmentActiveSynapses(otherCells, null, true);
+            Cell bestCell = getBestMatchingCell(1);
+            bestCell.getLearnHistory()[0] = true;
+            SegmentUpdate sUpdate = createSegmentUpdate(otherCells, null, 1, true);
             sUpdate.isSequenceSegment = true;
             addToUpdate(bestCell, sUpdate);
         }
     }
 
+    /**
+     * Клетка включает свое состояние предчувствия, если любой из ее латеральных сегментов становится активным.
+     * В этом случае проводятся следующие изменения: а) усиление активных сейчас латеральных сегментов и б)
+     * усиление сегментов, которые могли бы предсказать данную активацию.
+     */
     public void updatePredictiveCells() {
         for (Cell cell : cells) {
+            boolean toUpdate = false;
             for (DistalSegment s : cell.getDistalSegments()) {
-                if (s.segmentActive(false)) {
-                    cell.setCurrentState(Cell.State.predictive);
-
-                    SegmentUpdate sUpdate = getSegmentActiveSynapses(otherCells, s, false);
+                if (s.isActiveInState(false, 0)) {
+                    cell.getStateHistory()[0] = Cell.State.predictive;
+                    SegmentUpdate sUpdate = createSegmentUpdate(otherCells, s, 0, false);
                     addToUpdate(cell, sUpdate);
+                    toUpdate = true;
                 }
             }
-            DistalSegment predS = cell.getBestMatchingSegment();
-            SegmentUpdate predSUpdate = getSegmentActiveSynapses(otherCells, predS, true);
-            addToUpdate(cell, predSUpdate);
+            if (toUpdate) {
+                DistalSegment predS = cell.getBestMatchingSegment(1);
+                SegmentUpdate predSUpdate = createSegmentUpdate(otherCells, predS, 1, true);
+                addToUpdate(cell, predSUpdate);
+            }
         }
     }
 
@@ -147,10 +163,10 @@ public class Column {
 
     public void predictiveLearning() {
         for (Cell cell : cells) {
-            if (cell.isToLearn()) {
+            if (cell.getLearnHistory()[0]) {
                 adaptSegments(toUpdate.get(cell.getIndex()), true);
                 toUpdate.remove(cell.getIndex());
-            } else if (cell.getCurrentState() != Cell.State.predictive && cell.getPreviousState() == Cell.State.predictive) {
+            } else if (cell.getStateHistory()[0] != Cell.State.predictive && cell.getStateHistory()[1] == Cell.State.predictive) {
                 adaptSegments(toUpdate.get(cell.getIndex()), false);
                 toUpdate.remove(cell.getIndex());
             }
@@ -175,18 +191,31 @@ public class Column {
         }
     }
 
-    private SegmentUpdate getSegmentActiveSynapses(Map<Integer, Cell> cells, DistalSegment s, boolean addNewSynapses) {
+    /**
+     * Создание списка изменений для сегмента s. Если s != null, то на оьноваление выставляются активные синапсы
+     * у исходны клеток коnторых было активное состояние в прердыдущий (historyLevel = 1) или в текущий момент времени.
+     * Если addNewSynapses==true, то добавляются новые синапсы до максимального числа, равного newSynapseCount.
+     * Такие синапсы случайно выбираются из числа клеток, которые были назначены для обучения в текущий момент времени
+     * или в предыдущий (historyLevel = 1).
+     *
+     * @param cells
+     * @param s
+     * @param historyLevel
+     * @param addNewSynapses
+     * @return
+     */
+    private SegmentUpdate createSegmentUpdate(Map<Integer, Cell> cells, DistalSegment s, int historyLevel, boolean addNewSynapses) {
         final SegmentUpdate su = new SegmentUpdate();
         if (s != null) {
             su.segment = s;
-            su.synapses = s.getActiveSynapses();
+            su.synapses = s.getActiveSynapses(historyLevel);
         } else {
             su.segment = new DistalSegment();
         }
         if (addNewSynapses) {
             List<Cell> cellsToLearn = new ArrayList<>();
             for (Cell cell : cells.values()) {
-                if (cell.isToLearn())
+                if (cell.getLearnHistory()[historyLevel])
                     cellsToLearn.add(cell);
             }
             for (int i = 0; i < newSynapsesCount - su.synapses.size(); i++) {
@@ -199,17 +228,27 @@ public class Column {
         return su;
     }
 
-    private Cell getBestMatchingCell() {
+    /**
+     * Возвращается клетка с самым соответсвующим входу сегментом. Если такой клетки нет, то возвращается клетка с
+     * минимальным количеством сегментов.
+     *
+     * @return
+     */
+    private Cell getBestMatchingCell(int historyLevel) {
         Cell bestMatching = null;
+        Cell withMinSegments = null;
         DistalSegment bestSegment = null;
         for (Cell cell : cells) {
-            DistalSegment s = cell.getBestMatchingSegment();
-            if (s != null && (bestSegment == null || bestSegment.countConnected() < s.countConnected())) {
+            DistalSegment s = cell.getBestMatchingSegment(historyLevel);
+            if (s != null && (bestSegment == null || bestSegment.countConnected(historyLevel) < s.countConnected(historyLevel))) {
                 bestSegment = s;
                 bestMatching = cell;
             }
+            if (withMinSegments == null || (withMinSegments.getDistalSegments().size() > cell.getDistalSegments().size())) {
+                withMinSegments = cell;
+            }
         }
-        return bestMatching;
+        return bestMatching != null ? bestMatching : withMinSegments;
     }
 
     public int getIndex() {

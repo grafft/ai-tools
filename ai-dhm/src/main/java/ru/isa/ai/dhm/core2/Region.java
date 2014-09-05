@@ -164,6 +164,10 @@ public class Region {
         }
     }
 
+    /**
+     * Средний радиус подключенных рецептивных полей всех колонок
+     * @return
+     */
     private int averageReceptiveFieldSize() {
         int sum = 0;
         for (final Column column : columns.values()) {
@@ -173,6 +177,9 @@ public class Region {
         return sum / columns.size();
     }
 
+    /**
+     * Вычисляются активные состояния для каждой клетки из победивших колонок.
+     */
     public void updateActiveCells() {
         activeColumns.forEachIndexFromToInState(0, activeColumns.size() - 1, true, new IntProcedure() {
             @Override
@@ -183,6 +190,9 @@ public class Region {
         });
     }
 
+    /**
+     * Вычисляются состояния предсказания для каждой клетки.
+     */
     public void updatePredictiveCells() {
         for (Column column : columns.values()) {
             column.updatePredictiveCells();
@@ -193,10 +203,6 @@ public class Region {
         for (Column column : columns.values()) {
             column.predictiveLearning();
         }
-    }
-
-    public void addParent(Region parent) {
-        parentRegions.add(parent);
     }
 
     public void addChild(Region child) {

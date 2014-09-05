@@ -68,7 +68,7 @@ potentialSynapses(c) у которых значение
     public Column(Region region, int x, int y) {
         this.x = x;
         this.y = y;
-        //this.segmentActive = false;
+        //this.isActiveInState = false;
         this.region = region;
         this.overlap = 0.0;
         this.boost = 1.0;
