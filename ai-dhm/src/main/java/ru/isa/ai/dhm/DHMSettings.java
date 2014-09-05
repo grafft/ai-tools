@@ -16,20 +16,48 @@ public final class DHMSettings {
     public int xInput = 100;
     public int yInput = 100;
 
+    /**
+     * Число клеток в каждой из колонок.
+     */
     public int cellsPerColumn = 4;
+    /**
+     * Максимальное значение синапсов, добавляемых сегменту при обучении.
+     */
     public int newSynapseCount = 10;
 
     /**
-     *  Параметр, контролирующий число колонок победителей
+     *  Параметр, контролирующий число колонок победителей.
      */
     public int desiredLocalActivity = 10;
-    public int minOverlap = 50;
-    public double connectedPerm = 0.2;
+    /**
+     * Минимальнео число активных входов колонки для ее участия в шаге подавления.
+     */
+    public int minOverlap = 0;
+    /**
+     * Если значение перманентности синапса больше этого значения, то он ситается подключенным.
+     */
+    public double connectedPerm = 0.1;
+    /**
+     * Количество значений перманентности синапсов, которые были увелечины при обучении.
+     */
+    public double permanenceInc = 0.1;
+    /**
+     * Количество значений перманентности синапсов, которые были уменьшены при обучении.
+     */
+    public double permanenceDec = 0.01;
+    /**
+     * Порог активации для сегмента. Если число активных подключенных синапсов большем этого значения, данный
+     * сегмент считается активным.
+     */
     public double activationThreshold = 10.0;
+    /**
+     * Начальное значение перманентности для синапсов.
+     */
     public double initialPerm = 0.1;
+    /**
+     * Минимальное число активных синапсов для сегмент при поиске лучшего
+     */
     public double minThreshold = 4.0;
-    public int newSynapsesCount = 10;
-    public double maxBoost = 10.0;
     /**
      * This parameter deteremines the extent of the
      * input that each column can potentially be connected to. This
@@ -53,36 +81,12 @@ public final class DHMSettings {
      * input bits to comprise the column's potential pool.
      */
     public double connectedPct = 0.5;
-    /**
-     * This is a number specifying the minimum
-     * number of potentialSynapses that must be active in order for a column to
-     * turn ON. The purpose of this is to prevent noisy input from
-     * activating columns.
-     */
-    public long stimulusThreshold = 0;
 
     /**
      * Длина периода подсчета рабочих циклов
      */
     public int dutyCyclePeriod = 1000;
-    /**
-     * The default connected threshold. Any synapse
-     * whose permanence value is above the connected threshold is
-     * a "connected synapse", meaning it can contribute to
-     * the cell's firing.
-     */
-    public double permConnected = 0.1;
-
-    /**
-     * The amount by which the permanence of an
-     * active synapse is incremented in each round.
-     */
-    public double permanenceInc = 0.1;
-    /**
-     * The amount by which the permanence of an
-     * inactive synapse is decremented in each updateRelations step.
-     */
-    public double permanenceDec = 0.01;
+    public double maxBoost = 10.0;
     public double initConnectedPct = 0.5;
     public double stimulusInc;
     public int initialInhibitionRadius = 10;

@@ -71,12 +71,17 @@ public class NeocortexFrame extends JFrame {
                 new Runnable() {
                     @Override
                     public void run() {
-                        neocortex.iterate(input);
-                        ((JButton) e.getSource()).setEnabled(true);
-                        stButton.setEnabled(true);
-                        getContentPane().repaint();
+                        try {
+                            neocortex.iterate(input);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        } finally {
+                            ((JButton) e.getSource()).setEnabled(true);
+                            stButton.setEnabled(true);
+                            getContentPane().repaint();
+                        }
                     }
-                };
+                }.run();
             }
         });
         final Timer timer = new Timer(1000, new ActionListener() {

@@ -229,7 +229,7 @@ public class Column {
                 if (cell.getLearnHistory()[historyLevel])
                     cellsToLearn.add(cell);
             }
-            for (int i = 0; i < settings.newSynapsesCount - su.synapses.size(); i++) {
+            for (int i = 0; i < settings.newSynapseCount - su.synapses.size(); i++) {
                 int index = (int) (cellsToLearn.size() * Math.random());
                 Synapse synapse = new Synapse(settings, cellsToLearn.get(index).getIndex(), settings.initialPerm);
                 su.synapses.add(cellsToLearn.get(index).getIndex());

@@ -32,9 +32,9 @@ public class Synapse {
      */
     public void initPermanence() {
         if (random.nextDouble() <= settings.initConnectedPct)
-            permanence = settings.permConnected + random.nextDouble() * settings.permanenceInc / 4.0;
+            permanence = settings.connectedPerm + random.nextDouble() * settings.permanenceInc / 4.0;
         else
-            permanence = settings.permConnected - random.nextDouble() * settings.permanenceInc / 4.0;
+            permanence = settings.connectedPerm - random.nextDouble() * settings.permanenceInc / 4.0;
     }
 
     public void stimulatePermanence() {
@@ -53,7 +53,7 @@ public class Synapse {
     }
 
     public boolean isConnected() {
-        return permanence > settings.permConnected;
+        return permanence > settings.connectedPerm;
     }
 
     public int getInputSource() {
