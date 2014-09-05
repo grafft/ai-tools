@@ -33,7 +33,7 @@ public class DistalSegment {
                 activeHistory.get(historyLevel).size() > activationThreshold;
     }
 
-    public void updateSynapses(Map<Integer, Cell> cells) {
+    public void updateHistory(Map<Integer, Cell> cells) {
         for (int i = historyDeep - 1; i > 0; i--) {
             activeHistory.get(i).clear();
             learnHistory.get(i).clear();
@@ -48,6 +48,24 @@ public class DistalSegment {
                     activeHistory.get(0).add(entry.getValue());
                 } else if (cells.get(entry.getKey()).getLearnHistory()[0]) {
                     learnHistory.get(0).add(entry.getValue());
+                }
+            }
+        }
+    }
+
+    public void updateSynapses(List<Integer> indexes, boolean reinforcement) {
+        if (reinforcement) {
+            for (Synapse synapse : synapses.values()) {
+                if (indexes.contains(synapse.getInputSource())) {
+                    synapse.increasePermanence();
+                } else {
+                    synapse.decreasePermanence();
+                }
+            }
+        } else {
+            for (Synapse synapse : synapses.values()) {
+                if (indexes.contains(synapse.getInputSource())) {
+                    synapse.decreasePermanence();
                 }
             }
         }

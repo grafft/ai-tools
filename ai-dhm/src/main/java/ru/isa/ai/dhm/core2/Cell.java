@@ -79,7 +79,7 @@ public class Cell {
 
     public void updateSegments(Map<Integer, Cell> cells) {
         for (DistalSegment segment : distalSegments) {
-            segment.updateSynapses(cells);
+            segment.updateHistory(cells);
         }
     }
 

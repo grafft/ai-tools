@@ -41,6 +41,13 @@ public class Synapse {
         this.stimulusInc = permConnected / 10.0;
     }
 
+    public Synapse(int sourceIndex, double initPermanence) {
+        this.inputSource = sourceIndex;
+        this.permTrimThreshold = permanenceInc / 2.0;
+        this.stimulusInc = permConnected / 10.0;
+        this.permanence = initPermanence;
+    }
+
     /**
      * Случайные значения преманентности должны быть из малого диапазона около connectedPerm
      */

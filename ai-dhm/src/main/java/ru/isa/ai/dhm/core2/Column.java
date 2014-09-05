@@ -22,6 +22,7 @@ public class Column {
     private int newSynapsesCount = 10;
     private int minOverlap;
     private double maxBoost = 10.0;
+    private double initialPerm = 0.1;
 
     private ProximalSegment proximalSegment;
     private Map<Integer, Cell> otherCells;
@@ -173,17 +174,17 @@ public class Column {
         }
     }
 
+    /**
+     * Усиление каждого сегмента. Если reinforcement==true, то синапсы из списка на обновление увеличивают значения
+     * своих перманентностей. Все остальные синапсы уменьшают свои перманентности. В противном случае синапсы на
+     * обновление уменьшают свои перманентности. Для новых синапсов назначается перманентность, равная initialPerm.
+     *
+     * @param segmentUpdates
+     * @param reinforcement
+     */
     private void adaptSegments(List<SegmentUpdate> segmentUpdates, boolean reinforcement) {
         for (SegmentUpdate su : segmentUpdates) {
-            if (reinforcement) {
-                for (Synapse synapse : su.synapses) {
-                    synapse.increasePermanence();
-                }
-            } else {
-                for (Synapse synapse : su.synapses) {
-                    synapse.decreasePermanence();
-                }
-            }
+            su.segment.updateSynapses(su.synapses, reinforcement);
         }
 
         for (Cell cell : cells) {
@@ -208,7 +209,9 @@ public class Column {
         final SegmentUpdate su = new SegmentUpdate();
         if (s != null) {
             su.segment = s;
-            su.synapses = s.getActiveSynapses(historyLevel);
+            for (Synapse synapse : s.getActiveSynapses(historyLevel)) {
+                su.synapses.add(synapse.getInputSource());
+            }
         } else {
             su.segment = new DistalSegment();
         }
@@ -220,8 +223,8 @@ public class Column {
             }
             for (int i = 0; i < newSynapsesCount - su.synapses.size(); i++) {
                 int index = (int) (cellsToLearn.size() * Math.random());
-                Synapse synapse = new Synapse(cellsToLearn.get(index).getIndex());
-                su.synapses.add(synapse);
+                Synapse synapse = new Synapse(cellsToLearn.get(index).getIndex(), initialPerm);
+                su.synapses.add(cellsToLearn.get(index).getIndex());
                 su.segment.addSynapse(synapse);
             }
         }
@@ -309,7 +312,7 @@ public class Column {
 
     private class SegmentUpdate {
         DistalSegment segment = null;
-        List<Synapse> synapses = new ArrayList<>();
+        List<Integer> synapses = new ArrayList<>();
         boolean isSequenceSegment = false;
     }
 }

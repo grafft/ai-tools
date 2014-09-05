@@ -1,6 +1,5 @@
 package ru.isa.ai.dhm.core2;
 
-import cern.colt.function.tint.IntProcedure;
 import cern.colt.matrix.tbit.BitVector;
 import ru.isa.ai.dhm.RegionSettings;
 
