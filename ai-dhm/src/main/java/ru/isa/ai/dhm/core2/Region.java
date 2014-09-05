@@ -5,6 +5,7 @@ import cern.colt.matrix.tbit.BitVector;
 import cern.colt.matrix.tint.IntMatrix1D;
 import cern.colt.matrix.tint.impl.DenseIntMatrix1D;
 import com.google.common.primitives.Ints;
+import ru.isa.ai.dhm.MathUtils;
 import ru.isa.ai.dhm.RegionSettings;
 
 import java.util.ArrayList;
