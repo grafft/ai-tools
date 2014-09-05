@@ -1,4 +1,4 @@
-package ru.isa.ai.dhm.core2;
+package ru.isa.ai.dhm.core;
 
 import cern.colt.matrix.tbit.BitVector;
 import ru.isa.ai.dhm.RegionSettings;

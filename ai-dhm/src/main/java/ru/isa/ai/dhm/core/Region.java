@@ -1,265 +1,220 @@
 package ru.isa.ai.dhm.core;
 
-import cern.colt.matrix.tint.impl.SparseIntMatrix1D;
+import cern.colt.function.tint.IntProcedure;
+import cern.colt.matrix.tbit.BitVector;
 import cern.colt.matrix.tint.IntMatrix1D;
-import cern.colt.matrix.tint.IntMatrix2D;
+import cern.colt.matrix.tint.impl.DenseIntMatrix1D;
+import com.google.common.primitives.Ints;
+import ru.isa.ai.dhm.MathUtils;
+import ru.isa.ai.dhm.RegionSettings;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Author: Aleksandr Panov
+ * Date: 28.08.2014
+ * Time: 14:24
+ */
 public class Region {
-    public Column[] columns;
+    /**
+     * The period used to calculate duty cycles.
+     * Higher values make it take longer to respond to changes in
+     * boost. Shorter values make it potentially more unstable and
+     * likely to oscillate.
+     */
+    private int dutyCyclePeriod = 1000;
 
-    public int numColumns = 0;
+    private int desiredLocalActivity;
+    private List<Region> childRegions = new ArrayList<>();
+    private List<Region> parentRegions = new ArrayList<>();
+    private Map<Integer, Column> columns = new HashMap<>();
+    private Map<Integer, Cell> allCells = new HashMap<>();
+    private BitVector activeColumns;
+    private IntMatrix1D overlaps;
+
+    private int numColumns;
+    private int xInput;
+    private int yInput;
     private int xDimension;
     private int yDimension;
 
-    private int input_xDimension;
-    private int input_yDimension;
+    private int iterationNum = 0;
 
-    /*Список индексов колонок – победителей благодаря прямым
-    входным данным. (Выход пространственного группировщика)
-   */
-    public IntMatrix2D activeColumns;
+    public Region(RegionSettings settings) {
+        this.xDimension = settings.xDimension;
+        this.yDimension = settings.yDimension;
+        this.xInput = settings.xInput;
+        this.yInput = settings.yInput;
+        this.desiredLocalActivity = settings.desiredLocalActivity;
 
-    //Число клеток в каждой из колонок.
-    public int cellsPerColumn;
-
-    /*
-    Средний размер входного (рецепторного) поля колонок
-     */
-    public double inhibitionRadius;
-
-    /*
-    Минимальное число активных входов колонки для ее участия
-    в шаге подавления.
-     */
-    public int minOverlap;
-    /*
-    Параметр контролирующий число колонок победителей
-    после шага подавления.
-    */
-    public int desiredLocalActivity;
-
-    /*
-    Если значение перманентности синапса больше данного параметра, то он считается подключенным (действующим).
-     */
-    public double connectedPerm;
-    /*
-    Количество значений перманентности синапсов, которые
-    были увеличены при обучении.
-     */
-    public double permanenceInc;
-    /*
-    Количество значений перманентности синапсов, которые
-    были уменьшены при обучении.
-    */
-    public double permanenceDec;
-    /*
-    Порог активации для сегмента. Если число активных
-    подключенных синапсов в сегменте больше чем
-    activationThreshold, данный сегмент считается активным.
-     */
-    public int activationThreshold;
-
-    /*
-   Начальное значение перманентности для синапсов
-    */
-    public double initialPerm;
-    /*
-    Минимальная активность в сегменте для обучения.
-     */
-    public int minThreshold;
-    /*
-    Максимальное число синапсов добавляемых сегменту при
-    обучении.
-     */
-    public int newSynapseCount;
-
-    //////////////////////////////////////////////////////////
-    final private int NUM_MEMORY_CELLS = 1000;
-
-    public Region(double[] parameters) {
-        this.desiredLocalActivity = (int) parameters[0];
-        this.minOverlap = (int) parameters[1];
-        this.connectedPerm = parameters[2];
-        this.permanenceInc = parameters[3];
-        this.permanenceDec = parameters[4];
-        this.cellsPerColumn = (int) parameters[5];
-        this.activationThreshold = (int) parameters[6];
-        this.initialPerm = parameters[7];
-        this.minThreshold = (int) parameters[8];
-        this.newSynapseCount = (int) parameters[9];
-        this.xDimension = (int) parameters[10];
-        this.yDimension = (int) parameters[11];
-
-        addColumns();
-    }
-
-    public void addColumns() {
-        numColumns = xDimension * yDimension;
-
-        columns = new Column[numColumns];
-
-        int ind = 0;
-        for (int i = 0; i < xDimension; i++) {
-            for (int j = 0; j < yDimension; j++) {
-                columns[ind] = new Column(this, i, j);
-                ind++;
-            }
-        }
-
-    }
-
-    public void initParametersForColumns(double minOverlap, double minDutyCycle, double[] initOverlapDuty, double[] initActiveDuty) {
-        int i = 0;
-        for (Column c : this.columns) {
-            c.minOverlap = minOverlap;
-            c.minDutyCycle = minDutyCycle;
-            c.activeDutyCycle = initActiveDuty[i];
-            c.overlapDutyCycle = initOverlapDuty[i];
-            i++;
-        }
-    }
-
-
-    /*
-    neighbors(c) -  Список колонок находящихся в радиусе подавления
-inhibitionRadius колонки c.
-     */
-    public IntMatrix1D neighbours(int c) {
-        IntMatrix1D result = new SparseIntMatrix1D(NUM_MEMORY_CELLS);
-        int length = 1;
-        for (int i = 0; i < numColumns; i++) {
-            if ((Math.abs(columns[i].x - columns[c].x) < inhibitionRadius) &&
-                    (Math.abs(columns[i].y - columns[c].y) < inhibitionRadius)) {
-                result.setQuick(length, i);
-                length++;
-            }
-        }
-        result.setQuick(0, length - 1);
-        return result;
-    }
-
-
-    private int partition(double[] array, int start, int end) {
-        int marker = start;
-        for (int i = start; i <= end; i++) {
-            if (array[i] <= array[end]) {
-                double temp = array[marker];
-                array[marker] = array[i];
-                array[i] = temp;
-                marker += 1;
-            }
-        }
-        return marker - 1;
-    }
-
-    private void quicksort(double[] array, int start, int end) {
-        if (start >= end) {
-            return;
-        }
-        int pivot = partition(array, start, end);
-        quicksort(array, start, pivot - 1);
-        quicksort(array, pivot + 1, end);
-    }
-
-    /*
-   Для заданного списка колонок возвращает их k-ое максимальное значение
-их перекрытий со входом
-    */
-    public double kthScore(IntMatrix1D cols, int k) {
-        double[] overlaps = new double[NUM_MEMORY_CELLS];
-        //doubleMatrix1D overlaps;
-
-        int length = 1;
-        for (int i = 1; i <= cols.getQuick(0); i++) {
-            overlaps[i] = columns[cols.get(i)].overlap;
-            length++;
-        }
-        //Arrays.sort( overlaps);
-        overlaps[0] = length - 1;
-        quicksort(overlaps, 1, length - 1);
-        return overlaps[length - 1 - k];
-    }
-
-    /*
-    Средний радиус подключенных рецептивных полей всех колонок. Размер
-    подключенного рецептивного поля колонки определяется только по
-    подключенным синапсам (у которых значение перманентности >=
-    connectedPerm). Используется для определения протяженности
-    латерального подавления между колонками.
-     */
-
-    public double averageReceptiveFieldSize() {
-        double result = 0.0;
-
-        ///////
-        double xDistance;
-        double yDistance;
-        for (int i = 0; i < numColumns; i++) {
-            xDistance = 0.0;
-            yDistance = 0.0;
-            for (Synapse synapse : columns[i].potentialSynapses) {
-                if (synapse == null) break;
-                if (synapse.permanence > connectedPerm) {
-                    //double xCalculated = Math.abs(columns.get(i).x.doubleValue() - synapse.c.doubleValue());
-                    //double yCalculated = Math.abs(columns.get(i).y.doubleValue() - synapse.i.doubleValue());
-
-                    double xCalculated = Math.abs(columns[i].x - synapse.c);
-                    double yCalculated = Math.abs(columns[i].y - synapse.i);
-
-                    xDistance = xDistance > xCalculated ? xDistance : xCalculated;
-                    yDistance = yDistance > yCalculated ? yDistance : yCalculated;
+        for (int i = 0; i < settings.xDimension; i++) {
+            for (int j = 0; j < settings.yDimension; j++) {
+                Column column = new Column(i * yDimension + j, new int[]{i, j}, settings);
+                List<Integer> neighbors = new ArrayList<>();
+                for (int k = column.getCoords()[0] - column.getInhibitionRadius(); k < column.getCoords()[0] + column.getInhibitionRadius(); k++) {
+                    if (k >= 0 && k < xDimension) {
+                        for (int m = column.getCoords()[1] - column.getInhibitionRadius(); m < column.getCoords()[1] + column.getInhibitionRadius(); m++) {
+                            if (m >= 0 && m < yDimension) {
+                                neighbors.add(k * yDimension + m);
+                            }
+                        }
+                    }
+                }
+                column.setNeighbors(Ints.toArray(neighbors));
+                columns.put(column.getIndex(), column);
+                for (Cell cell : column.getCells()) {
+                    allCells.put(cell.getIndex(), cell);
                 }
             }
-            result = (Math.sqrt(xDistance * xDistance + yDistance * yDistance) + i * result) / (i + 1);
         }
-        return result;
+        for (Column column : columns.values()) {
+            column.setOtherCells(allCells);
+        }
+        activeColumns = new BitVector(numColumns);
+        overlaps = new DenseIntMatrix1D(numColumns);
     }
 
-    /*
-    Возвращает максимальное число циклов активности для всех заданных
-    колонок.
+    /**
+     * Иниуиализация региона, для каждой колнки создается начальный список потенцильаных синапсов
      */
-    public double maxDutyCycle(IntMatrix1D cols) {
-        double max = 0.0;
-        for (int col = 1; col < cols.getQuick(0) - 1; col++) {
-            if (max < columns[col].activeDutyCycle)
-                max = columns[col].activeDutyCycle;
+    public void initialization() {
+        for (Column column : columns.values()) {
+            int inputCenterX = (column.getCoords()[0] + 1) * (xInput / (xDimension + 1));
+            int inputCenterY = (column.getCoords()[1] + 1) * (yInput / (yDimension + 1));
+            column.initialization(inputCenterX, inputCenterY);
         }
-        return max;
     }
 
-    // TODO AP: все методы в Java - с маленькой буквы
-    double getMinLocalActivity(int i) {
-        return kthScore(neighbours(i), desiredLocalActivity);
+    /**
+     * Обработка входного сигнала
+     *
+     * @param input
+     * @return
+     */
+    public BitVector forwardInputProcessing(BitVector input) {
+        iterationNum++;
+        overlapPhase(input);
+        inhibitionPhase();
+        learningPhase(input);
+
+        return activeColumns;
     }
 
-    //////////////////////////////////////////////////////////
-    public double getInhibitionRadius() {
-        return inhibitionRadius;
+    /**
+     * Вычисление значения перекрытия каждой колонки с заданным входным вектором.
+     *
+     * @param input
+     */
+    private void overlapPhase(BitVector input) {
+        for (Column column : columns.values()) {
+            int overlap = column.overlapCalculating(input);
+            overlaps.setQuick(column.getIndex(), overlap);
+        }
     }
 
-    public void setInhibitionRadius(double value) {
-        inhibitionRadius = value;
+    /**
+     * Вычисление колонок, остающихся победителями после применения взаимного подавления.
+     */
+    private void inhibitionPhase() {
+        for (Column column : columns.values()) {
+            IntMatrix1D neighborOverlaps = overlaps.viewSelection(column.getNeighbors());
+            double minLocalOverlap = MathUtils.kthScore(neighborOverlaps, desiredLocalActivity);
+            if (column.getOverlap() > 0 && column.getOverlap() >= minLocalOverlap) {
+                column.setActive(true);
+                activeColumns.set(column.getIndex());
+            } else {
+                column.setActive(false);
+            }
+        }
     }
 
-    public void setInputDimensions(int x, int y) {
-        input_xDimension = x;
-        input_yDimension = y;
+    /**
+     * Обновление значений перманентности, фактора ускорения и радиуса подавления колонок.
+     * Механизм ускорения работает в том случае, если колонка не побеждает достаточно долго (activeDutyCycle).
+     * Если колонка плохо перекрывается с входным сигналом достоачно долго (overlapDutyCycle), то увеличиваются
+     * перманентности.
+     */
+    private void learningPhase(final BitVector input) {
+        activeColumns.forEachIndexFromToInState(0, activeColumns.size() - 1, true, new IntProcedure() {
+            @Override
+            public boolean apply(int element) {
+                columns.get(element).learning(input);
+                return true;
+            }
+        });
+        int period = dutyCyclePeriod > iterationNum ? iterationNum : dutyCyclePeriod;
+        for (Column column : columns.values()) {
+            double maxActiveDuty = 0;
+            for (int index : column.getNeighbors()) {
+                double activity = columns.get(index).getActiveDutyCycle();
+                maxActiveDuty = maxActiveDuty > activity ? maxActiveDuty : activity;
+            }
+            double minDutyCycle = 0.01 * maxActiveDuty;
+
+            column.updateActiveDutyCycle(period);
+            column.updateBoostFactor(minDutyCycle);
+
+            column.updateOverlapDutyCycle(period);
+            if (column.getOverlapDutyCycle() < minDutyCycle)
+                column.stimulate();
+
+            column.setInhibitionRadius(averageReceptiveFieldSize());
+        }
     }
 
-    public int getInputXDim() {
-        return input_xDimension;
+    /**
+     * Средний радиус подключенных рецептивных полей всех колонок
+     * @return
+     */
+    private int averageReceptiveFieldSize() {
+        int sum = 0;
+        for (final Column column : columns.values()) {
+            sum += column.getReceptiveFieldSize();
+        }
+
+        return sum / columns.size();
     }
 
-    public int getInputYDim() {
-        return input_yDimension;
+    /**
+     * Вычисляются активные состояния для каждой клетки из победивших колонок.
+     */
+    public void updateActiveCells() {
+        activeColumns.forEachIndexFromToInState(0, activeColumns.size() - 1, true, new IntProcedure() {
+            @Override
+            public boolean apply(int element) {
+                columns.get(element).updateActiveCells();
+                return true;
+            }
+        });
     }
 
-    public int getXDim() {
-        return this.xDimension;
+    /**
+     * Вычисляются состояния предсказания для каждой клетки.
+     */
+    public void updatePredictiveCells() {
+        for (Column column : columns.values()) {
+            column.updatePredictiveCells();
+        }
     }
 
-    public int getYDim() {
-        return this.yDimension;
+    public void updateRelations() {
+        for (Column column : columns.values()) {
+            column.predictiveLearning();
+        }
+    }
+
+    public void addChild(Region child) {
+        childRegions.add(child);
+    }
+
+    public Map<Integer, Column> getColumns() {
+        return columns;
+    }
+
+    public BitVector getActiveColumns() {
+        return activeColumns;
     }
 }

@@ -1,4 +1,4 @@
-package ru.isa.ai.dhm.core;
+package ru.isa.ai.dhm.oldcore;
 
 import cern.colt.matrix.tbit.BitMatrix;
 import cern.colt.matrix.tint.IntMatrix1D;

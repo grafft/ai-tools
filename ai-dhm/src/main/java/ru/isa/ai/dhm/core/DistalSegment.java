@@ -1,4 +1,4 @@
-package ru.isa.ai.dhm.core2;
+package ru.isa.ai.dhm.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;

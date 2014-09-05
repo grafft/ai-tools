@@ -2,9 +2,9 @@ package ru.isa.ai.dhm.visual;
 
 import cern.colt.matrix.tbit.BitVector;
 import ru.isa.ai.dhm.RegionSettings;
-import ru.isa.ai.dhm.core2.Column;
-import ru.isa.ai.dhm.core2.Neocortex;
-import ru.isa.ai.dhm.core2.Region;
+import ru.isa.ai.dhm.core.Column;
+import ru.isa.ai.dhm.core.Neocortex;
+import ru.isa.ai.dhm.core.Region;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;

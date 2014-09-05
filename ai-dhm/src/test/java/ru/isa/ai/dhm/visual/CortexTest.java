@@ -2,8 +2,8 @@ package ru.isa.ai.dhm.visual;
 
 import junit.framework.TestCase;
 import ru.isa.ai.dhm.RegionSettings;
-import ru.isa.ai.dhm.core.Column;
-import ru.isa.ai.dhm.core.Cortex;
+import ru.isa.ai.dhm.oldcore.Column;
+import ru.isa.ai.dhm.oldcore.Cortex;
 
 public class CortexTest extends TestCase {
 /* what are the tests:

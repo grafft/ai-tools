@@ -3,7 +3,7 @@ package ru.isa.ai.dhm.visual;
 import info.monitorenter.gui.chart.Chart2D;
 import ru.isa.ai.dhm.RegionSettings;
 import ru.isa.ai.dhm.RegionSettingsException;
-import ru.isa.ai.dhm.core.CortexThread;
+import ru.isa.ai.dhm.oldcore.CortexThread;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

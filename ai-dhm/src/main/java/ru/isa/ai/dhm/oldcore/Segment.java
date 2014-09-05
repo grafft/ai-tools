@@ -1,4 +1,4 @@
-package ru.isa.ai.dhm.core;
+package ru.isa.ai.dhm.oldcore;
 
 public class Segment {
     public Synapse[] synapses;
