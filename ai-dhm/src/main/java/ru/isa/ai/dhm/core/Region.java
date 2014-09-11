@@ -22,8 +22,8 @@ public class Region {
     private DHMSettings settings;
 
     private List<Region> childRegions = new ArrayList<>();
-    private Map<Integer, Column> columns = new HashMap<>();
-    private BitVector activeColumns;
+    private Map<Integer, Column> columns = new HashMap<>(); // можно и в виде массива
+    private BitVector activeColumns;  // для оптимизации
     private IntMatrix1D overlaps;
 
     private int iterationNum = 0;
@@ -98,6 +98,7 @@ public class Region {
                 activeColumns.set(column.getIndex());
             } else {
                 column.setActive(false);
+                activeColumns.clear(column.getIndex());
             }
         }
     }
@@ -120,8 +121,8 @@ public class Region {
         for (Column column : columns.values()) {
             double maxActiveDuty = 0;
             for (int index : column.getNeighbors()) {
-                double activity = columns.get(index).getActiveDutyCycle();
-                maxActiveDuty = maxActiveDuty > activity ? maxActiveDuty : activity;
+                    double activity = columns.get(index).getActiveDutyCycle();
+                    maxActiveDuty = maxActiveDuty > activity ? maxActiveDuty : activity;
             }
             double minDutyCycle = 0.01 * maxActiveDuty;
 

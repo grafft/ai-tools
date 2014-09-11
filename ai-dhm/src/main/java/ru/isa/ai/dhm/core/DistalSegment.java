@@ -10,6 +10,7 @@ import java.util.Map;
  * Date: 03.09.2014
  * Time: 12:16
  */
+/*Дистальный дендритный сегмент (между разными удаленными клетками одного региона)*/
 public class DistalSegment {
     private int historyDeep = 2;
     private Map<Integer, Synapse> synapses = new HashMap<>();

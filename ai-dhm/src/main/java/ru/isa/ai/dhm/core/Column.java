@@ -16,19 +16,20 @@ import java.util.Map;
 public class Column {
     private DHMSettings settings;
 
-    private int index;
-    private int[] coords;
-    private boolean isActive;
+    private int index; // линеаризированные координаты колонки в слое
+    private int[] coords; // координаты колотки в слое X,Y
+    private boolean isActive; // TODO: в Region уже есть Bitvector activeColumns
 
     private ProximalSegment proximalSegment;
-    private Map<Integer, Cell> otherCells;
+    private Map<Integer, Cell> otherCells; // все клетки слоя
 
-    private Cell[] cells;
+    private Cell[] cells; // клетки данной колонки
     private Map<Integer, List<SegmentUpdate>> toUpdate = new HashMap<>();
-    private List<Integer> neighbors = new ArrayList<>();
+    private List<Integer> neighbors = new ArrayList<>();  // колонки, находящиеся в радиусе подавления данной
 
-    private double activeDutyCycle = 0;
-    private double overlapDutyCycle = 0;
+    // DutyCycle - рабочий цикл = последовательность итераций в течение которых колонка находилась в возбужденном состоянии?
+    private int activeDutyCycle = 0;
+    private int overlapDutyCycle = 0;
 
     public Column(int index, int[] coords, DHMSettings settings) {
         this.settings = settings;
@@ -52,7 +53,12 @@ public class Column {
         updateNeighbors(settings.initialInhibitionRadius);
     }
 
+    /**
+     * Подавление соседних колонок, который отстоять от данной в круге радиусом inhibitionRadius
+     * @param inhibitionRadius радиус подавления (в начале назначется из настроек, потом берется как усредненный радиус рецептивного поля
+     */
     public void updateNeighbors(int inhibitionRadius) {
+        // TODO: не понятно, где neighbors чистятся
         for (int k = getCoords()[0] - inhibitionRadius; k < getCoords()[0] + inhibitionRadius; k++) {
             if (k >= 0 && k < settings.xDimension) {
                 for (int m = getCoords()[1] - inhibitionRadius; m < getCoords()[1] + inhibitionRadius; m++) {
@@ -72,6 +78,7 @@ public class Column {
         proximalSegment.updateSynapses(input);
     }
 
+    //  обновление счетчиков рабочих циклов перекрытия и активного
     public void updateOverlapDutyCycle(int period) {
         overlapDutyCycle = (overlapDutyCycle * (period - 1) + (getOverlap()) > settings.minOverlap ? 1 : 0) / period;
     }

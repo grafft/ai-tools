@@ -56,14 +56,17 @@ public class Synapse {
         return permanence > settings.connectedPerm;
     }
 
+    /* inputSource - это либо номер бита из сигнала снизу, либо номер клетки (аксон) при латеральной связи */
     public int getInputSource() {
         return inputSource;
     }
 
+    /* Получить степени связанности между аксоном и дендритом. */
     public double getPermanence() {
         return permanence;
     }
 
+    /* Установить степени связанности между аксоном и дендритом. */
     public void setPermanence(double permanence) {
         this.permanence = permanence;
     }

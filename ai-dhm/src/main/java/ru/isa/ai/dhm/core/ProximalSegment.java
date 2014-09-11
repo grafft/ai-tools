@@ -10,6 +10,7 @@ import java.util.*;
  * Date: 29.08.2014
  * Time: 10:30
  */
+/*Дистальный дендритный сегмент (один для колонки)*/
 public class ProximalSegment {
     private DHMSettings settings;
 
@@ -54,7 +55,7 @@ public class ProximalSegment {
     }
 
     /**
-     * Перекрытие - это просто число действующих синапсов подключенных к активным входным битам, умноженное на
+     * Перекрытие - это число действующих синапсов, подключенных к активным входным битам, умноженное на
      * фактор ускорения. Если полученное значение мньше minOverlap, то перекрытие устанавливается в 0.
      *
      * @param input - входной сигнал
@@ -62,7 +63,7 @@ public class ProximalSegment {
      */
     public int overlapCalculating(BitVector input) {
         overlap = 0;
-        for (int key : potentialSynapses.keySet())
+        for (int key : potentialSynapses.keySet())      /// TODO: тут должны быть Connected
             overlap += input.get(key) ? 1 : 0;
 
         overlap *= overlap < settings.minOverlap ? 0 : boostFactor;

@@ -69,7 +69,7 @@ public final class DHMSettings {
      * column will have a max square potential pool with sides of
      * length (2 * potentialRadius + 1).
      */
-    public int potentialRadius = 16;
+    public int potentialRadius = 16;      // TODO: сделать в зависимотси от размеров? InputWidth / ColonNumsOnXAxis
     /**
      * The percent of the inputs, within a column's
      * potential radius, that a column can be connected to. If set to
