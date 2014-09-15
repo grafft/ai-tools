@@ -12,8 +12,9 @@ import java.util.Map;
  */
 /*Дистальный дендритный сегмент (между разными удаленными клетками одного региона)*/
 public class DistalSegment {
-    private int historyDeep = 2;
-    private Map<Integer, Synapse> synapses = new HashMap<>();
+    private int historyDeep = 2; // глубина истории обучения
+    // Integer - индекс клетки в том же слое слое, с которой потенциально может быть связан данный дистальный дендрит с помошью синапса Synapse
+    private Map<Integer, Synapse> synapses = new HashMap<>(); // синапсы
     private Map<Integer, List<Synapse>> activeHistory = new HashMap<>();
     private Map<Integer, List<Synapse>> learnHistory = new HashMap<>();
     private Map<Integer, List<Synapse>> connectedHistory = new HashMap<>();

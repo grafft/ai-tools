@@ -10,11 +10,12 @@ import java.util.Properties;
  * Date: 28.08.2014
  * Time: 12:02
  */
+// настройки региона
 public final class DHMSettings {
-    public int xDimension = 30;
-    public int yDimension = 30;
-    public int xInput = 100;
-    public int yInput = 100;
+    public int xDimension = 30; // ширина региона (в колонках)
+    public int yDimension = 30; // высота региона (в колонках)
+    public int xInput = 100; // ширина входного слоя (в сигналах)
+    public int yInput = 100; // высота входного слоя (в сигналах)
 
     /**
      * Число клеток в каждой из колонок.
@@ -88,7 +89,7 @@ public final class DHMSettings {
     public int dutyCyclePeriod = 1000;
     public double maxBoost = 10.0;
     public double initConnectedPct = 0.5;
-    public double stimulusInc;
+    public double stimulusInc;                  //TODO: негде не загружается!
     public int initialInhibitionRadius = 10;
 
     public void saveIntoFile(String filePropName) throws RegionSettingsException {

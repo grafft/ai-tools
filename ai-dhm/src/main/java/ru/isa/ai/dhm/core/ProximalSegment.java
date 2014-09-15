@@ -10,13 +10,15 @@ import java.util.*;
  * Date: 29.08.2014
  * Time: 10:30
  */
-/*Дистальный дендритный сегмент (один для колонки)*/
+/*Проксимальный дендритный сегмент (один для колонки)*/
 public class ProximalSegment {
     private DHMSettings settings;
 
-    private int overlap;
-    private double boostFactor;
+    private int overlap; // вычисленное перекрытие данного дендрита (=колонки)
+    private double boostFactor; // вычисленный фактор ускорения дендрита (=колонки)
+    // Integer - индекс колонки на нижнем слое, с которой потенциально может быть связан данный проксимальный дендрит с помошью синапса Synapse
     private Map<Integer, Synapse> potentialSynapses = new HashMap<>();
+
 
     private Random random = new Random();
 
@@ -34,6 +36,8 @@ public class ProximalSegment {
      * @param yCenter - центр рецептивного поля
      */
     public void initSynapses(int xCenter, int yCenter) {
+        // индексы колонок из прямоугольника на нижнем слое вокруг проекции
+        // данной колонки с верхнего слоя на нижний (которой принадлежит данный проксимальный сегмент)
         List<Integer> indices = new ArrayList<>();
         for (int i = xCenter - settings.potentialRadius; i <= xCenter + settings.potentialRadius; i++) {
             if (i >= 0 && i < settings.xInput) {
@@ -56,18 +60,32 @@ public class ProximalSegment {
 
     /**
      * Перекрытие - это число действующих синапсов, подключенных к активным входным битам, умноженное на
-     * фактор ускорения. Если полученное значение мньше minOverlap, то перекрытие устанавливается в 0.
+     * фактор ускорения. Если полученное значение меньше minOverlap, то перекрытие устанавливается в 0.
      *
      * @param input - входной сигнал
      * @return значение перекрытия
      */
     public int overlapCalculating(BitVector input) {
         overlap = 0;
-        for (int key : potentialSynapses.keySet())      /// TODO: тут должны быть Connected
+        List<Integer> cs=connectedSynapses();
+        for (int key : cs)
             overlap += input.get(key) ? 1 : 0;
 
         overlap *= overlap < settings.minOverlap ? 0 : boostFactor;
         return overlap;
+    }
+
+    //Подмножество потенциальных синапсов potentialSynapses(c) у которых значение перманентности больше чем connectedPerm.
+    private List<Integer> connectedSynapses()
+    {
+        List<Integer> indices = new ArrayList<>();
+        for (Synapse s : potentialSynapses.values())
+        {
+            if(s.getPermanence()>settings.connectedPerm)
+                indices.add(s.getInputSource());
+        }
+
+        return indices;
     }
 
     /**

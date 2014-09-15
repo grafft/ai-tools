@@ -91,8 +91,11 @@ public class Region {
      */
     private void inhibitionPhase() {
         for (Column column : columns.values()) {
+            // выборка перекрытий колонок, соседних с данной
             IntMatrix1D neighborOverlaps = overlaps.viewSelection(Ints.toArray(column.getNeighbors()));
+            // определить порог перекрытия
             double minLocalOverlap = MathUtils.kthScore(neighborOverlaps, settings.desiredLocalActivity);
+            // если колонка имеет перекрытие большее, чем у соседей, то она становиться активной
             if (column.getOverlap() > 0 && column.getOverlap() >= minLocalOverlap) {
                 column.setActive(true);
                 activeColumns.set(column.getIndex());
@@ -110,6 +113,8 @@ public class Region {
      * перманентности.
      */
     private void learningPhase(final BitVector input) {
+
+        // 1. изменить значения перманентности всех синапсов проксимальных сегментов колонок
         activeColumns.forEachIndexFromToInState(0, activeColumns.size() - 1, true, new IntProcedure() {
             @Override
             public boolean apply(int element) {
@@ -117,22 +122,31 @@ public class Region {
                 return true;
             }
         });
+
+        // определить перешли ли мы черех период
         int period = settings.dutyCyclePeriod > iterationNum ? iterationNum : settings.dutyCyclePeriod;
+
+
         for (Column column : columns.values()) {
+
+            // определить колонку с максимальным числом срабатываний и само это число
             double maxActiveDuty = 0;
             for (int index : column.getNeighbors()) {
                     double activity = columns.get(index).getActiveDutyCycle();
                     maxActiveDuty = maxActiveDuty > activity ? maxActiveDuty : activity;
             }
+            // определить минимальное число срабатываний
             double minDutyCycle = 0.01 * maxActiveDuty;
 
             column.updateActiveDutyCycle(period);
             column.updateBoostFactor(minDutyCycle);
 
             column.updateOverlapDutyCycle(period);
+            // если колонка редко срабатывает стимулировать её
             if (column.getOverlapDutyCycle() < minDutyCycle)
                 column.stimulate();
 
+            // обновить соседей изсходя из нового рецептивного поля колонки
             column.updateNeighbors(averageReceptiveFieldSize());
         }
     }
