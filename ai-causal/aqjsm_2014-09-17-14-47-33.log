@@ -1,0 +1,1403 @@
+14:47:33.537 [main] INFO  GAAQClassifier - Loading...
+14:47:33.672 [main] INFO  GAAQClassifier - Data is loaded.
+14:47:33.673 [main] INFO  GAAQClassifier - Found 1 conflict negative objects
+14:47:33.673 [main] INFO  GAAQClassifier - Searching...
+14:47:38.427 [main] INFO  GAAQClassifier - Search was finished for  4893ms
+14:47:38.427 [main] INFO  GAAQClassifier - bestfit = 2509.463
+14:47:38.427 [main] INFO  GAAQClassifier - BestPop = 2509.463
+14:47:38.428 [main] INFO  GAAQClassifier - new_objects = 10
+14:47:38.428 [main] INFO  GAAQClassifier - all_objects = 10
+14:47:38.428 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 10
+14:47:38.428 [main] INFO  GAAQClassifier - covered_objects = 10
+14:47:43.509 [main] INFO  GAAQClassifier - Search was finished for  9975ms
+14:47:43.509 [main] INFO  GAAQClassifier - bestfit = 1505.463
+14:47:43.509 [main] INFO  GAAQClassifier - BestPop = 1505.463
+14:47:43.510 [main] INFO  GAAQClassifier - new_objects = 6
+14:47:43.510 [main] INFO  GAAQClassifier - all_objects = 6
+14:47:43.510 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 6
+14:47:43.510 [main] INFO  GAAQClassifier - covered_objects = 16
+14:47:48.258 [main] INFO  GAAQClassifier - Search was finished for  14724ms
+14:47:48.258 [main] INFO  GAAQClassifier - bestfit = 1001.459
+14:47:48.258 [main] INFO  GAAQClassifier - BestPop = 1001.459
+14:47:48.259 [main] INFO  GAAQClassifier - new_objects = 2
+14:47:48.259 [main] INFO  GAAQClassifier - all_objects = 4
+14:47:48.259 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 4
+14:47:48.259 [main] INFO  GAAQClassifier - covered_objects = 18
+14:47:52.825 [main] INFO  GAAQClassifier - Search was finished for  19291ms
+14:47:52.825 [main] INFO  GAAQClassifier - bestfit = 1751.464
+14:47:52.825 [main] INFO  GAAQClassifier - BestPop = 1751.464
+14:47:52.825 [main] INFO  GAAQClassifier - new_objects = 2
+14:47:52.825 [main] INFO  GAAQClassifier - all_objects = 7
+14:47:52.825 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 7
+14:47:52.825 [main] INFO  GAAQClassifier - covered_objects = 20
+14:47:58.354 [main] INFO  GAAQClassifier - Search was finished for  24820ms
+14:47:58.355 [main] INFO  GAAQClassifier - bestfit = 2500.46
+14:47:58.355 [main] INFO  GAAQClassifier - BestPop = 2500.46
+14:47:58.355 [main] INFO  GAAQClassifier - new_objects = 1
+14:47:58.355 [main] INFO  GAAQClassifier - all_objects = 10
+14:47:58.355 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 10
+14:47:58.355 [main] INFO  GAAQClassifier - covered_objects = 21
+14:48:03.389 [main] INFO  GAAQClassifier - Search was finished for  29855ms
+14:48:03.389 [main] INFO  GAAQClassifier - bestfit = 1252.463
+14:48:03.389 [main] INFO  GAAQClassifier - BestPop = 1252.463
+14:48:03.389 [main] INFO  GAAQClassifier - new_objects = 3
+14:48:03.390 [main] INFO  GAAQClassifier - all_objects = 5
+14:48:03.390 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 5
+14:48:03.390 [main] INFO  GAAQClassifier - covered_objects = 24
+14:48:07.932 [main] INFO  GAAQClassifier - Search was finished for  34398ms
+14:48:07.933 [main] INFO  GAAQClassifier - bestfit = 1001.524
+14:48:07.933 [main] INFO  GAAQClassifier - BestPop = 1001.524
+14:48:07.933 [main] INFO  GAAQClassifier - new_objects = 2
+14:48:07.933 [main] INFO  GAAQClassifier - all_objects = 4
+14:48:07.933 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 4
+14:48:07.933 [main] INFO  GAAQClassifier - covered_objects = 26
+14:48:13.593 [main] INFO  GAAQClassifier - Search was finished for  40059ms
+14:48:13.593 [main] INFO  GAAQClassifier - bestfit = 1500.461
+14:48:13.593 [main] INFO  GAAQClassifier - BestPop = 1500.461
+14:48:13.593 [main] INFO  GAAQClassifier - new_objects = 1
+14:48:13.593 [main] INFO  GAAQClassifier - all_objects = 6
+14:48:13.593 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 6
+14:48:13.593 [main] INFO  GAAQClassifier - covered_objects = 27
+14:48:18.264 [main] INFO  GAAQClassifier - Search was finished for  44730ms
+14:48:18.265 [main] INFO  GAAQClassifier - bestfit = 1252.463
+14:48:18.265 [main] INFO  GAAQClassifier - BestPop = 1252.463
+14:48:18.265 [main] INFO  GAAQClassifier - new_objects = 3
+14:48:18.265 [main] INFO  GAAQClassifier - all_objects = 5
+14:48:18.265 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 5
+14:48:18.265 [main] INFO  GAAQClassifier - covered_objects = 30
+14:48:23.086 [main] INFO  GAAQClassifier - Search was finished for  49552ms
+14:48:23.086 [main] INFO  GAAQClassifier - bestfit = 1250.466
+14:48:23.086 [main] INFO  GAAQClassifier - BestPop = 1250.466
+14:48:23.086 [main] INFO  GAAQClassifier - new_objects = 1
+14:48:23.086 [main] INFO  GAAQClassifier - all_objects = 5
+14:48:23.086 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 5
+14:48:23.086 [main] INFO  GAAQClassifier - covered_objects = 31
+14:48:28.207 [main] INFO  GAAQClassifier - Search was finished for  54673ms
+14:48:28.208 [main] INFO  GAAQClassifier - bestfit = 750.565
+14:48:28.208 [main] INFO  GAAQClassifier - BestPop = 750.565
+14:48:28.208 [main] INFO  GAAQClassifier - new_objects = 1
+14:48:28.208 [main] INFO  GAAQClassifier - all_objects = 3
+14:48:28.208 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 3
+14:48:28.208 [main] INFO  GAAQClassifier - covered_objects = 32
+14:48:33.277 [main] INFO  GAAQClassifier - Search was finished for  59743ms
+14:48:33.277 [main] INFO  GAAQClassifier - bestfit = 1503.464
+14:48:33.278 [main] INFO  GAAQClassifier - BestPop = 1503.464
+14:48:33.278 [main] INFO  GAAQClassifier - new_objects = 4
+14:48:33.278 [main] INFO  GAAQClassifier - all_objects = 6
+14:48:33.278 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 6
+14:48:33.278 [main] INFO  GAAQClassifier - covered_objects = 36
+14:48:38.031 [main] INFO  GAAQClassifier - Search was finished for  64497ms
+14:48:38.031 [main] INFO  GAAQClassifier - bestfit = 1502.47
+14:48:38.031 [main] INFO  GAAQClassifier - BestPop = 1502.47
+14:48:38.032 [main] INFO  GAAQClassifier - new_objects = 3
+14:48:38.032 [main] INFO  GAAQClassifier - all_objects = 6
+14:48:38.032 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 6
+14:48:38.032 [main] INFO  GAAQClassifier - covered_objects = 39
+14:48:43.487 [main] INFO  GAAQClassifier - Search was finished for  69953ms
+14:48:43.487 [main] INFO  GAAQClassifier - bestfit = 2252.462
+14:48:43.488 [main] INFO  GAAQClassifier - BestPop = 2252.462
+14:48:43.488 [main] INFO  GAAQClassifier - new_objects = 3
+14:48:43.488 [main] INFO  GAAQClassifier - all_objects = 9
+14:48:43.488 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 9
+14:48:43.488 [main] INFO  GAAQClassifier - covered_objects = 42
+14:48:48.350 [main] INFO  GAAQClassifier - Search was finished for  74816ms
+14:48:48.350 [main] INFO  GAAQClassifier - bestfit = 1500.531
+14:48:48.350 [main] INFO  GAAQClassifier - BestPop = 1500.531
+14:48:48.350 [main] INFO  GAAQClassifier - new_objects = 1
+14:48:48.350 [main] INFO  GAAQClassifier - all_objects = 6
+14:48:48.350 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 6
+14:48:48.350 [main] INFO  GAAQClassifier - covered_objects = 43
+14:48:53.625 [main] INFO  GAAQClassifier - Search was finished for  80091ms
+14:48:53.625 [main] INFO  GAAQClassifier - bestfit = 2250.47
+14:48:53.625 [main] INFO  GAAQClassifier - BestPop = 2250.47
+14:48:53.625 [main] INFO  GAAQClassifier - new_objects = 1
+14:48:53.626 [main] INFO  GAAQClassifier - all_objects = 9
+14:48:53.626 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 9
+14:48:53.626 [main] INFO  GAAQClassifier - covered_objects = 44
+14:48:58.475 [main] INFO  GAAQClassifier - Search was finished for  84941ms
+14:48:58.475 [main] INFO  GAAQClassifier - bestfit = 1750.464
+14:48:58.475 [main] INFO  GAAQClassifier - BestPop = 1750.464
+14:48:58.475 [main] INFO  GAAQClassifier - new_objects = 1
+14:48:58.475 [main] INFO  GAAQClassifier - all_objects = 7
+14:48:58.476 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 7
+14:48:58.476 [main] INFO  GAAQClassifier - covered_objects = 45
+14:49:03.350 [main] INFO  GAAQClassifier - Search was finished for  89816ms
+14:49:03.350 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:49:03.350 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:49:03.350 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:49:07.936 [main] INFO  GAAQClassifier - Search was finished for  94402ms
+14:49:07.936 [main] INFO  GAAQClassifier - bestfit = 1500.487
+14:49:07.936 [main] INFO  GAAQClassifier - BestPop = 1500.487
+14:49:07.936 [main] INFO  GAAQClassifier - new_objects = 1
+14:49:07.936 [main] INFO  GAAQClassifier - all_objects = 6
+14:49:07.936 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 6
+14:49:07.936 [main] INFO  GAAQClassifier - covered_objects = 46
+14:49:12.891 [main] INFO  GAAQClassifier - Search was finished for  99357ms
+14:49:12.891 [main] INFO  GAAQClassifier - bestfit = 500.463
+14:49:12.891 [main] INFO  GAAQClassifier - BestPop = 500.463
+14:49:12.891 [main] INFO  GAAQClassifier - new_objects = 1
+14:49:12.891 [main] INFO  GAAQClassifier - all_objects = 2
+14:49:12.891 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 2
+14:49:12.891 [main] INFO  GAAQClassifier - covered_objects = 47
+14:49:17.670 [main] INFO  GAAQClassifier - Search was finished for  104136ms
+14:49:17.671 [main] INFO  GAAQClassifier - bestfit = 2500.479
+14:49:17.671 [main] INFO  GAAQClassifier - BestPop = 2500.479
+14:49:17.671 [main] INFO  GAAQClassifier - new_objects = 1
+14:49:17.671 [main] INFO  GAAQClassifier - all_objects = 10
+14:49:17.671 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 10
+14:49:17.671 [main] INFO  GAAQClassifier - covered_objects = 48
+14:49:22.635 [main] INFO  GAAQClassifier - Search was finished for  109101ms
+14:49:22.636 [main] INFO  GAAQClassifier - bestfit = 1000.465
+14:49:22.636 [main] INFO  GAAQClassifier - BestPop = 1000.465
+14:49:22.636 [main] INFO  GAAQClassifier - new_objects = 1
+14:49:22.636 [main] INFO  GAAQClassifier - all_objects = 4
+14:49:22.636 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 4
+14:49:22.636 [main] INFO  GAAQClassifier - covered_objects = 49
+14:49:27.530 [main] INFO  GAAQClassifier - Search was finished for  113996ms
+14:49:27.530 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:49:27.530 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:49:27.530 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:49:32.573 [main] INFO  GAAQClassifier - Search was finished for  119038ms
+14:49:32.573 [main] INFO  GAAQClassifier - bestfit = 250.462
+14:49:32.573 [main] INFO  GAAQClassifier - BestPop = 250.462
+14:49:32.573 [main] INFO  GAAQClassifier - new_objects = 1
+14:49:32.573 [main] INFO  GAAQClassifier - all_objects = 1
+14:49:32.573 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 1
+14:49:32.573 [main] INFO  GAAQClassifier - covered_objects = 50
+14:49:37.176 [main] INFO  GAAQClassifier - Search was finished for  123642ms
+14:49:37.177 [main] INFO  GAAQClassifier - bestfit = 1000.476
+14:49:37.177 [main] INFO  GAAQClassifier - BestPop = 1000.476
+14:49:37.177 [main] INFO  GAAQClassifier - new_objects = 1
+14:49:37.177 [main] INFO  GAAQClassifier - all_objects = 4
+14:49:37.177 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 4
+14:49:37.177 [main] INFO  GAAQClassifier - covered_objects = 51
+14:49:42.318 [main] INFO  GAAQClassifier - Search was finished for  128784ms
+14:49:42.318 [main] INFO  GAAQClassifier - bestfit = 1500.467
+14:49:42.318 [main] INFO  GAAQClassifier - BestPop = 1500.467
+14:49:42.318 [main] INFO  GAAQClassifier - new_objects = 1
+14:49:42.318 [main] INFO  GAAQClassifier - all_objects = 6
+14:49:42.318 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 6
+14:49:42.318 [main] INFO  GAAQClassifier - covered_objects = 52
+14:49:47.322 [main] INFO  GAAQClassifier - Search was finished for  133788ms
+14:49:47.322 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:49:47.322 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:49:47.322 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:49:52.098 [main] INFO  GAAQClassifier - Search was finished for  138564ms
+14:49:52.098 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:49:52.098 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:49:52.098 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:49:56.931 [main] INFO  GAAQClassifier - Search was finished for  143397ms
+14:49:56.931 [main] INFO  GAAQClassifier - bestfit = 1501.516
+14:49:56.932 [main] INFO  GAAQClassifier - BestPop = 1501.516
+14:49:56.932 [main] INFO  GAAQClassifier - new_objects = 2
+14:49:56.932 [main] INFO  GAAQClassifier - all_objects = 6
+14:49:56.932 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 6
+14:49:56.932 [main] INFO  GAAQClassifier - covered_objects = 54
+14:50:01.753 [main] INFO  GAAQClassifier - Search was finished for  148219ms
+14:50:01.753 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:50:01.753 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:50:01.753 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:50:06.607 [main] INFO  GAAQClassifier - Search was finished for  153073ms
+14:50:06.607 [main] INFO  GAAQClassifier - bestfit = 1000.502
+14:50:06.607 [main] INFO  GAAQClassifier - BestPop = 1000.502
+14:50:06.607 [main] INFO  GAAQClassifier - new_objects = 1
+14:50:06.608 [main] INFO  GAAQClassifier - all_objects = 4
+14:50:06.608 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 4
+14:50:06.608 [main] INFO  GAAQClassifier - covered_objects = 55
+14:50:11.315 [main] INFO  GAAQClassifier - Search was finished for  157781ms
+14:50:11.315 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:50:11.315 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:50:11.315 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:50:16.288 [main] INFO  GAAQClassifier - Search was finished for  162754ms
+14:50:16.288 [main] INFO  GAAQClassifier - bestfit = 1751.468
+14:50:16.288 [main] INFO  GAAQClassifier - BestPop = 1751.468
+14:50:16.288 [main] INFO  GAAQClassifier - new_objects = 2
+14:50:16.288 [main] INFO  GAAQClassifier - all_objects = 7
+14:50:16.288 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 7
+14:50:16.288 [main] INFO  GAAQClassifier - covered_objects = 57
+14:50:21.656 [main] INFO  GAAQClassifier - Search was finished for  168122ms
+14:50:21.656 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:50:21.657 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:50:21.657 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:50:26.602 [main] INFO  GAAQClassifier - Search was finished for  173068ms
+14:50:26.602 [main] INFO  GAAQClassifier - bestfit = 1500.574
+14:50:26.602 [main] INFO  GAAQClassifier - BestPop = 1500.574
+14:50:26.602 [main] INFO  GAAQClassifier - new_objects = 1
+14:50:26.602 [main] INFO  GAAQClassifier - all_objects = 6
+14:50:26.602 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 6
+14:50:26.602 [main] INFO  GAAQClassifier - covered_objects = 58
+14:50:31.503 [main] INFO  GAAQClassifier - Search was finished for  177969ms
+14:50:31.503 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:50:31.503 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:50:31.503 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:50:36.225 [main] INFO  GAAQClassifier - Search was finished for  182691ms
+14:50:36.225 [main] INFO  GAAQClassifier - bestfit = 750.475
+14:50:36.225 [main] INFO  GAAQClassifier - BestPop = 750.475
+14:50:36.225 [main] INFO  GAAQClassifier - new_objects = 1
+14:50:36.226 [main] INFO  GAAQClassifier - all_objects = 3
+14:50:36.226 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 3
+14:50:36.226 [main] INFO  GAAQClassifier - covered_objects = 59
+14:50:41.434 [main] INFO  GAAQClassifier - Search was finished for  187900ms
+14:50:41.435 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:50:41.435 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:50:41.435 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:50:46.197 [main] INFO  GAAQClassifier - Search was finished for  192663ms
+14:50:46.197 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:50:46.197 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:50:46.197 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:50:50.960 [main] INFO  GAAQClassifier - Search was finished for  197426ms
+14:50:50.960 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:50:50.960 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:50:50.960 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:50:56.234 [main] INFO  GAAQClassifier - Search was finished for  202700ms
+14:50:56.234 [main] INFO  GAAQClassifier - bestfit = 3250.466
+14:50:56.234 [main] INFO  GAAQClassifier - BestPop = 3250.466
+14:50:56.234 [main] INFO  GAAQClassifier - new_objects = 1
+14:50:56.234 [main] INFO  GAAQClassifier - all_objects = 13
+14:50:56.234 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 13
+14:50:56.234 [main] INFO  GAAQClassifier - covered_objects = 60
+14:51:01.388 [main] INFO  GAAQClassifier - Search was finished for  207854ms
+14:51:01.388 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:51:01.388 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:51:01.388 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:51:06.529 [main] INFO  GAAQClassifier - Search was finished for  212995ms
+14:51:06.529 [main] INFO  GAAQClassifier - bestfit = 1000.462
+14:51:06.529 [main] INFO  GAAQClassifier - BestPop = 1000.462
+14:51:06.530 [main] INFO  GAAQClassifier - new_objects = 1
+14:51:06.530 [main] INFO  GAAQClassifier - all_objects = 4
+14:51:06.530 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 4
+14:51:06.530 [main] INFO  GAAQClassifier - covered_objects = 61
+14:51:11.855 [main] INFO  GAAQClassifier - Search was finished for  218321ms
+14:51:11.855 [main] INFO  GAAQClassifier - bestfit = 2750.465
+14:51:11.855 [main] INFO  GAAQClassifier - BestPop = 2750.465
+14:51:11.856 [main] INFO  GAAQClassifier - new_objects = 1
+14:51:11.856 [main] INFO  GAAQClassifier - all_objects = 11
+14:51:11.856 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 11
+14:51:11.856 [main] INFO  GAAQClassifier - covered_objects = 62
+14:51:16.764 [main] INFO  GAAQClassifier - Search was finished for  223230ms
+14:51:16.764 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:51:16.764 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:51:16.764 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:51:21.896 [main] INFO  GAAQClassifier - Search was finished for  228362ms
+14:51:21.896 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:51:21.896 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:51:21.896 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:51:27.210 [main] INFO  GAAQClassifier - Search was finished for  233676ms
+14:51:27.210 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:51:27.210 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:51:27.210 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:51:31.791 [main] INFO  GAAQClassifier - Search was finished for  238257ms
+14:51:31.791 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:51:31.791 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:51:31.791 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:51:37.160 [main] INFO  GAAQClassifier - Search was finished for  243626ms
+14:51:37.160 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:51:37.160 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:51:37.160 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:51:42.421 [main] INFO  GAAQClassifier - Search was finished for  248886ms
+14:51:42.421 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:51:42.421 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:51:42.421 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:51:47.096 [main] INFO  GAAQClassifier - Search was finished for  253562ms
+14:51:47.097 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:51:47.097 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:51:47.097 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:51:52.156 [main] INFO  GAAQClassifier - Search was finished for  258622ms
+14:51:52.156 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:51:52.156 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:51:52.156 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:51:57.244 [main] INFO  GAAQClassifier - Search was finished for  263710ms
+14:51:57.244 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:51:57.244 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:51:57.245 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:52:02.229 [main] INFO  GAAQClassifier - Search was finished for  268695ms
+14:52:02.229 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:52:02.229 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:52:02.230 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:52:07.125 [main] INFO  GAAQClassifier - Search was finished for  273591ms
+14:52:07.125 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:52:07.125 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:52:07.125 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:52:12.326 [main] INFO  GAAQClassifier - Search was finished for  278791ms
+14:52:12.326 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:52:12.326 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:52:12.326 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:52:17.674 [main] INFO  GAAQClassifier - Search was finished for  284140ms
+14:52:17.675 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:52:17.675 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:52:17.675 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:52:22.695 [main] INFO  GAAQClassifier - Search was finished for  289161ms
+14:52:22.695 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:52:22.695 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:52:22.695 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:52:27.712 [main] INFO  GAAQClassifier - Search was finished for  294178ms
+14:52:27.712 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:52:27.712 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:52:27.712 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:52:32.487 [main] INFO  GAAQClassifier - Search was finished for  298952ms
+14:52:32.487 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:52:32.487 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:52:32.487 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:52:37.079 [main] INFO  GAAQClassifier - Search was finished for  303545ms
+14:52:37.079 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:52:37.079 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:52:37.079 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:52:42.166 [main] INFO  GAAQClassifier - Search was finished for  308632ms
+14:52:42.166 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:52:42.166 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:52:42.166 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:52:47.028 [main] INFO  GAAQClassifier - Search was finished for  313494ms
+14:52:47.029 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:52:47.029 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:52:47.029 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:52:52.090 [main] INFO  GAAQClassifier - Search was finished for  318556ms
+14:52:52.090 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:52:52.090 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:52:52.090 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:52:57.199 [main] INFO  GAAQClassifier - Search was finished for  323665ms
+14:52:57.199 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:52:57.199 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:52:57.200 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:53:02.580 [main] INFO  GAAQClassifier - Search was finished for  329046ms
+14:53:02.580 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:53:02.580 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:53:02.580 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:53:08.077 [main] INFO  GAAQClassifier - Search was finished for  334543ms
+14:53:08.077 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:53:08.077 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:53:08.077 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:53:12.876 [main] INFO  GAAQClassifier - Search was finished for  339342ms
+14:53:12.877 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:53:12.877 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:53:12.877 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:53:17.595 [main] INFO  GAAQClassifier - Search was finished for  344061ms
+14:53:17.595 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:53:17.595 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:53:17.595 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:53:22.998 [main] INFO  GAAQClassifier - Search was finished for  349464ms
+14:53:22.998 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:53:22.998 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:53:22.998 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:53:28.086 [main] INFO  GAAQClassifier - Search was finished for  354552ms
+14:53:28.086 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:53:28.086 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:53:28.086 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:53:33.004 [main] INFO  GAAQClassifier - Search was finished for  359470ms
+14:53:33.005 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:53:33.005 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:53:33.005 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:53:37.763 [main] INFO  GAAQClassifier - Search was finished for  364229ms
+14:53:37.763 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:53:37.763 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:53:37.763 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:53:42.648 [main] INFO  GAAQClassifier - Search was finished for  369114ms
+14:53:42.648 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:53:42.648 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:53:42.648 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:53:47.683 [main] INFO  GAAQClassifier - Search was finished for  374149ms
+14:53:47.683 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:53:47.683 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:53:47.683 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:53:53.104 [main] INFO  GAAQClassifier - Search was finished for  379570ms
+14:53:53.104 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:53:53.104 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:53:53.104 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:53:57.850 [main] INFO  GAAQClassifier - Search was finished for  384316ms
+14:53:57.850 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:53:57.850 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:53:57.850 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:54:03.083 [main] INFO  GAAQClassifier - Search was finished for  389549ms
+14:54:03.083 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:54:03.083 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:54:03.083 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:54:07.855 [main] INFO  GAAQClassifier - Search was finished for  394321ms
+14:54:07.855 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:54:07.855 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:54:07.855 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:54:12.465 [main] INFO  GAAQClassifier - Search was finished for  398931ms
+14:54:12.466 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:54:12.466 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:54:12.466 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:54:17.559 [main] INFO  GAAQClassifier - Search was finished for  404025ms
+14:54:17.559 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:54:17.559 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:54:17.559 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:54:22.397 [main] INFO  GAAQClassifier - Search was finished for  408863ms
+14:54:22.398 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:54:22.398 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:54:22.398 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:54:27.038 [main] INFO  GAAQClassifier - Search was finished for  413504ms
+14:54:27.038 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:54:27.038 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:54:27.038 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:54:32.072 [main] INFO  GAAQClassifier - Search was finished for  418538ms
+14:54:32.072 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:54:32.072 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:54:32.072 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:54:37.251 [main] INFO  GAAQClassifier - Search was finished for  423717ms
+14:54:37.251 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:54:37.251 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:54:37.251 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:54:42.261 [main] INFO  GAAQClassifier - Search was finished for  428727ms
+14:54:42.261 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:54:42.261 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:54:42.262 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:54:47.239 [main] INFO  GAAQClassifier - Search was finished for  433705ms
+14:54:47.239 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:54:47.239 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:54:47.239 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:54:52.114 [main] INFO  GAAQClassifier - Search was finished for  438580ms
+14:54:52.114 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:54:52.114 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:54:52.114 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:54:57.378 [main] INFO  GAAQClassifier - Search was finished for  443844ms
+14:54:57.378 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:54:57.378 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:54:57.378 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:55:02.198 [main] INFO  GAAQClassifier - Search was finished for  448664ms
+14:55:02.199 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:55:02.199 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:55:02.199 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:55:07.409 [main] INFO  GAAQClassifier - Search was finished for  453875ms
+14:55:07.409 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:55:07.409 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:55:07.409 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:55:12.273 [main] INFO  GAAQClassifier - Search was finished for  458739ms
+14:55:12.273 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:55:12.273 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:55:12.273 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:55:17.087 [main] INFO  GAAQClassifier - Search was finished for  463553ms
+14:55:17.088 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:55:17.088 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:55:17.088 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:55:22.245 [main] INFO  GAAQClassifier - Search was finished for  468711ms
+14:55:22.245 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:55:22.245 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:55:22.245 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:55:27.273 [main] INFO  GAAQClassifier - Search was finished for  473739ms
+14:55:27.274 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:55:27.274 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:55:27.274 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:55:32.115 [main] INFO  GAAQClassifier - Search was finished for  478581ms
+14:55:32.115 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:55:32.115 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:55:32.115 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:55:36.979 [main] INFO  GAAQClassifier - Search was finished for  483445ms
+14:55:36.979 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:55:36.979 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:55:36.980 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:55:42.341 [main] INFO  GAAQClassifier - Search was finished for  488807ms
+14:55:42.341 [main] INFO  GAAQClassifier - bestfit = 1000.502
+14:55:42.341 [main] INFO  GAAQClassifier - BestPop = 1000.502
+14:55:42.341 [main] INFO  GAAQClassifier - new_objects = 1
+14:55:42.341 [main] INFO  GAAQClassifier - all_objects = 4
+14:55:42.341 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 4
+14:55:42.341 [main] INFO  GAAQClassifier - covered_objects = 63
+14:55:46.966 [main] INFO  GAAQClassifier - Search was finished for  493432ms
+14:55:46.966 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:55:46.966 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:55:46.966 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:55:52.102 [main] INFO  GAAQClassifier - Search was finished for  498568ms
+14:55:52.102 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:55:52.102 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:55:52.102 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:55:57.159 [main] INFO  GAAQClassifier - Search was finished for  503625ms
+14:55:57.159 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:55:57.159 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:55:57.159 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:56:01.773 [main] INFO  GAAQClassifier - Search was finished for  508239ms
+14:56:01.773 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:56:01.773 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:56:01.773 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:56:06.578 [main] INFO  GAAQClassifier - Search was finished for  513044ms
+14:56:06.578 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:56:06.578 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:56:06.578 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:56:12.346 [main] INFO  GAAQClassifier - Search was finished for  518812ms
+14:56:12.346 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:56:12.346 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:56:12.346 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:56:17.192 [main] INFO  GAAQClassifier - Search was finished for  523658ms
+14:56:17.192 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:56:17.192 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:56:17.192 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:56:22.132 [main] INFO  GAAQClassifier - Search was finished for  528598ms
+14:56:22.132 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:56:22.132 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:56:22.132 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:56:28.062 [main] INFO  GAAQClassifier - Search was finished for  534528ms
+14:56:28.062 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:56:28.062 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:56:28.062 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:56:33.066 [main] INFO  GAAQClassifier - Search was finished for  539532ms
+14:56:33.066 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:56:33.066 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:56:33.066 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:56:37.541 [main] INFO  GAAQClassifier - Search was finished for  544007ms
+14:56:37.541 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:56:37.541 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:56:37.541 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:56:42.149 [main] INFO  GAAQClassifier - Search was finished for  548615ms
+14:56:42.149 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:56:42.149 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:56:42.149 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:56:47.233 [main] INFO  GAAQClassifier - Search was finished for  553699ms
+14:56:47.233 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:56:47.233 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:56:47.233 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:56:52.430 [main] INFO  GAAQClassifier - Search was finished for  558896ms
+14:56:52.430 [main] INFO  GAAQClassifier - bestfit = 1500.46
+14:56:52.430 [main] INFO  GAAQClassifier - BestPop = 1500.46
+14:56:52.430 [main] INFO  GAAQClassifier - new_objects = 1
+14:56:52.430 [main] INFO  GAAQClassifier - all_objects = 6
+14:56:52.430 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 6
+14:56:52.430 [main] INFO  GAAQClassifier - covered_objects = 64
+14:56:57.101 [main] INFO  GAAQClassifier - Search was finished for  563567ms
+14:56:57.101 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:56:57.101 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:56:57.101 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:57:02.095 [main] INFO  GAAQClassifier - Search was finished for  568561ms
+14:57:02.095 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:57:02.095 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:57:02.095 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:57:07.338 [main] INFO  GAAQClassifier - Search was finished for  573804ms
+14:57:07.338 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:57:07.338 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:57:07.338 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:57:12.182 [main] INFO  GAAQClassifier - Search was finished for  578648ms
+14:57:12.183 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:57:12.183 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:57:12.183 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:57:17.067 [main] INFO  GAAQClassifier - Search was finished for  583533ms
+14:57:17.068 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:57:17.068 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:57:17.068 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:57:22.359 [main] INFO  GAAQClassifier - Search was finished for  588825ms
+14:57:22.359 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:57:22.359 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:57:22.359 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:57:27.302 [main] INFO  GAAQClassifier - Search was finished for  593768ms
+14:57:27.302 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:57:27.302 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:57:27.302 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:57:32.510 [main] INFO  GAAQClassifier - Search was finished for  598976ms
+14:57:32.510 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:57:32.510 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:57:32.510 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:57:37.843 [main] INFO  GAAQClassifier - Search was finished for  604309ms
+14:57:37.843 [main] INFO  GAAQClassifier - bestfit = 2500.488
+14:57:37.843 [main] INFO  GAAQClassifier - BestPop = 2500.488
+14:57:37.843 [main] INFO  GAAQClassifier - new_objects = 1
+14:57:37.843 [main] INFO  GAAQClassifier - all_objects = 10
+14:57:37.843 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 10
+14:57:37.843 [main] INFO  GAAQClassifier - covered_objects = 65
+14:57:37.865 [main] INFO  GAAQClassifier - NUM_NEW_OBJECTS: 10
+NUM_OBJECTS: 10
+NUM_MISS_OBJECTS: 10
+RULE_1:
+attr_6=[1, 2]
+attr_10=[2, 3]
+attr_17=[2, 3]
+attr_55=[2, 3]
+attr_57=[2, 3]
+attr_100=[1, 2]
+attr_132=[2, 3]
+attr_148=[2, 3]
+
+NUM_NEW_OBJECTS: 6
+NUM_OBJECTS: 6
+NUM_MISS_OBJECTS: 6
+RULE_2:
+attr_9=[2, 3]
+attr_12=[1, 3]
+attr_18=[1, 2]
+attr_53=[1, 2]
+attr_77=[1, 2]
+attr_113=[2, 3]
+attr_120=[2, 3]
+attr_160=[1, 2]
+
+NUM_NEW_OBJECTS: 2
+NUM_OBJECTS: 4
+NUM_MISS_OBJECTS: 4
+RULE_3:
+attr_4=[2, 3]
+attr_15=[2, 3]
+attr_125=[2, 3]
+attr_171=[1, 2]
+attr_182=[1, 2]
+
+NUM_NEW_OBJECTS: 2
+NUM_OBJECTS: 7
+NUM_MISS_OBJECTS: 7
+RULE_4:
+attr_1=[1, 3]
+attr_6=[1, 3]
+attr_17=[2, 3]
+attr_38=[1, 3]
+attr_76=[2, 3]
+attr_78=[1, 3]
+attr_80=[1, 3]
+attr_89=[1, 2]
+attr_93=[1, 2]
+attr_94=[1, 2]
+attr_128=[1, 3]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 10
+NUM_MISS_OBJECTS: 10
+RULE_5:
+attr_14=[1, 2]
+attr_17=[2, 3]
+attr_26=[2, 3]
+attr_40=[2, 3]
+attr_63=[1, 3]
+attr_68=[2, 3]
+attr_111=[1, 3]
+
+NUM_NEW_OBJECTS: 3
+NUM_OBJECTS: 5
+NUM_MISS_OBJECTS: 5
+RULE_6:
+attr_3=[2, 3]
+attr_31=[1, 2]
+attr_41=[2, 3]
+attr_44=[1, 2]
+attr_46=[1, 3]
+attr_52=[1, 2]
+attr_87=[1, 3]
+attr_88=[1, 2]
+attr_127=[1, 2]
+
+NUM_NEW_OBJECTS: 2
+NUM_OBJECTS: 4
+NUM_MISS_OBJECTS: 4
+RULE_7:
+attr_2=[1]
+attr_7=[1, 2]
+attr_8=[1]
+attr_10=[1, 3]
+attr_14=[1, 3]
+attr_15=[1, 2]
+attr_16=[1, 2]
+attr_19=[1, 3]
+attr_20=[1, 2]
+attr_24=[1]
+attr_30=[1, 2]
+attr_31=[2, 3]
+attr_35=[1, 2]
+attr_36=[1, 2]
+attr_39=[3]
+attr_40=[1, 2]
+attr_41=[1, 2]
+attr_50=[1, 3]
+attr_51=[1, 2]
+attr_56=[1, 2]
+attr_60=[1, 2]
+attr_66=[1, 2]
+attr_74=[2, 3]
+attr_77=[1, 3]
+attr_84=[2, 3]
+attr_85=[2, 3]
+attr_89=[2, 3]
+attr_91=[1, 2]
+attr_95=[1, 2]
+attr_105=[1, 3]
+attr_108=[3]
+attr_117=[1, 2]
+attr_119=[1, 2]
+attr_123=[1, 3]
+attr_127=[2, 3]
+attr_128=[2]
+attr_133=[1, 2]
+attr_134=[1, 2]
+attr_136=[1, 2]
+attr_138=[1]
+attr_156=[2, 3]
+attr_158=[2, 3]
+attr_162=[1]
+attr_166=[1, 2]
+attr_169=[1, 2]
+attr_178=[1, 2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 6
+NUM_MISS_OBJECTS: 6
+RULE_8:
+attr_3=[1, 3]
+attr_15=[2, 3]
+attr_16=[2, 3]
+attr_20=[1, 3]
+attr_28=[2, 3]
+attr_40=[2, 3]
+attr_79=[2, 3]
+
+NUM_NEW_OBJECTS: 3
+NUM_OBJECTS: 5
+NUM_MISS_OBJECTS: 5
+RULE_9:
+attr_5=[1, 3]
+attr_17=[2, 3]
+attr_48=[2, 3]
+attr_52=[1, 3]
+attr_82=[1, 2]
+attr_102=[1, 2]
+attr_103=[1, 2]
+attr_142=[2, 3]
+attr_144=[1]
+attr_168=[1, 2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 5
+NUM_MISS_OBJECTS: 5
+RULE_10:
+attr_3=[2, 3]
+attr_10=[1, 2]
+attr_16=[1, 3]
+attr_17=[2, 3]
+attr_43=[1, 3]
+attr_56=[1, 3]
+attr_62=[2, 3]
+attr_71=[1, 3]
+attr_74=[2, 3]
+attr_83=[2, 3]
+attr_85=[1, 3]
+attr_131=[2, 3]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 3
+NUM_MISS_OBJECTS: 3
+RULE_11:
+attr_2=[1, 2]
+attr_6=[2, 3]
+attr_8=[1, 2]
+attr_10=[1, 3]
+attr_19=[1]
+attr_22=[1, 3]
+attr_26=[1, 3]
+attr_27=[1]
+attr_28=[1, 3]
+attr_29=[1, 2]
+attr_31=[3]
+attr_32=[3]
+attr_36=[2, 3]
+attr_38=[1, 3]
+attr_39=[2, 3]
+attr_44=[1, 2]
+attr_45=[1, 3]
+attr_47=[1, 3]
+attr_50=[3]
+attr_51=[1, 2]
+attr_54=[1, 3]
+attr_55=[1, 2]
+attr_56=[3]
+attr_57=[1, 3]
+attr_58=[1, 3]
+attr_60=[1, 3]
+attr_63=[2, 3]
+attr_65=[1, 3]
+attr_66=[1, 2]
+attr_69=[2, 3]
+attr_74=[1, 2]
+attr_77=[3]
+attr_78=[3]
+attr_85=[3]
+attr_87=[2, 3]
+attr_90=[1, 2]
+attr_93=[1, 2]
+attr_94=[1, 3]
+attr_97=[2, 3]
+attr_102=[2]
+attr_105=[1, 2]
+attr_111=[1, 2]
+attr_125=[1]
+attr_127=[1, 3]
+attr_128=[3]
+attr_131=[1]
+attr_132=[1, 2]
+attr_133=[1, 2]
+attr_136=[2]
+attr_142=[1, 2]
+attr_150=[1, 2]
+attr_155=[2]
+attr_161=[2]
+attr_162=[1]
+attr_166=[3]
+attr_167=[2, 3]
+attr_170=[1, 2]
+attr_176=[1]
+attr_179=[1, 2]
+
+NUM_NEW_OBJECTS: 4
+NUM_OBJECTS: 6
+NUM_MISS_OBJECTS: 6
+RULE_12:
+attr_2=[2, 3]
+attr_3=[2, 3]
+attr_24=[2, 3]
+attr_37=[2, 3]
+attr_38=[1, 3]
+attr_74=[1, 2]
+attr_78=[1, 3]
+attr_79=[1, 2]
+attr_143=[1, 3]
+
+NUM_NEW_OBJECTS: 3
+NUM_OBJECTS: 6
+NUM_MISS_OBJECTS: 6
+RULE_13:
+attr_2=[1, 3]
+attr_5=[1, 3]
+attr_17=[2, 3]
+attr_22=[1, 2]
+attr_36=[1, 3]
+attr_45=[2, 3]
+attr_59=[1, 3]
+attr_77=[2, 3]
+attr_79=[2, 3]
+attr_83=[1, 3]
+attr_86=[1, 2]
+attr_91=[1, 2]
+attr_105=[2, 3]
+attr_122=[2, 3]
+attr_130=[2, 3]
+attr_144=[1, 2]
+
+NUM_NEW_OBJECTS: 3
+NUM_OBJECTS: 9
+NUM_MISS_OBJECTS: 9
+RULE_14:
+attr_2=[2, 3]
+attr_15=[2, 3]
+attr_18=[1, 2]
+attr_34=[1, 2]
+attr_40=[2, 3]
+attr_50=[1, 2]
+attr_66=[2, 3]
+attr_100=[1, 3]
+attr_130=[2, 3]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 6
+NUM_MISS_OBJECTS: 6
+RULE_15:
+attr_1=[1, 2]
+attr_3=[1, 3]
+attr_5=[1, 2]
+attr_12=[1, 2]
+attr_17=[1, 2]
+attr_22=[2, 3]
+attr_29=[1, 2]
+attr_36=[2, 3]
+attr_40=[2, 3]
+attr_43=[2, 3]
+attr_46=[1, 3]
+attr_47=[2, 3]
+attr_49=[1]
+attr_50=[1, 3]
+attr_58=[2, 3]
+attr_64=[1]
+attr_65=[1, 2]
+attr_67=[2, 3]
+attr_69=[2, 3]
+attr_72=[1, 2]
+attr_80=[1, 3]
+attr_85=[2]
+attr_90=[3]
+attr_91=[2, 3]
+attr_94=[2, 3]
+attr_96=[1, 2]
+attr_97=[1, 2]
+attr_106=[1, 3]
+attr_107=[1, 3]
+attr_108=[3]
+attr_111=[2, 3]
+attr_112=[1, 2]
+attr_120=[1, 2]
+attr_122=[2, 3]
+attr_125=[1, 2]
+attr_134=[3]
+attr_136=[2, 3]
+attr_142=[2]
+attr_146=[1, 2]
+attr_158=[2, 3]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 9
+NUM_MISS_OBJECTS: 9
+RULE_16:
+attr_10=[1, 3]
+attr_12=[1, 2]
+attr_13=[1, 3]
+attr_14=[1, 2]
+attr_16=[2, 3]
+attr_27=[1, 2]
+attr_35=[1, 2]
+attr_39=[1, 3]
+attr_47=[2]
+attr_52=[2, 3]
+attr_68=[1, 3]
+attr_69=[1, 3]
+attr_90=[2, 3]
+attr_93=[1, 2]
+attr_122=[1, 3]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 7
+NUM_MISS_OBJECTS: 7
+RULE_17:
+attr_17=[2, 3]
+attr_28=[1, 3]
+attr_36=[1, 3]
+attr_45=[1, 3]
+attr_47=[1, 3]
+attr_84=[2, 3]
+attr_105=[1, 3]
+attr_119=[2, 3]
+attr_132=[2, 3]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 6
+NUM_MISS_OBJECTS: 6
+RULE_18:
+attr_7=[1, 2]
+attr_19=[3]
+attr_23=[1, 3]
+attr_35=[1, 3]
+attr_37=[2, 3]
+attr_42=[3]
+attr_63=[2, 3]
+attr_65=[1, 3]
+attr_72=[1, 2]
+attr_74=[1, 2]
+attr_77=[1, 3]
+attr_86=[2]
+attr_88=[1, 2]
+attr_93=[1, 2]
+attr_99=[2, 3]
+attr_120=[1, 2]
+attr_126=[1, 2]
+attr_137=[2, 3]
+attr_139=[3]
+attr_158=[2, 3]
+attr_166=[2, 3]
+attr_167=[1, 2]
+attr_172=[1, 2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 2
+NUM_MISS_OBJECTS: 2
+RULE_19:
+attr_2=[1, 3]
+attr_3=[2, 3]
+attr_14=[2, 3]
+attr_54=[2, 3]
+attr_93=[1, 2]
+attr_122=[1, 2]
+attr_148=[1, 2]
+attr_164=[1, 2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 10
+NUM_MISS_OBJECTS: 10
+RULE_20:
+attr_3=[2, 3]
+attr_6=[2, 3]
+attr_24=[1, 2]
+attr_29=[2, 3]
+attr_30=[2, 3]
+attr_55=[2, 3]
+attr_76=[1, 2]
+attr_81=[1, 3]
+attr_102=[2, 3]
+attr_103=[1]
+attr_143=[2, 3]
+attr_182=[2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 4
+NUM_MISS_OBJECTS: 4
+RULE_21:
+attr_2=[2, 3]
+attr_7=[1, 3]
+attr_15=[2, 3]
+attr_16=[2, 3]
+attr_46=[1, 3]
+attr_48=[1, 2]
+attr_58=[1, 3]
+attr_101=[2, 3]
+attr_173=[1, 2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 1
+NUM_MISS_OBJECTS: 1
+RULE_22:
+attr_3=[3]
+attr_16=[1, 2]
+attr_20=[2, 3]
+attr_34=[1, 2]
+attr_103=[2, 3]
+attr_159=[1, 2]
+attr_164=[1, 2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 4
+NUM_MISS_OBJECTS: 4
+RULE_23:
+attr_1=[2]
+attr_5=[1, 2]
+attr_10=[1, 3]
+attr_36=[2, 3]
+attr_41=[2, 3]
+attr_42=[2, 3]
+attr_47=[1, 2]
+attr_50=[1, 3]
+attr_53=[1, 2]
+attr_72=[1, 2]
+attr_111=[2, 3]
+attr_129=[1, 2]
+attr_135=[2, 3]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 6
+NUM_MISS_OBJECTS: 6
+RULE_24:
+attr_5=[1, 2]
+attr_6=[1, 3]
+attr_15=[2, 3]
+attr_17=[2, 3]
+attr_19=[1, 2]
+attr_29=[1, 2]
+attr_70=[1, 3]
+attr_71=[1, 2]
+attr_92=[1, 3]
+attr_135=[2, 3]
+attr_166=[2, 3]
+
+NUM_NEW_OBJECTS: 2
+NUM_OBJECTS: 6
+NUM_MISS_OBJECTS: 6
+RULE_25:
+attr_2=[2, 3]
+attr_6=[1, 3]
+attr_12=[1, 3]
+attr_22=[1, 2]
+attr_29=[2, 3]
+attr_30=[2, 3]
+attr_32=[1, 3]
+attr_34=[1, 2]
+attr_36=[1]
+attr_38=[1, 2]
+attr_45=[3]
+attr_47=[1, 2]
+attr_58=[2]
+attr_59=[2, 3]
+attr_64=[1, 3]
+attr_66=[2, 3]
+attr_69=[1, 3]
+attr_80=[1, 3]
+attr_84=[2, 3]
+attr_93=[1, 2]
+attr_98=[2, 3]
+attr_100=[2, 3]
+attr_101=[2, 3]
+attr_102=[2, 3]
+attr_103=[1]
+attr_105=[1, 3]
+attr_112=[2, 3]
+attr_120=[1, 2]
+attr_122=[1, 3]
+attr_126=[2, 3]
+attr_128=[1, 3]
+attr_129=[1, 2]
+attr_134=[2, 3]
+attr_138=[1, 2]
+attr_142=[2, 3]
+attr_155=[1]
+attr_159=[1, 2]
+attr_163=[1, 2]
+attr_168=[2, 3]
+attr_170=[2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 4
+NUM_MISS_OBJECTS: 4
+RULE_26:
+attr_7=[1, 2]
+attr_10=[1, 3]
+attr_12=[1]
+attr_15=[1, 3]
+attr_16=[2, 3]
+attr_36=[3]
+attr_46=[1, 3]
+attr_53=[1, 2]
+attr_56=[1, 3]
+attr_59=[1, 2]
+attr_61=[2, 3]
+attr_65=[1, 2]
+attr_68=[1, 3]
+attr_70=[1, 2]
+attr_71=[1, 3]
+attr_74=[1, 2]
+attr_80=[1, 3]
+attr_82=[2]
+attr_88=[2, 3]
+attr_89=[2]
+attr_93=[1, 2]
+attr_96=[2, 3]
+attr_122=[1, 2]
+attr_129=[1, 2]
+attr_161=[1]
+attr_168=[1, 2]
+
+NUM_NEW_OBJECTS: 2
+NUM_OBJECTS: 7
+NUM_MISS_OBJECTS: 7
+RULE_27:
+attr_2=[2, 3]
+attr_10=[2, 3]
+attr_34=[1, 2]
+attr_40=[1, 3]
+attr_47=[1, 3]
+attr_71=[1, 2]
+attr_78=[1, 3]
+attr_86=[2, 3]
+attr_93=[1, 2]
+attr_130=[1, 2]
+attr_138=[2, 3]
+attr_174=[1, 2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 6
+NUM_MISS_OBJECTS: 6
+RULE_28:
+attr_2=[1, 2]
+attr_5=[1, 2]
+attr_8=[1, 3]
+attr_10=[1, 2]
+attr_11=[1, 2]
+attr_15=[2, 3]
+attr_23=[1, 2]
+attr_29=[2, 3]
+attr_33=[1, 3]
+attr_35=[3]
+attr_43=[2]
+attr_46=[1, 2]
+attr_49=[2, 3]
+attr_54=[1, 2]
+attr_56=[2, 3]
+attr_57=[1, 2]
+attr_64=[1]
+attr_66=[2, 3]
+attr_69=[1, 3]
+attr_70=[2, 3]
+attr_71=[1, 2]
+attr_74=[2]
+attr_76=[1, 2]
+attr_78=[1, 3]
+attr_79=[1, 2]
+attr_80=[1, 3]
+attr_81=[2, 3]
+attr_90=[1, 2]
+attr_92=[1, 3]
+attr_93=[1, 2]
+attr_94=[1]
+attr_101=[2]
+attr_103=[3]
+attr_105=[1, 3]
+attr_106=[3]
+attr_111=[2, 3]
+attr_119=[3]
+attr_120=[3]
+attr_121=[3]
+attr_123=[1, 2]
+attr_126=[1, 3]
+attr_130=[2, 3]
+attr_133=[1, 2]
+attr_134=[2, 3]
+attr_137=[2, 3]
+attr_140=[1, 2]
+attr_147=[2]
+attr_148=[2, 3]
+attr_155=[1, 2]
+attr_161=[1]
+attr_166=[2, 3]
+attr_168=[2]
+attr_179=[1, 2]
+attr_181=[1, 2]
+attr_183=[1, 2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 3
+NUM_MISS_OBJECTS: 3
+RULE_29:
+attr_5=[1]
+attr_7=[1, 2]
+attr_17=[2, 3]
+attr_22=[1, 2]
+attr_39=[1, 2]
+attr_52=[1, 3]
+attr_63=[1, 2]
+attr_72=[1, 2]
+attr_76=[1, 2]
+attr_86=[3]
+attr_88=[1, 2]
+attr_124=[1, 2]
+attr_128=[1, 3]
+attr_140=[1, 2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 13
+NUM_MISS_OBJECTS: 13
+RULE_30:
+attr_5=[1, 2]
+attr_14=[1, 2]
+attr_15=[1, 2]
+attr_16=[1, 2]
+attr_24=[1]
+attr_38=[1, 3]
+attr_66=[1, 2]
+attr_91=[2, 3]
+attr_93=[1, 2]
+attr_133=[1, 2]
+attr_152=[1, 2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 4
+NUM_MISS_OBJECTS: 4
+RULE_31:
+attr_7=[1]
+attr_15=[2, 3]
+attr_29=[1, 2]
+attr_32=[2, 3]
+attr_45=[2, 3]
+attr_47=[1, 3]
+attr_132=[2, 3]
+attr_169=[1, 2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 11
+NUM_MISS_OBJECTS: 11
+RULE_32:
+attr_7=[1, 2]
+attr_16=[2, 3]
+attr_31=[1, 2]
+attr_38=[1, 3]
+attr_43=[1, 2]
+attr_82=[1, 2]
+attr_93=[1, 2]
+attr_108=[2, 3]
+attr_171=[1, 2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 4
+NUM_MISS_OBJECTS: 4
+RULE_33:
+attr_8=[2, 3]
+attr_11=[1, 3]
+attr_15=[3]
+attr_19=[3]
+attr_20=[1, 3]
+attr_27=[1, 2]
+attr_28=[1, 2]
+attr_36=[2, 3]
+attr_37=[1, 2]
+attr_38=[1, 2]
+attr_60=[1, 2]
+attr_61=[1, 3]
+attr_63=[1, 2]
+attr_69=[2]
+attr_72=[1, 3]
+attr_76=[1, 2]
+attr_79=[1, 3]
+attr_86=[1, 2]
+attr_94=[2, 3]
+attr_95=[2, 3]
+attr_103=[1, 2]
+attr_105=[1, 3]
+attr_116=[2, 3]
+attr_122=[1, 3]
+attr_124=[2, 3]
+attr_127=[2, 3]
+attr_131=[1, 2]
+attr_135=[1, 2]
+attr_136=[2, 3]
+attr_148=[2, 3]
+attr_166=[2, 3]
+attr_168=[1, 2]
+attr_171=[1, 2]
+attr_178=[1, 2]
+attr_183=[1, 2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 6
+NUM_MISS_OBJECTS: 6
+RULE_34:
+attr_2=[2, 3]
+attr_15=[3]
+attr_19=[1, 2]
+attr_56=[1, 2]
+attr_100=[2, 3]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 10
+NUM_MISS_OBJECTS: 10
+RULE_35:
+attr_3=[1, 2]
+attr_7=[1, 3]
+attr_23=[1, 2]
+attr_28=[1, 2]
+attr_33=[1, 3]
+attr_34=[1, 2]
+attr_36=[2, 3]
+attr_50=[2, 3]
+attr_51=[1, 2]
+attr_56=[1, 3]
+attr_58=[1, 3]
+attr_60=[1, 2]
+attr_81=[2, 3]
+attr_93=[1, 2]
+attr_105=[2, 3]
+attr_106=[2, 3]
+attr_123=[2, 3]
+attr_130=[2, 3]
+attr_131=[1, 2]
+attr_133=[2, 3]
+attr_140=[1, 2]
+attr_148=[2, 3]
+attr_171=[2]
+attr_177=[1, 2]
+attr_183=[1, 2]
+
+
+14:57:37.866 [main] INFO  AbstractJSMAnalyzer - Start evaluating of causal relations for class 1 [desc_size=10, object_num=65]
+14:57:37.866 [main] INFO  AbstractJSMAnalyzer - Class 1:
+	0 - DIGOXIN=1V2
+	0 - CK-MB=1V2
+	0 - UROBILNGN=1V2
+	0 - ALBUMIN=1
+	0 - ABS CD4=1V2
+	0 - TOTAL CO2=1V2
+	0 - ANION GAP=1V2
+	0 - PCO2=1V3
+	0 - CREAT=1V2
+	0 - CARBOXYHB=2V3
+14:57:37.883 [main] INFO  AbstractJSMAnalyzer - Start search causes for DIGOXIN=1V2 [plus_ex=1, minus_ex=1, univer=9]
+14:57:37.908 [main] INFO  AbstractJSMAnalyzer - Start search causes for CK-MB=1V2 [plus_ex=7, minus_ex=1, univer=9]
+14:57:37.911 [main] INFO  AbstractJSMAnalyzer - Causes for CK-MB=1V2:
+	7[7]: (CREAT=1V2)
+	6[6]: (CREAT=1V2) & (ANION GAP=1V2)
+	5[5]: (TOTAL CO2=1V2) & (CREAT=1V2)
+	4[4]: (CREAT=1V2) & (PCO2=1V3)
+	3[3]: (TOTAL CO2=1V2) & (CREAT=1V2) & (PCO2=1V3)
+	2[2]: (TOTAL CO2=1V2) & (CREAT=1V2) & (ANION GAP=1V2) & (PCO2=1V3)
+14:57:37.916 [main] WARN  AbstractJSMAnalyzer - Fact base is conflicted for property UROBILNGN=1V2
+14:57:37.925 [main] WARN  AbstractJSMAnalyzer - Fact base is conflicted for property ALBUMIN=1
+14:57:37.926 [main] WARN  AbstractJSMAnalyzer - Fact base is conflicted for property ABS CD4=1V2
+14:57:37.931 [main] WARN  AbstractJSMAnalyzer - Fact base is conflicted for property TOTAL CO2=1V2
+14:57:37.935 [main] WARN  AbstractJSMAnalyzer - Fact base is conflicted for property ANION GAP=1V2
+14:57:37.937 [main] WARN  AbstractJSMAnalyzer - Fact base is conflicted for property PCO2=1V3
+14:57:37.939 [main] WARN  AbstractJSMAnalyzer - Fact base is conflicted for property CREAT=1V2
+14:57:37.940 [main] INFO  AbstractJSMAnalyzer - Start search causes for CARBOXYHB=2V3 [plus_ex=2, minus_ex=1, univer=9]
+14:57:37.940 [main] INFO  AbstractJSMAnalyzer - Causes for CARBOXYHB=2V3:
+	2[2]: (CREAT=1V2)

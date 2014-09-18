@@ -1,0 +1,36 @@
+13:49:56.974 [main] INFO  GAAQClassifier - Loading...
+13:50:54.576 [main] INFO  GAAQClassifier - Data is loaded.
+13:50:54.577 [main] INFO  GAAQClassifier - Searching...
+13:50:54.595 [main] INFO  GAAQClassifier - Found 94 conflict negative objects
+13:51:05.657 [main] INFO  GAAQClassifier - Search was finished for  68686ms
+13:51:05.657 [main] INFO  GAAQClassifier - bestfit = 250.613
+13:51:16.033 [main] INFO  GAAQClassifier - Search was finished for  79062ms
+13:51:16.033 [main] INFO  GAAQClassifier - bestfit = 250.567
+13:51:28.023 [main] INFO  GAAQClassifier - Search was finished for  91052ms
+13:51:28.023 [main] INFO  GAAQClassifier - bestfit = 250.624
+13:51:49.514 [main] INFO  GAAQClassifier - Search was finished for  112543ms
+13:51:49.514 [main] INFO  GAAQClassifier - bestfit = 501.481
+13:52:00.051 [main] INFO  GAAQClassifier - Search was finished for  123080ms
+13:52:00.051 [main] INFO  GAAQClassifier - bestfit = 250.652
+13:52:00.051 [main] INFO  GAAQClassifier - BestPop = 501.481
+13:52:00.067 [main] INFO  GAAQClassifier - num_new_ob = 2
+13:52:00.067 [main] INFO  GAAQClassifier - num_ob = 0
+13:52:00.067 [main] INFO  GAAQClassifier - num_obj_miss = 2
+13:52:13.394 [main] INFO  GAAQClassifier - Search was finished for  136423ms
+13:52:13.394 [main] INFO  GAAQClassifier - bestfit = 0.0
+13:52:28.418 [main] INFO  GAAQClassifier - Search was finished for  151447ms
+13:52:28.418 [main] INFO  GAAQClassifier - bestfit = 250.309
+13:52:41.297 [main] INFO  GAAQClassifier - Search was finished for  164326ms
+13:52:41.297 [main] INFO  GAAQClassifier - bestfit = 0.0
+13:53:03.175 [main] INFO  GAAQClassifier - Search was finished for  186204ms
+13:53:03.175 [main] INFO  GAAQClassifier - bestfit = 500.376
+13:53:15.860 [main] INFO  GAAQClassifier - Search was finished for  198889ms
+13:53:15.861 [main] INFO  GAAQClassifier - bestfit = 0.0
+13:53:15.861 [main] INFO  GAAQClassifier - BestPop = 500.376
+13:53:15.878 [main] INFO  GAAQClassifier - num_new_ob = 1
+13:53:15.879 [main] INFO  GAAQClassifier - num_ob = 0
+13:53:15.879 [main] INFO  GAAQClassifier - num_obj_miss = 2
+13:53:26.624 [main] INFO  GAAQClassifier - Search was finished for  209653ms
+13:53:26.624 [main] INFO  GAAQClassifier - bestfit = 0.0
+13:53:43.670 [main] INFO  GAAQClassifier - Search was finished for  226699ms
+13:53:43.670 [main] INFO  GAAQClassifier - bestfit = 0.0

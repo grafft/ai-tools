@@ -1,0 +1,1207 @@
+15:46:19.171 [main] INFO  GAAQClassifier - Loading...
+15:46:19.870 [main] INFO  GAAQClassifier - Data is loaded.
+15:46:19.876 [main] INFO  GAAQClassifier - Found 187 conflict negative objects
+15:46:19.876 [main] INFO  GAAQClassifier - Searching...
+15:46:21.335 [main] INFO  GAAQClassifier - Search was finished for  2167ms
+15:46:21.336 [main] INFO  GAAQClassifier - bestfit = 335334.982
+15:46:22.781 [main] INFO  GAAQClassifier - Search was finished for  3613ms
+15:46:22.781 [main] INFO  GAAQClassifier - bestfit = 339338.985
+15:46:22.781 [main] INFO  GAAQClassifier - BestPop = 339338.985
+15:46:22.782 [main] INFO  GAAQClassifier - new_objects = 339
+15:46:22.782 [main] INFO  GAAQClassifier - all_objects = 339
+15:46:22.782 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:46:22.782 [main] INFO  GAAQClassifier - covered_objects = 339
+15:46:23.848 [main] INFO  GAAQClassifier - Search was finished for  4680ms
+15:46:23.848 [main] INFO  GAAQClassifier - bestfit = 313005.987
+15:46:24.951 [main] INFO  GAAQClassifier - Search was finished for  5783ms
+15:46:24.951 [main] INFO  GAAQClassifier - bestfit = 324041.982
+15:46:24.951 [main] INFO  GAAQClassifier - BestPop = 324041.982
+15:46:24.952 [main] INFO  GAAQClassifier - new_objects = 42
+15:46:24.952 [main] INFO  GAAQClassifier - all_objects = 324
+15:46:24.952 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:46:24.952 [main] INFO  GAAQClassifier - covered_objects = 381
+15:46:26.008 [main] INFO  GAAQClassifier - Search was finished for  6840ms
+15:46:26.008 [main] INFO  GAAQClassifier - bestfit = 330000.982
+15:46:27.058 [main] INFO  GAAQClassifier - Search was finished for  7890ms
+15:46:27.058 [main] INFO  GAAQClassifier - bestfit = 314011.985
+15:46:27.058 [main] INFO  GAAQClassifier - BestPop = 330000.982
+15:46:27.059 [main] INFO  GAAQClassifier - new_objects = 1
+15:46:27.059 [main] INFO  GAAQClassifier - all_objects = 330
+15:46:27.059 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:46:27.059 [main] INFO  GAAQClassifier - covered_objects = 382
+15:46:28.132 [main] INFO  GAAQClassifier - Search was finished for  8964ms
+15:46:28.132 [main] INFO  GAAQClassifier - bestfit = 289002.983
+15:46:29.174 [main] INFO  GAAQClassifier - Search was finished for  10005ms
+15:46:29.174 [main] INFO  GAAQClassifier - bestfit = 328005.981
+15:46:29.174 [main] INFO  GAAQClassifier - BestPop = 328005.981
+15:46:29.174 [main] INFO  GAAQClassifier - new_objects = 6
+15:46:29.174 [main] INFO  GAAQClassifier - all_objects = 328
+15:46:29.174 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:46:29.175 [main] INFO  GAAQClassifier - covered_objects = 388
+15:46:30.186 [main] INFO  GAAQClassifier - Search was finished for  11018ms
+15:46:30.186 [main] INFO  GAAQClassifier - bestfit = 326011.986
+15:46:31.228 [main] INFO  GAAQClassifier - Search was finished for  12060ms
+15:46:31.228 [main] INFO  GAAQClassifier - bestfit = 316011.985
+15:46:31.229 [main] INFO  GAAQClassifier - BestPop = 326011.986
+15:46:31.229 [main] INFO  GAAQClassifier - new_objects = 12
+15:46:31.229 [main] INFO  GAAQClassifier - all_objects = 326
+15:46:31.229 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:46:31.229 [main] INFO  GAAQClassifier - covered_objects = 400
+15:46:32.266 [main] INFO  GAAQClassifier - Search was finished for  13098ms
+15:46:32.266 [main] INFO  GAAQClassifier - bestfit = 236023.988
+15:46:33.266 [main] INFO  GAAQClassifier - Search was finished for  14098ms
+15:46:33.266 [main] INFO  GAAQClassifier - bestfit = 69003.984
+15:46:33.266 [main] INFO  GAAQClassifier - BestPop = 236023.988
+15:46:33.266 [main] INFO  GAAQClassifier - new_objects = 24
+15:46:33.266 [main] INFO  GAAQClassifier - all_objects = 236
+15:46:33.266 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:46:33.266 [main] INFO  GAAQClassifier - covered_objects = 424
+15:46:34.248 [main] INFO  GAAQClassifier - Search was finished for  15080ms
+15:46:34.248 [main] INFO  GAAQClassifier - bestfit = 69003.984
+15:46:35.288 [main] INFO  GAAQClassifier - Search was finished for  16120ms
+15:46:35.289 [main] INFO  GAAQClassifier - bestfit = 69003.981
+15:46:35.289 [main] INFO  GAAQClassifier - BestPop = 69003.984
+15:46:35.289 [main] INFO  GAAQClassifier - new_objects = 4
+15:46:35.289 [main] INFO  GAAQClassifier - all_objects = 69
+15:46:35.289 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:46:35.289 [main] INFO  GAAQClassifier - covered_objects = 428
+15:46:36.250 [main] INFO  GAAQClassifier - Search was finished for  17082ms
+15:46:36.250 [main] INFO  GAAQClassifier - bestfit = 64000.983
+15:46:37.181 [main] INFO  GAAQClassifier - Search was finished for  18013ms
+15:46:37.181 [main] INFO  GAAQClassifier - bestfit = 64000.981
+15:46:37.181 [main] INFO  GAAQClassifier - BestPop = 64000.983
+15:46:37.181 [main] INFO  GAAQClassifier - new_objects = 1
+15:46:37.181 [main] INFO  GAAQClassifier - all_objects = 64
+15:46:37.181 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:46:37.181 [main] INFO  GAAQClassifier - covered_objects = 429
+15:46:38.148 [main] INFO  GAAQClassifier - Search was finished for  18980ms
+15:46:38.148 [main] INFO  GAAQClassifier - bestfit = 58001.984
+15:46:39.118 [main] INFO  GAAQClassifier - Search was finished for  19950ms
+15:46:39.118 [main] INFO  GAAQClassifier - bestfit = 58001.981
+15:46:39.118 [main] INFO  GAAQClassifier - BestPop = 58001.984
+15:46:39.119 [main] INFO  GAAQClassifier - new_objects = 2
+15:46:39.119 [main] INFO  GAAQClassifier - all_objects = 58
+15:46:39.119 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:46:39.119 [main] INFO  GAAQClassifier - covered_objects = 431
+15:46:40.103 [main] INFO  GAAQClassifier - Search was finished for  20935ms
+15:46:40.103 [main] INFO  GAAQClassifier - bestfit = 49014.984
+15:46:41.035 [main] INFO  GAAQClassifier - Search was finished for  21867ms
+15:46:41.036 [main] INFO  GAAQClassifier - bestfit = 45001.985
+15:46:41.036 [main] INFO  GAAQClassifier - BestPop = 49014.984
+15:46:41.036 [main] INFO  GAAQClassifier - new_objects = 15
+15:46:41.036 [main] INFO  GAAQClassifier - all_objects = 49
+15:46:41.036 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:46:41.036 [main] INFO  GAAQClassifier - covered_objects = 446
+15:46:41.945 [main] INFO  GAAQClassifier - Search was finished for  22777ms
+15:46:41.945 [main] INFO  GAAQClassifier - bestfit = 45001.985
+15:46:42.929 [main] INFO  GAAQClassifier - Search was finished for  23761ms
+15:46:42.930 [main] INFO  GAAQClassifier - bestfit = 285004.986
+15:46:42.930 [main] INFO  GAAQClassifier - BestPop = 285004.986
+15:46:42.930 [main] INFO  GAAQClassifier - new_objects = 5
+15:46:42.930 [main] INFO  GAAQClassifier - all_objects = 285
+15:46:42.930 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:46:42.930 [main] INFO  GAAQClassifier - covered_objects = 451
+15:46:43.895 [main] INFO  GAAQClassifier - Search was finished for  24727ms
+15:46:43.895 [main] INFO  GAAQClassifier - bestfit = 45001.987
+15:46:44.832 [main] INFO  GAAQClassifier - Search was finished for  25664ms
+15:46:44.832 [main] INFO  GAAQClassifier - bestfit = 45001.986
+15:46:44.832 [main] INFO  GAAQClassifier - BestPop = 45001.987
+15:46:44.832 [main] INFO  GAAQClassifier - new_objects = 2
+15:46:44.832 [main] INFO  GAAQClassifier - all_objects = 45
+15:46:44.832 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:46:44.832 [main] INFO  GAAQClassifier - covered_objects = 453
+15:46:45.741 [main] INFO  GAAQClassifier - Search was finished for  26573ms
+15:46:45.741 [main] INFO  GAAQClassifier - bestfit = 44000.983
+15:46:46.698 [main] INFO  GAAQClassifier - Search was finished for  27530ms
+15:46:46.699 [main] INFO  GAAQClassifier - bestfit = 44000.983
+15:46:46.699 [main] INFO  GAAQClassifier - BestPop = 44000.983
+15:46:46.699 [main] INFO  GAAQClassifier - new_objects = 1
+15:46:46.699 [main] INFO  GAAQClassifier - all_objects = 44
+15:46:46.699 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:46:46.699 [main] INFO  GAAQClassifier - covered_objects = 454
+15:46:47.637 [main] INFO  GAAQClassifier - Search was finished for  28469ms
+15:46:47.637 [main] INFO  GAAQClassifier - bestfit = 38000.986
+15:46:48.629 [main] INFO  GAAQClassifier - Search was finished for  29461ms
+15:46:48.629 [main] INFO  GAAQClassifier - bestfit = 32000.986
+15:46:48.629 [main] INFO  GAAQClassifier - BestPop = 38000.986
+15:46:48.629 [main] INFO  GAAQClassifier - new_objects = 1
+15:46:48.629 [main] INFO  GAAQClassifier - all_objects = 38
+15:46:48.629 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:46:48.629 [main] INFO  GAAQClassifier - covered_objects = 455
+15:46:49.573 [main] INFO  GAAQClassifier - Search was finished for  30405ms
+15:46:49.573 [main] INFO  GAAQClassifier - bestfit = 50002.988
+15:46:50.508 [main] INFO  GAAQClassifier - Search was finished for  31340ms
+15:46:50.508 [main] INFO  GAAQClassifier - bestfit = 38003.989
+15:46:50.508 [main] INFO  GAAQClassifier - BestPop = 50002.988
+15:46:50.508 [main] INFO  GAAQClassifier - new_objects = 3
+15:46:50.508 [main] INFO  GAAQClassifier - all_objects = 50
+15:46:50.508 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:46:50.508 [main] INFO  GAAQClassifier - covered_objects = 458
+15:46:51.424 [main] INFO  GAAQClassifier - Search was finished for  32256ms
+15:46:51.425 [main] INFO  GAAQClassifier - bestfit = 31001.986
+15:46:52.377 [main] INFO  GAAQClassifier - Search was finished for  33209ms
+15:46:52.377 [main] INFO  GAAQClassifier - bestfit = 28002.986
+15:46:52.377 [main] INFO  GAAQClassifier - BestPop = 31001.986
+15:46:52.378 [main] INFO  GAAQClassifier - new_objects = 2
+15:46:52.378 [main] INFO  GAAQClassifier - all_objects = 31
+15:46:52.378 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:46:52.378 [main] INFO  GAAQClassifier - covered_objects = 460
+15:46:53.311 [main] INFO  GAAQClassifier - Search was finished for  34143ms
+15:46:53.312 [main] INFO  GAAQClassifier - bestfit = 38003.984
+15:46:54.216 [main] INFO  GAAQClassifier - Search was finished for  35048ms
+15:46:54.216 [main] INFO  GAAQClassifier - bestfit = 43001.989
+15:46:54.216 [main] INFO  GAAQClassifier - BestPop = 43001.989
+15:46:54.216 [main] INFO  GAAQClassifier - new_objects = 2
+15:46:54.217 [main] INFO  GAAQClassifier - all_objects = 43
+15:46:54.217 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:46:54.217 [main] INFO  GAAQClassifier - covered_objects = 462
+15:46:55.161 [main] INFO  GAAQClassifier - Search was finished for  35993ms
+15:46:55.161 [main] INFO  GAAQClassifier - bestfit = 27003.988
+15:46:56.111 [main] INFO  GAAQClassifier - Search was finished for  36943ms
+15:46:56.111 [main] INFO  GAAQClassifier - bestfit = 15006.984
+15:46:56.111 [main] INFO  GAAQClassifier - BestPop = 27003.988
+15:46:56.111 [main] INFO  GAAQClassifier - new_objects = 4
+15:46:56.111 [main] INFO  GAAQClassifier - all_objects = 27
+15:46:56.111 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:46:56.111 [main] INFO  GAAQClassifier - covered_objects = 466
+15:46:57.054 [main] INFO  GAAQClassifier - Search was finished for  37886ms
+15:46:57.055 [main] INFO  GAAQClassifier - bestfit = 16001.984
+15:46:57.983 [main] INFO  GAAQClassifier - Search was finished for  38815ms
+15:46:57.983 [main] INFO  GAAQClassifier - bestfit = 16000.987
+15:46:57.983 [main] INFO  GAAQClassifier - BestPop = 16001.984
+15:46:57.983 [main] INFO  GAAQClassifier - new_objects = 2
+15:46:57.983 [main] INFO  GAAQClassifier - all_objects = 16
+15:46:57.983 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:46:57.983 [main] INFO  GAAQClassifier - covered_objects = 468
+15:46:58.899 [main] INFO  GAAQClassifier - Search was finished for  39731ms
+15:46:58.899 [main] INFO  GAAQClassifier - bestfit = 15005.986
+15:46:59.819 [main] INFO  GAAQClassifier - Search was finished for  40651ms
+15:46:59.819 [main] INFO  GAAQClassifier - bestfit = 15005.981
+15:46:59.819 [main] INFO  GAAQClassifier - BestPop = 15005.986
+15:46:59.819 [main] INFO  GAAQClassifier - new_objects = 6
+15:46:59.819 [main] INFO  GAAQClassifier - all_objects = 15
+15:46:59.819 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:46:59.819 [main] INFO  GAAQClassifier - covered_objects = 474
+15:47:00.699 [main] INFO  GAAQClassifier - Search was finished for  41531ms
+15:47:00.699 [main] INFO  GAAQClassifier - bestfit = 13001.987
+15:47:01.649 [main] INFO  GAAQClassifier - Search was finished for  42481ms
+15:47:01.649 [main] INFO  GAAQClassifier - bestfit = 11001.984
+15:47:01.649 [main] INFO  GAAQClassifier - BestPop = 13001.987
+15:47:01.649 [main] INFO  GAAQClassifier - new_objects = 2
+15:47:01.649 [main] INFO  GAAQClassifier - all_objects = 13
+15:47:01.649 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:01.649 [main] INFO  GAAQClassifier - covered_objects = 476
+15:47:02.517 [main] INFO  GAAQClassifier - Search was finished for  43349ms
+15:47:02.517 [main] INFO  GAAQClassifier - bestfit = 11001.984
+15:47:03.429 [main] INFO  GAAQClassifier - Search was finished for  44261ms
+15:47:03.429 [main] INFO  GAAQClassifier - bestfit = 9001.984
+15:47:03.430 [main] INFO  GAAQClassifier - BestPop = 11001.984
+15:47:03.430 [main] INFO  GAAQClassifier - new_objects = 2
+15:47:03.430 [main] INFO  GAAQClassifier - all_objects = 11
+15:47:03.430 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:03.430 [main] INFO  GAAQClassifier - covered_objects = 478
+15:47:04.358 [main] INFO  GAAQClassifier - Search was finished for  45190ms
+15:47:04.358 [main] INFO  GAAQClassifier - bestfit = 9001.981
+15:47:05.300 [main] INFO  GAAQClassifier - Search was finished for  46132ms
+15:47:05.300 [main] INFO  GAAQClassifier - bestfit = 9001.983
+15:47:05.300 [main] INFO  GAAQClassifier - BestPop = 9001.983
+15:47:05.300 [main] INFO  GAAQClassifier - new_objects = 2
+15:47:05.300 [main] INFO  GAAQClassifier - all_objects = 9
+15:47:05.300 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:05.300 [main] INFO  GAAQClassifier - covered_objects = 480
+15:47:06.206 [main] INFO  GAAQClassifier - Search was finished for  47038ms
+15:47:06.206 [main] INFO  GAAQClassifier - bestfit = 6001.983
+15:47:07.132 [main] INFO  GAAQClassifier - Search was finished for  47964ms
+15:47:07.132 [main] INFO  GAAQClassifier - bestfit = 6000.988
+15:47:07.133 [main] INFO  GAAQClassifier - BestPop = 6001.983
+15:47:07.133 [main] INFO  GAAQClassifier - new_objects = 2
+15:47:07.133 [main] INFO  GAAQClassifier - all_objects = 6
+15:47:07.133 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:07.133 [main] INFO  GAAQClassifier - covered_objects = 482
+15:47:08.030 [main] INFO  GAAQClassifier - Search was finished for  48862ms
+15:47:08.030 [main] INFO  GAAQClassifier - bestfit = 27004.988
+15:47:08.958 [main] INFO  GAAQClassifier - Search was finished for  49790ms
+15:47:08.959 [main] INFO  GAAQClassifier - bestfit = 14004.987
+15:47:08.959 [main] INFO  GAAQClassifier - BestPop = 27004.988
+15:47:08.959 [main] INFO  GAAQClassifier - new_objects = 5
+15:47:08.959 [main] INFO  GAAQClassifier - all_objects = 27
+15:47:08.959 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:08.959 [main] INFO  GAAQClassifier - covered_objects = 487
+15:47:09.886 [main] INFO  GAAQClassifier - Search was finished for  50718ms
+15:47:09.886 [main] INFO  GAAQClassifier - bestfit = 9002.986
+15:47:10.766 [main] INFO  GAAQClassifier - Search was finished for  51598ms
+15:47:10.766 [main] INFO  GAAQClassifier - bestfit = 6000.987
+15:47:10.766 [main] INFO  GAAQClassifier - BestPop = 9002.986
+15:47:10.766 [main] INFO  GAAQClassifier - new_objects = 3
+15:47:10.766 [main] INFO  GAAQClassifier - all_objects = 9
+15:47:10.767 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:10.767 [main] INFO  GAAQClassifier - covered_objects = 490
+15:47:11.677 [main] INFO  GAAQClassifier - Search was finished for  52509ms
+15:47:11.677 [main] INFO  GAAQClassifier - bestfit = 11000.985
+15:47:12.585 [main] INFO  GAAQClassifier - Search was finished for  53417ms
+15:47:12.585 [main] INFO  GAAQClassifier - bestfit = 42004.99
+15:47:12.585 [main] INFO  GAAQClassifier - BestPop = 42004.99
+15:47:12.585 [main] INFO  GAAQClassifier - new_objects = 5
+15:47:12.585 [main] INFO  GAAQClassifier - all_objects = 42
+15:47:12.585 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:12.585 [main] INFO  GAAQClassifier - covered_objects = 495
+15:47:13.480 [main] INFO  GAAQClassifier - Search was finished for  54312ms
+15:47:13.480 [main] INFO  GAAQClassifier - bestfit = 6000.986
+15:47:14.403 [main] INFO  GAAQClassifier - Search was finished for  55235ms
+15:47:14.403 [main] INFO  GAAQClassifier - bestfit = 6000.986
+15:47:14.403 [main] INFO  GAAQClassifier - BestPop = 6000.986
+15:47:14.403 [main] INFO  GAAQClassifier - new_objects = 1
+15:47:14.403 [main] INFO  GAAQClassifier - all_objects = 6
+15:47:14.403 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:14.403 [main] INFO  GAAQClassifier - covered_objects = 496
+15:47:15.263 [main] INFO  GAAQClassifier - Search was finished for  56095ms
+15:47:15.264 [main] INFO  GAAQClassifier - bestfit = 5000.987
+15:47:16.157 [main] INFO  GAAQClassifier - Search was finished for  56989ms
+15:47:16.157 [main] INFO  GAAQClassifier - bestfit = 5000.986
+15:47:16.157 [main] INFO  GAAQClassifier - BestPop = 5000.987
+15:47:16.157 [main] INFO  GAAQClassifier - new_objects = 1
+15:47:16.157 [main] INFO  GAAQClassifier - all_objects = 5
+15:47:16.157 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:16.157 [main] INFO  GAAQClassifier - covered_objects = 497
+15:47:17.053 [main] INFO  GAAQClassifier - Search was finished for  57885ms
+15:47:17.054 [main] INFO  GAAQClassifier - bestfit = 2000.987
+15:47:17.972 [main] INFO  GAAQClassifier - Search was finished for  58804ms
+15:47:17.972 [main] INFO  GAAQClassifier - bestfit = 2000.988
+15:47:17.972 [main] INFO  GAAQClassifier - BestPop = 2000.988
+15:47:17.972 [main] INFO  GAAQClassifier - new_objects = 1
+15:47:17.972 [main] INFO  GAAQClassifier - all_objects = 2
+15:47:17.972 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:17.972 [main] INFO  GAAQClassifier - covered_objects = 498
+15:47:18.880 [main] INFO  GAAQClassifier - Search was finished for  59712ms
+15:47:18.880 [main] INFO  GAAQClassifier - bestfit = 1000.989
+15:47:19.784 [main] INFO  GAAQClassifier - Search was finished for  60616ms
+15:47:19.785 [main] INFO  GAAQClassifier - bestfit = 1000.99
+15:47:19.785 [main] INFO  GAAQClassifier - BestPop = 1000.99
+15:47:19.785 [main] INFO  GAAQClassifier - new_objects = 1
+15:47:19.785 [main] INFO  GAAQClassifier - all_objects = 1
+15:47:19.785 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:19.785 [main] INFO  GAAQClassifier - covered_objects = 499
+15:47:20.694 [main] INFO  GAAQClassifier - Search was finished for  61526ms
+15:47:20.694 [main] INFO  GAAQClassifier - bestfit = 1000.986
+15:47:21.592 [main] INFO  GAAQClassifier - Search was finished for  62424ms
+15:47:21.592 [main] INFO  GAAQClassifier - bestfit = 1000.986
+15:47:21.593 [main] INFO  GAAQClassifier - BestPop = 1000.986
+15:47:21.593 [main] INFO  GAAQClassifier - new_objects = 1
+15:47:21.593 [main] INFO  GAAQClassifier - all_objects = 1
+15:47:21.593 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:21.593 [main] INFO  GAAQClassifier - covered_objects = 500
+15:47:21.599 [main] INFO  GAAQClassifier - NUM_NEW_OBJECTS: 339
+NUM_OBJECTS: 339
+NUM_MISS_OBJECTS: 0
+RULE_1:
+attr_1=[1, 2]
+attr_2=[1, 2]
+attr_3=[1, 2]
+attr_5=[1, 2]
+attr_6=[1, 2]
+attr_8=[1, 2]
+
+NUM_NEW_OBJECTS: 42
+NUM_OBJECTS: 324
+NUM_MISS_OBJECTS: 0
+RULE_2:
+attr_1=[1, 2]
+attr_2=[2]
+attr_6=[1, 2]
+attr_7=[1, 3]
+attr_8=[1, 3]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 330
+NUM_MISS_OBJECTS: 0
+RULE_3:
+attr_1=[1, 2]
+attr_2=[1, 2]
+attr_4=[1, 2]
+attr_6=[1, 2]
+attr_7=[1, 3]
+attr_8=[1, 3]
+
+NUM_NEW_OBJECTS: 6
+NUM_OBJECTS: 328
+NUM_MISS_OBJECTS: 0
+RULE_4:
+attr_1=[1, 2]
+attr_2=[1, 2]
+attr_3=[2]
+attr_5=[1, 2]
+
+NUM_NEW_OBJECTS: 12
+NUM_OBJECTS: 326
+NUM_MISS_OBJECTS: 0
+RULE_5:
+attr_1=[1, 2]
+attr_2=[1, 2]
+attr_5=[1, 2]
+attr_6=[2]
+attr_7=[1]
+
+NUM_NEW_OBJECTS: 24
+NUM_OBJECTS: 236
+NUM_MISS_OBJECTS: 0
+RULE_6:
+attr_1=[1, 2]
+attr_3=[2]
+attr_4=[1]
+attr_5=[1, 3]
+attr_6=[1, 2]
+attr_7=[1]
+attr_8=[1]
+
+NUM_NEW_OBJECTS: 4
+NUM_OBJECTS: 69
+NUM_MISS_OBJECTS: 0
+RULE_7:
+attr_2=[1, 2]
+attr_4=[2]
+attr_6=[1, 2]
+attr_7=[1, 2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 64
+NUM_MISS_OBJECTS: 0
+RULE_8:
+attr_2=[1, 2]
+attr_3=[2, 3]
+attr_4=[2, 3]
+attr_7=[1, 3]
+
+NUM_NEW_OBJECTS: 2
+NUM_OBJECTS: 58
+NUM_MISS_OBJECTS: 0
+RULE_9:
+attr_1=[1, 3]
+attr_2=[1, 2]
+attr_3=[2, 3]
+attr_4=[2]
+
+NUM_NEW_OBJECTS: 15
+NUM_OBJECTS: 49
+NUM_MISS_OBJECTS: 0
+RULE_10:
+attr_3=[3]
+attr_5=[1]
+attr_6=[1, 2]
+attr_7=[1, 3]
+attr_8=[1]
+
+NUM_NEW_OBJECTS: 5
+NUM_OBJECTS: 285
+NUM_MISS_OBJECTS: 0
+RULE_11:
+attr_1=[1, 2]
+attr_3=[2, 3]
+attr_4=[1]
+attr_5=[1, 2]
+attr_6=[1, 2]
+attr_7=[1]
+attr_8=[1]
+
+NUM_NEW_OBJECTS: 2
+NUM_OBJECTS: 45
+NUM_MISS_OBJECTS: 0
+RULE_12:
+attr_4=[1, 2]
+attr_6=[1]
+attr_7=[1, 3]
+attr_8=[1, 3]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 44
+NUM_MISS_OBJECTS: 0
+RULE_13:
+attr_1=[1, 3]
+attr_6=[1]
+attr_7=[1, 3]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 38
+NUM_MISS_OBJECTS: 0
+RULE_14:
+attr_1=[2]
+attr_2=[1, 2]
+attr_5=[1, 3]
+attr_6=[2]
+attr_8=[1, 3]
+
+NUM_NEW_OBJECTS: 3
+NUM_OBJECTS: 50
+NUM_MISS_OBJECTS: 0
+RULE_15:
+attr_1=[1]
+attr_3=[3]
+attr_5=[1, 3]
+attr_6=[2]
+attr_7=[1, 3]
+attr_8=[1, 2]
+
+NUM_NEW_OBJECTS: 2
+NUM_OBJECTS: 31
+NUM_MISS_OBJECTS: 0
+RULE_16:
+attr_1=[2]
+attr_3=[1, 2]
+attr_4=[1, 3]
+attr_5=[1, 3]
+attr_6=[2]
+attr_7=[1]
+attr_8=[1, 3]
+
+NUM_NEW_OBJECTS: 2
+NUM_OBJECTS: 43
+NUM_MISS_OBJECTS: 0
+RULE_17:
+attr_1=[1, 3]
+attr_3=[3]
+attr_5=[1, 2]
+attr_6=[2]
+attr_7=[1]
+attr_8=[1]
+
+NUM_NEW_OBJECTS: 4
+NUM_OBJECTS: 27
+NUM_MISS_OBJECTS: 0
+RULE_18:
+attr_2=[2]
+attr_3=[2]
+attr_4=[1]
+attr_5=[1]
+attr_6=[2]
+attr_7=[1, 3]
+attr_8=[2, 3]
+
+NUM_NEW_OBJECTS: 2
+NUM_OBJECTS: 16
+NUM_MISS_OBJECTS: 0
+RULE_19:
+attr_1=[1, 3]
+attr_3=[1, 3]
+attr_4=[2, 3]
+attr_5=[1, 3]
+attr_6=[2]
+attr_7=[1, 2]
+attr_8=[1, 2]
+
+NUM_NEW_OBJECTS: 6
+NUM_OBJECTS: 15
+NUM_MISS_OBJECTS: 0
+RULE_20:
+attr_3=[1, 2]
+attr_4=[1, 2]
+attr_5=[1, 2]
+attr_7=[1]
+attr_8=[3]
+
+NUM_NEW_OBJECTS: 2
+NUM_OBJECTS: 13
+NUM_MISS_OBJECTS: 0
+RULE_21:
+attr_1=[1, 3]
+attr_3=[2, 3]
+attr_5=[2]
+attr_6=[1, 2]
+attr_7=[1]
+attr_8=[1, 3]
+
+NUM_NEW_OBJECTS: 2
+NUM_OBJECTS: 11
+NUM_MISS_OBJECTS: 0
+RULE_22:
+attr_2=[1, 3]
+attr_3=[3]
+attr_4=[1, 3]
+attr_6=[2]
+attr_8=[1]
+
+NUM_NEW_OBJECTS: 2
+NUM_OBJECTS: 9
+NUM_MISS_OBJECTS: 0
+RULE_23:
+attr_1=[1, 3]
+attr_4=[1, 3]
+attr_6=[1, 3]
+attr_8=[2, 3]
+
+NUM_NEW_OBJECTS: 2
+NUM_OBJECTS: 6
+NUM_MISS_OBJECTS: 0
+RULE_24:
+attr_1=[1, 2]
+attr_3=[2]
+attr_4=[2, 3]
+attr_5=[1, 3]
+attr_6=[1, 3]
+attr_7=[1, 2]
+
+NUM_NEW_OBJECTS: 5
+NUM_OBJECTS: 27
+NUM_MISS_OBJECTS: 0
+RULE_25:
+attr_1=[2]
+attr_3=[1, 2]
+attr_4=[1, 3]
+attr_5=[1]
+attr_6=[1, 2]
+attr_7=[1, 2]
+attr_8=[2, 3]
+
+NUM_NEW_OBJECTS: 3
+NUM_OBJECTS: 9
+NUM_MISS_OBJECTS: 0
+RULE_26:
+attr_1=[2]
+attr_2=[1, 3]
+attr_4=[1]
+attr_5=[1, 3]
+attr_6=[1, 2]
+attr_7=[1, 3]
+attr_8=[2]
+
+NUM_NEW_OBJECTS: 5
+NUM_OBJECTS: 42
+NUM_MISS_OBJECTS: 0
+RULE_27:
+attr_1=[1]
+attr_3=[1, 2]
+attr_4=[2, 3]
+attr_5=[1]
+attr_6=[2]
+attr_7=[1]
+attr_8=[1, 2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 6
+NUM_MISS_OBJECTS: 0
+RULE_28:
+attr_2=[1, 2]
+attr_5=[2]
+attr_6=[1, 2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 5
+NUM_MISS_OBJECTS: 0
+RULE_29:
+attr_1=[1]
+attr_3=[1, 3]
+attr_5=[2, 3]
+attr_6=[2, 3]
+attr_7=[1, 2]
+attr_8=[1]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 2
+NUM_MISS_OBJECTS: 0
+RULE_30:
+attr_1=[2]
+attr_2=[3]
+attr_3=[2, 3]
+attr_4=[1, 3]
+attr_7=[2, 3]
+attr_8=[2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 1
+NUM_MISS_OBJECTS: 0
+RULE_31:
+attr_1=[1]
+attr_3=[2, 3]
+attr_5=[3]
+attr_6=[1, 2]
+attr_7=[2, 3]
+attr_8=[1, 3]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 1
+NUM_MISS_OBJECTS: 0
+RULE_32:
+attr_1=[2, 3]
+attr_2=[1, 3]
+attr_3=[1, 2]
+attr_4=[2]
+attr_5=[2, 3]
+attr_6=[1, 2]
+attr_7=[1, 2]
+attr_8=[2]
+
+
+15:47:21.599 [main] INFO  GAAQClassifier - Loading...
+15:47:22.275 [main] INFO  GAAQClassifier - Data is loaded.
+15:47:22.276 [main] INFO  GAAQClassifier - Found 400 conflict negative objects
+15:47:22.276 [main] INFO  GAAQClassifier - Searching...
+15:47:23.325 [main] INFO  GAAQClassifier - Search was finished for  1726ms
+15:47:23.325 [main] INFO  GAAQClassifier - bestfit = 64063.984
+15:47:24.350 [main] INFO  GAAQClassifier - Search was finished for  2751ms
+15:47:24.350 [main] INFO  GAAQClassifier - bestfit = 62061.982
+15:47:24.350 [main] INFO  GAAQClassifier - BestPop = 64063.984
+15:47:24.350 [main] INFO  GAAQClassifier - new_objects = 64
+15:47:24.350 [main] INFO  GAAQClassifier - all_objects = 64
+15:47:24.350 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:24.351 [main] INFO  GAAQClassifier - covered_objects = 64
+15:47:25.349 [main] INFO  GAAQClassifier - Search was finished for  3750ms
+15:47:25.349 [main] INFO  GAAQClassifier - bestfit = 53039.984
+15:47:26.327 [main] INFO  GAAQClassifier - Search was finished for  4728ms
+15:47:26.327 [main] INFO  GAAQClassifier - bestfit = 60050.985
+15:47:26.327 [main] INFO  GAAQClassifier - BestPop = 60050.985
+15:47:26.327 [main] INFO  GAAQClassifier - new_objects = 51
+15:47:26.327 [main] INFO  GAAQClassifier - all_objects = 60
+15:47:26.327 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:26.327 [main] INFO  GAAQClassifier - covered_objects = 115
+15:47:27.211 [main] INFO  GAAQClassifier - Search was finished for  5612ms
+15:47:27.212 [main] INFO  GAAQClassifier - bestfit = 48008.982
+15:47:28.094 [main] INFO  GAAQClassifier - Search was finished for  6495ms
+15:47:28.094 [main] INFO  GAAQClassifier - bestfit = 67039.985
+15:47:28.094 [main] INFO  GAAQClassifier - BestPop = 67039.985
+15:47:28.094 [main] INFO  GAAQClassifier - new_objects = 40
+15:47:28.094 [main] INFO  GAAQClassifier - all_objects = 67
+15:47:28.094 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:28.094 [main] INFO  GAAQClassifier - covered_objects = 155
+15:47:28.935 [main] INFO  GAAQClassifier - Search was finished for  7336ms
+15:47:28.935 [main] INFO  GAAQClassifier - bestfit = 62001.982
+15:47:29.774 [main] INFO  GAAQClassifier - Search was finished for  8175ms
+15:47:29.774 [main] INFO  GAAQClassifier - bestfit = 80011.984
+15:47:29.774 [main] INFO  GAAQClassifier - BestPop = 80011.984
+15:47:29.774 [main] INFO  GAAQClassifier - new_objects = 12
+15:47:29.774 [main] INFO  GAAQClassifier - all_objects = 80
+15:47:29.774 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:29.774 [main] INFO  GAAQClassifier - covered_objects = 167
+15:47:30.583 [main] INFO  GAAQClassifier - Search was finished for  8984ms
+15:47:30.583 [main] INFO  GAAQClassifier - bestfit = 62000.982
+15:47:31.403 [main] INFO  GAAQClassifier - Search was finished for  9804ms
+15:47:31.403 [main] INFO  GAAQClassifier - bestfit = 61000.983
+15:47:31.403 [main] INFO  GAAQClassifier - BestPop = 62000.982
+15:47:31.403 [main] INFO  GAAQClassifier - new_objects = 1
+15:47:31.403 [main] INFO  GAAQClassifier - all_objects = 62
+15:47:31.403 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:31.403 [main] INFO  GAAQClassifier - covered_objects = 168
+15:47:32.211 [main] INFO  GAAQClassifier - Search was finished for  10612ms
+15:47:32.211 [main] INFO  GAAQClassifier - bestfit = 53006.984
+15:47:33.020 [main] INFO  GAAQClassifier - Search was finished for  11421ms
+15:47:33.020 [main] INFO  GAAQClassifier - bestfit = 48002.983
+15:47:33.020 [main] INFO  GAAQClassifier - BestPop = 53006.984
+15:47:33.020 [main] INFO  GAAQClassifier - new_objects = 7
+15:47:33.020 [main] INFO  GAAQClassifier - all_objects = 53
+15:47:33.020 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:33.020 [main] INFO  GAAQClassifier - covered_objects = 175
+15:47:33.829 [main] INFO  GAAQClassifier - Search was finished for  12230ms
+15:47:33.829 [main] INFO  GAAQClassifier - bestfit = 97013.986
+15:47:34.621 [main] INFO  GAAQClassifier - Search was finished for  13022ms
+15:47:34.621 [main] INFO  GAAQClassifier - bestfit = 63015.984
+15:47:34.621 [main] INFO  GAAQClassifier - BestPop = 97013.986
+15:47:34.621 [main] INFO  GAAQClassifier - new_objects = 14
+15:47:34.621 [main] INFO  GAAQClassifier - all_objects = 97
+15:47:34.621 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:34.621 [main] INFO  GAAQClassifier - covered_objects = 189
+15:47:35.387 [main] INFO  GAAQClassifier - Search was finished for  13788ms
+15:47:35.388 [main] INFO  GAAQClassifier - bestfit = 56002.985
+15:47:36.152 [main] INFO  GAAQClassifier - Search was finished for  14553ms
+15:47:36.153 [main] INFO  GAAQClassifier - bestfit = 54001.987
+15:47:36.153 [main] INFO  GAAQClassifier - BestPop = 56002.985
+15:47:36.153 [main] INFO  GAAQClassifier - new_objects = 3
+15:47:36.153 [main] INFO  GAAQClassifier - all_objects = 56
+15:47:36.153 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:36.153 [main] INFO  GAAQClassifier - covered_objects = 192
+15:47:36.920 [main] INFO  GAAQClassifier - Search was finished for  15321ms
+15:47:36.920 [main] INFO  GAAQClassifier - bestfit = 64000.984
+15:47:37.720 [main] INFO  GAAQClassifier - Search was finished for  16121ms
+15:47:37.720 [main] INFO  GAAQClassifier - bestfit = 67008.984
+15:47:37.720 [main] INFO  GAAQClassifier - BestPop = 67008.984
+15:47:37.720 [main] INFO  GAAQClassifier - new_objects = 9
+15:47:37.720 [main] INFO  GAAQClassifier - all_objects = 67
+15:47:37.720 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:37.720 [main] INFO  GAAQClassifier - covered_objects = 201
+15:47:38.500 [main] INFO  GAAQClassifier - Search was finished for  16901ms
+15:47:38.501 [main] INFO  GAAQClassifier - bestfit = 59009.984
+15:47:39.260 [main] INFO  GAAQClassifier - Search was finished for  17661ms
+15:47:39.260 [main] INFO  GAAQClassifier - bestfit = 56003.983
+15:47:39.260 [main] INFO  GAAQClassifier - BestPop = 59009.984
+15:47:39.260 [main] INFO  GAAQClassifier - new_objects = 10
+15:47:39.260 [main] INFO  GAAQClassifier - all_objects = 59
+15:47:39.260 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:39.261 [main] INFO  GAAQClassifier - covered_objects = 211
+15:47:40.013 [main] INFO  GAAQClassifier - Search was finished for  18414ms
+15:47:40.013 [main] INFO  GAAQClassifier - bestfit = 45007.983
+15:47:40.784 [main] INFO  GAAQClassifier - Search was finished for  19185ms
+15:47:40.784 [main] INFO  GAAQClassifier - bestfit = 59000.985
+15:47:40.784 [main] INFO  GAAQClassifier - BestPop = 59000.985
+15:47:40.784 [main] INFO  GAAQClassifier - new_objects = 1
+15:47:40.784 [main] INFO  GAAQClassifier - all_objects = 59
+15:47:40.784 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:40.784 [main] INFO  GAAQClassifier - covered_objects = 212
+15:47:41.545 [main] INFO  GAAQClassifier - Search was finished for  19946ms
+15:47:41.545 [main] INFO  GAAQClassifier - bestfit = 37001.984
+15:47:42.282 [main] INFO  GAAQClassifier - Search was finished for  20683ms
+15:47:42.282 [main] INFO  GAAQClassifier - bestfit = 60018.987
+15:47:42.282 [main] INFO  GAAQClassifier - BestPop = 60018.987
+15:47:42.282 [main] INFO  GAAQClassifier - new_objects = 19
+15:47:42.283 [main] INFO  GAAQClassifier - all_objects = 60
+15:47:42.283 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:42.283 [main] INFO  GAAQClassifier - covered_objects = 231
+15:47:43.024 [main] INFO  GAAQClassifier - Search was finished for  21425ms
+15:47:43.024 [main] INFO  GAAQClassifier - bestfit = 27001.983
+15:47:43.739 [main] INFO  GAAQClassifier - Search was finished for  22140ms
+15:47:43.739 [main] INFO  GAAQClassifier - bestfit = 40000.986
+15:47:43.739 [main] INFO  GAAQClassifier - BestPop = 40000.986
+15:47:43.739 [main] INFO  GAAQClassifier - new_objects = 1
+15:47:43.740 [main] INFO  GAAQClassifier - all_objects = 40
+15:47:43.740 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:43.740 [main] INFO  GAAQClassifier - covered_objects = 232
+15:47:44.474 [main] INFO  GAAQClassifier - Search was finished for  22875ms
+15:47:44.474 [main] INFO  GAAQClassifier - bestfit = 52006.986
+15:47:45.219 [main] INFO  GAAQClassifier - Search was finished for  23620ms
+15:47:45.220 [main] INFO  GAAQClassifier - bestfit = 52006.984
+15:47:45.220 [main] INFO  GAAQClassifier - BestPop = 52006.986
+15:47:45.220 [main] INFO  GAAQClassifier - new_objects = 7
+15:47:45.220 [main] INFO  GAAQClassifier - all_objects = 52
+15:47:45.220 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:45.220 [main] INFO  GAAQClassifier - covered_objects = 239
+15:47:45.949 [main] INFO  GAAQClassifier - Search was finished for  24350ms
+15:47:45.949 [main] INFO  GAAQClassifier - bestfit = 41001.985
+15:47:46.655 [main] INFO  GAAQClassifier - Search was finished for  25056ms
+15:47:46.656 [main] INFO  GAAQClassifier - bestfit = 27001.982
+15:47:46.656 [main] INFO  GAAQClassifier - BestPop = 41001.985
+15:47:46.656 [main] INFO  GAAQClassifier - new_objects = 2
+15:47:46.656 [main] INFO  GAAQClassifier - all_objects = 41
+15:47:46.656 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:46.656 [main] INFO  GAAQClassifier - covered_objects = 241
+15:47:47.363 [main] INFO  GAAQClassifier - Search was finished for  25764ms
+15:47:47.364 [main] INFO  GAAQClassifier - bestfit = 44000.985
+15:47:48.082 [main] INFO  GAAQClassifier - Search was finished for  26483ms
+15:47:48.082 [main] INFO  GAAQClassifier - bestfit = 27001.988
+15:47:48.082 [main] INFO  GAAQClassifier - BestPop = 44000.985
+15:47:48.082 [main] INFO  GAAQClassifier - new_objects = 1
+15:47:48.082 [main] INFO  GAAQClassifier - all_objects = 44
+15:47:48.082 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:48.082 [main] INFO  GAAQClassifier - covered_objects = 242
+15:47:48.797 [main] INFO  GAAQClassifier - Search was finished for  27198ms
+15:47:48.797 [main] INFO  GAAQClassifier - bestfit = 31000.984
+15:47:49.504 [main] INFO  GAAQClassifier - Search was finished for  27905ms
+15:47:49.504 [main] INFO  GAAQClassifier - bestfit = 29000.984
+15:47:49.504 [main] INFO  GAAQClassifier - BestPop = 31000.984
+15:47:49.504 [main] INFO  GAAQClassifier - new_objects = 1
+15:47:49.504 [main] INFO  GAAQClassifier - all_objects = 31
+15:47:49.504 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:49.505 [main] INFO  GAAQClassifier - covered_objects = 243
+15:47:50.225 [main] INFO  GAAQClassifier - Search was finished for  28626ms
+15:47:50.225 [main] INFO  GAAQClassifier - bestfit = 27001.982
+15:47:50.936 [main] INFO  GAAQClassifier - Search was finished for  29337ms
+15:47:50.936 [main] INFO  GAAQClassifier - bestfit = 27001.983
+15:47:50.936 [main] INFO  GAAQClassifier - BestPop = 27001.983
+15:47:50.936 [main] INFO  GAAQClassifier - new_objects = 2
+15:47:50.936 [main] INFO  GAAQClassifier - all_objects = 27
+15:47:50.936 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:50.936 [main] INFO  GAAQClassifier - covered_objects = 245
+15:47:51.655 [main] INFO  GAAQClassifier - Search was finished for  30055ms
+15:47:51.655 [main] INFO  GAAQClassifier - bestfit = 36000.984
+15:47:52.366 [main] INFO  GAAQClassifier - Search was finished for  30767ms
+15:47:52.367 [main] INFO  GAAQClassifier - bestfit = 24001.985
+15:47:52.367 [main] INFO  GAAQClassifier - BestPop = 36000.984
+15:47:52.367 [main] INFO  GAAQClassifier - new_objects = 1
+15:47:52.367 [main] INFO  GAAQClassifier - all_objects = 36
+15:47:52.367 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:52.367 [main] INFO  GAAQClassifier - covered_objects = 246
+15:47:53.073 [main] INFO  GAAQClassifier - Search was finished for  31474ms
+15:47:53.073 [main] INFO  GAAQClassifier - bestfit = 26000.989
+15:47:53.775 [main] INFO  GAAQClassifier - Search was finished for  32175ms
+15:47:53.775 [main] INFO  GAAQClassifier - bestfit = 26000.986
+15:47:53.775 [main] INFO  GAAQClassifier - BestPop = 26000.989
+15:47:53.775 [main] INFO  GAAQClassifier - new_objects = 1
+15:47:53.775 [main] INFO  GAAQClassifier - all_objects = 26
+15:47:53.775 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:53.775 [main] INFO  GAAQClassifier - covered_objects = 247
+15:47:54.492 [main] INFO  GAAQClassifier - Search was finished for  32893ms
+15:47:54.492 [main] INFO  GAAQClassifier - bestfit = 25000.986
+15:47:55.206 [main] INFO  GAAQClassifier - Search was finished for  33607ms
+15:47:55.207 [main] INFO  GAAQClassifier - bestfit = 25000.985
+15:47:55.207 [main] INFO  GAAQClassifier - BestPop = 25000.986
+15:47:55.207 [main] INFO  GAAQClassifier - new_objects = 1
+15:47:55.207 [main] INFO  GAAQClassifier - all_objects = 25
+15:47:55.207 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:55.207 [main] INFO  GAAQClassifier - covered_objects = 248
+15:47:55.929 [main] INFO  GAAQClassifier - Search was finished for  34330ms
+15:47:55.929 [main] INFO  GAAQClassifier - bestfit = 32000.986
+15:47:56.637 [main] INFO  GAAQClassifier - Search was finished for  35038ms
+15:47:56.637 [main] INFO  GAAQClassifier - bestfit = 25000.981
+15:47:56.637 [main] INFO  GAAQClassifier - BestPop = 32000.986
+15:47:56.637 [main] INFO  GAAQClassifier - new_objects = 1
+15:47:56.637 [main] INFO  GAAQClassifier - all_objects = 32
+15:47:56.637 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:56.637 [main] INFO  GAAQClassifier - covered_objects = 249
+15:47:57.340 [main] INFO  GAAQClassifier - Search was finished for  35741ms
+15:47:57.340 [main] INFO  GAAQClassifier - bestfit = 20001.985
+15:47:58.034 [main] INFO  GAAQClassifier - Search was finished for  36435ms
+15:47:58.035 [main] INFO  GAAQClassifier - bestfit = 20000.985
+15:47:58.035 [main] INFO  GAAQClassifier - BestPop = 20001.985
+15:47:58.035 [main] INFO  GAAQClassifier - new_objects = 2
+15:47:58.035 [main] INFO  GAAQClassifier - all_objects = 20
+15:47:58.035 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:58.035 [main] INFO  GAAQClassifier - covered_objects = 251
+15:47:58.752 [main] INFO  GAAQClassifier - Search was finished for  37153ms
+15:47:58.752 [main] INFO  GAAQClassifier - bestfit = 29003.985
+15:47:59.437 [main] INFO  GAAQClassifier - Search was finished for  37838ms
+15:47:59.438 [main] INFO  GAAQClassifier - bestfit = 56003.989
+15:47:59.438 [main] INFO  GAAQClassifier - BestPop = 56003.989
+15:47:59.438 [main] INFO  GAAQClassifier - new_objects = 4
+15:47:59.438 [main] INFO  GAAQClassifier - all_objects = 56
+15:47:59.438 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:47:59.438 [main] INFO  GAAQClassifier - covered_objects = 255
+15:48:00.122 [main] INFO  GAAQClassifier - Search was finished for  38523ms
+15:48:00.122 [main] INFO  GAAQClassifier - bestfit = 20000.983
+15:48:00.822 [main] INFO  GAAQClassifier - Search was finished for  39223ms
+15:48:00.822 [main] INFO  GAAQClassifier - bestfit = 21000.985
+15:48:00.822 [main] INFO  GAAQClassifier - BestPop = 21000.985
+15:48:00.823 [main] INFO  GAAQClassifier - new_objects = 1
+15:48:00.823 [main] INFO  GAAQClassifier - all_objects = 21
+15:48:00.823 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:48:00.823 [main] INFO  GAAQClassifier - covered_objects = 256
+15:48:01.542 [main] INFO  GAAQClassifier - Search was finished for  39943ms
+15:48:01.543 [main] INFO  GAAQClassifier - bestfit = 20000.986
+15:48:02.231 [main] INFO  GAAQClassifier - Search was finished for  40632ms
+15:48:02.231 [main] INFO  GAAQClassifier - bestfit = 16002.983
+15:48:02.231 [main] INFO  GAAQClassifier - BestPop = 20000.986
+15:48:02.231 [main] INFO  GAAQClassifier - new_objects = 1
+15:48:02.231 [main] INFO  GAAQClassifier - all_objects = 20
+15:48:02.231 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:48:02.231 [main] INFO  GAAQClassifier - covered_objects = 257
+15:48:02.935 [main] INFO  GAAQClassifier - Search was finished for  41336ms
+15:48:02.935 [main] INFO  GAAQClassifier - bestfit = 16002.984
+15:48:03.638 [main] INFO  GAAQClassifier - Search was finished for  42039ms
+15:48:03.638 [main] INFO  GAAQClassifier - bestfit = 16002.984
+15:48:03.638 [main] INFO  GAAQClassifier - BestPop = 16002.984
+15:48:03.638 [main] INFO  GAAQClassifier - new_objects = 3
+15:48:03.638 [main] INFO  GAAQClassifier - all_objects = 16
+15:48:03.638 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:48:03.639 [main] INFO  GAAQClassifier - covered_objects = 260
+15:48:04.341 [main] INFO  GAAQClassifier - Search was finished for  42742ms
+15:48:04.341 [main] INFO  GAAQClassifier - bestfit = 10006.987
+15:48:05.033 [main] INFO  GAAQClassifier - Search was finished for  43434ms
+15:48:05.033 [main] INFO  GAAQClassifier - bestfit = 13006.986
+15:48:05.033 [main] INFO  GAAQClassifier - BestPop = 13006.986
+15:48:05.033 [main] INFO  GAAQClassifier - new_objects = 7
+15:48:05.033 [main] INFO  GAAQClassifier - all_objects = 13
+15:48:05.033 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:48:05.034 [main] INFO  GAAQClassifier - covered_objects = 267
+15:48:05.733 [main] INFO  GAAQClassifier - Search was finished for  44134ms
+15:48:05.733 [main] INFO  GAAQClassifier - bestfit = 5000.986
+15:48:06.426 [main] INFO  GAAQClassifier - Search was finished for  44827ms
+15:48:06.426 [main] INFO  GAAQClassifier - bestfit = 5000.985
+15:48:06.426 [main] INFO  GAAQClassifier - BestPop = 5000.986
+15:48:06.426 [main] INFO  GAAQClassifier - new_objects = 1
+15:48:06.426 [main] INFO  GAAQClassifier - all_objects = 5
+15:48:06.426 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 0
+15:48:06.426 [main] INFO  GAAQClassifier - covered_objects = 268
+15:48:06.427 [main] INFO  GAAQClassifier - NUM_NEW_OBJECTS: 64
+NUM_OBJECTS: 64
+NUM_MISS_OBJECTS: 0
+RULE_1:
+attr_2=[3]
+attr_3=[1, 2]
+attr_5=[1, 2]
+attr_6=[2]
+attr_8=[1]
+
+NUM_NEW_OBJECTS: 51
+NUM_OBJECTS: 60
+NUM_MISS_OBJECTS: 0
+RULE_2:
+attr_1=[2, 3]
+attr_2=[2, 3]
+attr_4=[1]
+attr_5=[1, 3]
+attr_6=[2, 3]
+attr_7=[1]
+attr_8=[1, 2]
+
+NUM_NEW_OBJECTS: 40
+NUM_OBJECTS: 67
+NUM_MISS_OBJECTS: 0
+RULE_3:
+attr_1=[1]
+attr_4=[1, 3]
+attr_5=[1, 3]
+attr_6=[2]
+attr_7=[1, 2]
+attr_8=[1]
+
+NUM_NEW_OBJECTS: 12
+NUM_OBJECTS: 80
+NUM_MISS_OBJECTS: 0
+RULE_4:
+attr_2=[3]
+attr_3=[1, 2]
+attr_5=[1, 2]
+attr_6=[2]
+attr_7=[1, 3]
+attr_8=[1, 2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 62
+NUM_MISS_OBJECTS: 0
+RULE_5:
+attr_1=[2, 3]
+attr_2=[2, 3]
+attr_4=[1, 3]
+attr_6=[2, 3]
+attr_7=[1, 3]
+attr_8=[1, 2]
+
+NUM_NEW_OBJECTS: 7
+NUM_OBJECTS: 53
+NUM_MISS_OBJECTS: 0
+RULE_6:
+attr_1=[2, 3]
+attr_2=[2, 3]
+attr_3=[1, 2]
+attr_4=[1, 3]
+attr_5=[1, 2]
+attr_6=[2, 3]
+attr_7=[1, 2]
+attr_8=[1, 2]
+
+NUM_NEW_OBJECTS: 14
+NUM_OBJECTS: 97
+NUM_MISS_OBJECTS: 0
+RULE_7:
+attr_2=[2, 3]
+attr_3=[2]
+attr_5=[1]
+attr_6=[2]
+attr_7=[1, 2]
+attr_8=[1]
+
+NUM_NEW_OBJECTS: 3
+NUM_OBJECTS: 56
+NUM_MISS_OBJECTS: 0
+RULE_8:
+attr_1=[1]
+attr_2=[3]
+attr_3=[1, 2]
+attr_5=[1, 2]
+attr_6=[2]
+attr_7=[1, 2]
+
+NUM_NEW_OBJECTS: 9
+NUM_OBJECTS: 67
+NUM_MISS_OBJECTS: 0
+RULE_9:
+attr_2=[3]
+attr_6=[2]
+attr_7=[1]
+attr_8=[1]
+
+NUM_NEW_OBJECTS: 10
+NUM_OBJECTS: 59
+NUM_MISS_OBJECTS: 0
+RULE_10:
+attr_1=[1, 3]
+attr_2=[3]
+attr_5=[1]
+attr_6=[2, 3]
+attr_7=[1, 3]
+attr_8=[1, 3]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 59
+NUM_MISS_OBJECTS: 0
+RULE_11:
+attr_2=[3]
+attr_3=[1, 2]
+attr_4=[1, 3]
+attr_5=[1, 3]
+attr_6=[2]
+attr_7=[1, 2]
+attr_8=[1, 2]
+
+NUM_NEW_OBJECTS: 19
+NUM_OBJECTS: 60
+NUM_MISS_OBJECTS: 0
+RULE_12:
+attr_2=[2, 3]
+attr_3=[2, 3]
+attr_4=[1]
+attr_5=[1]
+attr_6=[2]
+attr_7=[1, 2]
+attr_8=[2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 40
+NUM_MISS_OBJECTS: 0
+RULE_13:
+attr_1=[1]
+attr_2=[3]
+attr_3=[2, 3]
+attr_4=[1, 3]
+attr_6=[2]
+attr_7=[1]
+
+NUM_NEW_OBJECTS: 7
+NUM_OBJECTS: 52
+NUM_MISS_OBJECTS: 0
+RULE_14:
+attr_1=[2]
+attr_2=[3]
+attr_6=[2]
+attr_8=[1, 2]
+
+NUM_NEW_OBJECTS: 2
+NUM_OBJECTS: 41
+NUM_MISS_OBJECTS: 0
+RULE_15:
+attr_1=[2, 3]
+attr_2=[3]
+attr_6=[2]
+attr_7=[1, 2]
+attr_8=[2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 44
+NUM_MISS_OBJECTS: 0
+RULE_16:
+attr_1=[2, 3]
+attr_2=[3]
+attr_6=[2, 3]
+attr_8=[2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 31
+NUM_MISS_OBJECTS: 0
+RULE_17:
+attr_1=[1, 2]
+attr_2=[3]
+attr_4=[2, 3]
+attr_5=[1, 2]
+attr_6=[1, 2]
+attr_8=[1]
+
+NUM_NEW_OBJECTS: 2
+NUM_OBJECTS: 27
+NUM_MISS_OBJECTS: 0
+RULE_18:
+attr_1=[1, 3]
+attr_3=[1, 3]
+attr_4=[1, 3]
+attr_5=[1]
+attr_6=[2, 3]
+attr_8=[1, 3]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 36
+NUM_MISS_OBJECTS: 0
+RULE_19:
+attr_2=[3]
+attr_3=[1, 3]
+attr_4=[1]
+attr_5=[1, 3]
+attr_6=[2, 3]
+attr_7=[1, 2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 26
+NUM_MISS_OBJECTS: 0
+RULE_20:
+attr_2=[3]
+attr_3=[1, 3]
+attr_5=[1, 2]
+attr_7=[1, 3]
+attr_8=[1]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 25
+NUM_MISS_OBJECTS: 0
+RULE_21:
+attr_1=[1, 2]
+attr_3=[2]
+attr_6=[1, 2]
+attr_7=[2]
+attr_8=[1, 2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 32
+NUM_MISS_OBJECTS: 0
+RULE_22:
+attr_1=[2, 3]
+attr_3=[1, 2]
+attr_5=[1, 3]
+attr_6=[1, 2]
+attr_7=[1, 2]
+attr_8=[1]
+
+NUM_NEW_OBJECTS: 2
+NUM_OBJECTS: 20
+NUM_MISS_OBJECTS: 0
+RULE_23:
+attr_1=[2]
+attr_3=[3]
+attr_5=[1, 3]
+attr_6=[2, 3]
+attr_7=[1, 2]
+attr_8=[2]
+
+NUM_NEW_OBJECTS: 4
+NUM_OBJECTS: 56
+NUM_MISS_OBJECTS: 0
+RULE_24:
+attr_1=[2]
+attr_2=[2, 3]
+attr_3=[1, 2]
+attr_5=[1]
+attr_6=[2]
+attr_7=[1, 2]
+attr_8=[1, 2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 21
+NUM_MISS_OBJECTS: 0
+RULE_25:
+attr_1=[2]
+attr_3=[1, 3]
+attr_5=[1, 3]
+attr_8=[2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 20
+NUM_MISS_OBJECTS: 0
+RULE_26:
+attr_1=[2, 3]
+attr_2=[1, 3]
+attr_4=[2, 3]
+attr_6=[2]
+attr_7=[1, 3]
+attr_8=[1, 2]
+
+NUM_NEW_OBJECTS: 3
+NUM_OBJECTS: 16
+NUM_MISS_OBJECTS: 0
+RULE_27:
+attr_1=[1, 2]
+attr_4=[2, 3]
+attr_5=[1, 2]
+attr_6=[1, 2]
+attr_7=[2, 3]
+
+NUM_NEW_OBJECTS: 7
+NUM_OBJECTS: 13
+NUM_MISS_OBJECTS: 0
+RULE_28:
+attr_3=[1, 3]
+attr_5=[1]
+attr_6=[3]
+attr_7=[1, 3]
+attr_8=[1, 2]
+
+NUM_NEW_OBJECTS: 1
+NUM_OBJECTS: 5
+NUM_MISS_OBJECTS: 0
+RULE_29:
+attr_1=[2]
+attr_2=[2, 3]
+attr_3=[1, 3]
+attr_5=[1, 3]
+attr_6=[3]
+
+
