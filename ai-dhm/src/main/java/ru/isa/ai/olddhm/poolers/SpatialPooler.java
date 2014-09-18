@@ -26,7 +26,7 @@ import java.util.*;
  * etc.
  * <p/>
  * The primary public interfaces to this function are the "initialize"
- * and "compute" methods.
+ * and "forwardInputProcessing" methods.
  * <p/>
  * Example usage:
  * <p/>
@@ -34,7 +34,7 @@ import java.util.*;
  * sp.initialize(inputDimensions, columnDimensions, <parameters>);<p/>
  * while (true) {<p/>
  * <get input vector><p/>
- * sp.compute(inputVector, learn, activeColumns)<p/>
+ * sp.forwardInputProcessing(inputVector, learn, activeColumns)<p/>
  * <do something with output><p/>
  * }
  */
@@ -115,7 +115,7 @@ public class SpatialPooler implements ISpatialPooler {
     private long stimulusThreshold = 0;
     /**
      * The amount by which the permanence of an
-     * inactive synapse is decremented in each learning step.
+     * inactive synapse is decremented in each updateRelations step.
      */
     private double synPermInactiveDec = 0.01;
     /**

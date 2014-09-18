@@ -1,60 +1,109 @@
 package ru.isa.ai.dhm.core;
 
-import cern.colt.matrix.tbit.BitVector;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
+/**
+ * Author: Aleksandr Panov
+ * Date: 28.08.2014
+ * Time: 14:24
+ */
 public class Cell {
-    int index;
 
-    /*
-    Для каждой клетки мы вводим три различных состояния.
-    Массивы activeState и predictiveState хранят в себе записи об активных состояниях и
-    состояниях предсказания (предчувствия) для каждой из клеток в каждый из моментов времени.
-    Массив learnState определяет какие клетки используются во время обучения.
-     */
-    public BitVector learnState;
-    //All bits are initially false.
-
-    public BitVector predictiveState;
-
-    /*
-    activeState(c, i, t) это вклад от клетки
-    колонки c с номером i во время t. Если это 1, то клетка
-    активна при данном прямом входе и временном контексте.
-     */
-    public BitVector activeState;
-
-    Segment[] dendriteSegments;
-    public int dendriteSegmentsNum;
-
-    /*
-   Список структур segmentUpdate. segmentUpdateList(c,i) это
-   список изменений для клетки i в колонке c.
-    */
-    SegmentUpdate[] segmentUpdateList;
-    int segmentUpdateListNum;
-
-    final private int numSegments = 1000;
-    final private int numStateCells = 3;
-
-    public Cell(int i)
-    {
-       // column = c;
-        index = i;
-        dendriteSegments = new Segment[numSegments];
-        dendriteSegmentsNum = 0;
-
-        segmentUpdateList = new SegmentUpdate[numSegments];
-        segmentUpdateListNum = 0;
-
-        learnState = new BitVector(numStateCells);
-        predictiveState = new BitVector(numStateCells);
-        activeState = new BitVector(numStateCells);
+    public enum State {
+        active, predictive, passive
     }
 
-    public void clearSegmentUpdateList(){
-        for (int i = 0 ; i < segmentUpdateListNum; i++)
-            segmentUpdateList[i] = null;
+    private int index;
+    private int minThreshold = 5;
+    private int historyDeep = 2;
 
-        segmentUpdateListNum = 0;
+    private List<DistalSegment> distalSegments = new ArrayList<>();
+    private State[] stateHistory;
+    private boolean[] learnHistory;
+
+    public Cell(int index) {
+        this.index = index;
+        stateHistory = new State[historyDeep];
+        learnHistory = new boolean[historyDeep];
+        for (int i = 0; i < historyDeep; i++) {
+            stateHistory[i] = State.passive;
+            learnHistory[i] = false;
+        }
+    }
+
+    /**
+     * Возвращает активный по состоянию сегмент. Если активны несколько сегментов, то сегментам последовательностей
+     * отдается предпочтение. В противном случае предпочтение отдается сегментам с наибольшей активностью.
+     *
+     * @param inLearning
+     * @return
+     */
+    public DistalSegment getMostActiveSegment(boolean inLearning, int historyLevel) {
+        DistalSegment segment = null;
+        for (DistalSegment s : distalSegments) {
+            if (segment == null) {
+                segment = s;
+            } else if (s.isSequenceSegment() && !segment.isSequenceSegment()) {
+                segment = s;
+            } else if (segment.countInState(inLearning, historyLevel) < s.countInState(inLearning, historyLevel)) {
+                segment = s;
+            }
+        }
+        return segment;
+    }
+
+    /**
+     * Возвращается сегмент с самсым большим числом активных синапсов. При этом значения перманентности синапсов
+     * могут быть ниже порога connectedPerm. Число активных синапсов допускается ниже порога activationThreshold,
+     * но должно быть выше minThreshold.
+     *
+     * @param historyLevel
+     * @return
+     */
+    public DistalSegment getBestMatchingSegment(int historyLevel) {
+        DistalSegment bestSegment = null;
+        for (DistalSegment s : distalSegments) {
+            if (bestSegment != null) {
+                int connected = s.getActiveSynapses(historyLevel).size();
+                int bestConnected = bestSegment.getActiveSynapses(historyLevel).size();
+                if (connected > minThreshold && bestConnected < connected)
+                    bestSegment = s;
+            } else {
+                bestSegment = s;
+            }
+        }
+        return bestSegment;
+    }
+
+    public void updateHistory(Map<Integer, Cell> cells) {
+        for (DistalSegment segment : distalSegments) {
+            segment.updateHistory(cells);
+        }
+        for (int i = historyDeep - 1; i > 0; i--) {
+            stateHistory[i] = stateHistory[i - 1];
+            learnHistory[i] = learnHistory[i - 1];
+        }
+    }
+
+    public List<DistalSegment> getDistalSegments() {
+        return distalSegments;
+    }
+
+    public State[] getStateHistory() {
+        return stateHistory;
+    }
+
+    public boolean[] getLearnHistory() {
+        return learnHistory;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

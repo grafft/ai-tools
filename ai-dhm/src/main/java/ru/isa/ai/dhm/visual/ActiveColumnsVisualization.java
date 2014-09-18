@@ -1,8 +1,8 @@
 package ru.isa.ai.dhm.visual;
 
 import cern.colt.matrix.tbit.BitMatrix;
-import ru.isa.ai.dhm.core.CortexThread;
-import ru.isa.ai.dhm.core.Synapse;
+import ru.isa.ai.dhm.oldcore.CortexThread;
+import ru.isa.ai.dhm.oldcore.Synapse;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

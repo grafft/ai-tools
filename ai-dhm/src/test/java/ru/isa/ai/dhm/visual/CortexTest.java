@@ -1,9 +1,9 @@
 package ru.isa.ai.dhm.visual;
 
 import junit.framework.TestCase;
-import ru.isa.ai.dhm.HTMSettings;
-import ru.isa.ai.dhm.core.Column;
-import ru.isa.ai.dhm.core.Cortex;
+import ru.isa.ai.dhm.DHMSettings;
+import ru.isa.ai.dhm.oldcore.Column;
+import ru.isa.ai.dhm.oldcore.Cortex;
 
 public class CortexTest extends TestCase {
 /* what are the tests:
@@ -46,15 +46,16 @@ public void testUpdateInhibitionRadius()
         System.out.print("Asdad");
 
         HTMConfiguration conf=new HTMConfiguration();
-        HTMSettings[] set=new HTMSettings[1];
+        DHMSettings[] set=new DHMSettings[1];
         /*looks like a strange thing for me... */
-        set[0]= new HTMSettings();
+        set[0]= new DHMSettings();
 
         //c.sInitializationTest(new int[]{numInputs,1,1}, new int[]{57,31,2});
-        set[0].initialParameters[2]=0.5; // connectedPerm
-        set[0].initialParameters[5]=2; // cells per column
-        set[0].initialParameters[10]=57; //xColumnDim
-        set[0].initialParameters[11]=31; //yColumnDim
+        // TODO AP: comment by refactoring!
+//        set[0].initialParameters[2]=0.5; // connectedPerm
+//        set[0].initialParameters[5]=2; // cells per column
+//        set[0].initialParameters[10]=57; //xColumnDim
+//        set[0].initialParameters[11]=31; //yColumnDim
 
         Cortex c = new Cortex(1,set);
         int numInputs = 1;

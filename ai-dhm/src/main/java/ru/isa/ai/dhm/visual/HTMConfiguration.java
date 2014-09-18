@@ -1,23 +1,14 @@
 package ru.isa.ai.dhm.visual;
 
 import info.monitorenter.gui.chart.Chart2D;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import ru.isa.ai.dhm.HTMSettings;
-import ru.isa.ai.dhm.core.CortexThread;
-import ru.isa.ai.dhm.RegionInitializationException;
+import ru.isa.ai.dhm.DHMSettings;
+import ru.isa.ai.dhm.RegionSettingsException;
+import ru.isa.ai.dhm.oldcore.CortexThread;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Properties;
-
-import ru.isa.ai.dhm.core.Region;
-
-import javax.swing.event.DocumentEvent;
 import java.io.File;
 
 public class HTMConfiguration {
@@ -86,23 +77,28 @@ public class HTMConfiguration {
     private JPanel ActiveColsVisGenView;
     private JPanel ActiveColsSelectedView;
 
-    //frames
-    private JFrame f;
+    private final static int NUM_OF_PARAMETERS_FOR_1_REG = 12;
+    private final static int MAX_NUM_OF_REGIONS = 10;
 
     //HTM Comfiguration properties
     private int numOfRegions;
-    private HTMSettings[] settings;
+    private DHMSettings[] settings;
     public CortexThread crtx;
-    static HTMConfiguration panel;
-    private ActiveColumnsVisualization cl;
     public ImageClass img;
-    final private int NUM_OF_PARAMETERS_FOR_1_REG = 12;
-    final private int MAX_NUM_OF_REGIONS = 10;
 
-    private String filePropName;
     private String imagePath;
     private String PROPERTY_POSTFIX = ".properties";
     private String path;
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("HTMConfiguration");
+        HTMConfiguration panel = new HTMConfiguration();
+        frame.setContentPane(panel.mainPanel);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setResizable(false);
+        frame.setVisible(true);
+    }
 
     public HTMConfiguration() {
         path = HTMConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath();
@@ -143,13 +139,76 @@ public class HTMConfiguration {
         loadImage();
     }
 
-    private void prepareInterfaceAndValues(int numOfRegions_, boolean textFieldsAvailable) {
-        numOfRegions = numOfRegions_;
-        if (numOfRegions > 0) {
+    public void loadImage() {
+        img = new ImageClass();
+        img.load(imagePath);
+    }
 
-            settings = new HTMSettings[numOfRegions];
-            for (int i = 0; i < numOfRegions; i++) {
-                settings[i] = new HTMSettings();
+    public void initCortex() {
+        crtx = new CortexThread(numOfRegions, settings);
+        //crtx.cr.region.addColumns();
+        crtx.init(chart2D1, chart2D2, this);
+    }
+
+    private void loadProperties() throws RegionSettingsException { //загрузка данных в массив settings[]
+        File listFile = new File(path);
+        File exportFiles[] = listFile.listFiles();
+        String[] names = new String[exportFiles.length];
+        int numOfFilesWithSettings = 0;
+        for (int i = 0; i < names.length; i++) {
+            if (exportFiles[i].getName().contains(PROPERTY_POSTFIX)) {
+                names[i] = exportFiles[i].getName();
+                numOfFilesWithSettings++;
+            }
+        }
+        /*
+        for (int i = 1; i <= numOfFilesWithSettings; i++){
+            System.out.print(names[i]+ "\n");
+        }*/
+
+        prepareInterfaceAndValues(numOfFilesWithSettings, true);
+        spinnerNumRegs.setValue(numOfFilesWithSettings);
+
+        if (numOfFilesWithSettings != 0) {
+            for (int i = 0; i < numOfFilesWithSettings; i++) {
+                settings[i].loadFromFile(path + names[i + 1]);
+            }
+        }
+
+        setSettingsButton.doClick();
+        setSettingsButton.setEnabled(false);
+        savePropertiesToFileButton.setEnabled(true);
+    }
+
+    /*
+    private void checkProperties() throws RegionInitializationException {
+        if (numColumns <= 0)
+            throw new RegionInitializationException("Column dimensions must be non zero positive values");
+        if (numInputs <= 0)
+            throw new RegionInitializationException("Input dimensions must be non zero positive values");
+        if (numActiveColumnsPerInhArea <= 0 && (localAreaDensity <= 0 || localAreaDensity > 0.5))
+            throw new RegionInitializationException("Or numActiveColumnsPerInhArea > 0 or localAreaDensity > 0 " +
+                    "and localAreaDensity <= 0.5");
+        if (potentialPct <= 0 || potentialPct > 1)
+            throw new RegionInitializationException("potentialPct must be > 0 and <= 1");
+        potentialRadius = potentialRadius > numInputs ? numInputs : potentialRadius;
+    }
+    */
+
+    private void saveProperties() throws RegionSettingsException {
+        int numOfFiles = (Integer) spinnerNumRegs.getValue();
+        for (int i = 0; i < numOfFiles; i++) {
+            settings[i].saveIntoFile(path + "htm" + String.valueOf(i) + PROPERTY_POSTFIX);
+        }
+    }
+
+    private void prepareInterfaceAndValues(int numOfRegions, boolean textFieldsAvailable) {
+        this.numOfRegions = numOfRegions;
+        if (this.numOfRegions > 0) {
+
+            settings = new DHMSettings[this.numOfRegions];
+            for (int i = 0; i < this.numOfRegions; i++) {
+                settings[i] = new DHMSettings();
             }
 
             if (textFieldsAvailable) {
@@ -170,50 +229,34 @@ public class HTMConfiguration {
             }
 
             //buttons
-            if (numOfRegions > 1) nextRegSettingsButton.setEnabled(true);
+            if (this.numOfRegions > 1) nextRegSettingsButton.setEnabled(true);
             setSettingsButton.setEnabled(true);
             putNumOfRegionsButton.setEnabled(false);
             spinnerNumRegs.setEnabled(false);
         }
     }
 
-    private class PutNumOfRegionsButtonListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            prepareInterfaceAndValues((Integer) spinnerNumRegs.getValue(), true);
-            savePropertiesToFileButton.setEnabled(true);
-        }
-    }
-
-    private class NextRegSettingsButtonListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            //inc counter of current region
-            int numOfNextReg = Integer.parseInt(numOfReg.getText()) + 1;
-            if (numOfNextReg == 1)
-                previousRegSettingsButton.setEnabled(true);
-            numOfReg.setText(String.valueOf(numOfNextReg));
-            //show setting for previous region
-            showSettingsForRegion(numOfNextReg);
-            if (numOfNextReg == numOfRegions - 1)
-                nextRegSettingsButton.setEnabled(false);
-        }
-    }
-
     private void showSettingsForRegion(int regInd) {
-        textField1.setText(String.valueOf(settings[regInd].initialParameters[0]));
-        textField2.setText(String.valueOf(settings[regInd].initialParameters[1]));
-        textField3.setText(String.valueOf(settings[regInd].initialParameters[2]));
-        textField4.setText(String.valueOf(settings[regInd].initialParameters[3]));
-        textField5.setText(String.valueOf(settings[regInd].initialParameters[4]));
-        textField6.setText(String.valueOf(settings[regInd].initialParameters[5]));
-        textField7.setText(String.valueOf(settings[regInd].initialParameters[6]));
-        textField8.setText(String.valueOf(settings[regInd].initialParameters[7]));
-        textField9.setText(String.valueOf(settings[regInd].initialParameters[8]));
-        textField10.setText(String.valueOf(settings[regInd].initialParameters[9]));
-        textField11.setText(String.valueOf(settings[regInd].initialParameters[10]));
-        textField12.setText(String.valueOf(settings[regInd].initialParameters[11]));
+        // TODO AP: comment by refactoring!
+//        textField1.setText(String.valueOf(settings[regInd].initialParameters[0]));
+//        textField2.setText(String.valueOf(settings[regInd].initialParameters[1]));
+//        textField3.setText(String.valueOf(settings[regInd].initialParameters[2]));
+//        textField4.setText(String.valueOf(settings[regInd].initialParameters[3]));
+//        textField5.setText(String.valueOf(settings[regInd].initialParameters[4]));
+//        textField6.setText(String.valueOf(settings[regInd].initialParameters[5]));
+//        textField7.setText(String.valueOf(settings[regInd].initialParameters[6]));
+//        textField8.setText(String.valueOf(settings[regInd].initialParameters[7]));
+//        textField9.setText(String.valueOf(settings[regInd].initialParameters[8]));
+//        textField10.setText(String.valueOf(settings[regInd].initialParameters[9]));
+//        textField11.setText(String.valueOf(settings[regInd].initialParameters[10]));
+//        textField12.setText(String.valueOf(settings[regInd].initialParameters[11]));
     }
 
+    public ImageClass getImg() {
+        return img;
+    }
 
+    ////////////////////////////////////Listeners//////////////////////////////////////////
     private class PreviousRegSettingsButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             //dec counter of current region
@@ -280,159 +323,24 @@ public class HTMConfiguration {
         }
     }
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("HTMConfiguration");
-        panel = new HTMConfiguration();
-        frame.setContentPane(panel.mainPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setResizable(false);
-        frame.setVisible(true);
-    }
-
-    public void loadImage() {
-        img = new ImageClass();
-        img.load(imagePath);
-    }
-
-    public ImageClass getImg() {
-        return img;
-    }
-
-    public void initCortex() {
-        crtx = new CortexThread(numOfRegions, settings);
-        //crtx.cr.region.addColumns();
-        crtx.init(chart2D1, chart2D2, panel);
-    }
-
-    public void loadProperties() throws RegionInitializationException { //загрузка данных в массив settings[]
-
-        File listFile = new File(path);
-        File exportFiles[] = listFile.listFiles();
-        String[] names = new String[exportFiles.length];
-        int numOfFilesWithSettings = 0;
-        for (int i = 0; i < names.length; i++) {
-            if (exportFiles[i].getName().contains(PROPERTY_POSTFIX)) {
-                names[i] = exportFiles[i].getName();
-                numOfFilesWithSettings++;
-            }
+    private class PutNumOfRegionsButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            prepareInterfaceAndValues((Integer) spinnerNumRegs.getValue(), true);
+            savePropertiesToFileButton.setEnabled(true);
         }
-        /*
-        for (int i = 1; i <= numOfFilesWithSettings; i++){
-            System.out.print(names[i]+ "\n");
-        }*/
-
-        prepareInterfaceAndValues(numOfFilesWithSettings, true);
-        spinnerNumRegs.setValue(numOfFilesWithSettings);
-
-        Logger logger = LogManager.getLogger(Region.class.getSimpleName());
-
-        if (numOfFilesWithSettings != 0) {
-            for (int i = 0; i < numOfFilesWithSettings; i++) {
-                Properties properties = new Properties();
-                try {
-                    filePropName = path + names[i + 1];
-                    FileInputStream input = new FileInputStream(filePropName);
-                    properties.load(input);
-                    for (String name : properties.stringPropertyNames()) {
-                        switch (name) {
-                            case "desiredLocalActivity":
-                                settings[i].initialParameters[0] = Double.parseDouble(properties.getProperty(name));
-                                break;
-                            case "minOverlap":
-                                settings[i].initialParameters[1] = Double.parseDouble(properties.getProperty(name));
-                                break;
-                            case "connectedPerm":
-                                settings[i].initialParameters[2] = Double.parseDouble(properties.getProperty(name));
-                                break;
-                            case "permanenceInc":
-                                settings[i].initialParameters[3] = Double.parseDouble(properties.getProperty(name));
-                                break;
-                            case "permanenceDec":
-                                settings[i].initialParameters[4] = Double.parseDouble(properties.getProperty(name));
-                                break;
-                            case "cellsPerColumn":
-                                settings[i].initialParameters[5] = Double.parseDouble(properties.getProperty(name));
-                                break;
-                            case "activationThreshold":
-                                settings[i].initialParameters[6] = Double.parseDouble(properties.getProperty(name));
-                                break;
-                            case "initialPerm":
-                                settings[i].initialParameters[7] = Double.parseDouble(properties.getProperty(name));
-                                break;
-                            case "minThreshold":
-                                settings[i].initialParameters[8] = Double.parseDouble(properties.getProperty(name));
-                                break;
-                            case "newSynapseCount":
-                                settings[i].initialParameters[9] = Double.parseDouble(properties.getProperty(name));
-                                break;
-                            case "xDimension":
-                                settings[i].initialParameters[10] = Double.parseDouble(properties.getProperty(name));
-                                break;
-                            case "yDimension":
-                                settings[i].initialParameters[11] = Double.parseDouble(properties.getProperty(name));
-                                break;
-                            default:
-                                logger.error("Illegal property name: " + name);
-                                break;
-                        }
-                    }
-                    input.close();
-                } catch (IOException e) {
-                    throw new RegionInitializationException("Cannot load properties file " + filePropName, e);
-                } catch (NumberFormatException nfe) {
-                    throw new RegionInitializationException("Wrong property value in property file " + filePropName, nfe);
-                }
-            }
-        }
-
-        setSettingsButton.doClick();
-        setSettingsButton.setEnabled(false);
-        savePropertiesToFileButton.setEnabled(true);
     }
 
-    /*
-    private void checkProperties() throws RegionInitializationException {
-        if (numColumns <= 0)
-            throw new RegionInitializationException("Column dimensions must be non zero positive values");
-        if (numInputs <= 0)
-            throw new RegionInitializationException("Input dimensions must be non zero positive values");
-        if (numActiveColumnsPerInhArea <= 0 && (localAreaDensity <= 0 || localAreaDensity > 0.5))
-            throw new RegionInitializationException("Or numActiveColumnsPerInhArea > 0 or localAreaDensity > 0 " +
-                    "and localAreaDensity <= 0.5");
-        if (potentialPct <= 0 || potentialPct > 1)
-            throw new RegionInitializationException("potentialPct must be > 0 and <= 1");
-        potentialRadius = potentialRadius > numInputs ? numInputs : potentialRadius;
-    }
-    */
-
-    public void saveProperties() throws RegionInitializationException {
-        int numOfFiles = (Integer) spinnerNumRegs.getValue();
-
-        for (int i = 0; i < numOfFiles; i++) {
-            Properties properties = new Properties();
-            try {
-                properties.setProperty("desiredLocalActivity", String.valueOf(settings[i].initialParameters[0]));
-                properties.setProperty("minOverlap", String.valueOf(settings[i].initialParameters[1]));
-                properties.setProperty("connectedPerm", String.valueOf(settings[i].initialParameters[2]));
-                properties.setProperty("permanenceInc", String.valueOf(settings[i].initialParameters[3]));
-                properties.setProperty("permanenceDec", String.valueOf(settings[i].initialParameters[4]));
-                properties.setProperty("cellsPerColumn", String.valueOf(settings[i].initialParameters[5]));
-                properties.setProperty("activationThreshold", String.valueOf(settings[i].initialParameters[6]));
-                properties.setProperty("initialPerm", String.valueOf(settings[i].initialParameters[7]));
-                properties.setProperty("minThreshold", String.valueOf(settings[i].initialParameters[8]));
-                properties.setProperty("newSynapseCount", String.valueOf(settings[i].initialParameters[9]));
-                properties.setProperty("xDimension", String.valueOf(settings[i].initialParameters[10]));
-                properties.setProperty("yDimension", String.valueOf(settings[i].initialParameters[11]));
-
-                filePropName = path + "htm" + String.valueOf(i) + PROPERTY_POSTFIX;
-                FileOutputStream output = new FileOutputStream(filePropName);
-                properties.store(output, "Saved settings");
-                output.close();
-
-            } catch (IOException e) {
-                throw new RegionInitializationException("Cannot save properties file " + filePropName, e);
-            }
+    private class NextRegSettingsButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            //inc counter of current region
+            int numOfNextReg = Integer.parseInt(numOfReg.getText()) + 1;
+            if (numOfNextReg == 1)
+                previousRegSettingsButton.setEnabled(true);
+            numOfReg.setText(String.valueOf(numOfNextReg));
+            //show setting for previous region
+            showSettingsForRegion(numOfNextReg);
+            if (numOfNextReg == numOfRegions - 1)
+                nextRegSettingsButton.setEnabled(false);
         }
     }
 
@@ -440,7 +348,7 @@ public class HTMConfiguration {
         public void actionPerformed(ActionEvent e) {
             try {
                 saveProperties();
-            } catch (RegionInitializationException ex) {
+            } catch (RegionSettingsException ex) {
                 System.out.println("caught " + ex);
             }
         }
@@ -452,7 +360,7 @@ public class HTMConfiguration {
                 loadProperties();
                 numOfReg.setText("0");
                 showSettingsForRegion(0);
-            } catch (RegionInitializationException e) {
+            } catch (RegionSettingsException e) {
                 System.out.println("caught " + e);
             }
         }
@@ -464,20 +372,20 @@ public class HTMConfiguration {
                 //initCortex();
                 crtx.start();
             } else
-                crtx.Continue();
+                crtx.thdContinue();
         }
     }
 
     private class StopCortexButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            crtx.Quit();
+            crtx.thdQuit();
         }
     }
 
     private class MakeStepButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             showActiveColumnsButton.setEnabled(true);
-            crtx.MakeStep();
+            crtx.thdMakeStep();
             if (numOfRegions > 1)
                 UPButton.setEnabled(true);
             makeStepButton.setEnabled(false);
@@ -486,8 +394,8 @@ public class HTMConfiguration {
 
     private class ShowActiveColumnsListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            f = new JFrame("Active Columns Visualization");
-            cl = new ActiveColumnsVisualization();
+            JFrame f = new JFrame("Active Columns Visualization");
+            ActiveColumnsVisualization cl = new ActiveColumnsVisualization();
             f.setContentPane(cl.activeColumnsPanel_main);
             f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             f.pack();
@@ -497,7 +405,7 @@ public class HTMConfiguration {
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////Property listeners/////////////////////////////////////////////
     private class DocumentListener1 implements javax.swing.event.DocumentListener {
 
         @Override
@@ -523,14 +431,15 @@ public class HTMConfiguration {
 
                     int num_of_reg = Integer.parseInt(numOfReg.getText());
                     double new_value = 0.0;
-                    try {
-                        new_value = Double.parseDouble(textField1.getText());
-                    } catch (NumberFormatException ex) {
-                        System.out.print("Wrong property[0] (desired local activity) for region " + numOfReg);
-                        new_value = HTMSettings.DESIRED_LOCAL_ACTIVITY_DEFAULT;
-                        textField1.setText(String.valueOf(new_value));
-                    }
-                    settings[num_of_reg].initialParameters[0] = new_value;
+                    // TODO AP: comment by refactoring!
+//                    try {
+//                        new_value = Double.parseDouble(textField1.getText());
+//                    } catch (NumberFormatException ex) {
+//                        System.out.print("Wrong property[0] (desired local activity) for region " + numOfReg);
+//                        new_value = RegionSettings.DESIRED_LOCAL_ACTIVITY_DEFAULT;
+//                        textField1.setText(String.valueOf(new_value));
+//                    }
+//                    settings[num_of_reg].initialParameters[0] = new_value;
                 }
             });
         }
@@ -560,14 +469,15 @@ public class HTMConfiguration {
                 public void run() {
                     int num_of_reg = Integer.parseInt(numOfReg.getText());
                     double new_value = 0.0;
-                    try {
-                        new_value = Double.parseDouble(textField12.getText());
-                    } catch (NumberFormatException ex) {
-                        System.out.print("Wrong property[11] (region y dimension) for region " + numOfReg);
-                        new_value = HTMSettings.REGION_Y_DIMENSION_DEFAULT;
-                        textField12.setText(String.valueOf(new_value));
-                    }
-                    settings[num_of_reg].initialParameters[11] = new_value;
+                    // TODO AP: comment by refactoring!
+//                    try {
+//                        new_value = Double.parseDouble(textField12.getText());
+//                    } catch (NumberFormatException ex) {
+//                        System.out.print("Wrong property[11] (region y dimension) for region " + numOfReg);
+//                        new_value = RegionSettings.REGION_Y_DIMENSION_DEFAULT;
+//                        textField12.setText(String.valueOf(new_value));
+//                    }
+//                    settings[num_of_reg].initialParameters[11] = new_value;
                 }
             });
         }
@@ -597,14 +507,15 @@ public class HTMConfiguration {
                 public void run() {
                     int num_of_reg = Integer.parseInt(numOfReg.getText());
                     double new_value = 0.0;
-                    try {
-                        new_value = Double.parseDouble(textField11.getText());
-                    } catch (NumberFormatException ex) {
-                        System.out.print("Wrong property[10] (region x dimension) for region " + numOfReg);
-                        new_value = HTMSettings.REGION_X_DIMENSION_DEFAULT;
-                        textField11.setText(String.valueOf(new_value));
-                    }
-                    settings[num_of_reg].initialParameters[10] = new_value;
+                    // TODO AP: comment by refactoring!
+//                    try {
+//                        new_value = Double.parseDouble(textField11.getText());
+//                    } catch (NumberFormatException ex) {
+//                        System.out.print("Wrong property[10] (region x dimension) for region " + numOfReg);
+//                        new_value = RegionSettings.REGION_X_DIMENSION_DEFAULT;
+//                        textField11.setText(String.valueOf(new_value));
+//                    }
+//                    settings[num_of_reg].initialParameters[10] = new_value;
                 }
             });
         }
@@ -634,14 +545,15 @@ public class HTMConfiguration {
                 public void run() {
                     int num_of_reg = Integer.parseInt(numOfReg.getText());
                     double new_value = 0.0;
-                    try {
-                        new_value = Double.parseDouble(textField10.getText());
-                    } catch (NumberFormatException ex) {
-                        System.out.print("Wrong property[9] (new synapses count) for region " + numOfReg);
-                        new_value = HTMSettings.NEW_SYNAPSES_COUNT_DEFAULT;
-                        textField10.setText(String.valueOf(new_value));
-                    }
-                    settings[num_of_reg].initialParameters[9] = new_value;
+                    // TODO AP: comment by refactoring!
+//                    try {
+//                        new_value = Double.parseDouble(textField10.getText());
+//                    } catch (NumberFormatException ex) {
+//                        System.out.print("Wrong property[9] (new synapses count) for region " + numOfReg);
+//                        new_value = RegionSettings.NEW_SYNAPSES_COUNT_DEFAULT;
+//                        textField10.setText(String.valueOf(new_value));
+//                    }
+//                    settings[num_of_reg].initialParameters[9] = new_value;
                 }
             });
         }
@@ -671,14 +583,15 @@ public class HTMConfiguration {
                 public void run() {
                     int num_of_reg = Integer.parseInt(numOfReg.getText());
                     double new_value = 0.0;
-                    try {
-                        new_value = Double.parseDouble(textField9.getText());
-                    } catch (NumberFormatException ex) {
-                        System.out.print("Wrong property[8] (minimal threshold) for region " + numOfReg);
-                        new_value = HTMSettings.MINIMAL_THRESHOLD_DEFAULT;
-                        textField9.setText(String.valueOf(new_value));
-                    }
-                    settings[num_of_reg].initialParameters[8] = new_value;
+                    // TODO AP: comment by refactoring!
+//                    try {
+//                        new_value = Double.parseDouble(textField9.getText());
+//                    } catch (NumberFormatException ex) {
+//                        System.out.print("Wrong property[8] (minimal threshold) for region " + numOfReg);
+//                        new_value = RegionSettings.MINIMAL_THRESHOLD_DEFAULT;
+//                        textField9.setText(String.valueOf(new_value));
+//                    }
+//                    settings[num_of_reg].initialParameters[8] = new_value;
                 }
             });
         }
@@ -708,14 +621,15 @@ public class HTMConfiguration {
                 public void run() {
                     int num_of_reg = Integer.parseInt(numOfReg.getText());
                     double new_value = 0.0;
-                    try {
-                        new_value = Double.parseDouble(textField8.getText());
-                    } catch (NumberFormatException ex) {
-                        System.out.print("Wrong property[7] (initial permanence) for region " + numOfReg);
-                        new_value = HTMSettings.INITIAL_PERMANENCE_DEFAULT;
-                        textField8.setText(String.valueOf(new_value));
-                    }
-                    settings[num_of_reg].initialParameters[7] = new_value;
+                    // TODO AP: comment by refactoring!
+//                    try {
+//                        new_value = Double.parseDouble(textField8.getText());
+//                    } catch (NumberFormatException ex) {
+//                        System.out.print("Wrong property[7] (initial permanence) for region " + numOfReg);
+//                        new_value = RegionSettings.INITIAL_PERMANENCE_DEFAULT;
+//                        textField8.setText(String.valueOf(new_value));
+//                    }
+//                    settings[num_of_reg].initialParameters[7] = new_value;
                 }
             });
         }
@@ -745,14 +659,15 @@ public class HTMConfiguration {
                 public void run() {
                     int num_of_reg = Integer.parseInt(numOfReg.getText());
                     double new_value = 0.0;
-                    try {
-                        new_value = Double.parseDouble(textField7.getText());
-                    } catch (NumberFormatException ex) {
-                        System.out.print("Wrong property[6] (activation treshold) for region " + numOfReg);
-                        new_value = HTMSettings.ACTIVATION_THRESHOLD_DEFAULT;
-                        textField7.setText(String.valueOf(new_value));
-                    }
-                    settings[num_of_reg].initialParameters[6] = new_value;
+                    // TODO AP: comment by refactoring!
+//                    try {
+//                        new_value = Double.parseDouble(textField7.getText());
+//                    } catch (NumberFormatException ex) {
+//                        System.out.print("Wrong property[6] (activation treshold) for region " + numOfReg);
+//                        new_value = RegionSettings.ACTIVATION_THRESHOLD_DEFAULT;
+//                        textField7.setText(String.valueOf(new_value));
+//                    }
+//                    settings[num_of_reg].initialParameters[6] = new_value;
                 }
             });
         }
@@ -782,14 +697,15 @@ public class HTMConfiguration {
                 public void run() {
                     int num_of_reg = Integer.parseInt(numOfReg.getText());
                     double new_value = 0.0;
-                    try {
-                        new_value = Double.parseDouble(textField6.getText());
-                    } catch (NumberFormatException ex) {
-                        System.out.print("Wrong property[5] (cells per column) for region " + numOfReg);
-                        new_value = HTMSettings.CELLS_PER_COLUMN_DEFAULT;
-                        textField6.setText(String.valueOf(new_value));
-                    }
-                    settings[num_of_reg].initialParameters[5] = new_value;
+                    // TODO AP: comment by refactoring!
+//                    try {
+//                        new_value = Double.parseDouble(textField6.getText());
+//                    } catch (NumberFormatException ex) {
+//                        System.out.print("Wrong property[5] (cells per column) for region " + numOfReg);
+//                        new_value = RegionSettings.CELLS_PER_COLUMN_DEFAULT;
+//                        textField6.setText(String.valueOf(new_value));
+//                    }
+//                    settings[num_of_reg].initialParameters[5] = new_value;
                 }
             });
         }
@@ -819,14 +735,15 @@ public class HTMConfiguration {
                 public void run() {
                     int num_of_reg = Integer.parseInt(numOfReg.getText());
                     double new_value = 0.0;
-                    try {
-                        new_value = Double.parseDouble(textField5.getText());
-                    } catch (NumberFormatException ex) {
-                        System.out.print("Wrong property[4] (permanence dec) for region " + numOfReg);
-                        new_value = HTMSettings.PERMANENCE_DEC_DEFAULT;
-                        textField5.setText(String.valueOf(new_value));
-                    }
-                    settings[num_of_reg].initialParameters[4] = new_value;
+                    // TODO AP: comment by refactoring!
+//                    try {
+//                        new_value = Double.parseDouble(textField5.getText());
+//                    } catch (NumberFormatException ex) {
+//                        System.out.print("Wrong property[4] (permanence dec) for region " + numOfReg);
+//                        new_value = RegionSettings.PERMANENCE_DEC_DEFAULT;
+//                        textField5.setText(String.valueOf(new_value));
+//                    }
+//                    settings[num_of_reg].initialParameters[4] = new_value;
                 }
             });
         }
@@ -856,14 +773,15 @@ public class HTMConfiguration {
                 public void run() {
                     int num_of_reg = Integer.parseInt(numOfReg.getText());
                     double new_value = 0.0;
-                    try {
-                        new_value = Double.parseDouble(textField4.getText());
-                    } catch (NumberFormatException ex) {
-                        System.out.print("Wrong property[3] (permanence inc) for region " + numOfReg);
-                        new_value = HTMSettings.PERMANENCE_INC_DEFAULT;
-                        textField4.setText(String.valueOf(new_value));
-                    }
-                    settings[num_of_reg].initialParameters[3] = new_value;
+                    // TODO AP: comment by refactoring!
+//                    try {
+//                        new_value = Double.parseDouble(textField4.getText());
+//                    } catch (NumberFormatException ex) {
+//                        System.out.print("Wrong property[3] (permanence inc) for region " + numOfReg);
+//                        new_value = RegionSettings.PERMANENCE_INC_DEFAULT;
+//                        textField4.setText(String.valueOf(new_value));
+//                    }
+//                    settings[num_of_reg].initialParameters[3] = new_value;
                 }
             });
         }
@@ -893,14 +811,15 @@ public class HTMConfiguration {
                 public void run() {
                     int num_of_reg = Integer.parseInt(numOfReg.getText());
                     double new_value = 0.0;
-                    try {
-                        new_value = Double.parseDouble(textField3.getText());
-                    } catch (NumberFormatException ex) {
-                        System.out.print("Wrong property[2] (connected permission) for region " + numOfReg);
-                        new_value = HTMSettings.CONNECTED_PERMISSION_DEFAULT;
-                        textField3.setText(String.valueOf(new_value));
-                    }
-                    settings[num_of_reg].initialParameters[2] = new_value;
+                    // TODO AP: comment by refactoring!
+//                    try {
+//                        new_value = Double.parseDouble(textField3.getText());
+//                    } catch (NumberFormatException ex) {
+//                        System.out.print("Wrong property[2] (connected permission) for region " + numOfReg);
+//                        new_value = RegionSettings.CONNECTED_PERMISSION_DEFAULT;
+//                        textField3.setText(String.valueOf(new_value));
+//                    }
+//                    settings[num_of_reg].initialParameters[2] = new_value;
                 }
             });
         }
@@ -930,14 +849,15 @@ public class HTMConfiguration {
                 public void run() {
                     int num_of_reg = Integer.parseInt(numOfReg.getText());
                     double new_value = 0.0;
-                    try {
-                        new_value = Double.parseDouble(textField2.getText());
-                    } catch (NumberFormatException ex) {
-                        System.out.print("Wrong property[1] (minimal overlap) for region " + numOfReg);
-                        new_value = HTMSettings.MINIMAL_OVERLAP_DEFAULT;
-                        textField2.setText(String.valueOf(new_value));
-                    }
-                    settings[num_of_reg].initialParameters[1] = new_value;
+                    // TODO AP: comment by refactoring!
+//                    try {
+//                        new_value = Double.parseDouble(textField2.getText());
+//                    } catch (NumberFormatException ex) {
+//                        System.out.print("Wrong property[1] (minimal overlap) for region " + numOfReg);
+//                        new_value = RegionSettings.MINIMAL_OVERLAP_DEFAULT;
+//                        textField2.setText(String.valueOf(new_value));
+//                    }
+//                    settings[num_of_reg].initialParameters[1] = new_value;
                 }
             });
         }
