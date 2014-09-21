@@ -1,0 +1,18 @@
+13:55:25.203 [main] INFO  GAAQClassifier - Loading...
+13:56:23.183 [main] INFO  GAAQClassifier - Data is loaded.
+13:56:23.184 [main] INFO  GAAQClassifier - Searching...
+13:56:23.203 [main] INFO  GAAQClassifier - Found 94 conflict negative objects
+13:56:39.498 [main] INFO  GAAQClassifier - Search was finished for  74298ms
+13:56:39.498 [main] INFO  GAAQClassifier - bestfit = 250.647
+13:56:53.306 [main] INFO  GAAQClassifier - Search was finished for  88106ms
+13:56:53.306 [main] INFO  GAAQClassifier - bestfit = 250.639
+13:57:07.949 [main] INFO  GAAQClassifier - Search was finished for  102749ms
+13:57:07.950 [main] INFO  GAAQClassifier - bestfit = 250.468
+13:57:23.587 [main] INFO  GAAQClassifier - Search was finished for  118387ms
+13:57:23.587 [main] INFO  GAAQClassifier - bestfit = 250.598
+13:57:32.952 [main] INFO  GAAQClassifier - Search was finished for  127752ms
+13:57:32.953 [main] INFO  GAAQClassifier - bestfit = 250.615
+13:57:32.953 [main] INFO  GAAQClassifier - BestPop = 250.647
+13:57:32.964 [main] INFO  GAAQClassifier - new_objects = 1
+13:57:32.965 [main] INFO  GAAQClassifier - all_objects = 01
+13:57:32.965 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 1

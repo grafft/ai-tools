@@ -1,0 +1,7 @@
+16:07:17.768 [main] ERROR GAAQJSM - Weka exception: For input string: "0																																		"
+java.lang.NumberFormatException: For input string: "0																																		"
+	at java.lang.NumberFormatException.forInputString(NumberFormatException.java:65) ~[?:1.7.0_60]
+	at java.lang.Integer.parseInt(Integer.java:492) ~[?:1.7.0_60]
+	at java.lang.Integer.parseInt(Integer.java:527) ~[?:1.7.0_60]
+	at ru.isa.ai.causal.GAAQJSM$1.setSource(GAAQJSM.java:72) ~[classes/:?]
+	at ru.isa.ai.causal.GAAQJSM.main(GAAQJSM.java:97) [classes/:?]

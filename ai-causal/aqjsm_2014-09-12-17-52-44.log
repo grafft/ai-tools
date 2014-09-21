@@ -1,0 +1,8 @@
+17:52:44.369 [main] INFO  GAAQClassifier - Loading...
+17:52:45.054 [main] INFO  GAAQClassifier - Data is loaded.
+17:52:45.060 [main] INFO  GAAQClassifier - Found 187 conflict negative objects
+17:52:45.060 [main] INFO  GAAQClassifier - Searching...
+17:52:46.565 [main] INFO  GAAQClassifier - Search was finished for  2199ms
+17:52:46.566 [main] INFO  GAAQClassifier - bestfit = 344343.981
+17:52:48.135 [main] INFO  GAAQClassifier - Search was finished for  3769ms
+17:52:48.135 [main] INFO  GAAQClassifier - bestfit = 318317.986

@@ -199,13 +199,14 @@ public class GAAQClassifier extends AbstractClassifier {
             logger.info("Searching...");
             Population[] BestPop = new Population[2000];
             int num_ob, num_new_ob, num_ob_miss;
+            int covered_objects=0;
             int sizeBestPop = 0;
 
             int[][] tobj0 = tobj;
+            ++sizeBestPop;
+            BestPop[sizeBestPop - 1] = new Population(1, numgen, sizegen, tobj0, tobj, fobj);
             while (tobj.length != 0) {
-                ++sizeBestPop;
-                BestPop[sizeBestPop - 1] = new Population(1, numgen, sizegen, tobj0, tobj, fobj);
-                for (int restart = 0; restart < 5; ++restart) {
+                for (int restart = 0; restart < 2; ++restart) {
                     Coevolution mainCpop = new Coevolution(cn, n, numgen, sizegen, ngen, nadapt, socialcard, socialfine,
                             typega, typesel, sizetur, typerec, mutation, mutadapt,
                             truthvalue, tobj0, tobj, fobj);
@@ -342,9 +343,13 @@ public class GAAQClassifier extends AbstractClassifier {
                 num_new_objects.add(num_new_ob);
                 num_objects.add(sum);
                 num_miss_objects.add(num_ob_miss);
+                covered_objects+=num_new_ob;
                 logger.info("new_objects = " + num_new_ob);
                 logger.info("all_objects = " + sum);
                 logger.info("objects_with_missing_value_used = " + num_ob_miss);
+                logger.info("covered_objects = " + covered_objects);
+                ++sizeBestPop;
+                BestPop[sizeBestPop - 1] = new Population(1, numgen, sizegen, tobj0, tobj, fobj);
             }
 
             Integer[][] map_atr = new Integer[8][];
@@ -359,7 +364,7 @@ public class GAAQClassifier extends AbstractClassifier {
 
             StringBuilder result = new StringBuilder();
             List<AQRule> classRules = new ArrayList<>();
-            for (int bp = 0; bp < sizeBestPop; ++bp) {
+            for (int bp = 0; bp < sizeBestPop-1; ++bp) {
                 result.append("NUM_NEW_OBJECTS: ").append(num_new_objects.get(bp)).append("\n");//((int) (BestPop[bp].bestgenotype.fit / 1000)).append("\n");
                 result.append("NUM_OBJECTS: ").append(num_objects.get(bp)).append("\n");
                 result.append("NUM_MISS_OBJECTS: ").append(num_miss_objects.get(bp)).append("\n");

@@ -1,0 +1,1092 @@
+13:58:29.440 [main] INFO  GAAQClassifier - Loading...
+13:59:27.042 [main] INFO  GAAQClassifier - Data is loaded.
+13:59:27.062 [main] INFO  GAAQClassifier - Found 94 conflict negative objects
+13:59:27.063 [main] INFO  GAAQClassifier - Searching...
+13:59:37.658 [main] INFO  GAAQClassifier - Search was finished for  68221ms
+13:59:37.658 [main] INFO  GAAQClassifier - bestfit = 250.668
+13:59:48.253 [main] INFO  GAAQClassifier - Search was finished for  78816ms
+13:59:48.253 [main] INFO  GAAQClassifier - bestfit = 250.66
+13:59:56.841 [main] INFO  GAAQClassifier - Search was finished for  87404ms
+13:59:56.842 [main] INFO  GAAQClassifier - bestfit = 501.315
+14:00:09.683 [main] INFO  GAAQClassifier - Search was finished for  100246ms
+14:00:09.683 [main] INFO  GAAQClassifier - bestfit = 250.648
+14:00:23.081 [main] INFO  GAAQClassifier - Search was finished for  113644ms
+14:00:23.081 [main] INFO  GAAQClassifier - bestfit = 250.645
+14:00:23.081 [main] INFO  GAAQClassifier - BestPop = 501.315
+14:00:23.106 [main] INFO  GAAQClassifier - new_objects = 2
+14:00:23.106 [main] INFO  GAAQClassifier - all_objects = 2
+14:00:23.106 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 2
+14:00:37.629 [main] INFO  GAAQClassifier - Search was finished for  128192ms
+14:00:37.629 [main] INFO  GAAQClassifier - bestfit = 250.443
+14:00:49.609 [main] INFO  GAAQClassifier - Search was finished for  140172ms
+14:00:49.609 [main] INFO  GAAQClassifier - bestfit = 250.424
+14:01:00.524 [main] INFO  GAAQClassifier - Search was finished for  151086ms
+14:01:00.524 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:01:11.635 [main] INFO  GAAQClassifier - Search was finished for  162198ms
+14:01:11.635 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:01:22.575 [main] INFO  GAAQClassifier - Search was finished for  173138ms
+14:01:22.576 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:01:22.576 [main] INFO  GAAQClassifier - BestPop = 250.443
+14:01:22.591 [main] INFO  GAAQClassifier - new_objects = 1
+14:01:22.591 [main] INFO  GAAQClassifier - all_objects = 1
+14:01:22.591 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 1
+14:01:33.528 [main] INFO  GAAQClassifier - Search was finished for  184091ms
+14:01:33.528 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:01:44.557 [main] INFO  GAAQClassifier - Search was finished for  195120ms
+14:01:44.558 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:01:59.108 [main] INFO  GAAQClassifier - Search was finished for  209671ms
+14:01:59.108 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:02:15.342 [main] INFO  GAAQClassifier - Search was finished for  225905ms
+14:02:15.342 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:02:26.420 [main] INFO  GAAQClassifier - Search was finished for  236983ms
+14:02:26.421 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:02:26.421 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:02:26.421 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:02:40.141 [main] INFO  GAAQClassifier - Search was finished for  250704ms
+14:02:40.141 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:02:59.673 [main] INFO  GAAQClassifier - Search was finished for  270236ms
+14:02:59.673 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:03:15.569 [main] INFO  GAAQClassifier - Search was finished for  286132ms
+14:03:15.569 [main] INFO  GAAQClassifier - bestfit = 250.317
+14:03:29.324 [main] INFO  GAAQClassifier - Search was finished for  299887ms
+14:03:29.324 [main] INFO  GAAQClassifier - bestfit = 250.628
+14:03:44.982 [main] INFO  GAAQClassifier - Search was finished for  315545ms
+14:03:44.983 [main] INFO  GAAQClassifier - bestfit = 250.515
+14:03:44.983 [main] INFO  GAAQClassifier - BestPop = 250.628
+14:03:44.986 [main] INFO  GAAQClassifier - new_objects = 1
+14:03:44.987 [main] INFO  GAAQClassifier - all_objects = 1
+14:03:44.987 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 1
+14:03:58.598 [main] INFO  GAAQClassifier - Search was finished for  329161ms
+14:03:58.598 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:04:10.219 [main] INFO  GAAQClassifier - Search was finished for  340782ms
+14:04:10.219 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:04:23.517 [main] INFO  GAAQClassifier - Search was finished for  354080ms
+14:04:23.517 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:04:36.042 [main] INFO  GAAQClassifier - Search was finished for  366605ms
+14:04:36.042 [main] INFO  GAAQClassifier - bestfit = 250.316
+14:04:47.294 [main] INFO  GAAQClassifier - Search was finished for  377857ms
+14:04:47.295 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:04:47.295 [main] INFO  GAAQClassifier - BestPop = 250.316
+14:04:47.298 [main] INFO  GAAQClassifier - new_objects = 1
+14:04:47.298 [main] INFO  GAAQClassifier - all_objects = 1
+14:04:47.298 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 1
+14:04:58.337 [main] INFO  GAAQClassifier - Search was finished for  388900ms
+14:04:58.337 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:05:09.095 [main] INFO  GAAQClassifier - Search was finished for  399658ms
+14:05:09.095 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:05:20.034 [main] INFO  GAAQClassifier - Search was finished for  410597ms
+14:05:20.034 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:05:34.300 [main] INFO  GAAQClassifier - Search was finished for  424863ms
+14:05:34.300 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:05:45.135 [main] INFO  GAAQClassifier - Search was finished for  435698ms
+14:05:45.135 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:05:45.135 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:05:45.135 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:05:55.849 [main] INFO  GAAQClassifier - Search was finished for  446412ms
+14:05:55.849 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:06:05.478 [main] INFO  GAAQClassifier - Search was finished for  456041ms
+14:06:05.478 [main] INFO  GAAQClassifier - bestfit = 250.315
+14:06:22.521 [main] INFO  GAAQClassifier - Search was finished for  473084ms
+14:06:22.521 [main] INFO  GAAQClassifier - bestfit = 250.315
+14:06:35.573 [main] INFO  GAAQClassifier - Search was finished for  486136ms
+14:06:35.573 [main] INFO  GAAQClassifier - bestfit = 250.657
+14:06:48.541 [main] INFO  GAAQClassifier - Search was finished for  499104ms
+14:06:48.541 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:06:48.542 [main] INFO  GAAQClassifier - BestPop = 250.657
+14:06:48.543 [main] INFO  GAAQClassifier - new_objects = 1
+14:06:48.543 [main] INFO  GAAQClassifier - all_objects = 1
+14:06:48.543 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 1
+14:07:00.090 [main] INFO  GAAQClassifier - Search was finished for  510653ms
+14:07:00.090 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:07:11.633 [main] INFO  GAAQClassifier - Search was finished for  522196ms
+14:07:11.633 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:07:29.227 [main] INFO  GAAQClassifier - Search was finished for  539790ms
+14:07:29.227 [main] INFO  GAAQClassifier - bestfit = 250.555
+14:07:40.605 [main] INFO  GAAQClassifier - Search was finished for  551168ms
+14:07:40.606 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:07:51.916 [main] INFO  GAAQClassifier - Search was finished for  562479ms
+14:07:51.916 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:07:51.916 [main] INFO  GAAQClassifier - BestPop = 250.555
+14:07:51.918 [main] INFO  GAAQClassifier - new_objects = 1
+14:07:51.918 [main] INFO  GAAQClassifier - all_objects = 1
+14:07:51.919 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 1
+14:08:02.931 [main] INFO  GAAQClassifier - Search was finished for  573494ms
+14:08:02.931 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:08:23.808 [main] INFO  GAAQClassifier - Search was finished for  594371ms
+14:08:23.808 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:08:35.165 [main] INFO  GAAQClassifier - Search was finished for  605728ms
+14:08:35.165 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:08:46.320 [main] INFO  GAAQClassifier - Search was finished for  616883ms
+14:08:46.320 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:08:57.502 [main] INFO  GAAQClassifier - Search was finished for  628065ms
+14:08:57.502 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:08:57.502 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:08:57.502 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:09:08.855 [main] INFO  GAAQClassifier - Search was finished for  639418ms
+14:09:08.856 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:09:20.307 [main] INFO  GAAQClassifier - Search was finished for  650870ms
+14:09:20.307 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:09:40.459 [main] INFO  GAAQClassifier - Search was finished for  671022ms
+14:09:40.459 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:09:57.183 [main] INFO  GAAQClassifier - Search was finished for  687746ms
+14:09:57.183 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:10:10.720 [main] INFO  GAAQClassifier - Search was finished for  701283ms
+14:10:10.720 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:10:10.720 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:10:10.721 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:10:21.917 [main] INFO  GAAQClassifier - Search was finished for  712480ms
+14:10:21.917 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:10:32.750 [main] INFO  GAAQClassifier - Search was finished for  723313ms
+14:10:32.750 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:10:43.907 [main] INFO  GAAQClassifier - Search was finished for  734470ms
+14:10:43.907 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:11:01.229 [main] INFO  GAAQClassifier - Search was finished for  751792ms
+14:11:01.229 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:11:12.419 [main] INFO  GAAQClassifier - Search was finished for  762982ms
+14:11:12.420 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:11:12.420 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:11:12.420 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:11:23.712 [main] INFO  GAAQClassifier - Search was finished for  774275ms
+14:11:23.712 [main] INFO  GAAQClassifier - bestfit = 250.629
+14:11:36.046 [main] INFO  GAAQClassifier - Search was finished for  786609ms
+14:11:36.046 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:11:57.114 [main] INFO  GAAQClassifier - Search was finished for  807677ms
+14:11:57.114 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:12:07.040 [main] INFO  GAAQClassifier - Search was finished for  817603ms
+14:12:07.040 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:12:24.446 [main] INFO  GAAQClassifier - Search was finished for  835009ms
+14:12:24.446 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:12:24.446 [main] INFO  GAAQClassifier - BestPop = 250.629
+14:12:24.448 [main] INFO  GAAQClassifier - new_objects = 1
+14:12:24.448 [main] INFO  GAAQClassifier - all_objects = 1
+14:12:24.448 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 1
+14:12:39.534 [main] INFO  GAAQClassifier - Search was finished for  850097ms
+14:12:39.534 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:12:48.682 [main] INFO  GAAQClassifier - Search was finished for  859245ms
+14:12:48.682 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:13:03.699 [main] INFO  GAAQClassifier - Search was finished for  874262ms
+14:13:03.699 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:13:24.767 [main] INFO  GAAQClassifier - Search was finished for  895330ms
+14:13:24.767 [main] INFO  GAAQClassifier - bestfit = 500.415
+14:13:37.590 [main] INFO  GAAQClassifier - Search was finished for  908153ms
+14:13:37.591 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:13:37.591 [main] INFO  GAAQClassifier - BestPop = 500.415
+14:13:37.593 [main] INFO  GAAQClassifier - new_objects = 1
+14:13:37.593 [main] INFO  GAAQClassifier - all_objects = 2
+14:13:37.594 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 2
+14:13:56.751 [main] INFO  GAAQClassifier - Search was finished for  927314ms
+14:13:56.752 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:14:10.598 [main] INFO  GAAQClassifier - Search was finished for  941161ms
+14:14:10.599 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:14:23.928 [main] INFO  GAAQClassifier - Search was finished for  954491ms
+14:14:23.928 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:14:37.738 [main] INFO  GAAQClassifier - Search was finished for  968301ms
+14:14:37.738 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:14:51.308 [main] INFO  GAAQClassifier - Search was finished for  981871ms
+14:14:51.308 [main] INFO  GAAQClassifier - bestfit = 500.313
+14:14:51.308 [main] INFO  GAAQClassifier - BestPop = 500.313
+14:14:51.311 [main] INFO  GAAQClassifier - new_objects = 1
+14:14:51.311 [main] INFO  GAAQClassifier - all_objects = 2
+14:14:51.312 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 2
+14:15:09.468 [main] INFO  GAAQClassifier - Search was finished for  1000031ms
+14:15:09.469 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:15:23.978 [main] INFO  GAAQClassifier - Search was finished for  1014541ms
+14:15:23.979 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:15:35.331 [main] INFO  GAAQClassifier - Search was finished for  1025894ms
+14:15:35.332 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:15:49.016 [main] INFO  GAAQClassifier - Search was finished for  1039579ms
+14:15:49.016 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:15:59.725 [main] INFO  GAAQClassifier - Search was finished for  1050288ms
+14:15:59.726 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:15:59.726 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:15:59.726 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:16:18.180 [main] INFO  GAAQClassifier - Search was finished for  1068743ms
+14:16:18.180 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:16:31.644 [main] INFO  GAAQClassifier - Search was finished for  1082207ms
+14:16:31.644 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:16:57.110 [main] INFO  GAAQClassifier - Search was finished for  1107673ms
+14:16:57.110 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:17:08.488 [main] INFO  GAAQClassifier - Search was finished for  1119051ms
+14:17:08.488 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:17:19.864 [main] INFO  GAAQClassifier - Search was finished for  1130427ms
+14:17:19.864 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:17:19.864 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:17:19.864 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:17:31.168 [main] INFO  GAAQClassifier - Search was finished for  1141731ms
+14:17:31.168 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:17:45.384 [main] INFO  GAAQClassifier - Search was finished for  1155947ms
+14:17:45.384 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:17:59.059 [main] INFO  GAAQClassifier - Search was finished for  1169622ms
+14:17:59.059 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:18:09.885 [main] INFO  GAAQClassifier - Search was finished for  1180448ms
+14:18:09.885 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:18:23.681 [main] INFO  GAAQClassifier - Search was finished for  1194244ms
+14:18:23.681 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:18:23.681 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:18:23.681 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:18:42.131 [main] INFO  GAAQClassifier - Search was finished for  1212694ms
+14:18:42.131 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:18:54.589 [main] INFO  GAAQClassifier - Search was finished for  1225152ms
+14:18:54.589 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:19:05.119 [main] INFO  GAAQClassifier - Search was finished for  1235682ms
+14:19:05.119 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:19:14.974 [main] INFO  GAAQClassifier - Search was finished for  1245537ms
+14:19:14.975 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:19:24.258 [main] INFO  GAAQClassifier - Search was finished for  1254821ms
+14:19:24.258 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:19:24.258 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:19:24.258 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:19:35.269 [main] INFO  GAAQClassifier - Search was finished for  1265832ms
+14:19:35.270 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:19:54.775 [main] INFO  GAAQClassifier - Search was finished for  1285338ms
+14:19:54.775 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:20:05.827 [main] INFO  GAAQClassifier - Search was finished for  1296390ms
+14:20:05.827 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:20:18.944 [main] INFO  GAAQClassifier - Search was finished for  1309507ms
+14:20:18.945 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:20:29.667 [main] INFO  GAAQClassifier - Search was finished for  1320230ms
+14:20:29.667 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:20:29.667 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:20:29.667 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:20:42.847 [main] INFO  GAAQClassifier - Search was finished for  1333410ms
+14:20:42.847 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:20:53.453 [main] INFO  GAAQClassifier - Search was finished for  1344016ms
+14:20:53.453 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:21:04.641 [main] INFO  GAAQClassifier - Search was finished for  1355204ms
+14:21:04.641 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:21:15.256 [main] INFO  GAAQClassifier - Search was finished for  1365819ms
+14:21:15.256 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:21:26.296 [main] INFO  GAAQClassifier - Search was finished for  1376859ms
+14:21:26.296 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:21:26.296 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:21:26.296 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:21:35.716 [main] INFO  GAAQClassifier - Search was finished for  1386279ms
+14:21:35.716 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:21:47.021 [main] INFO  GAAQClassifier - Search was finished for  1397584ms
+14:21:47.021 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:22:01.103 [main] INFO  GAAQClassifier - Search was finished for  1411666ms
+14:22:01.103 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:22:09.747 [main] INFO  GAAQClassifier - Search was finished for  1420310ms
+14:22:09.747 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:22:22.947 [main] INFO  GAAQClassifier - Search was finished for  1433510ms
+14:22:22.947 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:22:22.947 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:22:22.947 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:22:33.753 [main] INFO  GAAQClassifier - Search was finished for  1444316ms
+14:22:33.753 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:22:52.404 [main] INFO  GAAQClassifier - Search was finished for  1462967ms
+14:22:52.404 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:23:01.624 [main] INFO  GAAQClassifier - Search was finished for  1472187ms
+14:23:01.624 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:23:11.488 [main] INFO  GAAQClassifier - Search was finished for  1482051ms
+14:23:11.489 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:23:25.400 [main] INFO  GAAQClassifier - Search was finished for  1495963ms
+14:23:25.400 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:23:25.400 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:23:25.400 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:23:40.246 [main] INFO  GAAQClassifier - Search was finished for  1510809ms
+14:23:40.246 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:23:50.321 [main] INFO  GAAQClassifier - Search was finished for  1520884ms
+14:23:50.321 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:24:08.584 [main] INFO  GAAQClassifier - Search was finished for  1539147ms
+14:24:08.585 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:24:21.947 [main] INFO  GAAQClassifier - Search was finished for  1552510ms
+14:24:21.947 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:24:32.863 [main] INFO  GAAQClassifier - Search was finished for  1563426ms
+14:24:32.863 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:24:32.863 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:24:32.863 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:24:43.745 [main] INFO  GAAQClassifier - Search was finished for  1574308ms
+14:24:43.745 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:24:57.467 [main] INFO  GAAQClassifier - Search was finished for  1588030ms
+14:24:57.467 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:25:07.717 [main] INFO  GAAQClassifier - Search was finished for  1598280ms
+14:25:07.717 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:25:16.300 [main] INFO  GAAQClassifier - Search was finished for  1606863ms
+14:25:16.300 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:25:28.919 [main] INFO  GAAQClassifier - Search was finished for  1619482ms
+14:25:28.919 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:25:28.919 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:25:28.919 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:25:39.341 [main] INFO  GAAQClassifier - Search was finished for  1629904ms
+14:25:39.341 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:25:49.380 [main] INFO  GAAQClassifier - Search was finished for  1639943ms
+14:25:49.380 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:26:00.449 [main] INFO  GAAQClassifier - Search was finished for  1651012ms
+14:26:00.449 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:26:10.673 [main] INFO  GAAQClassifier - Search was finished for  1661236ms
+14:26:10.673 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:26:21.600 [main] INFO  GAAQClassifier - Search was finished for  1672163ms
+14:26:21.600 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:26:21.600 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:26:21.600 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:26:30.229 [main] INFO  GAAQClassifier - Search was finished for  1680792ms
+14:26:30.229 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:26:40.330 [main] INFO  GAAQClassifier - Search was finished for  1690893ms
+14:26:40.330 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:26:54.206 [main] INFO  GAAQClassifier - Search was finished for  1704769ms
+14:26:54.206 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:27:05.927 [main] INFO  GAAQClassifier - Search was finished for  1716490ms
+14:27:05.928 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:27:16.839 [main] INFO  GAAQClassifier - Search was finished for  1727401ms
+14:27:16.839 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:27:16.839 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:27:16.839 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:27:31.990 [main] INFO  GAAQClassifier - Search was finished for  1742553ms
+14:27:31.991 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:27:42.971 [main] INFO  GAAQClassifier - Search was finished for  1753534ms
+14:27:42.972 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:27:53.723 [main] INFO  GAAQClassifier - Search was finished for  1764285ms
+14:27:53.723 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:28:07.114 [main] INFO  GAAQClassifier - Search was finished for  1777677ms
+14:28:07.114 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:28:20.496 [main] INFO  GAAQClassifier - Search was finished for  1791059ms
+14:28:20.497 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:28:20.497 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:28:20.497 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:28:39.091 [main] INFO  GAAQClassifier - Search was finished for  1809654ms
+14:28:39.091 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:28:54.041 [main] INFO  GAAQClassifier - Search was finished for  1824604ms
+14:28:54.041 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:29:11.948 [main] INFO  GAAQClassifier - Search was finished for  1842511ms
+14:29:11.949 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:29:23.004 [main] INFO  GAAQClassifier - Search was finished for  1853567ms
+14:29:23.004 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:29:34.506 [main] INFO  GAAQClassifier - Search was finished for  1865069ms
+14:29:34.506 [main] INFO  GAAQClassifier - bestfit = 250.374
+14:29:34.506 [main] INFO  GAAQClassifier - BestPop = 250.374
+14:29:34.509 [main] INFO  GAAQClassifier - new_objects = 1
+14:29:34.509 [main] INFO  GAAQClassifier - all_objects = 1
+14:29:34.509 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 1
+14:29:45.457 [main] INFO  GAAQClassifier - Search was finished for  1876020ms
+14:29:45.457 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:29:55.831 [main] INFO  GAAQClassifier - Search was finished for  1886394ms
+14:29:55.831 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:30:06.131 [main] INFO  GAAQClassifier - Search was finished for  1896694ms
+14:30:06.131 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:30:21.219 [main] INFO  GAAQClassifier - Search was finished for  1911782ms
+14:30:21.219 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:30:34.925 [main] INFO  GAAQClassifier - Search was finished for  1925488ms
+14:30:34.926 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:30:34.926 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:30:34.926 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:30:59.187 [main] INFO  GAAQClassifier - Search was finished for  1949750ms
+14:30:59.187 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:31:17.933 [main] INFO  GAAQClassifier - Search was finished for  1968496ms
+14:31:17.933 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:31:34.741 [main] INFO  GAAQClassifier - Search was finished for  1985304ms
+14:31:34.741 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:31:44.187 [main] INFO  GAAQClassifier - Search was finished for  1994750ms
+14:31:44.188 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:31:53.756 [main] INFO  GAAQClassifier - Search was finished for  2004319ms
+14:31:53.756 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:31:53.756 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:31:53.756 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:32:11.831 [main] INFO  GAAQClassifier - Search was finished for  2022394ms
+14:32:11.831 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:32:22.248 [main] INFO  GAAQClassifier - Search was finished for  2032811ms
+14:32:22.248 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:32:42.757 [main] INFO  GAAQClassifier - Search was finished for  2053320ms
+14:32:42.758 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:32:57.957 [main] INFO  GAAQClassifier - Search was finished for  2068520ms
+14:32:57.958 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:33:08.142 [main] INFO  GAAQClassifier - Search was finished for  2078705ms
+14:33:08.142 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:33:08.142 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:33:08.142 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:33:24.135 [main] INFO  GAAQClassifier - Search was finished for  2094698ms
+14:33:24.135 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:33:34.767 [main] INFO  GAAQClassifier - Search was finished for  2105330ms
+14:33:34.767 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:33:49.019 [main] INFO  GAAQClassifier - Search was finished for  2119582ms
+14:33:49.019 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:34:07.238 [main] INFO  GAAQClassifier - Search was finished for  2137801ms
+14:34:07.238 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:34:18.256 [main] INFO  GAAQClassifier - Search was finished for  2148819ms
+14:34:18.256 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:34:18.256 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:34:18.256 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:34:28.218 [main] INFO  GAAQClassifier - Search was finished for  2158781ms
+14:34:28.218 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:34:38.670 [main] INFO  GAAQClassifier - Search was finished for  2169233ms
+14:34:38.670 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:34:49.498 [main] INFO  GAAQClassifier - Search was finished for  2180061ms
+14:34:49.498 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:35:08.899 [main] INFO  GAAQClassifier - Search was finished for  2199462ms
+14:35:08.900 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:35:29.430 [main] INFO  GAAQClassifier - Search was finished for  2219993ms
+14:35:29.430 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:35:29.430 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:35:29.430 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:35:42.418 [main] INFO  GAAQClassifier - Search was finished for  2232981ms
+14:35:42.418 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:35:53.346 [main] INFO  GAAQClassifier - Search was finished for  2243909ms
+14:35:53.346 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:36:05.847 [main] INFO  GAAQClassifier - Search was finished for  2256410ms
+14:36:05.847 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:36:19.047 [main] INFO  GAAQClassifier - Search was finished for  2269610ms
+14:36:19.047 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:36:31.853 [main] INFO  GAAQClassifier - Search was finished for  2282416ms
+14:36:31.853 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:36:31.853 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:36:31.853 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:36:42.677 [main] INFO  GAAQClassifier - Search was finished for  2293239ms
+14:36:42.677 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:36:53.635 [main] INFO  GAAQClassifier - Search was finished for  2304198ms
+14:36:53.635 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:37:07.897 [main] INFO  GAAQClassifier - Search was finished for  2318460ms
+14:37:07.898 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:37:21.054 [main] INFO  GAAQClassifier - Search was finished for  2331617ms
+14:37:21.055 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:37:34.929 [main] INFO  GAAQClassifier - Search was finished for  2345492ms
+14:37:34.929 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:37:34.929 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:37:34.929 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:37:50.687 [main] INFO  GAAQClassifier - Search was finished for  2361250ms
+14:37:50.688 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:38:02.957 [main] INFO  GAAQClassifier - Search was finished for  2373520ms
+14:38:02.958 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:38:13.395 [main] INFO  GAAQClassifier - Search was finished for  2383958ms
+14:38:13.395 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:38:26.896 [main] INFO  GAAQClassifier - Search was finished for  2397458ms
+14:38:26.896 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:38:38.835 [main] INFO  GAAQClassifier - Search was finished for  2409398ms
+14:38:38.835 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:38:38.835 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:38:38.835 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:38:52.629 [main] INFO  GAAQClassifier - Search was finished for  2423192ms
+14:38:52.629 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:39:06.154 [main] INFO  GAAQClassifier - Search was finished for  2436717ms
+14:39:06.154 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:39:17.077 [main] INFO  GAAQClassifier - Search was finished for  2447640ms
+14:39:17.077 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:39:30.314 [main] INFO  GAAQClassifier - Search was finished for  2460877ms
+14:39:30.314 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:39:41.360 [main] INFO  GAAQClassifier - Search was finished for  2471923ms
+14:39:41.360 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:39:41.361 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:39:41.361 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:39:53.344 [main] INFO  GAAQClassifier - Search was finished for  2483907ms
+14:39:53.345 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:40:03.969 [main] INFO  GAAQClassifier - Search was finished for  2494532ms
+14:40:03.970 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:40:14.833 [main] INFO  GAAQClassifier - Search was finished for  2505396ms
+14:40:14.833 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:40:25.790 [main] INFO  GAAQClassifier - Search was finished for  2516353ms
+14:40:25.790 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:40:34.046 [main] INFO  GAAQClassifier - Search was finished for  2524609ms
+14:40:34.046 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:40:34.046 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:40:34.046 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:40:42.748 [main] INFO  GAAQClassifier - Search was finished for  2533310ms
+14:40:42.748 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:40:53.698 [main] INFO  GAAQClassifier - Search was finished for  2544261ms
+14:40:53.698 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:41:02.942 [main] INFO  GAAQClassifier - Search was finished for  2553505ms
+14:41:02.943 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:41:13.444 [main] INFO  GAAQClassifier - Search was finished for  2564007ms
+14:41:13.444 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:41:31.988 [main] INFO  GAAQClassifier - Search was finished for  2582551ms
+14:41:31.989 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:41:31.989 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:41:31.989 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:41:42.856 [main] INFO  GAAQClassifier - Search was finished for  2593419ms
+14:41:42.856 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:41:55.684 [main] INFO  GAAQClassifier - Search was finished for  2606247ms
+14:41:55.684 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:42:03.745 [main] INFO  GAAQClassifier - Search was finished for  2614308ms
+14:42:03.745 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:42:18.531 [main] INFO  GAAQClassifier - Search was finished for  2629094ms
+14:42:18.532 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:42:29.712 [main] INFO  GAAQClassifier - Search was finished for  2640275ms
+14:42:29.712 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:42:29.712 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:42:29.712 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:42:40.839 [main] INFO  GAAQClassifier - Search was finished for  2651402ms
+14:42:40.839 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:43:01.954 [main] INFO  GAAQClassifier - Search was finished for  2672517ms
+14:43:01.954 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:43:13.900 [main] INFO  GAAQClassifier - Search was finished for  2684463ms
+14:43:13.901 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:43:26.881 [main] INFO  GAAQClassifier - Search was finished for  2697444ms
+14:43:26.882 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:43:41.164 [main] INFO  GAAQClassifier - Search was finished for  2711727ms
+14:43:41.164 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:43:41.164 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:43:41.164 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:43:52.111 [main] INFO  GAAQClassifier - Search was finished for  2722674ms
+14:43:52.111 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:44:02.273 [main] INFO  GAAQClassifier - Search was finished for  2732836ms
+14:44:02.274 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:44:13.411 [main] INFO  GAAQClassifier - Search was finished for  2743974ms
+14:44:13.411 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:44:24.212 [main] INFO  GAAQClassifier - Search was finished for  2754775ms
+14:44:24.212 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:44:34.869 [main] INFO  GAAQClassifier - Search was finished for  2765432ms
+14:44:34.869 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:44:34.869 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:44:34.869 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:44:44.104 [main] INFO  GAAQClassifier - Search was finished for  2774667ms
+14:44:44.104 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:45:09.035 [main] INFO  GAAQClassifier - Search was finished for  2799598ms
+14:45:09.035 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:45:19.486 [main] INFO  GAAQClassifier - Search was finished for  2810049ms
+14:45:19.486 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:45:34.238 [main] INFO  GAAQClassifier - Search was finished for  2824801ms
+14:45:34.238 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:45:45.065 [main] INFO  GAAQClassifier - Search was finished for  2835628ms
+14:45:45.066 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:45:45.066 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:45:45.066 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:45:55.267 [main] INFO  GAAQClassifier - Search was finished for  2845830ms
+14:45:55.267 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:46:06.104 [main] INFO  GAAQClassifier - Search was finished for  2856667ms
+14:46:06.105 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:46:19.311 [main] INFO  GAAQClassifier - Search was finished for  2869874ms
+14:46:19.312 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:46:29.551 [main] INFO  GAAQClassifier - Search was finished for  2880114ms
+14:46:29.551 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:46:40.404 [main] INFO  GAAQClassifier - Search was finished for  2890967ms
+14:46:40.404 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:46:40.404 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:46:40.404 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:46:53.422 [main] INFO  GAAQClassifier - Search was finished for  2903985ms
+14:46:53.422 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:47:13.042 [main] INFO  GAAQClassifier - Search was finished for  2923605ms
+14:47:13.042 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:47:34.613 [main] INFO  GAAQClassifier - Search was finished for  2945176ms
+14:47:34.613 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:47:47.018 [main] INFO  GAAQClassifier - Search was finished for  2957581ms
+14:47:47.018 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:47:57.520 [main] INFO  GAAQClassifier - Search was finished for  2968083ms
+14:47:57.520 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:47:57.520 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:47:57.520 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:48:08.656 [main] INFO  GAAQClassifier - Search was finished for  2979219ms
+14:48:08.656 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:48:17.711 [main] INFO  GAAQClassifier - Search was finished for  2988274ms
+14:48:17.712 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:48:38.198 [main] INFO  GAAQClassifier - Search was finished for  3008761ms
+14:48:38.198 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:48:57.351 [main] INFO  GAAQClassifier - Search was finished for  3027914ms
+14:48:57.351 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:49:17.859 [main] INFO  GAAQClassifier - Search was finished for  3048422ms
+14:49:17.859 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:49:17.859 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:49:17.859 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:49:28.667 [main] INFO  GAAQClassifier - Search was finished for  3059230ms
+14:49:28.667 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:49:39.461 [main] INFO  GAAQClassifier - Search was finished for  3070024ms
+14:49:39.461 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:49:52.447 [main] INFO  GAAQClassifier - Search was finished for  3083010ms
+14:49:52.447 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:50:13.683 [main] INFO  GAAQClassifier - Search was finished for  3104246ms
+14:50:13.683 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:50:26.866 [main] INFO  GAAQClassifier - Search was finished for  3117429ms
+14:50:26.866 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:50:26.866 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:50:26.866 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:50:50.082 [main] INFO  GAAQClassifier - Search was finished for  3140645ms
+14:50:50.082 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:51:03.171 [main] INFO  GAAQClassifier - Search was finished for  3153734ms
+14:51:03.171 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:51:13.115 [main] INFO  GAAQClassifier - Search was finished for  3163678ms
+14:51:13.115 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:51:26.131 [main] INFO  GAAQClassifier - Search was finished for  3176694ms
+14:51:26.131 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:51:36.412 [main] INFO  GAAQClassifier - Search was finished for  3186975ms
+14:51:36.412 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:51:36.412 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:51:36.412 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:51:56.895 [main] INFO  GAAQClassifier - Search was finished for  3207458ms
+14:51:56.895 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:52:07.893 [main] INFO  GAAQClassifier - Search was finished for  3218456ms
+14:52:07.894 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:52:18.487 [main] INFO  GAAQClassifier - Search was finished for  3229050ms
+14:52:18.487 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:52:28.930 [main] INFO  GAAQClassifier - Search was finished for  3239493ms
+14:52:28.930 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:52:39.987 [main] INFO  GAAQClassifier - Search was finished for  3250550ms
+14:52:39.987 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:52:39.987 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:52:39.987 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:52:51.131 [main] INFO  GAAQClassifier - Search was finished for  3261694ms
+14:52:51.131 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:53:11.928 [main] INFO  GAAQClassifier - Search was finished for  3282491ms
+14:53:11.929 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:53:23.165 [main] INFO  GAAQClassifier - Search was finished for  3293728ms
+14:53:23.165 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:53:34.313 [main] INFO  GAAQClassifier - Search was finished for  3304876ms
+14:53:34.314 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:53:43.514 [main] INFO  GAAQClassifier - Search was finished for  3314077ms
+14:53:43.514 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:53:43.514 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:53:43.514 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:54:01.925 [main] INFO  GAAQClassifier - Search was finished for  3332488ms
+14:54:01.926 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:54:23.496 [main] INFO  GAAQClassifier - Search was finished for  3354059ms
+14:54:23.496 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:54:42.942 [main] INFO  GAAQClassifier - Search was finished for  3373505ms
+14:54:42.942 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:55:01.222 [main] INFO  GAAQClassifier - Search was finished for  3391785ms
+14:55:01.222 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:55:19.154 [main] INFO  GAAQClassifier - Search was finished for  3409717ms
+14:55:19.154 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:55:19.155 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:55:19.155 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:55:29.928 [main] INFO  GAAQClassifier - Search was finished for  3420491ms
+14:55:29.928 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:55:51.377 [main] INFO  GAAQClassifier - Search was finished for  3441940ms
+14:55:51.378 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:56:04.685 [main] INFO  GAAQClassifier - Search was finished for  3455248ms
+14:56:04.685 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:56:21.725 [main] INFO  GAAQClassifier - Search was finished for  3472288ms
+14:56:21.725 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:56:32.327 [main] INFO  GAAQClassifier - Search was finished for  3482890ms
+14:56:32.327 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:56:32.327 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:56:32.327 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:56:41.673 [main] INFO  GAAQClassifier - Search was finished for  3492236ms
+14:56:41.673 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:56:52.185 [main] INFO  GAAQClassifier - Search was finished for  3502748ms
+14:56:52.185 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:57:02.952 [main] INFO  GAAQClassifier - Search was finished for  3513515ms
+14:57:02.952 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:57:16.285 [main] INFO  GAAQClassifier - Search was finished for  3526848ms
+14:57:16.285 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:57:29.067 [main] INFO  GAAQClassifier - Search was finished for  3539630ms
+14:57:29.067 [main] INFO  GAAQClassifier - bestfit = 250.335
+14:57:29.067 [main] INFO  GAAQClassifier - BestPop = 250.335
+14:57:29.070 [main] INFO  GAAQClassifier - new_objects = 1
+14:57:29.071 [main] INFO  GAAQClassifier - all_objects = 1
+14:57:29.071 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 1
+14:57:40.479 [main] INFO  GAAQClassifier - Search was finished for  3551042ms
+14:57:40.479 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:57:52.294 [main] INFO  GAAQClassifier - Search was finished for  3562857ms
+14:57:52.294 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:58:03.096 [main] INFO  GAAQClassifier - Search was finished for  3573659ms
+14:58:03.096 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:58:22.208 [main] INFO  GAAQClassifier - Search was finished for  3592771ms
+14:58:22.208 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:58:31.325 [main] INFO  GAAQClassifier - Search was finished for  3601888ms
+14:58:31.325 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:58:31.325 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:58:31.325 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:58:52.073 [main] INFO  GAAQClassifier - Search was finished for  3622636ms
+14:58:52.073 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:59:02.862 [main] INFO  GAAQClassifier - Search was finished for  3633425ms
+14:59:02.862 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:59:11.226 [main] INFO  GAAQClassifier - Search was finished for  3641789ms
+14:59:11.226 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:59:25.702 [main] INFO  GAAQClassifier - Search was finished for  3656265ms
+14:59:25.703 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:59:42.194 [main] INFO  GAAQClassifier - Search was finished for  3672757ms
+14:59:42.194 [main] INFO  GAAQClassifier - bestfit = 0.0
+14:59:42.194 [main] INFO  GAAQClassifier - BestPop = 0.0
+14:59:42.194 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+14:59:54.227 [main] INFO  GAAQClassifier - Search was finished for  3684790ms
+14:59:54.227 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:00:05.239 [main] INFO  GAAQClassifier - Search was finished for  3695802ms
+15:00:05.239 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:00:16.118 [main] INFO  GAAQClassifier - Search was finished for  3706681ms
+15:00:16.119 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:00:29.016 [main] INFO  GAAQClassifier - Search was finished for  3719579ms
+15:00:29.016 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:00:47.001 [main] INFO  GAAQClassifier - Search was finished for  3737564ms
+15:00:47.001 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:00:47.001 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:00:47.001 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:00:57.389 [main] INFO  GAAQClassifier - Search was finished for  3747952ms
+15:00:57.389 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:01:10.813 [main] INFO  GAAQClassifier - Search was finished for  3761376ms
+15:01:10.814 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:01:21.634 [main] INFO  GAAQClassifier - Search was finished for  3772197ms
+15:01:21.634 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:01:32.513 [main] INFO  GAAQClassifier - Search was finished for  3783076ms
+15:01:32.513 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:01:41.683 [main] INFO  GAAQClassifier - Search was finished for  3792246ms
+15:01:41.684 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:01:41.684 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:01:41.684 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:01:54.691 [main] INFO  GAAQClassifier - Search was finished for  3805254ms
+15:01:54.691 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:02:07.722 [main] INFO  GAAQClassifier - Search was finished for  3818285ms
+15:02:07.722 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:02:16.808 [main] INFO  GAAQClassifier - Search was finished for  3827371ms
+15:02:16.808 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:02:29.464 [main] INFO  GAAQClassifier - Search was finished for  3840027ms
+15:02:29.464 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:02:45.275 [main] INFO  GAAQClassifier - Search was finished for  3855838ms
+15:02:45.276 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:02:45.276 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:02:45.276 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:02:56.073 [main] INFO  GAAQClassifier - Search was finished for  3866636ms
+15:02:56.073 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:03:05.751 [main] INFO  GAAQClassifier - Search was finished for  3876314ms
+15:03:05.751 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:03:16.037 [main] INFO  GAAQClassifier - Search was finished for  3886600ms
+15:03:16.037 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:03:31.272 [main] INFO  GAAQClassifier - Search was finished for  3901835ms
+15:03:31.272 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:03:42.490 [main] INFO  GAAQClassifier - Search was finished for  3913053ms
+15:03:42.491 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:03:42.491 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:03:42.491 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:04:01.470 [main] INFO  GAAQClassifier - Search was finished for  3932033ms
+15:04:01.471 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:04:19.150 [main] INFO  GAAQClassifier - Search was finished for  3949713ms
+15:04:19.150 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:04:30.124 [main] INFO  GAAQClassifier - Search was finished for  3960687ms
+15:04:30.124 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:04:41.262 [main] INFO  GAAQClassifier - Search was finished for  3971825ms
+15:04:41.262 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:05:00.901 [main] INFO  GAAQClassifier - Search was finished for  3991464ms
+15:05:00.901 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:05:00.901 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:05:00.901 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:05:19.374 [main] INFO  GAAQClassifier - Search was finished for  4009937ms
+15:05:19.374 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:05:30.846 [main] INFO  GAAQClassifier - Search was finished for  4021409ms
+15:05:30.847 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:05:43.047 [main] INFO  GAAQClassifier - Search was finished for  4033610ms
+15:05:43.047 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:05:54.400 [main] INFO  GAAQClassifier - Search was finished for  4044963ms
+15:05:54.401 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:06:04.197 [main] INFO  GAAQClassifier - Search was finished for  4054760ms
+15:06:04.197 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:06:04.197 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:06:04.197 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:06:24.005 [main] INFO  GAAQClassifier - Search was finished for  4074568ms
+15:06:24.005 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:06:37.700 [main] INFO  GAAQClassifier - Search was finished for  4088263ms
+15:06:37.701 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:06:47.388 [main] INFO  GAAQClassifier - Search was finished for  4097951ms
+15:06:47.389 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:06:58.355 [main] INFO  GAAQClassifier - Search was finished for  4108918ms
+15:06:58.356 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:07:18.805 [main] INFO  GAAQClassifier - Search was finished for  4129368ms
+15:07:18.805 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:07:18.805 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:07:18.805 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:07:29.835 [main] INFO  GAAQClassifier - Search was finished for  4140398ms
+15:07:29.835 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:07:42.025 [main] INFO  GAAQClassifier - Search was finished for  4152588ms
+15:07:42.025 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:07:52.427 [main] INFO  GAAQClassifier - Search was finished for  4162990ms
+15:07:52.428 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:08:04.767 [main] INFO  GAAQClassifier - Search was finished for  4175330ms
+15:08:04.767 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:08:15.107 [main] INFO  GAAQClassifier - Search was finished for  4185670ms
+15:08:15.107 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:08:15.107 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:08:15.107 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:08:26.061 [main] INFO  GAAQClassifier - Search was finished for  4196624ms
+15:08:26.061 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:08:34.387 [main] INFO  GAAQClassifier - Search was finished for  4204950ms
+15:08:34.388 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:08:45.192 [main] INFO  GAAQClassifier - Search was finished for  4215755ms
+15:08:45.192 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:08:55.888 [main] INFO  GAAQClassifier - Search was finished for  4226451ms
+15:08:55.888 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:09:08.773 [main] INFO  GAAQClassifier - Search was finished for  4239336ms
+15:09:08.774 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:09:08.774 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:09:08.774 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:09:28.997 [main] INFO  GAAQClassifier - Search was finished for  4259560ms
+15:09:28.997 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:09:47.454 [main] INFO  GAAQClassifier - Search was finished for  4278017ms
+15:09:47.455 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:10:00.609 [main] INFO  GAAQClassifier - Search was finished for  4291172ms
+15:10:00.609 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:10:11.142 [main] INFO  GAAQClassifier - Search was finished for  4301705ms
+15:10:11.142 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:10:24.266 [main] INFO  GAAQClassifier - Search was finished for  4314829ms
+15:10:24.266 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:10:24.266 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:10:24.266 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:10:40.128 [main] INFO  GAAQClassifier - Search was finished for  4330691ms
+15:10:40.128 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:10:57.610 [main] INFO  GAAQClassifier - Search was finished for  4348173ms
+15:10:57.611 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:11:08.111 [main] INFO  GAAQClassifier - Search was finished for  4358674ms
+15:11:08.111 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:11:27.425 [main] INFO  GAAQClassifier - Search was finished for  4377988ms
+15:11:27.425 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:11:40.873 [main] INFO  GAAQClassifier - Search was finished for  4391436ms
+15:11:40.873 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:11:40.873 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:11:40.873 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:11:51.405 [main] INFO  GAAQClassifier - Search was finished for  4401968ms
+15:11:51.406 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:12:00.706 [main] INFO  GAAQClassifier - Search was finished for  4411269ms
+15:12:00.707 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:12:11.544 [main] INFO  GAAQClassifier - Search was finished for  4422107ms
+15:12:11.544 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:12:25.141 [main] INFO  GAAQClassifier - Search was finished for  4435704ms
+15:12:25.141 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:12:38.711 [main] INFO  GAAQClassifier - Search was finished for  4449274ms
+15:12:38.711 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:12:38.711 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:12:38.711 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:12:54.167 [main] INFO  GAAQClassifier - Search was finished for  4464730ms
+15:12:54.167 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:13:05.162 [main] INFO  GAAQClassifier - Search was finished for  4475725ms
+15:13:05.162 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:13:29.998 [main] INFO  GAAQClassifier - Search was finished for  4500561ms
+15:13:29.999 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:13:41.094 [main] INFO  GAAQClassifier - Search was finished for  4511657ms
+15:13:41.095 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:13:52.075 [main] INFO  GAAQClassifier - Search was finished for  4522638ms
+15:13:52.075 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:13:52.075 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:13:52.075 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:14:11.089 [main] INFO  GAAQClassifier - Search was finished for  4541652ms
+15:14:11.090 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:14:35.457 [main] INFO  GAAQClassifier - Search was finished for  4566020ms
+15:14:35.457 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:14:52.005 [main] INFO  GAAQClassifier - Search was finished for  4582568ms
+15:14:52.005 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:15:12.593 [main] INFO  GAAQClassifier - Search was finished for  4603156ms
+15:15:12.593 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:15:23.273 [main] INFO  GAAQClassifier - Search was finished for  4613836ms
+15:15:23.273 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:15:23.273 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:15:23.273 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:15:36.467 [main] INFO  GAAQClassifier - Search was finished for  4627030ms
+15:15:36.467 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:15:46.890 [main] INFO  GAAQClassifier - Search was finished for  4637453ms
+15:15:46.891 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:16:03.559 [main] INFO  GAAQClassifier - Search was finished for  4654122ms
+15:16:03.559 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:16:22.757 [main] INFO  GAAQClassifier - Search was finished for  4673320ms
+15:16:22.758 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:16:36.130 [main] INFO  GAAQClassifier - Search was finished for  4686693ms
+15:16:36.130 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:16:36.130 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:16:36.130 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:16:47.093 [main] INFO  GAAQClassifier - Search was finished for  4697656ms
+15:16:47.093 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:16:58.713 [main] INFO  GAAQClassifier - Search was finished for  4709275ms
+15:16:58.713 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:17:09.760 [main] INFO  GAAQClassifier - Search was finished for  4720323ms
+15:17:09.760 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:17:20.066 [main] INFO  GAAQClassifier - Search was finished for  4730629ms
+15:17:20.066 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:17:31.166 [main] INFO  GAAQClassifier - Search was finished for  4741729ms
+15:17:31.166 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:17:31.167 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:17:31.167 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:17:40.494 [main] INFO  GAAQClassifier - Search was finished for  4751057ms
+15:17:40.495 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:17:53.990 [main] INFO  GAAQClassifier - Search was finished for  4764553ms
+15:17:53.991 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:18:18.911 [main] INFO  GAAQClassifier - Search was finished for  4789473ms
+15:18:18.911 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:18:29.646 [main] INFO  GAAQClassifier - Search was finished for  4800209ms
+15:18:29.647 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:18:40.702 [main] INFO  GAAQClassifier - Search was finished for  4811265ms
+15:18:40.702 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:18:40.702 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:18:40.702 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:18:51.213 [main] INFO  GAAQClassifier - Search was finished for  4821776ms
+15:18:51.214 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:19:01.584 [main] INFO  GAAQClassifier - Search was finished for  4832147ms
+15:19:01.584 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:19:12.499 [main] INFO  GAAQClassifier - Search was finished for  4843062ms
+15:19:12.499 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:19:23.541 [main] INFO  GAAQClassifier - Search was finished for  4854104ms
+15:19:23.541 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:19:32.836 [main] INFO  GAAQClassifier - Search was finished for  4863399ms
+15:19:32.837 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:19:32.837 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:19:32.837 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:19:43.009 [main] INFO  GAAQClassifier - Search was finished for  4873572ms
+15:19:43.010 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:19:56.634 [main] INFO  GAAQClassifier - Search was finished for  4887197ms
+15:19:56.635 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:20:07.602 [main] INFO  GAAQClassifier - Search was finished for  4898165ms
+15:20:07.602 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:20:15.808 [main] INFO  GAAQClassifier - Search was finished for  4906371ms
+15:20:15.808 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:20:26.781 [main] INFO  GAAQClassifier - Search was finished for  4917344ms
+15:20:26.782 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:20:26.782 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:20:26.782 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:20:37.845 [main] INFO  GAAQClassifier - Search was finished for  4928408ms
+15:20:37.846 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:20:48.934 [main] INFO  GAAQClassifier - Search was finished for  4939497ms
+15:20:48.934 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:20:57.311 [main] INFO  GAAQClassifier - Search was finished for  4947874ms
+15:20:57.311 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:21:15.955 [main] INFO  GAAQClassifier - Search was finished for  4966518ms
+15:21:15.955 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:21:28.046 [main] INFO  GAAQClassifier - Search was finished for  4978609ms
+15:21:28.046 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:21:28.046 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:21:28.047 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:21:41.173 [main] INFO  GAAQClassifier - Search was finished for  4991736ms
+15:21:41.173 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:21:52.204 [main] INFO  GAAQClassifier - Search was finished for  5002767ms
+15:21:52.205 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:22:09.852 [main] INFO  GAAQClassifier - Search was finished for  5020415ms
+15:22:09.853 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:22:25.564 [main] INFO  GAAQClassifier - Search was finished for  5036127ms
+15:22:25.564 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:22:36.585 [main] INFO  GAAQClassifier - Search was finished for  5047148ms
+15:22:36.585 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:22:36.585 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:22:36.586 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:22:46.958 [main] INFO  GAAQClassifier - Search was finished for  5057521ms
+15:22:46.958 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:23:00.253 [main] INFO  GAAQClassifier - Search was finished for  5070816ms
+15:23:00.253 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:23:10.838 [main] INFO  GAAQClassifier - Search was finished for  5081401ms
+15:23:10.838 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:23:30.558 [main] INFO  GAAQClassifier - Search was finished for  5101121ms
+15:23:30.558 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:23:45.811 [main] INFO  GAAQClassifier - Search was finished for  5116374ms
+15:23:45.812 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:23:45.812 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:23:45.812 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:24:05.102 [main] INFO  GAAQClassifier - Search was finished for  5135665ms
+15:24:05.102 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:24:18.436 [main] INFO  GAAQClassifier - Search was finished for  5148999ms
+15:24:18.436 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:24:29.672 [main] INFO  GAAQClassifier - Search was finished for  5160235ms
+15:24:29.672 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:24:50.157 [main] INFO  GAAQClassifier - Search was finished for  5180720ms
+15:24:50.158 [main] INFO  GAAQClassifier - bestfit = 500.34
+15:25:00.777 [main] INFO  GAAQClassifier - Search was finished for  5191340ms
+15:25:00.777 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:25:00.777 [main] INFO  GAAQClassifier - BestPop = 500.34
+15:25:00.780 [main] INFO  GAAQClassifier - new_objects = 1
+15:25:00.780 [main] INFO  GAAQClassifier - all_objects = 2
+15:25:00.780 [main] INFO  GAAQClassifier - objects_with_missing_value_used = 2
+15:25:11.443 [main] INFO  GAAQClassifier - Search was finished for  5202006ms
+15:25:11.443 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:25:24.651 [main] INFO  GAAQClassifier - Search was finished for  5215214ms
+15:25:24.651 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:25:35.312 [main] INFO  GAAQClassifier - Search was finished for  5225875ms
+15:25:35.312 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:25:47.657 [main] INFO  GAAQClassifier - Search was finished for  5238220ms
+15:25:47.657 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:25:58.753 [main] INFO  GAAQClassifier - Search was finished for  5249316ms
+15:25:58.754 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:25:58.754 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:25:58.754 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:26:09.597 [main] INFO  GAAQClassifier - Search was finished for  5260160ms
+15:26:09.597 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:26:28.235 [main] INFO  GAAQClassifier - Search was finished for  5278798ms
+15:26:28.235 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:26:38.450 [main] INFO  GAAQClassifier - Search was finished for  5289013ms
+15:26:38.450 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:26:51.760 [main] INFO  GAAQClassifier - Search was finished for  5302323ms
+15:26:51.760 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:27:04.605 [main] INFO  GAAQClassifier - Search was finished for  5315168ms
+15:27:04.605 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:27:04.605 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:27:04.605 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:27:16.949 [main] INFO  GAAQClassifier - Search was finished for  5327512ms
+15:27:16.950 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:27:27.700 [main] INFO  GAAQClassifier - Search was finished for  5338263ms
+15:27:27.700 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:27:36.996 [main] INFO  GAAQClassifier - Search was finished for  5347559ms
+15:27:36.996 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:27:46.385 [main] INFO  GAAQClassifier - Search was finished for  5356948ms
+15:27:46.385 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:28:03.617 [main] INFO  GAAQClassifier - Search was finished for  5374180ms
+15:28:03.617 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:28:03.617 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:28:03.617 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:28:21.167 [main] INFO  GAAQClassifier - Search was finished for  5391730ms
+15:28:21.167 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:28:43.181 [main] INFO  GAAQClassifier - Search was finished for  5413744ms
+15:28:43.181 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:28:57.683 [main] INFO  GAAQClassifier - Search was finished for  5428246ms
+15:28:57.683 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:29:16.836 [main] INFO  GAAQClassifier - Search was finished for  5447399ms
+15:29:16.837 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:29:38.939 [main] INFO  GAAQClassifier - Search was finished for  5469502ms
+15:29:38.939 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:29:38.939 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:29:38.939 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:29:49.282 [main] INFO  GAAQClassifier - Search was finished for  5479845ms
+15:29:49.282 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:29:58.878 [main] INFO  GAAQClassifier - Search was finished for  5489441ms
+15:29:58.878 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:30:11.647 [main] INFO  GAAQClassifier - Search was finished for  5502209ms
+15:30:11.647 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:30:24.929 [main] INFO  GAAQClassifier - Search was finished for  5515492ms
+15:30:24.929 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:30:40.244 [main] INFO  GAAQClassifier - Search was finished for  5530807ms
+15:30:40.244 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:30:40.244 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:30:40.245 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:30:51.199 [main] INFO  GAAQClassifier - Search was finished for  5541762ms
+15:30:51.199 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:31:01.410 [main] INFO  GAAQClassifier - Search was finished for  5551973ms
+15:31:01.410 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:31:12.006 [main] INFO  GAAQClassifier - Search was finished for  5562569ms
+15:31:12.006 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:31:27.232 [main] INFO  GAAQClassifier - Search was finished for  5577795ms
+15:31:27.232 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:31:36.781 [main] INFO  GAAQClassifier - Search was finished for  5587344ms
+15:31:36.781 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:31:36.781 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:31:36.781 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:31:56.644 [main] INFO  GAAQClassifier - Search was finished for  5607207ms
+15:31:56.645 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:32:12.944 [main] INFO  GAAQClassifier - Search was finished for  5623507ms
+15:32:12.944 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:32:31.740 [main] INFO  GAAQClassifier - Search was finished for  5642303ms
+15:32:31.740 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:32:42.794 [main] INFO  GAAQClassifier - Search was finished for  5653357ms
+15:32:42.794 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:32:58.225 [main] INFO  GAAQClassifier - Search was finished for  5668788ms
+15:32:58.225 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:32:58.225 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:32:58.225 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:33:11.944 [main] INFO  GAAQClassifier - Search was finished for  5682507ms
+15:33:11.944 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:33:28.365 [main] INFO  GAAQClassifier - Search was finished for  5698928ms
+15:33:28.365 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:33:41.607 [main] INFO  GAAQClassifier - Search was finished for  5712170ms
+15:33:41.607 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:34:00.625 [main] INFO  GAAQClassifier - Search was finished for  5731188ms
+15:34:00.625 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:34:13.853 [main] INFO  GAAQClassifier - Search was finished for  5744416ms
+15:34:13.853 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:34:13.853 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:34:13.853 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:34:24.113 [main] INFO  GAAQClassifier - Search was finished for  5754676ms
+15:34:24.114 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:34:35.082 [main] INFO  GAAQClassifier - Search was finished for  5765645ms
+15:34:35.082 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:34:43.761 [main] INFO  GAAQClassifier - Search was finished for  5774324ms
+15:34:43.761 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:34:54.219 [main] INFO  GAAQClassifier - Search was finished for  5784782ms
+15:34:54.219 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:35:07.056 [main] INFO  GAAQClassifier - Search was finished for  5797619ms
+15:35:07.056 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:35:07.056 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:35:07.056 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:35:26.225 [main] INFO  GAAQClassifier - Search was finished for  5816788ms
+15:35:26.225 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:35:36.539 [main] INFO  GAAQClassifier - Search was finished for  5827102ms
+15:35:36.539 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:35:45.776 [main] INFO  GAAQClassifier - Search was finished for  5836339ms
+15:35:45.776 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:35:56.716 [main] INFO  GAAQClassifier - Search was finished for  5847279ms
+15:35:56.716 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:36:07.163 [main] INFO  GAAQClassifier - Search was finished for  5857726ms
+15:36:07.163 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:36:07.163 [main] INFO  GAAQClassifier - BestPop = 0.0
+15:36:07.163 [main] INFO  GAAQClassifier - Decision is not appropriate. Negative examples have been covered
+15:36:15.089 [main] INFO  GAAQClassifier - Search was finished for  5865652ms
+15:36:15.089 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:36:28.491 [main] INFO  GAAQClassifier - Search was finished for  5879054ms
+15:36:28.491 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:36:41.776 [main] INFO  GAAQClassifier - Search was finished for  5892339ms
+15:36:41.777 [main] INFO  GAAQClassifier - bestfit = 0.0
+15:36:55.084 [main] INFO  GAAQClassifier - Search was finished for  5905647ms
+15:36:55.084 [main] INFO  GAAQClassifier - bestfit = 0.0
