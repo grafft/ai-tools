@@ -13,13 +13,19 @@ import java.util.Map;
 /*Дистальный дендритный сегмент (между разными удаленными клетками одного региона)*/
 public class DistalSegment {
     private int historyDeep = 2; // глубина истории обучения
-    // Integer - индекс клетки в том же слое слое, с которой потенциально может быть связан данный дистальный дендрит с помошью синапса Synapse
-    private Map<Integer, Synapse> synapses = new HashMap<>(); // синапсы
+    // Integer - индекс клетки в том же слое, с которой потенциально может быть связан данный дистальный дендрит с помошью синапса Synapse
+    private Map<Integer, Synapse> synapses = new HashMap<>(); // синапсы дендрита
+    // Integer - определенный момент в прошлом // List<Synapse> - список подключенных синапсов в сегменте
     private Map<Integer, List<Synapse>> activeHistory = new HashMap<>();
-    private Map<Integer, List<Synapse>> learnHistory = new HashMap<>();
-    private Map<Integer, List<Synapse>> connectedHistory = new HashMap<>();
+    private Map<Integer, List<Synapse>> learnHistory = new HashMap<>(); // массив клеток, использующихся во время обучения
+    private Map<Integer, List<Synapse>> connectedHistory = new HashMap<>(); // TODO: возможно не используется!
 
+    /**
+     * Порог активации для сегмента. Если число активных подключенных синапсов в сегменте больше чем
+     * activationThreshold, данный сегмент считается активным.
+     */
     private int activationThreshold = 20;
+    // предсказывает ли данный сегмент активацию своей клетки от прямого входа в следующий момент времени.
     private boolean isSequenceSegment = false;
 
     public DistalSegment() {
@@ -35,7 +41,9 @@ public class DistalSegment {
                 activeHistory.get(historyLevel).size() > activationThreshold;
     }
 
+    // обновление истории состояний синапсов данного сегмента
     public void updateHistory(Map<Integer, Cell> cells) {
+        // сдвиг истории на 1
         for (int i = historyDeep - 1; i > 0; i--) {
             activeHistory.get(i).clear();
             learnHistory.get(i).clear();
@@ -44,11 +52,13 @@ public class DistalSegment {
         }
         activeHistory.get(0).clear();
         learnHistory.get(0).clear();
+
+        //
         for (Map.Entry<Integer, Synapse> entry : synapses.entrySet()) {
             if (entry.getValue().isConnected()) {
                 if (cells.get(entry.getKey()).getStateHistory()[0] == Cell.State.active) {
                     activeHistory.get(0).add(entry.getValue());
-                } else if (cells.get(entry.getKey()).getLearnHistory()[0]) {
+                } if (cells.get(entry.getKey()).getLearnHistory()[0]) {
                     learnHistory.get(0).add(entry.getValue());
                 }
             }
@@ -85,6 +95,8 @@ public class DistalSegment {
         this.isSequenceSegment = isSequenceSegment;
     }
 
+    // в режиме обучения возвращается количество синапсов у дендрита в определенный момент времени обучения
+    // в режиме распознавания возвращается количество синапсов у дендрита в определенный момент времени распознавания
     public int countInState(boolean inLearning, int historyLevel) {
         return inLearning ? learnHistory.get(historyLevel).size() : activeHistory.get(historyLevel).size();
     }
