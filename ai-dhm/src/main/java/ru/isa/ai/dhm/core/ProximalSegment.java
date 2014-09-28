@@ -54,6 +54,7 @@ public class ProximalSegment {
             int index = indices.get(i);
             Synapse synapse = new Synapse(settings, index);
             synapse.initPermanence();
+            // TODO P: почему только часть синапсов (а не все) попадают в potentialSynapses (а остальные получается баластом будут всю работу HTM лежать)
             potentialSynapses.put(index, synapse);
         }
     }

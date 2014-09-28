@@ -126,7 +126,6 @@ public class Region {
         // определить перешли ли мы черех период
         int period = settings.dutyCyclePeriod > iterationNum ? iterationNum : settings.dutyCyclePeriod;
 
-
         for (Column column : columns.values()) {
 
             // определить колонку с максимальным числом срабатываний и само это число
@@ -147,6 +146,7 @@ public class Region {
                 column.stimulate();
 
             // обновить соседей изсходя из нового рецептивного поля колонки
+            // TODO P: почему есть зависимость -  inhibitionRadius от  averageReceptiveFieldSize ??
             column.updateNeighbors(averageReceptiveFieldSize());
         }
     }

@@ -12,7 +12,9 @@ import java.util.Map;
 public class Cell {
 
     public enum State {
-        active, predictive, passive
+        active,     // активное состояние клетки - клетка активна от прямого (feed-forward) воздействия
+        predictive, // состояние предсказания - клетка активна от латерального воздействия
+        passive     // пассивное (неактивное) состояние
     }
 
     private int index;
@@ -20,7 +22,7 @@ public class Cell {
     private int historyDeep = 2;
 
     private List<DistalSegment> distalSegments = new ArrayList<>();
-    private State[] stateHistory;
+    private State[] stateHistory; // история состояний клетки
     private boolean[] learnHistory;
 
     public Cell(int index) {
@@ -34,7 +36,7 @@ public class Cell {
     }
 
     /**
-     * Возвращает активный по состоянию сегмент. Если активны несколько сегментов, то сегментам последовательностей
+     * Возвращает самый активный по состоянию сегмент. Если активны несколько сегментов, то сегментам последовательностей
      * отдается предпочтение. В противном случае предпочтение отдается сегментам с наибольшей активностью.
      *
      * @param inLearning

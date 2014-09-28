@@ -53,7 +53,7 @@ public class DistalSegment {
         activeHistory.get(0).clear();
         learnHistory.get(0).clear();
 
-        //
+        // обновление истории состояния синапсов
         for (Map.Entry<Integer, Synapse> entry : synapses.entrySet()) {
             if (entry.getValue().isConnected()) {
                 if (cells.get(entry.getKey()).getStateHistory()[0] == Cell.State.active) {
