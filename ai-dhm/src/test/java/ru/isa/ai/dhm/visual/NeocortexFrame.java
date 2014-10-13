@@ -134,6 +134,7 @@ public class NeocortexFrame extends JFrame {
         settings = DHMSettings.getDefaultSettings();
         neocortex = new Neocortex();
         Region region1 = neocortex.addRegion(settings, null);
+        // TODO P: когда более 1 слоя, то возникает исключение выхода за границы массива - связано с тем что как-то не так заданы настройки слоя (размеры в клетках и колонках)
        /* java.util.List<Region> children = new ArrayList<>();
         children.add(region1);
         neocortex.addRegion(settings, children);*/

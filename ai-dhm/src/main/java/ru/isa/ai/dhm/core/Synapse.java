@@ -31,6 +31,14 @@ public class Synapse {
      * Случайные значения преманентности должны быть из малого диапазона около connectedPerm
      */
     public void initPermanence() {
+        if(settings.debug==true) {
+            if(inputSource%2==0)
+                permanence = settings.connectedPerm + 0.5*settings.permanenceInc / 4.0;
+            else
+                permanence = settings.connectedPerm - 0.5*settings.permanenceInc / 4.0;
+            return;
+        }
+
         if (random.nextDouble() <= settings.initConnectedPct)
             permanence = settings.connectedPerm + random.nextDouble() * settings.permanenceInc / 4.0;
         else

@@ -123,6 +123,6 @@ public final class MathUtils {
     }
 
     public static int kthScore(IntMatrix1D overlaps, int k) {
-        return overlaps.viewSorted().getQuick((int) overlaps.size() - k - 1);
+        return overlaps.viewSorted().getQuick((int) overlaps.size() - k);
     }
 }

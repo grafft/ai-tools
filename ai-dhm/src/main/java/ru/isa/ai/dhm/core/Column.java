@@ -54,16 +54,17 @@ public class Column {
     }
 
     /**
-     * Подавление соседних колонок, которые отстоят от данной в круге радиусом inhibitionRadius
+     * Изменение списка соседних колонок, которые отстоят от данной в круге радиусом inhibitionRadius
      * @param inhibitionRadius радиус подавления (в начале назначется из настроек, потом берется как усредненный радиус рецептивного поля)
      */
     public void updateNeighbors(int inhibitionRadius) {
-        // TODO: не понятно, где neighbors чистятся
-        for (int k = getCoords()[0] - inhibitionRadius; k < getCoords()[0] + inhibitionRadius; k++) {
+        neighbors.clear();
+        for (int k = getCoords()[0] - inhibitionRadius; k <= (getCoords()[0] + inhibitionRadius); k++) {
             if (k >= 0 && k < settings.xDimension) {
-                for (int m = getCoords()[1] - inhibitionRadius; m < getCoords()[1] + inhibitionRadius; m++) {
+                for (int m = getCoords()[1] - inhibitionRadius; m <= (getCoords()[1] + inhibitionRadius); m++) {
                     if (m >= 0 && m < settings.yDimension) {
-                        neighbors.add(k * settings.yDimension + m);
+                       if((k * settings.yDimension + m)!=index)
+                            neighbors.add(k * settings.yDimension + m);
                     }
                 }
             }

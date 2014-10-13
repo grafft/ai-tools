@@ -15,7 +15,7 @@ public class ProximalSegment {
     private DHMSettings settings;
 
     private int overlap; // вычисленное перекрытие данного дендрита (=колонки)
-    private double boostFactor; // вычисленный фактор ускорения дендрита (=колонки)
+    private double boostFactor=1.0; // вычисленный фактор ускорения дендрита (=колонки)
     // Integer - индекс колонки на нижнем слое, с которой потенциально может быть связан данный проксимальный дендрит с помошью синапса Synapse
     private Map<Integer, Synapse> potentialSynapses = new HashMap<>();
 
@@ -48,7 +48,9 @@ public class ProximalSegment {
             }
         }
 
-        Collections.shuffle(indices, random);
+        if(settings.debug==false)
+            Collections.shuffle(indices, random);
+
         int numPotential = (int) Math.round(indices.size() * settings.connectedPct);
         for (int i = 0; i < numPotential; i++) {
             int index = indices.get(i);
@@ -93,7 +95,7 @@ public class ProximalSegment {
      * Есил синапс был активен (через него шел сигнал от входного вектора), его значение преманентности увеличивается,
      * а иначе - уменьшается.
      *
-     * @param input - входнйо сигнал
+     * @param input - входной сигнал
      */
     public void updateSynapses(BitVector input) {
         for (Synapse synapse : potentialSynapses.values()) {
