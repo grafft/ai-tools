@@ -128,12 +128,6 @@ public class Region {
 
 
         for (Column column : columns.values()) {
-
-            // TODO: в цикле ниже определяется максимальный ActiveDuty, однако после цикла у одной из колонок он меняется, поэтому
-            // каждую итерацию максимальный ActiveDuty вычисляется по новым значениям - это правильно?
-            // может быть нужно зафиксировать перед итерацией Duty и вычислять по ним??
-            // иначе полуачется, что порядок обхода колонок в цикле будет важен
-
             // определить колонку с максимальным числом срабатываний и само это число
             double maxActiveDuty = 0;
             for (int index : column.getNeighbors()) {
@@ -155,6 +149,7 @@ public class Region {
             column.updateNeighbors(averageReceptiveFieldSize());
         }
 
+        // теперь обновим activeDutyCycle всех колонок.
         for (Column column: columns.values())
             column.updateActiveDutyCycle(period);
     }

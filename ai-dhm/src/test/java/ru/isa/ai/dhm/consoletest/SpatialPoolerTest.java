@@ -27,9 +27,10 @@ public class SpatialPoolerTest  extends TestCase {
     private DHMSettings settings;
 
 
-    public void runTests() throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException, InvocationTargetException {
+    public void testRun() throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException, InvocationTargetException {
         testOverlapPhase();
         testInhibitionPhase();
+        testLearningPhase();
     }
     public static void main(String[] args) {
 
@@ -170,6 +171,34 @@ public class SpatialPoolerTest  extends TestCase {
 
             }
         }
+    }
+
+
+    public void testUpdateActiveCells() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException {
+
+        SpatialPoolerTest test=new SpatialPoolerTest();
+        test.initCortex(4,4,2,2);
+        Region r=test.neocortex.getRegions().get(0);
+
+        int[] arr = {1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1};
+
+        BitVector input = new BitVector(arr.length);
+        MathUtils.assign(input, arr);
+
+        Method method = Region.class.getDeclaredMethod("overlapPhase", BitVector.class);
+        method.setAccessible(true);
+        method.invoke(r,input);
+
+        Field field=Region.class.getDeclaredField("overlaps");
+        field.setAccessible(true);
+        IntMatrix1D overlaps1D=(IntMatrix1D)field.get(r);
+        int[] overlaps=overlaps1D.toArray();
+
+        int[] groundtruth={3,2,3,2};
+        for (int i = 0; i < groundtruth.length; i++)
+            assertTrue(overlaps[i]==groundtruth[i]);
+
+
     }
 
 
