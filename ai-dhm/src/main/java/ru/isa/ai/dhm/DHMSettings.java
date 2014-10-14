@@ -12,6 +12,7 @@ import java.util.Properties;
  */
 // настройки региона
 public final class DHMSettings {
+    public boolean debug=false;
     public int xDimension = 30; // ширина региона (в колонках)
     public int yDimension = 30; // высота региона (в колонках)
     public int xInput = 100; // ширина входного слоя (в сигналах)

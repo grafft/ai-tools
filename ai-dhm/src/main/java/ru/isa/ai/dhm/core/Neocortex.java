@@ -30,6 +30,7 @@ public class Neocortex {
         for (Region region : regions) {
             newInput = region.forwardInputProcessing(newInput);
             region.updateActiveCells();
+            // TODO P: Добавить вызов UpdateHistory?
             region.updatePredictiveCells();
             region.updateRelations();
         }

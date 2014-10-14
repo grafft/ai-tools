@@ -128,7 +128,6 @@ public class Region {
 
 
         for (Column column : columns.values()) {
-
             // определить колонку с максимальным числом срабатываний и само это число
             double maxActiveDuty = 0;
             for (int index : column.getNeighbors()) {
@@ -138,7 +137,6 @@ public class Region {
             // определить минимальное число срабатываний
             double minDutyCycle = 0.01 * maxActiveDuty;
 
-            column.updateActiveDutyCycle(period);
             column.updateBoostFactor(minDutyCycle);
 
             column.updateOverlapDutyCycle(period);
@@ -146,9 +144,14 @@ public class Region {
             if (column.getOverlapDutyCycle() < minDutyCycle)
                 column.stimulate();
 
+            // TODO P: почему есть зависимость -  inhibitionRadius от  averageReceptiveFieldSize ??
             // обновить соседей изсходя из нового рецептивного поля колонки
             column.updateNeighbors(averageReceptiveFieldSize());
         }
+
+        // теперь обновим activeDutyCycle всех колонок.
+        for (Column column: columns.values())
+            column.updateActiveDutyCycle(period);
     }
 
     /**

@@ -38,7 +38,7 @@ public class NeocortexFrame extends JFrame {
         });
     }
 
-    public NeocortexFrame() throws HeadlessException {
+    public NeocortexFrame()  {
         super("DHM test");
         initCortex();
 
@@ -71,15 +71,15 @@ public class NeocortexFrame extends JFrame {
                 new Runnable() {
                     @Override
                     public void run() {
-                        try {
+                        //try {
                             neocortex.iterate(input);
-                        } catch (Exception e) {
+                        /*} catch (Exception e) {
                             e.printStackTrace();
-                        } finally {
+                        } finally {*/
                             ((JButton) e.getSource()).setEnabled(true);
                             stButton.setEnabled(true);
                             getContentPane().repaint();
-                        }
+                        //}
                     }
                 }.run();
             }
@@ -134,9 +134,10 @@ public class NeocortexFrame extends JFrame {
         settings = DHMSettings.getDefaultSettings();
         neocortex = new Neocortex();
         Region region1 = neocortex.addRegion(settings, null);
-        java.util.List<Region> children = new ArrayList<>();
+        // TODO P: когда более 1 слоя, то возникает исключение выхода за границы массива - связано с тем что как-то не так заданы настройки слоя (размеры в клетках и колонках)
+       /* java.util.List<Region> children = new ArrayList<>();
         children.add(region1);
-        neocortex.addRegion(settings, children);
+        neocortex.addRegion(settings, children);*/
         neocortex.initialization();
     }
 
