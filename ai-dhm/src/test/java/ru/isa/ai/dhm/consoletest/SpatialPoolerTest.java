@@ -185,9 +185,11 @@ public class SpatialPoolerTest  extends TestCase {
         BitVector input = new BitVector(arr.length);
         MathUtils.assign(input, arr);
 
-        Method method = Region.class.getDeclaredMethod("overlapPhase", BitVector.class);
+        BitVector output=r.forwardInputProcessing(input);
+
+        Method method = Region.class.getDeclaredMethod("updateActiveCells");
         method.setAccessible(true);
-        method.invoke(r,input);
+        method.invoke(r);
 
         Field field=Region.class.getDeclaredField("overlaps");
         field.setAccessible(true);
