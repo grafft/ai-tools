@@ -83,7 +83,8 @@ public class HTMConfiguration {
     //HTM Comfiguration properties
     private int numOfRegions;
     private DHMSettings[] settings;
-    public CortexThread crtx;
+    //public CortexThread crtx;
+    public NeocortexThread neocortexThrd;
     public ImageClass img;
 
     private String imagePath;
@@ -145,13 +146,12 @@ public class HTMConfiguration {
     }
 
     public void initCortex() {
-        crtx = new CortexThread(numOfRegions, settings);
-        //crtx.cr.region.addColumns();
-        crtx.init(chart2D1, chart2D2, this);
+        neocortexThrd=new NeocortexThread(settings);
+        neocortexThrd.init(chart2D1, chart2D2, this);
     }
 
     private void loadProperties() throws RegionSettingsException { //загрузка данных в массив settings[]
-        File listFile = new File(path);
+       /* File listFile = new File(path);
         File exportFiles[] = listFile.listFiles();
         String[] names = new String[exportFiles.length];
         int numOfFilesWithSettings = 0;
@@ -161,10 +161,7 @@ public class HTMConfiguration {
                 numOfFilesWithSettings++;
             }
         }
-        /*
-        for (int i = 1; i <= numOfFilesWithSettings; i++){
-            System.out.print(names[i]+ "\n");
-        }*/
+
 
         prepareInterfaceAndValues(numOfFilesWithSettings, true);
         spinnerNumRegs.setValue(numOfFilesWithSettings);
@@ -173,13 +170,18 @@ public class HTMConfiguration {
             for (int i = 0; i < numOfFilesWithSettings; i++) {
                 settings[i].loadFromFile(path + names[i + 1]);
             }
-        }
+        }*/
+
+        settings=new DHMSettings[1];
+        String path = HTMConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        settings[0] = DHMSettings.loadFromFile(path+"\\"+"test16xOnes.properties");
 
         setSettingsButton.doClick();
         setSettingsButton.setEnabled(false);
         savePropertiesToFileButton.setEnabled(true);
     }
 
+    // TODO P: полезная функция, нужно доработать
     /*
     private void checkProperties() throws RegionInitializationException {
         if (numColumns <= 0)
@@ -279,7 +281,7 @@ public class HTMConfiguration {
                 DOWNButton.setEnabled(true);
             regToDraw.setText(String.valueOf(numOfNextReg));
 
-            crtx.drawOnChart(numOfNextReg);
+            neocortexThrd.drawOnChart(numOfNextReg);
             if (numOfNextReg == numOfRegions - 1)
                 UPButton.setEnabled(false);
         }
@@ -293,7 +295,7 @@ public class HTMConfiguration {
                 UPButton.setEnabled(true);
             regToDraw.setText(String.valueOf(numOfPrevReg));
 
-            crtx.drawOnChart(numOfPrevReg);
+            neocortexThrd.drawOnChart(numOfPrevReg);
             if (numOfPrevReg == 0)
                 DOWNButton.setEnabled(false);
         }
@@ -368,24 +370,24 @@ public class HTMConfiguration {
 
     public class RunCortexButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-            if (!crtx.isRunning()) {
+            if (!neocortexThrd.isRunning()) {
                 //initCortex();
-                crtx.start();
+                neocortexThrd.start();
             } else
-                crtx.thdContinue();
+                neocortexThrd.thdContinue();
         }
     }
 
     private class StopCortexButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            crtx.thdQuit();
+            neocortexThrd.thdQuit();
         }
     }
 
     private class MakeStepButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             showActiveColumnsButton.setEnabled(true);
-            crtx.thdMakeStep();
+            neocortexThrd.thdMakeStep();
             if (numOfRegions > 1)
                 UPButton.setEnabled(true);
             makeStepButton.setEnabled(false);
@@ -399,7 +401,7 @@ public class HTMConfiguration {
             f.setContentPane(cl.activeColumnsPanel_main);
             f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             f.pack();
-            cl.setSettings(crtx);
+            cl.setSettings(neocortexThrd);
             cl.draw(0, -1);
             f.setVisible(true);
         }

@@ -1,17 +1,25 @@
-package ru.isa.ai.dhm.oldcore;
+package ru.isa.ai.dhm.visual;
 
-import cern.colt.matrix.tbit.BitMatrix;
-//import com.sun.scenario.Settings;
+import cern.colt.matrix.tbit.BitVector;
 import info.monitorenter.gui.chart.Chart2D;
 import ru.isa.ai.dhm.DHMSettings;
-import ru.isa.ai.dhm.visual.ChartHandler;
+import ru.isa.ai.dhm.RegionSettingsException;
+import ru.isa.ai.dhm.core.Neocortex;
+import ru.isa.ai.dhm.core.Region;
 import ru.isa.ai.dhm.visual.HTMConfiguration;
 import ru.isa.ai.dhm.visual.ImageClass;
+import java.util.ArrayList;
 
+import java.util.Arrays;
 import java.util.Random;
 
-public class CortexThread extends Thread {
-    public Cortex cr;
+/**
+ * Created by gmdidro on 03.11.2014.
+ */
+public class NeocortexThread extends Thread {
+    public Neocortex neocortex;
+    private DHMSettings[] settings;
+
     public ImageClass img;
     public ChartHandler chartHandler;
     private int numRegions;
@@ -21,21 +29,38 @@ public class CortexThread extends Thread {
     private Boolean makeStep = false;
     private Random rnd = new Random();
 
-    public CortexThread(int numRegions, DHMSettings[] settings) {
-        this.numRegions = numRegions;
-        cr = new Cortex(this.numRegions, settings);
+    public NeocortexThread(DHMSettings[] settings) {
+        this.numRegions = settings.length;
+        this.settings=settings;
+    }
+
+    private void initCortex() {
+        neocortex = new Neocortex();
+
+        Region leaf = neocortex.addRegion(settings[0], null);
+        for(int i=1;i<settings.length;i++)
+            leaf = neocortex.addRegion(settings[i], new ArrayList<>(Arrays.asList(leaf)));
+
+        neocortex.initialization();
     }
 
     public void run() {
         this.runs = true;
-        //while (runs)
+        while (runs)
         {                                  //в момент t=1 подается следующая картинка на вход
-            //if (!pause)
+            if (!pause)
             {
-                cr.setInput2DMatrix(getInputMatrixAtT()); // 1 picture yet
-                cr.interactRegions();
-                chartHandler.collectData(0);
-                cr.timestep();
+                //TODO P: тут все для одного слоя (settings[0])
+                final BitVector input = new BitVector(settings[0].xInput * settings[0].yInput);
+                for (int i = 0; i < settings[0].xInput * settings[0].yInput; i++) {
+                    //if (Math.random() > 0.3)
+                    input.set(i);
+                }
+
+                neocortex.iterate(input);
+               // TODO P: make changes
+               // chartHandler.collectData(0);
+
                 if (makeStep) {
                     pause = true;
                     makeStep = false;
@@ -45,8 +70,8 @@ public class CortexThread extends Thread {
     }
 
     public void init(Chart2D chart1, Chart2D chart2, HTMConfiguration configuration) {
+        initCortex();
         img = configuration.getImg();
-        cr.sInitializationDefault(img.getW(), img.getH());
         chartHandler = new ChartHandler(chart1, chart2, configuration);
     }
 
@@ -55,9 +80,11 @@ public class CortexThread extends Thread {
     }
 
     public void drawOnChart(int regInd) {
-        chartHandler.collectData(regInd);
+       // TODO P: Make changes
+       // chartHandler.collectData(regInd);
     }
 
+   /*
     public BitMatrix getInputMatrixAtT() {
         BitMatrix matrix = new BitMatrix(img.getW(), img.getH());
         matrix = img.getBitMatrix();
@@ -73,7 +100,7 @@ public class CortexThread extends Thread {
             }
         return matrix;
     }
-
+    */
     public Boolean isRunning() {
         return runs;
     }
@@ -97,3 +124,4 @@ public class CortexThread extends Thread {
         this.runs = false;
     }
 }
+

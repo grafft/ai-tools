@@ -5,7 +5,9 @@ import cern.colt.matrix.tdouble.DoubleMatrix1D;
 import cern.colt.matrix.tint.IntMatrix1D;
 import junit.framework.TestCase;
 import ru.isa.ai.dhm.DHMSettings;
+import ru.isa.ai.dhm.RegionSettingsException;
 import ru.isa.ai.dhm.core.*;
+import ru.isa.ai.dhm.visual.HTMConfiguration;
 import ru.isa.ai.olddhm.MathUtils;
 
 
@@ -185,6 +187,11 @@ public class SpatialPoolerTest  extends TestCase {
         BitVector input = new BitVector(arr.length);
         MathUtils.assign(input, arr);
 
+        // первая итерация для данного теста всегда дает один и тот же результат
+        test.neocortex.iterate(input);
+        for(Cell c : r.getColumns().get(0).getCells())
+            assertTrue(c.getStateHistory()[0]== Cell.State.active);
+
         BitVector output=r.forwardInputProcessing(input);
 
         Method method = Region.class.getDeclaredMethod("updateActiveCells");
@@ -216,6 +223,12 @@ public class SpatialPoolerTest  extends TestCase {
         settings.desiredLocalActivity=1;
         settings.connectedPerm=0.1;
 
+        String path = HTMConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        try{
+        settings.saveIntoFile(path+"\\"+"test16xOnes.properties");
+        } catch (RegionSettingsException e) {
+            e.printStackTrace();
+        }
         neocortex = new Neocortex();
         Region region1 = neocortex.addRegion(settings, null);
        /* java.util.List<Region> children = new ArrayList<>();

@@ -21,7 +21,7 @@ public class Cell {
     private int minThreshold = 5;
     private int historyDeep = 2;
 
-    private List<DistalSegment> distalSegments = new ArrayList<>();
+    private List<DistalSegment> distalSegments = new ArrayList<>(); // TODO P: нигде не обновляется, всегда пуст
     private State[] stateHistory; // история состояний клетки
     private boolean[] learnHistory;
 

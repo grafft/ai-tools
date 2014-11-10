@@ -23,7 +23,7 @@ public class ActiveColumnsVisualization extends JFrame {
     private JLabel regionLabel;
     private JLabel numOfRegToDraw;
     private HighlightableArea ha;
-    private CortexThread crtx;
+    private NeocortexThread crtx;
     private int curTime = 0;
     private final int PANEL_DIMENSION_X = 500;
     private final int PANEL_DIMENSION_Y = 500;
@@ -98,14 +98,16 @@ public class ActiveColumnsVisualization extends JFrame {
         activeColsPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(5, 5, 5, 5),
                 BorderFactory.createLineBorder(Color.blue)));
-        ha = new HighlightableArea(crtx, indOfUpReg, indOfDownReg, curTime,(float)slider1.getValue()/100.0);
-        ha.setBackground(Color.white);
-        activeColsPanel.add(ha, BorderLayout.CENTER);
+
+        // TODO P: make changes
+       // ha = new HighlightableArea(crtx, indOfUpReg, indOfDownReg, curTime,(float)slider1.getValue()/100.0);
+       // ha.setBackground(Color.white);
+       // activeColsPanel.add(ha, BorderLayout.CENTER);
         activeColsPanel.setVisible(true);
     }
 
-    public void setSettings(CortexThread crtx_){
-        if (crtx_.cr != null){
+    public void setSettings(NeocortexThread crtx_){
+        if (crtx_.neocortex != null){
             crtx = crtx_;
             if (crtx.getNumOfRegions() > 1)
                 buttonUP.setEnabled(true);
@@ -113,10 +115,11 @@ public class ActiveColumnsVisualization extends JFrame {
     }
 
     public void draw(int up_regInd, int down_regInd){
-      if (crtx.cr != null){
+      if (crtx.neocortex != null){
             indOfUpReg = up_regInd;
             indOfDownReg = down_regInd;
-            curTime = crtx.cr.time - 1 > 0 ? crtx.cr.time - 1 : 0;
+            //TODO P: make changes
+            //curTime = crtx.cr.time - 1 > 0 ? crtx.cr.time - 1 : 0;
             if (ha != null)
                 activeColsPanel.remove(ha);
             AreaHighlightTest();
