@@ -3,13 +3,11 @@ package ru.isa.ai.dhm.visual;
 import info.monitorenter.gui.chart.Chart2D;
 import ru.isa.ai.dhm.DHMSettings;
 import ru.isa.ai.dhm.RegionSettingsException;
-import ru.isa.ai.dhm.oldcore.CortexThread;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 
 public class HTMConfiguration {
     //text fields
@@ -83,8 +81,8 @@ public class HTMConfiguration {
     //HTM Comfiguration properties
     private int numOfRegions;
     private DHMSettings[] settings;
-    //public CortexThread crtx;
-    public NeocortexThread neocortexThrd;
+    private Timer timer;
+    public NeocortexAction neocortexAction;
     public ImageClass img;
 
     private String imagePath;
@@ -146,11 +144,15 @@ public class HTMConfiguration {
     }
 
     public void initCortex() {
-        neocortexThrd=new NeocortexThread(settings);
-        neocortexThrd.init(chart2D1, chart2D2, this);
+        neocortexAction =new NeocortexAction(settings);
+        neocortexAction.init(chart2D1, chart2D2, this);
+
+        timer = new Timer(1000, neocortexAction);
+        runCortexButton.setEnabled(true);
     }
 
     private void loadProperties() throws RegionSettingsException { //загрузка данных в массив settings[]
+      // TODO P: как-то тут нужно переписать :) На мой взгляд лучше уж в одном файле настройки для всех регионов хранить
        /* File listFile = new File(path);
         File exportFiles[] = listFile.listFiles();
         String[] names = new String[exportFiles.length];
@@ -281,7 +283,7 @@ public class HTMConfiguration {
                 DOWNButton.setEnabled(true);
             regToDraw.setText(String.valueOf(numOfNextReg));
 
-            neocortexThrd.drawOnChart(numOfNextReg);
+            neocortexAction.drawOnChart(numOfNextReg);
             if (numOfNextReg == numOfRegions - 1)
                 UPButton.setEnabled(false);
         }
@@ -295,7 +297,7 @@ public class HTMConfiguration {
                 UPButton.setEnabled(true);
             regToDraw.setText(String.valueOf(numOfPrevReg));
 
-            neocortexThrd.drawOnChart(numOfPrevReg);
+            neocortexAction.drawOnChart(numOfPrevReg);
             if (numOfPrevReg == 0)
                 DOWNButton.setEnabled(false);
         }
@@ -370,27 +372,33 @@ public class HTMConfiguration {
 
     public class RunCortexButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-            if (!neocortexThrd.isRunning()) {
-                //initCortex();
-                neocortexThrd.start();
-            } else
-                neocortexThrd.thdContinue();
+            if (!timer.isRunning()) {
+                timer.start();
+                //((JButton) e.getSource()).setText("Stop");
+                //stepButton.setEnabled(false);
+            } else {
+                timer.stop();
+                //((JButton) e.getSource()).setText("Start");
+            }
         }
     }
 
     private class StopCortexButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            neocortexThrd.thdQuit();
+            timer.stop();
         }
     }
 
     private class MakeStepButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            showActiveColumnsButton.setEnabled(true);
-            neocortexThrd.thdMakeStep();
+            neocortexAction.makeStep();
+           /* showActiveColumnsButton.setEnabled(true);
+            neocortexAction.thdMakeStep();
             if (numOfRegions > 1)
                 UPButton.setEnabled(true);
             makeStepButton.setEnabled(false);
+            */
+
         }
     }
 
@@ -401,7 +409,7 @@ public class HTMConfiguration {
             f.setContentPane(cl.activeColumnsPanel_main);
             f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             f.pack();
-            cl.setSettings(neocortexThrd);
+            cl.setSettings(neocortexAction);
             cl.draw(0, -1);
             f.setVisible(true);
         }

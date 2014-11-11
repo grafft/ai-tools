@@ -8,6 +8,10 @@ import ru.isa.ai.dhm.core.Neocortex;
 import ru.isa.ai.dhm.core.Region;
 import ru.isa.ai.dhm.visual.HTMConfiguration;
 import ru.isa.ai.dhm.visual.ImageClass;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import java.util.Arrays;
@@ -16,7 +20,7 @@ import java.util.Random;
 /**
  * Created by gmdidro on 03.11.2014.
  */
-public class NeocortexThread extends Thread {
+public class NeocortexAction implements ActionListener {
     public Neocortex neocortex;
     private DHMSettings[] settings;
 
@@ -29,7 +33,7 @@ public class NeocortexThread extends Thread {
     private Boolean makeStep = false;
     private Random rnd = new Random();
 
-    public NeocortexThread(DHMSettings[] settings) {
+    public NeocortexAction(DHMSettings[] settings) {
         this.numRegions = settings.length;
         this.settings=settings;
     }
@@ -44,12 +48,7 @@ public class NeocortexThread extends Thread {
         neocortex.initialization();
     }
 
-    public void run() {
-        this.runs = true;
-        while (runs)
-        {                                  //в момент t=1 подается следующая картинка на вход
-            if (!pause)
-            {
+    public void actionPerformed(ActionEvent e) {
                 //TODO P: тут все для одного слоя (settings[0])
                 final BitVector input = new BitVector(settings[0].xInput * settings[0].yInput);
                 for (int i = 0; i < settings[0].xInput * settings[0].yInput; i++) {
@@ -60,13 +59,6 @@ public class NeocortexThread extends Thread {
                 neocortex.iterate(input);
                // TODO P: make changes
                // chartHandler.collectData(0);
-
-                if (makeStep) {
-                    pause = true;
-                    makeStep = false;
-                }
-            }
-        }
     }
 
     public void init(Chart2D chart1, Chart2D chart2, HTMConfiguration configuration) {
@@ -101,27 +93,26 @@ public class NeocortexThread extends Thread {
         return matrix;
     }
     */
-    public Boolean isRunning() {
-        return runs;
-    }
 
-    public Boolean isPaused() {
-        return pause;
-    }
-
-    public void thdMakeStep() {
-        if (!runs)
-            this.start();
-        this.pause = false;
-        this.makeStep = true;
-    }
-
-    public void thdContinue() {
-        this.pause = false;
-    }
-
-    public void thdQuit() {
-        this.runs = false;
+    public void makeStep()
+    {
+        //TODO P: тут все для одного слоя (settings[0])
+        final BitVector input = new BitVector(settings[0].xInput * settings[0].yInput);
+        for (int i = 0; i < settings[0].xInput * settings[0].yInput; i++) {
+            //if (Math.random() > 0.3)
+            input.set(i);
+        }
+        new Runnable() {
+            @Override
+            public void run() {
+                //try {
+                neocortex.iterate(input);
+                        /*} catch (Exception e) {
+                            e.printStackTrace();
+                        } finally {*/
+                //}
+            }
+        }.run();
     }
 }
 
