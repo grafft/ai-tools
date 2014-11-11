@@ -32,7 +32,7 @@ public final class DHMSettings {
      */
     public int desiredLocalActivity = 10;
     /**
-     * Минимальнео число активных входов колонки для ее участия в шаге подавления.
+     * Минимальное число активных входов колонки для ее участия в шаге подавления.
      */
     public int minOverlap = 0;
     /**

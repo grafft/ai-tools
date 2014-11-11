@@ -6,6 +6,8 @@ import ru.isa.ai.dhm.DHMSettings;
 import ru.isa.ai.dhm.RegionSettingsException;
 import ru.isa.ai.dhm.core.Neocortex;
 import ru.isa.ai.dhm.core.Region;
+import ru.isa.ai.dhm.core.Column;
+import ru.isa.ai.dhm.core.Cell;
 import ru.isa.ai.dhm.visual.HTMConfiguration;
 import ru.isa.ai.dhm.visual.ImageClass;
 
@@ -15,7 +17,12 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
+
+import au.com.bytecode.opencsv.CSV;
+import au.com.bytecode.opencsv.CSVWriteProc;
+import au.com.bytecode.opencsv.CSVWriter;
 
 /**
  * Created by gmdidro on 03.11.2014.
@@ -94,6 +101,40 @@ public class NeocortexAction implements ActionListener {
     }
     */
 
+    public void createCSVExportFiles(String outPutFileCells, String outPutFileColumns){
+        CSV csv = CSV
+                .separator(';')
+                .quote('\'')
+                .skipLines(1)
+                .charset("UTF-8")
+                .create();
+        // CSVWriter will be closed after end of processing
+        csv.write(outPutFileCells, new CSVWriteProc() {
+            public void process(CSVWriter out) {
+                out.writeNext("Cell Index", "State");
+                for (Region reg: neocortex.getRegions()){
+                    for (Column col : reg.getColumns().values()){
+                        for (Cell cell : col.getCells()){
+                            out.writeNext(String.valueOf(col.getIndex()) +"_"+String.valueOf(cell.getIndex()), String.valueOf(cell.getStateHistory()[1]));
+                        }
+                    }
+
+                }
+            }
+        });
+
+        csv.write(outPutFileColumns, new CSVWriteProc() {
+            public void process(CSVWriter out) {
+                out.writeNext("Column Index", "Activity","Overlap","Boost");
+                for (Region reg: neocortex.getRegions()){
+                    for (Column col : reg.getColumns().values()){
+                        out.writeNext(String.valueOf(col.getIndex()), String.valueOf(col.isActive()), String.valueOf(col.getOverlap()), String.valueOf(col.getProximalSegment().getBoostFactor()));
+                    }
+                }
+            }
+        });
+    }
+
     public void makeStep()
     {
         //TODO P: тут все для одного слоя (settings[0])
@@ -107,6 +148,7 @@ public class NeocortexAction implements ActionListener {
             public void run() {
                 //try {
                 neocortex.iterate(input);
+
                         /*} catch (Exception e) {
                             e.printStackTrace();
                         } finally {*/

@@ -147,4 +147,5 @@ public class ProximalSegment {
     public void setBoostFactor(double val) {
         boostFactor = val;
     }
+    public double getBoostFactor() {return boostFactor; }
 }

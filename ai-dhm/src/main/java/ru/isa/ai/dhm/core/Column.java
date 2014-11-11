@@ -327,6 +327,8 @@ public class Column {
         this.isActive = isActive;
     }
 
+    public ProximalSegment getProximalSegment() {return proximalSegment; }
+
     private class SegmentUpdate {
         DistalSegment segment = null;
         List<Integer> synapses = new ArrayList<>();
