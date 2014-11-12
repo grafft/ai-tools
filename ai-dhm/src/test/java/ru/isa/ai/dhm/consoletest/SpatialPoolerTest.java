@@ -1,10 +1,10 @@
 package ru.isa.ai.dhm.consoletest;
 
 import cern.colt.matrix.tbit.BitVector;
-import cern.colt.matrix.tdouble.DoubleMatrix1D;
 import cern.colt.matrix.tint.IntMatrix1D;
 import junit.framework.TestCase;
 import ru.isa.ai.dhm.DHMSettings;
+import ru.isa.ai.dhm.LogUtils;
 import ru.isa.ai.dhm.RegionSettingsException;
 import ru.isa.ai.dhm.core.*;
 import ru.isa.ai.dhm.visual.HTMConfiguration;
@@ -14,9 +14,8 @@ import ru.isa.ai.olddhm.MathUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
+
 import static junit.framework.Assert.assertTrue;
 
 
@@ -160,7 +159,7 @@ public class SpatialPoolerTest  extends TestCase {
         field3.setAccessible(true);
 
 
-        for(Column c : columns.values()) {
+        /*for(Column c : columns.values()) {
             Integer[] neighbors = new Integer[3];
             c.getNeighbors().toArray(neighbors);
             int[] groundtruth = IntStream.rangeClosed(0, 3).filter(p-> p!=c.getIndex()).toArray();
@@ -172,7 +171,7 @@ public class SpatialPoolerTest  extends TestCase {
                 assertTrue(proximalSegment.getReceptieveFieldSize()==2);
 
             }
-        }
+        } */
     }
 
 
@@ -192,6 +191,9 @@ public class SpatialPoolerTest  extends TestCase {
         for(Cell c : r.getColumns().get(0).getCells())
             assertTrue(c.getStateHistory()[0]== Cell.State.active);
 
+        LogUtils.Open("cells.csv", "cols.csv");
+        LogUtils.createCSVExportFiles(test.neocortex);
+
         BitVector output=r.forwardInputProcessing(input);
 
         Method method = Region.class.getDeclaredMethod("updateActiveCells");
@@ -206,8 +208,6 @@ public class SpatialPoolerTest  extends TestCase {
         int[] groundtruth={3,2,3,2};
         for (int i = 0; i < groundtruth.length; i++)
             assertTrue(overlaps[i]==groundtruth[i]);
-
-
     }
 
 

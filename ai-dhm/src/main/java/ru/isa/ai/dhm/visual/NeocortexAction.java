@@ -14,6 +14,8 @@ import ru.isa.ai.dhm.visual.ImageClass;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import java.util.Arrays;
@@ -101,39 +103,7 @@ public class NeocortexAction implements ActionListener {
     }
     */
 
-    public void createCSVExportFiles(String outPutFileCells, String outPutFileColumns){
-        CSV csv = CSV
-                .separator(';')
-                .quote('\'')
-                .skipLines(1)
-                .charset("UTF-8")
-                .create();
-        // CSVWriter will be closed after end of processing
-        csv.write(outPutFileCells, new CSVWriteProc() {
-            public void process(CSVWriter out) {
-                out.writeNext("Cell Index", "State");
-                for (Region reg: neocortex.getRegions()){
-                    for (Column col : reg.getColumns().values()){
-                        for (Cell cell : col.getCells()){
-                            out.writeNext(String.valueOf(col.getIndex()) +"_"+String.valueOf(cell.getIndex()), String.valueOf(cell.getStateHistory()[1]));
-                        }
-                    }
 
-                }
-            }
-        });
-
-        csv.write(outPutFileColumns, new CSVWriteProc() {
-            public void process(CSVWriter out) {
-                out.writeNext("Column Index", "Activity","Overlap","Boost");
-                for (Region reg: neocortex.getRegions()){
-                    for (Column col : reg.getColumns().values()){
-                        out.writeNext(String.valueOf(col.getIndex()), String.valueOf(col.isActive()), String.valueOf(col.getOverlap()), String.valueOf(col.getProximalSegment().getBoostFactor()));
-                    }
-                }
-            }
-        });
-    }
 
     public void makeStep()
     {
