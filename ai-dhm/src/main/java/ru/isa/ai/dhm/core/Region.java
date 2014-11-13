@@ -49,7 +49,15 @@ public class Region {
     }
 
     /**
-     * Иниуиализация региона, для каждой колнки создается начальный список потенцильаных синапсов
+     * @return Возвращает 3 числа: W,H колонок, N клеток у каждой колонки
+     */
+    public int[] getDimensions()
+    {
+        return new int[]{settings.xDimension, settings.yDimension,settings.cellsPerColumn};
+    }
+
+    /**
+     * Инициализация региона, для каждой колнки создается начальный список потенцильаных синапсов
      */
     public void initialization() {
         for (Column column : columns.values()) {
