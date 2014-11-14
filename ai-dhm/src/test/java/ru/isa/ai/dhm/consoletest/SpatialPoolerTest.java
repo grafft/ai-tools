@@ -176,6 +176,7 @@ public class SpatialPoolerTest  extends TestCase {
 
 
     public void testUpdateActiveCells() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException {
+        LogUtils.Open("cells.csv", "cols.csv");
 
         SpatialPoolerTest test=new SpatialPoolerTest();
         test.initCortex(4,4,2,2);
@@ -191,8 +192,8 @@ public class SpatialPoolerTest  extends TestCase {
         for(Cell c : r.getColumns().get(0).getCells())
             assertTrue(c.getStateHistory()[0]== Cell.State.active);
 
-        LogUtils.Open("cells.csv", "cols.csv");
-        LogUtils.createCSVExportFiles(test.neocortex);
+
+
 
         BitVector output=r.forwardInputProcessing(input);
 

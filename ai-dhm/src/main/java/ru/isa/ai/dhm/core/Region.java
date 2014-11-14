@@ -6,6 +6,7 @@ import cern.colt.matrix.tint.IntMatrix1D;
 import cern.colt.matrix.tint.impl.DenseIntMatrix1D;
 import com.google.common.primitives.Ints;
 import ru.isa.ai.dhm.DHMSettings;
+import ru.isa.ai.dhm.LogUtils;
 import ru.isa.ai.dhm.MathUtils;
 
 import java.util.ArrayList;
@@ -76,6 +77,7 @@ public class Region {
     public BitVector forwardInputProcessing(BitVector input) {
         iterationNum++;
         overlapPhase(input);
+        LogUtils.printToCVS(this,"after overlap iterationNum# "+iterationNum);
         inhibitionPhase();
         learningPhase(input);
 

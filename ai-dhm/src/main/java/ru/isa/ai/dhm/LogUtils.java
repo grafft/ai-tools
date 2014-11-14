@@ -36,12 +36,16 @@ public class LogUtils {
         }
     }
 
+    public static void printToCVS(final Region r){
+        printToCVS(r,"");
+    }
+
     /**
      * Выводит в 2 файла текущие параметры клеток и колонок одного (первого) региона неокортекса
      * Для большего числа регионов нужно дописывать
-     * @param neo
+     * @param r
      */
-    public static void printToCVS(Neocortex neo){
+    public static void printToCVS(final Region r, final String logmessage){
         CSV csv = CSV
                 .separator(';')
                 .quote('\'')
@@ -49,15 +53,16 @@ public class LogUtils {
                 .charset("UTF-8")
                 .create();
         // CSVWriter will be closed after end of processing
-        final Neocortex neocortex=neo;
+
 
         CSVWriter mCsvWriter = new CSVWriter(mCellsWriter,';',CSVWriter.NO_QUOTE_CHARACTER);
 
         csv.write(mCsvWriter, new CSVWriteProc() {
             public void process(CSVWriter out) {
+                out.writeNext(logmessage);
                 //for (Region reg : neocortex.getRegions()) {
                 {
-                    Region reg=neocortex.getRegions().get(0);
+                    Region reg=r;
                     int dim[] = reg.getDimensions();
                     int ColsW = dim[0];
                     int ColsH = dim[1];
@@ -85,10 +90,11 @@ public class LogUtils {
 
         csv.write(mCsvWriter2, new CSVWriteProc() {
             public void process(CSVWriter out) {
-                out.writeNext("Activity", "Overlap", "Boost", "NeighborsSize");
+                out.writeNext(logmessage);
+                //out.writeNext("Activity", "Overlap", "Boost", "NeighborsSize");
                 //for (Region reg : neocortex.getRegions()) {
                 {
-                    Region reg=neocortex.getRegions().get(0);
+                    Region reg=r;
                     int dim[] = reg.getDimensions();
                     int ColsW = dim[0];
                     int ColsH = dim[1];
