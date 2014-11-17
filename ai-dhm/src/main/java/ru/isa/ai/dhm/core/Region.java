@@ -77,7 +77,7 @@ public class Region {
     public BitVector forwardInputProcessing(BitVector input) {
         iterationNum++;
         overlapPhase(input);
-        LogUtils.printToCVS(this,"after overlap iterationNum# "+iterationNum);
+
         inhibitionPhase();
         learningPhase(input);
 

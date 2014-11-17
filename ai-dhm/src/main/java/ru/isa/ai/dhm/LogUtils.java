@@ -5,10 +5,14 @@ import au.com.bytecode.opencsv.CSVWriteProc;
 import au.com.bytecode.opencsv.CSVWriter;
 import ru.isa.ai.dhm.core.Column;
 import ru.isa.ai.dhm.core.Neocortex;
+import ru.isa.ai.dhm.core.ProximalSegment;
 import ru.isa.ai.dhm.core.Region;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -68,6 +72,8 @@ public class LogUtils {
                     int ColsH = dim[1];
                     int cellsPerCol = dim[2];
 
+
+                    //вывод активности клеток
                     for (int colLine = 0; colLine < ColsH; colLine++) {
                         // перебор всех слоев клеток
                         String s[]=new String[ColsW*cellsPerCol+cellsPerCol*2];
@@ -82,6 +88,7 @@ public class LogUtils {
                         }
                         out.writeNext(s);
                     }
+
                 }
             }
         });
@@ -99,7 +106,7 @@ public class LogUtils {
                     int ColsW = dim[0];
                     int ColsH = dim[1];
                     int cellsPerCol = dim[2];
-                    final int params = 4;
+                    final int params = 5;
 
                     for (int colLine = 0; colLine < ColsH; colLine++) {
                         String s[] = new String[ColsW * params + params * 2];
@@ -133,8 +140,45 @@ public class LogUtils {
                         s[i++] = "";
                         s[i++] = "";
 
+
+                        // вывод потенциальных синапсов
+
+                        Method method = null;
+                        try {
+                            method = ProximalSegment.class.getDeclaredMethod("connectedSynapses");
+                        } catch (NoSuchMethodException e) {
+                            e.printStackTrace();
+                        }
+                        method.setAccessible(true);
+
+                        for (int col = colLine * ColsW; col < (colLine + 1) * ColsW; col++) {
+                            List<Integer> syns=null;
+                            try {
+                                syns=(List<Integer>)method.invoke( reg.getColumns().get(col).getProximalSegment());
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            } catch (InvocationTargetException e) {
+                                e.printStackTrace();
+                            }
+                            s[i]="";
+                            for(Integer syn : syns)
+                                s[i] =s[i]+syn.toString()+", ";
+                            i++;
+                        }
+
+
+                        s[i++] = "";
+                        s[i++] = "";
+
+
                         out.writeNext(s);
                     }
+
+
+
+
+
+
 
                 }
             }

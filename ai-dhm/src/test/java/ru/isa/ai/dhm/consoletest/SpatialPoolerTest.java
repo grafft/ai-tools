@@ -187,19 +187,22 @@ public class SpatialPoolerTest  extends TestCase {
         BitVector input = new BitVector(arr.length);
         MathUtils.assign(input, arr);
 
+        LogUtils.printToCVS(r,"before iterate");
+
         // первая итерация для данного теста всегда дает один и тот же результат
         test.neocortex.iterate(input);
         for(Cell c : r.getColumns().get(0).getCells())
             assertTrue(c.getStateHistory()[0]== Cell.State.active);
 
-
-
+        LogUtils.printToCVS(r,"after iterate");
 
         BitVector output=r.forwardInputProcessing(input);
+        LogUtils.printToCVS(r,"after forwardInputProcessing");
 
         Method method = Region.class.getDeclaredMethod("updateActiveCells");
         method.setAccessible(true);
         method.invoke(r);
+        LogUtils.printToCVS(r,"after updateActiveCells");
 
         Field field=Region.class.getDeclaredField("overlaps");
         field.setAccessible(true);
