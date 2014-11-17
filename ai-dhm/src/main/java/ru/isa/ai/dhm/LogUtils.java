@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Created by gmdidro on 12.11.2014.
@@ -173,12 +172,6 @@ public class LogUtils {
 
                         out.writeNext(s);
                     }
-
-
-
-
-
-
 
                 }
             }

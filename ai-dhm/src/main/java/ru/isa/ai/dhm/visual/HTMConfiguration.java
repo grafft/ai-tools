@@ -1,13 +1,18 @@
 package ru.isa.ai.dhm.visual;
 
 import info.monitorenter.gui.chart.Chart2D;
+import org.omg.CORBA.*;
 import ru.isa.ai.dhm.DHMSettings;
 import ru.isa.ai.dhm.RegionSettingsException;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
+import javax.swing.text.Document;
+import javax.xml.soap.Text;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.Object;
 
 public class HTMConfiguration {
     //text fields
@@ -23,6 +28,11 @@ public class HTMConfiguration {
     private JTextField textField10;
     private JTextField textField11;
     private JTextField textField12;
+    private JTextField textField13;
+    private JTextField textField14;
+    private JTextField textField15;
+    private JTextField textField16;
+    private JTextField textField17;
 
     //buttons
     private JButton runCortexButton;
@@ -75,6 +85,7 @@ public class HTMConfiguration {
     private JPanel ActiveColsVisGenView;
     private JPanel ActiveColsSelectedView;
 
+
     private final static int NUM_OF_PARAMETERS_FOR_1_REG = 12;
     private final static int MAX_NUM_OF_REGIONS = 10;
 
@@ -118,18 +129,51 @@ public class HTMConfiguration {
         savePropertiesToFileButton.addActionListener(new SavePropertiesToFileButtonListener());
 
         //text - editors
-        textField1.getDocument().addDocumentListener(new DocumentListener1());
-        textField2.getDocument().addDocumentListener(new DocumentListener2());
-        textField3.getDocument().addDocumentListener(new DocumentListener3());
-        textField4.getDocument().addDocumentListener(new DocumentListener4());
-        textField5.getDocument().addDocumentListener(new DocumentListener5());
-        textField6.getDocument().addDocumentListener(new DocumentListener6());
-        textField7.getDocument().addDocumentListener(new DocumentListener7());
-        textField8.getDocument().addDocumentListener(new DocumentListener8());
-        textField9.getDocument().addDocumentListener(new DocumentListener9());
-        textField10.getDocument().addDocumentListener(new DocumentListener10());
-        textField11.getDocument().addDocumentListener(new DocumentListener11());
-        textField12.getDocument().addDocumentListener(new DocumentListener12());
+        Object[] objects = mainPanel.getComponents();
+        for (int i = 0; i < objects.length; i++) {
+            if (objects[i] instanceof JTextField) {
+                JTextField tf = (JTextField) objects[i];
+                tf.getDocument().addDocumentListener(new DocumentListenerGeneral());
+                tf.getDocument().putProperty("owner", tf);
+                tf.getDocument().putProperty("property_id", i);
+            }
+        }
+        /*
+        textField1.getDocument().addDocumentListener(new DocumentListenerGeneral());
+        textField1.getDocument().putProperty("owner", textField1);
+        textField2.getDocument().addDocumentListener(new DocumentListenerGeneral());
+        textField2.getDocument().putProperty("owner", textField2);
+        textField3.getDocument().addDocumentListener(new DocumentListenerGeneral());
+        textField3.getDocument().putProperty("owner", textField3);
+        textField4.getDocument().addDocumentListener(new DocumentListenerGeneral());
+        textField4.getDocument().putProperty("owner", textField4);
+        textField5.getDocument().addDocumentListener(new DocumentListenerGeneral());
+        textField5.getDocument().putProperty("owner", textField5);
+        textField6.getDocument().addDocumentListener(new DocumentListenerGeneral());
+        textField6.getDocument().putProperty("owner", textField6);
+        textField7.getDocument().addDocumentListener(new DocumentListenerGeneral());
+        textField7.getDocument().putProperty("owner", textField7);
+        textField8.getDocument().addDocumentListener(new DocumentListenerGeneral());
+        textField8.getDocument().putProperty("owner", textField8);
+        textField9.getDocument().addDocumentListener(new DocumentListenerGeneral());
+        textField9.getDocument().putProperty("owner", textField9);
+        textField10.getDocument().addDocumentListener(new DocumentListenerGeneral());
+        textField10.getDocument().putProperty("owner", textField10);
+        textField11.getDocument().addDocumentListener(new DocumentListenerGeneral());
+        textField11.getDocument().putProperty("owner", textField11);
+        textField12.getDocument().addDocumentListener(new DocumentListenerGeneral());
+        textField12.getDocument().putProperty("owner", textField12);
+        textField13.getDocument().addDocumentListener(new DocumentListenerGeneral());
+        textField13.getDocument().putProperty("owner", textField13);
+        textField14.getDocument().addDocumentListener(new DocumentListenerGeneral());
+        textField14.getDocument().putProperty("owner", textField14);
+        textField15.getDocument().addDocumentListener(new DocumentListenerGeneral());
+        textField15.getDocument().putProperty("owner", textField15);
+        textField16.getDocument().addDocumentListener(new DocumentListenerGeneral());
+        textField16.getDocument().putProperty("owner", textField16);
+        textField17.getDocument().addDocumentListener(new DocumentListenerGeneral());
+        textField17.getDocument().putProperty("owner", textField17);
+*/
 
         // from 1 to 10, in 1.0 steps start value 1.0
         SpinnerNumberModel model = new SpinnerNumberModel(1, 1, MAX_NUM_OF_REGIONS, 1);
@@ -144,7 +188,7 @@ public class HTMConfiguration {
     }
 
     public void initCortex() {
-        neocortexAction =new NeocortexAction(settings);
+        neocortexAction = new NeocortexAction(settings);
         neocortexAction.init(chart2D1, chart2D2, this);
 
         timer = new Timer(1000, neocortexAction);
@@ -152,7 +196,7 @@ public class HTMConfiguration {
     }
 
     private void loadProperties() throws RegionSettingsException { //загрузка данных в массив settings[]
-      // TODO P: как-то тут нужно переписать :) На мой взгляд лучше уж в одном файле настройки для всех регионов хранить
+        // TODO P: как-то тут нужно переписать :) На мой взгляд лучше уж в одном файле настройки для всех регионов хранить
        /* File listFile = new File(path);
         File exportFiles[] = listFile.listFiles();
         String[] names = new String[exportFiles.length];
@@ -174,9 +218,9 @@ public class HTMConfiguration {
             }
         }*/
 
-        settings=new DHMSettings[1];
+        settings = new DHMSettings[1];
         String path = HTMConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        settings[0] = DHMSettings.loadFromFile(path+"\\"+"test16xOnes.properties");
+        settings[0] = DHMSettings.loadFromFile(path + "\\" + "test16xOnes.properties");
 
         setSettingsButton.doClick();
         setSettingsButton.setEnabled(false);
@@ -218,18 +262,13 @@ public class HTMConfiguration {
             if (textFieldsAvailable) {
                 /////////////////////////////////////////////////////
                 //edits for settings  should be enabled
-                textField1.setEnabled(true);
-                textField2.setEnabled(true);
-                textField3.setEnabled(true);
-                textField4.setEnabled(true);
-                textField5.setEnabled(true);
-                textField6.setEnabled(true);
-                textField7.setEnabled(true);
-                textField8.setEnabled(true);
-                textField9.setEnabled(true);
-                textField10.setEnabled(true);
-                textField11.setEnabled(true);
-                textField12.setEnabled(true);
+                Object[] objects = mainPanel.getComponents();
+                for (int i = 0; i < objects.length; i++) {
+                    if (objects[i] instanceof JTextField) {
+                        JTextField tf = (JTextField) objects[i];
+                        tf.setEnabled(true);
+                    }
+                }
             }
 
             //buttons
@@ -241,19 +280,33 @@ public class HTMConfiguration {
     }
 
     private void showSettingsForRegion(int regInd) {
-        // TODO AP: comment by refactoring!
-//        textField1.setText(String.valueOf(settings[regInd].initialParameters[0]));
-//        textField2.setText(String.valueOf(settings[regInd].initialParameters[1]));
-//        textField3.setText(String.valueOf(settings[regInd].initialParameters[2]));
-//        textField4.setText(String.valueOf(settings[regInd].initialParameters[3]));
-//        textField5.setText(String.valueOf(settings[regInd].initialParameters[4]));
-//        textField6.setText(String.valueOf(settings[regInd].initialParameters[5]));
-//        textField7.setText(String.valueOf(settings[regInd].initialParameters[6]));
-//        textField8.setText(String.valueOf(settings[regInd].initialParameters[7]));
-//        textField9.setText(String.valueOf(settings[regInd].initialParameters[8]));
-//        textField10.setText(String.valueOf(settings[regInd].initialParameters[9]));
-//        textField11.setText(String.valueOf(settings[regInd].initialParameters[10]));
-//        textField12.setText(String.valueOf(settings[regInd].initialParameters[11]));
+
+        Object[] objects = mainPanel.getComponents();
+        for (int i = 0; i < objects.length; i++) {
+            if (objects[i] instanceof JTextField) {
+                JTextField tf = (JTextField) objects[i];
+                int property_id = (Integer)tf.getDocument().getProperty("property_id");
+                switch(property_id){
+                    case 0: tf.setText(String.valueOf(settings[regInd].debug)); break;
+                    case 1: tf.setText(String.valueOf(settings[regInd].xInput)); break;
+                    case 2: tf.setText(String.valueOf(settings[regInd].yInput)); break;
+                    case 3: tf.setText(String.valueOf(settings[regInd].xDimension)); break;
+                    case 4: tf.setText(String.valueOf(settings[regInd].yDimension)); break;
+                    case 5: tf.setText(String.valueOf(settings[regInd].initialInhibitionRadius)); break;
+                    case 6: tf.setText(String.valueOf(settings[regInd].potentialRadius)); break;
+                    case 7: tf.setText(String.valueOf(settings[regInd].cellsPerColumn)); break;
+                    case 8: tf.setText(String.valueOf(settings[regInd].newSynapseCount)); break;
+                    case 9: tf.setText(String.valueOf(settings[regInd].desiredLocalActivity)); break;
+                    case 10: tf.setText(String.valueOf(settings[regInd].minOverlap)); break;
+                    case 11: tf.setText(String.valueOf(settings[regInd].connectedPerm)); break;
+                    case 12: tf.setText(String.valueOf(settings[regInd].permanenceInc)); break;
+                    case 13: tf.setText(String.valueOf(settings[regInd].permanenceDec)); break;
+                    case 14: tf.setText(String.valueOf(settings[regInd].activationThreshold)); break;
+                    case 15: tf.setText(String.valueOf(settings[regInd].initialPerm)); break;
+                    case 16: tf.setText(String.valueOf(settings[regInd].minThreshold)); break;
+                }
+            }
+        }
     }
 
     public ImageClass getImg() {
@@ -416,7 +469,7 @@ public class HTMConfiguration {
     }
 
     /////////////////////////////////Property listeners/////////////////////////////////////////////
-    private class DocumentListener1 implements javax.swing.event.DocumentListener {
+    private class DocumentListenerGeneral implements javax.swing.event.DocumentListener {
 
         @Override
         public void changedUpdate(DocumentEvent e) {
@@ -433,441 +486,65 @@ public class HTMConfiguration {
             updateLabel(e);
         }
 
-        private void updateLabel(DocumentEvent e) {
+        private void updateLabel(final DocumentEvent e) {
             java.awt.EventQueue.invokeLater(new Runnable() {
 
                 @Override
                 public void run() {
+                    Object owner = e.getDocument().getProperty("owner");
+                    JTextField tf = (JTextField) owner;
+                    int property_id = (Integer)tf.getDocument().getProperty("property_id");
 
                     int num_of_reg = Integer.parseInt(numOfReg.getText());
                     double new_value = 0.0;
-                    // TODO AP: comment by refactoring!
-//                    try {
-//                        new_value = Double.parseDouble(textField1.getText());
-//                    } catch (NumberFormatException ex) {
-//                        System.out.print("Wrong property[0] (desired local activity) for region " + numOfReg);
-//                        new_value = RegionSettings.DESIRED_LOCAL_ACTIVITY_DEFAULT;
-//                        textField1.setText(String.valueOf(new_value));
-//                    }
-//                    settings[num_of_reg].initialParameters[0] = new_value;
-                }
-            });
-        }
-    }
 
-    private class DocumentListener12 implements javax.swing.event.DocumentListener {
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        private void updateLabel(DocumentEvent e) {
-            java.awt.EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    int num_of_reg = Integer.parseInt(numOfReg.getText());
-                    double new_value = 0.0;
-                    // TODO AP: comment by refactoring!
-//                    try {
-//                        new_value = Double.parseDouble(textField12.getText());
-//                    } catch (NumberFormatException ex) {
-//                        System.out.print("Wrong property[11] (region y dimension) for region " + numOfReg);
-//                        new_value = RegionSettings.REGION_Y_DIMENSION_DEFAULT;
-//                        textField12.setText(String.valueOf(new_value));
-//                    }
-//                    settings[num_of_reg].initialParameters[11] = new_value;
-                }
-            });
-        }
-    }
-
-    private class DocumentListener11 implements javax.swing.event.DocumentListener {
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        private void updateLabel(DocumentEvent e) {
-            java.awt.EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    int num_of_reg = Integer.parseInt(numOfReg.getText());
-                    double new_value = 0.0;
-                    // TODO AP: comment by refactoring!
-//                    try {
-//                        new_value = Double.parseDouble(textField11.getText());
-//                    } catch (NumberFormatException ex) {
-//                        System.out.print("Wrong property[10] (region x dimension) for region " + numOfReg);
-//                        new_value = RegionSettings.REGION_X_DIMENSION_DEFAULT;
-//                        textField11.setText(String.valueOf(new_value));
-//                    }
-//                    settings[num_of_reg].initialParameters[10] = new_value;
-                }
-            });
-        }
-    }
-
-    private class DocumentListener10 implements javax.swing.event.DocumentListener {
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        private void updateLabel(DocumentEvent e) {
-            java.awt.EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    int num_of_reg = Integer.parseInt(numOfReg.getText());
-                    double new_value = 0.0;
-                    // TODO AP: comment by refactoring!
-//                    try {
-//                        new_value = Double.parseDouble(textField10.getText());
-//                    } catch (NumberFormatException ex) {
-//                        System.out.print("Wrong property[9] (new synapses count) for region " + numOfReg);
-//                        new_value = RegionSettings.NEW_SYNAPSES_COUNT_DEFAULT;
-//                        textField10.setText(String.valueOf(new_value));
-//                    }
-//                    settings[num_of_reg].initialParameters[9] = new_value;
-                }
-            });
-        }
-    }
-
-    private class DocumentListener9 implements javax.swing.event.DocumentListener {
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        private void updateLabel(DocumentEvent e) {
-            java.awt.EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    int num_of_reg = Integer.parseInt(numOfReg.getText());
-                    double new_value = 0.0;
-                    // TODO AP: comment by refactoring!
-//                    try {
-//                        new_value = Double.parseDouble(textField9.getText());
-//                    } catch (NumberFormatException ex) {
-//                        System.out.print("Wrong property[8] (minimal threshold) for region " + numOfReg);
-//                        new_value = RegionSettings.MINIMAL_THRESHOLD_DEFAULT;
-//                        textField9.setText(String.valueOf(new_value));
-//                    }
-//                    settings[num_of_reg].initialParameters[8] = new_value;
-                }
-            });
-        }
-    }
-
-    private class DocumentListener8 implements javax.swing.event.DocumentListener {
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        private void updateLabel(DocumentEvent e) {
-            java.awt.EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    int num_of_reg = Integer.parseInt(numOfReg.getText());
-                    double new_value = 0.0;
-                    // TODO AP: comment by refactoring!
-//                    try {
-//                        new_value = Double.parseDouble(textField8.getText());
-//                    } catch (NumberFormatException ex) {
-//                        System.out.print("Wrong property[7] (initial permanence) for region " + numOfReg);
-//                        new_value = RegionSettings.INITIAL_PERMANENCE_DEFAULT;
-//                        textField8.setText(String.valueOf(new_value));
-//                    }
-//                    settings[num_of_reg].initialParameters[7] = new_value;
-                }
-            });
-        }
-    }
-
-    private class DocumentListener7 implements javax.swing.event.DocumentListener {
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        private void updateLabel(DocumentEvent e) {
-            java.awt.EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    int num_of_reg = Integer.parseInt(numOfReg.getText());
-                    double new_value = 0.0;
-                    // TODO AP: comment by refactoring!
-//                    try {
-//                        new_value = Double.parseDouble(textField7.getText());
-//                    } catch (NumberFormatException ex) {
-//                        System.out.print("Wrong property[6] (activation treshold) for region " + numOfReg);
-//                        new_value = RegionSettings.ACTIVATION_THRESHOLD_DEFAULT;
-//                        textField7.setText(String.valueOf(new_value));
-//                    }
-//                    settings[num_of_reg].initialParameters[6] = new_value;
-                }
-            });
-        }
-    }
-
-    private class DocumentListener6 implements javax.swing.event.DocumentListener {
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        private void updateLabel(DocumentEvent e) {
-            java.awt.EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    int num_of_reg = Integer.parseInt(numOfReg.getText());
-                    double new_value = 0.0;
-                    // TODO AP: comment by refactoring!
-//                    try {
-//                        new_value = Double.parseDouble(textField6.getText());
-//                    } catch (NumberFormatException ex) {
-//                        System.out.print("Wrong property[5] (cells per column) for region " + numOfReg);
-//                        new_value = RegionSettings.CELLS_PER_COLUMN_DEFAULT;
-//                        textField6.setText(String.valueOf(new_value));
-//                    }
-//                    settings[num_of_reg].initialParameters[5] = new_value;
-                }
-            });
-        }
-    }
-
-    private class DocumentListener5 implements javax.swing.event.DocumentListener {
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        private void updateLabel(DocumentEvent e) {
-            java.awt.EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    int num_of_reg = Integer.parseInt(numOfReg.getText());
-                    double new_value = 0.0;
-                    // TODO AP: comment by refactoring!
-//                    try {
-//                        new_value = Double.parseDouble(textField5.getText());
-//                    } catch (NumberFormatException ex) {
-//                        System.out.print("Wrong property[4] (permanence dec) for region " + numOfReg);
-//                        new_value = RegionSettings.PERMANENCE_DEC_DEFAULT;
-//                        textField5.setText(String.valueOf(new_value));
-//                    }
-//                    settings[num_of_reg].initialParameters[4] = new_value;
-                }
-            });
-        }
-    }
-
-    private class DocumentListener4 implements javax.swing.event.DocumentListener {
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        private void updateLabel(DocumentEvent e) {
-            java.awt.EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    int num_of_reg = Integer.parseInt(numOfReg.getText());
-                    double new_value = 0.0;
-                    // TODO AP: comment by refactoring!
-//                    try {
-//                        new_value = Double.parseDouble(textField4.getText());
-//                    } catch (NumberFormatException ex) {
-//                        System.out.print("Wrong property[3] (permanence inc) for region " + numOfReg);
-//                        new_value = RegionSettings.PERMANENCE_INC_DEFAULT;
-//                        textField4.setText(String.valueOf(new_value));
-//                    }
-//                    settings[num_of_reg].initialParameters[3] = new_value;
-                }
-            });
-        }
-    }
-
-    private class DocumentListener3 implements javax.swing.event.DocumentListener {
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        private void updateLabel(DocumentEvent e) {
-            java.awt.EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    int num_of_reg = Integer.parseInt(numOfReg.getText());
-                    double new_value = 0.0;
-                    // TODO AP: comment by refactoring!
-//                    try {
-//                        new_value = Double.parseDouble(textField3.getText());
-//                    } catch (NumberFormatException ex) {
-//                        System.out.print("Wrong property[2] (connected permission) for region " + numOfReg);
-//                        new_value = RegionSettings.CONNECTED_PERMISSION_DEFAULT;
-//                        textField3.setText(String.valueOf(new_value));
-//                    }
-//                    settings[num_of_reg].initialParameters[2] = new_value;
-                }
-            });
-        }
-    }
-
-    private class DocumentListener2 implements javax.swing.event.DocumentListener {
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        private void updateLabel(DocumentEvent e) {
-            java.awt.EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    int num_of_reg = Integer.parseInt(numOfReg.getText());
-                    double new_value = 0.0;
-                    // TODO AP: comment by refactoring!
-//                    try {
-//                        new_value = Double.parseDouble(textField2.getText());
-//                    } catch (NumberFormatException ex) {
-//                        System.out.print("Wrong property[1] (minimal overlap) for region " + numOfReg);
-//                        new_value = RegionSettings.MINIMAL_OVERLAP_DEFAULT;
-//                        textField2.setText(String.valueOf(new_value));
-//                    }
-//                    settings[num_of_reg].initialParameters[1] = new_value;
+                    try {
+                        new_value = Double.parseDouble(tf.getText());
+                    } catch (NumberFormatException ex) {
+                        System.out.print("Wrong properties for region " + numOfReg);
+                        DHMSettings default_settings = DHMSettings.getDefaultSettings();
+                        double tmp = 0.0;
+                        switch(property_id){
+                            case 0: tmp = (default_settings.debug == true) ? 1 : 0 ; break;
+                            case 1: tmp = default_settings.xInput; break;
+                            case 2: tmp = default_settings.yInput; break;
+                            case 3: tmp = default_settings.xDimension; break;
+                            case 4: tmp = default_settings.yDimension; break;
+                            case 5: tmp = default_settings.initialInhibitionRadius; break;
+                            case 6: tmp = default_settings.potentialRadius; break;
+                            case 7: tmp = default_settings.cellsPerColumn; break;
+                            case 8: tmp = default_settings.newSynapseCount; break;
+                            case 9: tmp = default_settings.desiredLocalActivity; break;
+                            case 10: tmp = default_settings.minOverlap; break;
+                            case 11: tmp = default_settings.connectedPerm; break;
+                            case 12: tmp = default_settings.permanenceInc; break;
+                            case 13: tmp = default_settings.permanenceDec; break;
+                            case 14: tmp = default_settings.activationThreshold; break;
+                            case 15: tmp = default_settings.initialPerm; break;
+                            case 16: tmp =  default_settings.minThreshold; break;
+                        }
+                        tf.setText(String.valueOf(tmp));
+                        new_value = tmp;
+                    }
+                    switch(property_id){
+                        case 0: settings[num_of_reg].debug = (new_value == 1) ? true : false ; break;
+                        case 1: settings[num_of_reg].xInput = (int)new_value; break;
+                        case 2: settings[num_of_reg].yInput = (int )new_value; break;
+                        case 3: settings[num_of_reg].xDimension = (int)new_value ; break;
+                        case 4: settings[num_of_reg].yDimension = (int)new_value; break;
+                        case 5: settings[num_of_reg].initialInhibitionRadius = (int)new_value; break;
+                        case 6: settings[num_of_reg].potentialRadius = (int)new_value; break;
+                        case 7: settings[num_of_reg].cellsPerColumn = (int)new_value; break;
+                        case 8: settings[num_of_reg].newSynapseCount= (int)new_value; break;
+                        case 9: settings[num_of_reg].desiredLocalActivity = (int)new_value ; break;
+                        case 10: settings[num_of_reg].minOverlap = (int)new_value; break;
+                        case 11: settings[num_of_reg].connectedPerm = new_value; break;
+                        case 12: settings[num_of_reg].permanenceInc = new_value; break;
+                        case 13: settings[num_of_reg].permanenceDec = new_value; break;
+                        case 14: settings[num_of_reg].activationThreshold = new_value; break;
+                        case 15: settings[num_of_reg].initialPerm = new_value; break;
+                        case 16: settings[num_of_reg].minThreshold = new_value; break;
+                    }
                 }
             });
         }
