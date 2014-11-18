@@ -130,12 +130,14 @@ public class HTMConfiguration {
 
         //text - editors
         Object[] objects = mainPanel.getComponents();
+        int counter = 0;
         for (int i = 0; i < objects.length; i++) {
             if (objects[i] instanceof JTextField) {
                 JTextField tf = (JTextField) objects[i];
                 tf.getDocument().addDocumentListener(new DocumentListenerGeneral());
                 tf.getDocument().putProperty("owner", tf);
-                tf.getDocument().putProperty("property_id", i);
+                tf.getDocument().putProperty("property_id", counter);
+                counter++;
             }
         }
         /*
@@ -270,6 +272,9 @@ public class HTMConfiguration {
                     }
                 }
             }
+            textField1.setEnabled(false);
+            //show settings for 0-region
+            showSettingsForRegion(0);
 
             //buttons
             if (this.numOfRegions > 1) nextRegSettingsButton.setEnabled(true);
@@ -287,7 +292,7 @@ public class HTMConfiguration {
                 JTextField tf = (JTextField) objects[i];
                 int property_id = (Integer)tf.getDocument().getProperty("property_id");
                 switch(property_id){
-                    case 0: tf.setText(String.valueOf(settings[regInd].debug)); break;
+                    case 0: tf.setText(String.valueOf((settings[regInd].debug == false) ? 0 : 1)); break;
                     case 1: tf.setText(String.valueOf(settings[regInd].xInput)); break;
                     case 2: tf.setText(String.valueOf(settings[regInd].yInput)); break;
                     case 3: tf.setText(String.valueOf(settings[regInd].xDimension)); break;
@@ -311,10 +316,6 @@ public class HTMConfiguration {
 
     public ImageClass getImg() {
         return img;
-    }
-
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
     }
 
     ////////////////////////////////////Listeners//////////////////////////////////////////
@@ -369,6 +370,14 @@ public class HTMConfiguration {
             loadPropertiesFromFileButton.setEnabled(false);
 
             //fields for settings are not available
+            Object[] objects = mainPanel.getComponents();
+            for (int i = 0; i < objects.length; i++) {
+                if (objects[i] instanceof JTextField) {
+                    JTextField tf = (JTextField) objects[i];
+                    tf.setEditable(false);
+                }
+            }
+            /*
             textField1.setEditable(false);
             textField2.setEditable(false);
             textField3.setEditable(false);
@@ -380,7 +389,7 @@ public class HTMConfiguration {
             textField9.setEditable(false);
             textField10.setEditable(false);
             textField11.setEditable(false);
-            textField12.setEditable(false);
+            textField12.setEditable(false);*/
         }
     }
 
@@ -420,7 +429,7 @@ public class HTMConfiguration {
             try {
                 loadProperties();
                 numOfReg.setText("0");
-                showSettingsForRegion(0);
+                //showSettingsForRegion(0);
             } catch (RegionSettingsException e) {
                 System.out.println("caught " + e);
             }
@@ -503,9 +512,9 @@ public class HTMConfiguration {
                     double new_value = 0.0;
 
                     try {
-                        new_value = Double.parseDouble(tf.getText());
+                           new_value = Double.parseDouble(tf.getText());
                     } catch (NumberFormatException ex) {
-                        System.out.print("Wrong properties for region " + numOfReg);
+                        System.out.print("Wrong properties for region " + num_of_reg);
                         DHMSettings default_settings = DHMSettings.getDefaultSettings();
                         double tmp = 0.0;
                         switch(property_id){
