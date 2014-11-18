@@ -313,6 +313,10 @@ public class HTMConfiguration {
         return img;
     }
 
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+    }
+
     ////////////////////////////////////Listeners//////////////////////////////////////////
     private class PreviousRegSettingsButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
