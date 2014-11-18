@@ -11,112 +11,49 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
 
-public class ActiveColumnsVisualization extends JFrame {
+public class ActiveColumnsVisualization extends JPanel {
 
-    public JPanel activeColumnsPanel_main;
     private JPanel activeColsPanel;
-    private JSlider slider1;
-    private JLabel spinnersLabel;
-    private JButton buttonUP;
-    private JButton buttonDOWN;
-    private JLabel regionLabel;
-    private JLabel numOfRegToDraw;
     private HighlightableArea ha;
     private NeocortexAction crtx;
-    private int curTime = 0;
     private final int PANEL_DIMENSION_X = 500;
     private final int PANEL_DIMENSION_Y = 500;
-    private int indOfUpReg = 0;
-    private int indOfDownReg = 0;
 
-    public ActiveColumnsVisualization(){
+    public ActiveColumnsVisualization(JPanel ActiveColsVisGenView){
+        activeColsPanel = ActiveColsVisGenView;
         activeColsPanel.setPreferredSize(new Dimension(PANEL_DIMENSION_X, PANEL_DIMENSION_Y));
-
-        slider1.addChangeListener(new BoundedChangeListener());
-        slider1.setMinorTickSpacing(2);
-        slider1.setMajorTickSpacing(10);
-        slider1.setPaintTicks(true);
-        slider1.setPaintLabels(true);
-
-        //Create the label table
-        Hashtable labelTable = new Hashtable();
-        labelTable.put( new Integer( 0 ), new JLabel("0") );
-        labelTable.put( new Integer( 50 ), new JLabel("0.5") );
-        labelTable.put( new Integer( 100 ), new JLabel("1.0") );
-        slider1.setLabelTable( labelTable );
-        slider1.setPaintLabels(true);
-
-        buttonUP.addActionListener(new ButtonUPListener());
-        buttonDOWN.addActionListener(new ButtonDOWNListener());
     }
 
-    private class ButtonUPListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            //inc counter of current region
-            int numOfNextReg = Integer.parseInt(numOfRegToDraw.getText()) + 1;
-            if (numOfNextReg == 1)
-                buttonDOWN.setEnabled(true);
-            numOfRegToDraw.setText(String.valueOf(numOfNextReg));
-
-            indOfUpReg++;
-            indOfDownReg++;
-            draw(indOfUpReg, indOfDownReg);
-            if (numOfNextReg == crtx.getNumOfRegions() - 1)
-                buttonUP.setEnabled(false);
-            }
-    }
-
-    private class ButtonDOWNListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-
-            int numOfPrevReg = Integer.parseInt(numOfRegToDraw.getText()) - 1;
-            if (numOfPrevReg  == crtx.getNumOfRegions() - 2)
-                buttonUP.setEnabled(true);
-            numOfRegToDraw.setText(String.valueOf(numOfPrevReg));
-
-            indOfUpReg--;
-            indOfDownReg--;
-            draw(indOfUpReg, indOfDownReg);
-            if (numOfPrevReg == 0)
-                buttonDOWN.setEnabled(false);
-        }
-    }
-
-    private class BoundedChangeListener implements ChangeListener {
-        public void stateChanged(ChangeEvent changeEvent) {
-            if (!slider1.getValueIsAdjusting()) {
+    /*
                 activeColsPanel.remove(ha);
                 AreaHighlightTest();
                 activeColumnsPanel_main.setVisible(false);
                 activeColumnsPanel_main.setVisible(true);
-            }
-        }
-    }
+     */
 
     private void AreaHighlightTest() {
         activeColsPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(5, 5, 5, 5),
                 BorderFactory.createLineBorder(Color.blue)));
 
-        // TODO P: make changes
-       // ha = new HighlightableArea(crtx, indOfUpReg, indOfDownReg, curTime,(float)slider1.getValue()/100.0);
-       // ha.setBackground(Color.white);
-       // activeColsPanel.add(ha, BorderLayout.CENTER);
-        activeColsPanel.setVisible(true);
+
+       ha = new HighlightableArea(crtx, 1, 0, 0,0.5);
+       ha.setBackground(Color.white);
+       activeColsPanel.add(ha, BorderLayout.CENTER);
+       activeColsPanel.setVisible(true);
     }
 
     public void setSettings(NeocortexAction crtx_){
         if (crtx_.neocortex != null){
             crtx = crtx_;
-            if (crtx.getNumOfRegions() > 1)
-                buttonUP.setEnabled(true);
         }
+
     }
 
     public void draw(int up_regInd, int down_regInd){
       if (crtx.neocortex != null){
-            indOfUpReg = up_regInd;
-            indOfDownReg = down_regInd;
+            //indOfUpReg = up_regInd;
+            //indOfDownReg = down_regInd;
             //TODO P: make changes
             //curTime = crtx.cr.time - 1 > 0 ? crtx.cr.time - 1 : 0;
             if (ha != null)

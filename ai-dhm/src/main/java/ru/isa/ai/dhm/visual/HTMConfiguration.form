@@ -109,24 +109,6 @@
           <text value="Enter"/>
         </properties>
       </component>
-      <component id="24b77" class="javax.swing.JButton" binding="DOWNButton" default-binding="true">
-        <constraints>
-          <grid row="11" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <enabled value="false"/>
-          <text value="DOWN"/>
-        </properties>
-      </component>
-      <component id="2c64d" class="javax.swing.JButton" binding="UPButton">
-        <constraints>
-          <grid row="10" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="2" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <enabled value="false"/>
-          <text value="UP"/>
-        </properties>
-      </component>
       <component id="f456b" class="javax.swing.JCheckBox" binding="inputsGraphicsCheckBox" default-binding="true">
         <constraints>
           <grid row="30" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
@@ -337,16 +319,6 @@
           <background awt-color="white"/>
           <enabled value="false"/>
           <text value="Make Step"/>
-        </properties>
-      </component>
-      <component id="83598" class="javax.swing.JButton" binding="showActiveColumnsButton">
-        <constraints>
-          <grid row="26" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <enabled value="false"/>
-          <hideActionText value="false"/>
-          <text value="Show Active Columns"/>
         </properties>
       </component>
       <component id="f3536" class="javax.swing.JButton" binding="runCortexButton" default-binding="true">

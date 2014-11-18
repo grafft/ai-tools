@@ -39,11 +39,8 @@ public class HTMConfiguration {
     private JButton stopCortexButton;
     private JButton makeStepButton;
     private JButton loadPropertiesFromFileButton;
-    private JButton showActiveColumnsButton;
     private JButton setSettingsButton;
     private JButton putNumOfRegionsButton;
-    private JButton UPButton;
-    private JButton DOWNButton;
     private JButton previousRegSettingsButton;
     private JButton nextRegSettingsButton;
     private JButton savePropertiesToFileButton;
@@ -85,8 +82,6 @@ public class HTMConfiguration {
     private JPanel ActiveColsVisGenView;
     private JPanel ActiveColsSelectedView;
 
-
-    private final static int NUM_OF_PARAMETERS_FOR_1_REG = 12;
     private final static int MAX_NUM_OF_REGIONS = 10;
 
     //HTM Comfiguration properties
@@ -118,11 +113,9 @@ public class HTMConfiguration {
         stopCortexButton.addActionListener(new StopCortexButtonListener());
         makeStepButton.addActionListener(new MakeStepButtonListener());
         runCortexButton.addActionListener(new RunCortexButtonListener());
-        showActiveColumnsButton.addActionListener(new ShowActiveColumnsListener());
+        //showActiveColumnsButton.addActionListener(new ShowActiveColumnsListener());
         loadPropertiesFromFileButton.addActionListener(new LoadPropertiesButtonGUIListener());
         putNumOfRegionsButton.addActionListener(new PutNumOfRegionsButtonListener());
-        UPButton.addActionListener(new UPButtonListener());
-        DOWNButton.addActionListener(new DOWNButtonListener());
         setSettingsButton.addActionListener(new SetSettingsButtonListener());
         previousRegSettingsButton.addActionListener(new PreviousRegSettingsButtonListener());
         nextRegSettingsButton.addActionListener(new NextRegSettingsButtonListener());
@@ -140,43 +133,6 @@ public class HTMConfiguration {
                 counter++;
             }
         }
-        /*
-        textField1.getDocument().addDocumentListener(new DocumentListenerGeneral());
-        textField1.getDocument().putProperty("owner", textField1);
-        textField2.getDocument().addDocumentListener(new DocumentListenerGeneral());
-        textField2.getDocument().putProperty("owner", textField2);
-        textField3.getDocument().addDocumentListener(new DocumentListenerGeneral());
-        textField3.getDocument().putProperty("owner", textField3);
-        textField4.getDocument().addDocumentListener(new DocumentListenerGeneral());
-        textField4.getDocument().putProperty("owner", textField4);
-        textField5.getDocument().addDocumentListener(new DocumentListenerGeneral());
-        textField5.getDocument().putProperty("owner", textField5);
-        textField6.getDocument().addDocumentListener(new DocumentListenerGeneral());
-        textField6.getDocument().putProperty("owner", textField6);
-        textField7.getDocument().addDocumentListener(new DocumentListenerGeneral());
-        textField7.getDocument().putProperty("owner", textField7);
-        textField8.getDocument().addDocumentListener(new DocumentListenerGeneral());
-        textField8.getDocument().putProperty("owner", textField8);
-        textField9.getDocument().addDocumentListener(new DocumentListenerGeneral());
-        textField9.getDocument().putProperty("owner", textField9);
-        textField10.getDocument().addDocumentListener(new DocumentListenerGeneral());
-        textField10.getDocument().putProperty("owner", textField10);
-        textField11.getDocument().addDocumentListener(new DocumentListenerGeneral());
-        textField11.getDocument().putProperty("owner", textField11);
-        textField12.getDocument().addDocumentListener(new DocumentListenerGeneral());
-        textField12.getDocument().putProperty("owner", textField12);
-        textField13.getDocument().addDocumentListener(new DocumentListenerGeneral());
-        textField13.getDocument().putProperty("owner", textField13);
-        textField14.getDocument().addDocumentListener(new DocumentListenerGeneral());
-        textField14.getDocument().putProperty("owner", textField14);
-        textField15.getDocument().addDocumentListener(new DocumentListenerGeneral());
-        textField15.getDocument().putProperty("owner", textField15);
-        textField16.getDocument().addDocumentListener(new DocumentListenerGeneral());
-        textField16.getDocument().putProperty("owner", textField16);
-        textField17.getDocument().addDocumentListener(new DocumentListenerGeneral());
-        textField17.getDocument().putProperty("owner", textField17);
-*/
-
         // from 1 to 10, in 1.0 steps start value 1.0
         SpinnerNumberModel model = new SpinnerNumberModel(1, 1, MAX_NUM_OF_REGIONS, 1);
         spinnerNumRegs.setModel(model);
@@ -332,7 +288,7 @@ public class HTMConfiguration {
                 previousRegSettingsButton.setEnabled(false);
         }
     }
-
+/*
     private class UPButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             //inc counter of current region
@@ -359,7 +315,7 @@ public class HTMConfiguration {
             if (numOfPrevReg == 0)
                 DOWNButton.setEnabled(false);
         }
-    }
+    }*/
 
     private class SetSettingsButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -377,19 +333,6 @@ public class HTMConfiguration {
                     tf.setEditable(false);
                 }
             }
-            /*
-            textField1.setEditable(false);
-            textField2.setEditable(false);
-            textField3.setEditable(false);
-            textField4.setEditable(false);
-            textField5.setEditable(false);
-            textField6.setEditable(false);
-            textField7.setEditable(false);
-            textField8.setEditable(false);
-            textField9.setEditable(false);
-            textField10.setEditable(false);
-            textField11.setEditable(false);
-            textField12.setEditable(false);*/
         }
     }
 
@@ -458,16 +401,16 @@ public class HTMConfiguration {
     private class MakeStepButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             neocortexAction.makeStep();
-           /* showActiveColumnsButton.setEnabled(true);
-            neocortexAction.thdMakeStep();
-            if (numOfRegions > 1)
-                UPButton.setEnabled(true);
-            makeStepButton.setEnabled(false);
-            */
-
+            //showActiveColumns();
         }
     }
 
+    private void showActiveColumns(){
+        ActiveColumnsVisualization cl = new ActiveColumnsVisualization(ActiveColsVisGenView);
+        cl.setSettings(neocortexAction);
+        cl.draw(0, -1);
+    }
+    /*
     private class ShowActiveColumnsListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             JFrame f = new JFrame("Active Columns Visualization");
@@ -480,7 +423,7 @@ public class HTMConfiguration {
             f.setVisible(true);
         }
     }
-
+*/
     /////////////////////////////////Property listeners/////////////////////////////////////////////
     private class DocumentListenerGeneral implements javax.swing.event.DocumentListener {
 
