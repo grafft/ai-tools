@@ -79,7 +79,7 @@ public class LogUtils {
                         int i=0;
                         for (int layer = 0; layer < cellsPerCol; layer++) {
                             for (int col = colLine * ColsW; col < (colLine + 1) * ColsW; col++) {
-                                s[i]=String.valueOf(reg.getColumns().get(col).getCells()[layer].getStateHistory()[1]);
+                                s[i]=String.valueOf(reg.getColumns().get(col).getCells()[layer].getStateHistory()[0]);
                                 i++;
                             }
                             s[i++]="";

@@ -29,95 +29,76 @@ public class SpatialPoolerTest  extends TestCase {
 
 
     public void testRun() throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException, InvocationTargetException {
-        testOverlapPhase();
-        testInhibitionPhase();
+        testOverlapPhase(new int[]{1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1}, 4,4,2,2, new int[]{3,2,3,2});
+        testOverlapPhase(new int[]{0,0,0,0, 1,1,1,1, 1,1,1,1, 1,1,1,1}, 4,4,2,2, new int[]{1,1,3,2});
+        testInhibitionPhase(new int[]{1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1}, 4,4,2,2, new boolean[]{true,false,true,false});
+        testInhibitionPhase(new int[]{0,0,0,0, 1,1,1,1, 1,1,1,1, 1,1,1,1}, 4,4,2,2, new boolean[]{false,false,true,false});
+
         testLearningPhase();
+        testUpdateActiveCells(new int[]{1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1}, 4,4,2,2,new boolean[]{true,false,true,false},
+                new String[]{"active", "passive","active", "passive",   "active", "passive","active", "passive",
+                            "active", "passive","active", "passive",    "active", "passive","active", "passive",});
+        testUpdateActiveCells(new int[]{0,0,0,0, 1,1,1,1, 1,1,1,1, 1,1,1,1}, 4,4,2,2, new boolean[]{false,false,true,false},
+                new String[]{"passive", "passive","passive", "passive", "passive", "passive","passive", "passive",
+                             "active", "passive","active", "passive",   "active", "passive","active", "passive",});
     }
+
     public static void main(String[] args) {
 
-            SpatialPoolerTest test=new SpatialPoolerTest();
-            test.initCortex(4,4,2,2);
-
-            final BitVector input = new BitVector(test.settings.xInput * test.settings.yInput);
-            for (int i = 0; i < test.settings.xInput * test.settings.yInput; i++) {
-                //if (Math.random() > 0.3)
-                    input.set(i);
-            }
-
-
-            for(int q=0;q<10;q++) {
-                System.out.println("------- q= "+q+" ----------");
-                BitVector result = test.neocortex.getRegions().get(0).forwardInputProcessing(input);
-
-
-                for (int i = 0; i < result.size(); i++) {
-
-                    System.out.print(i + "= " + result.get(i) + " ");
-                    if ((i + 1) % test.settings.xDimension == 0)
-                        System.out.println();
-
-                }
-            }
-            /*for(Column c : test.neocortex.getRegions().get(0).getColumns().values()) {
-                System.out.print(c.isActive()+" ");
-                if((c.getIndex()+1) % test.settings.xDimension==0)
-                    System.out.println();
-            } */
 
     }
 
-    public void testOverlapPhase() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException {
+    public void testOverlapPhase(int[] input, int inputW, int inputH, int colW, int colsH, int[] trueOverlaps) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException {
 
             SpatialPoolerTest test=new SpatialPoolerTest();
-            test.initCortex(4,4,2,2);
+            test.initCortex(inputW, inputH, colW, colsH);
             Region r=test.neocortex.getRegions().get(0);
 
-            int[] arr = {1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1};
+            int[] arr = input;
 
-            BitVector input = new BitVector(arr.length);
-            MathUtils.assign(input, arr);
+            BitVector inputvec = new BitVector(arr.length);
+            MathUtils.assign(inputvec, arr);
 
             Method method = Region.class.getDeclaredMethod("overlapPhase", BitVector.class);
             method.setAccessible(true);
-            method.invoke(r,input);
+            method.invoke(r, inputvec);
 
             Field field=Region.class.getDeclaredField("overlaps");
             field.setAccessible(true);
             IntMatrix1D overlaps1D=(IntMatrix1D)field.get(r);
             int[] overlaps=overlaps1D.toArray();
 
-            int[] groundtruth={3,2,3,2};
+            int[] groundtruth=trueOverlaps;
             for (int i = 0; i < groundtruth.length; i++)
                 assertTrue(overlaps[i]==groundtruth[i]);
 
 
     }
 
-    public void testInhibitionPhase() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException {
+    public void testInhibitionPhase(int[] input, int inputW, int inputH, int colsW, int colsH, boolean[] trueColStates) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException {
 
         SpatialPoolerTest test=new SpatialPoolerTest();
-        test.initCortex(4,4,2,2);
+        test.initCortex(inputW, inputH, colsW, colsH);
         Region r=test.neocortex.getRegions().get(0);
 
-        int[] arr = {1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1};
 
-        BitVector input = new BitVector(arr.length);
-        MathUtils.assign(input, arr);
+
+        BitVector inputvec = new BitVector(input.length);
+        MathUtils.assign(inputvec, input);
 
         Method method1 = Region.class.getDeclaredMethod("overlapPhase", BitVector.class);
         method1.setAccessible(true);
-        method1.invoke(r,input);
+        method1.invoke(r, inputvec);
 
         Method method2 = Region.class.getDeclaredMethod("inhibitionPhase");
         method2.setAccessible(true);
         method2.invoke(r);
 
-
         Field field=Region.class.getDeclaredField("activeColumns");
         field.setAccessible(true);
         BitVector activeColumns=(BitVector)field.get(r);
 
-        boolean[] groundtruth={true,false,true,false};
+        boolean[] groundtruth=trueColStates;
         for (int i = 0; i < groundtruth.length; i++)
             assertTrue(activeColumns.get(i)==groundtruth[i]);
 
@@ -158,65 +139,57 @@ public class SpatialPoolerTest  extends TestCase {
         Field field3=Column.class.getDeclaredField("proximalSegment");
         field3.setAccessible(true);
 
-
-        /*for(Column c : columns.values()) {
-            Integer[] neighbors = new Integer[3];
-            c.getNeighbors().toArray(neighbors);
-            int[] groundtruth = IntStream.rangeClosed(0, 3).filter(p-> p!=c.getIndex()).toArray();
-            for (int i = 0; i < groundtruth.length; i++)
-                assertTrue(neighbors[i]==groundtruth[i]);
-
-            if(c.isActive()) {
-                ProximalSegment proximalSegment = (ProximalSegment) field3.get(c);
-                assertTrue(proximalSegment.getReceptieveFieldSize()==2);
-
-            }
-        } */
+        // проверим как изменился boost-фактор и перманентности синапсов проксимального сегмента каждой колонки
+        // TODO P: done it!
     }
 
 
-    public void testUpdateActiveCells() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException {
+    public void testUpdateActiveCells(int[] input, int inputW, int inputH, int colsW, int colsH, boolean[] trueColStates, String[] trueCellStates) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException {
         LogUtils.Open("cells.csv", "cols.csv");
 
         SpatialPoolerTest test=new SpatialPoolerTest();
-        test.initCortex(4,4,2,2);
+        test.initCortex(inputW,inputH,colsW,colsH);
         Region r=test.neocortex.getRegions().get(0);
 
-        int[] arr = {1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1};
+        BitVector inputvec = new BitVector(input.length);
+        MathUtils.assign(inputvec, input);
 
-        BitVector input = new BitVector(arr.length);
-        MathUtils.assign(input, arr);
+        LogUtils.printToCVS(r,"after initialization");
 
-        LogUtils.printToCVS(r,"before iterate");
-
-        // первая итерация для данного теста всегда дает один и тот же результат
-        //test.neocortex.iterate(input);
-
-        r.forwardInputProcessing(input);
+        r.forwardInputProcessing(inputvec);
         LogUtils.printToCVS(r,"after 1st forwardInputProcessing");
-/*
-        for(Cell c : r.getColumns().get(0).getCells())
-            assertTrue(c.getStateHistory()[0]== Cell.State.active);
 
-        LogUtils.printToCVS(r,"after iterate");
+        //проверим, что победила та колонка, которую мы ожидаем
+        Field field=Region.class.getDeclaredField("activeColumns");
+        field.setAccessible(true);
+        BitVector activeColumns=(BitVector)field.get(r);
 
-        BitVector output=r.forwardInputProcessing(input);
-        LogUtils.printToCVS(r,"after 2nd forwardInputProcessing");
+        boolean[] groundtruth=trueColStates;
+        for (int i = 0; i < groundtruth.length; i++)
+            assertTrue(activeColumns.get(i)==groundtruth[i]);
+
 
         Method method = Region.class.getDeclaredMethod("updateActiveCells");
         method.setAccessible(true);
         method.invoke(r);
-        LogUtils.printToCVS(r,"after updateActiveCells");
+        LogUtils.printToCVS(r,"after 1st updateActiveCells");
 
-        Field field=Region.class.getDeclaredField("overlaps");
-        field.setAccessible(true);
-        IntMatrix1D overlaps1D=(IntMatrix1D)field.get(r);
-        int[] overlaps=overlaps1D.toArray();
+        int i=0;
+        //проверка активности клеток
+        for (int colLine = 0; colLine < colsH; colLine++) {
+            // перебор всех слоев клеток
 
-        int[] groundtruth={3,2,3,2};
-        for (int i = 0; i < groundtruth.length; i++)
-            assertTrue(overlaps[i]==groundtruth[i]);
-  */  }
+            for (int layer = 0; layer < test.settings.cellsPerColumn; layer++) {
+                for (int col = colLine * colsW; col < (colLine + 1) * colsW; col++) {
+                    String state=r.getColumns().get(col).getCells()[layer].getStateHistory()[0].toString();
+                    assertTrue(trueCellStates[i].equalsIgnoreCase(state));
+                    i++;
+                }
+            }
+
+        }
+
+    }
 
 
     private void initCortex(int xInput,int yInput,int xDimension,int yDimension) {
