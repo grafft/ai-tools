@@ -34,7 +34,9 @@ public class SpatialPoolerTest  extends TestCase {
         testInhibitionPhase(new int[]{1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1}, 4,4,2,2, new boolean[]{true,false,true,false});
         testInhibitionPhase(new int[]{0,0,0,0, 1,1,1,1, 1,1,1,1, 1,1,1,1}, 4,4,2,2, new boolean[]{false,false,true,false});
 
-        testLearningPhase();
+        testLearningPhase(new int[]{1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1}, 4,4,2,2, new double[]{1,1,1,1},
+                new boolean[][]{{true,true,true,true,true},{false,true,false,false,true},{true,true,true,true,true},{false,true,false,false,true}}
+        );
         testUpdateActiveCells(new int[]{1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1}, 4,4,2,2,new boolean[]{true,false,true,false},
                 new String[]{"active", "passive","active", "passive",   "active", "passive","active", "passive",
                             "active", "passive","active", "passive",    "active", "passive","active", "passive",});
@@ -71,8 +73,6 @@ public class SpatialPoolerTest  extends TestCase {
             int[] groundtruth=trueOverlaps;
             for (int i = 0; i < groundtruth.length; i++)
                 assertTrue(overlaps[i]==groundtruth[i]);
-
-
     }
 
     public void testInhibitionPhase(int[] input, int inputW, int inputH, int colsW, int colsH, boolean[] trueColStates) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException {
@@ -105,42 +105,51 @@ public class SpatialPoolerTest  extends TestCase {
 
     }
 
-    public void testLearningPhase() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException {
+    public void testLearningPhase(int[] input, int inputW, int inputH, int colsW, int colsH, double[] trueBoosts, boolean[][] trueConnected) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException {
 
         SpatialPoolerTest test=new SpatialPoolerTest();
-        test.initCortex(4,4,2,2);
+        test.initCortex(inputW, inputH, colsW, colsH);
         Region r=test.neocortex.getRegions().get(0);
 
-        int[] arr = {1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1};
-
-        BitVector input = new BitVector(arr.length);
-        MathUtils.assign(input, arr);
-
-        Method method1 = Region.class.getDeclaredMethod("overlapPhase", BitVector.class);
-        method1.setAccessible(true);
-        method1.invoke(r,input);
-
-        Method method2 = Region.class.getDeclaredMethod("inhibitionPhase");
-        method2.setAccessible(true);
-        method2.invoke(r);
+        BitVector inputvec = new BitVector(input.length);
+        MathUtils.assign(inputvec, input);
 
         Field field1=Region.class.getDeclaredField("iterationNum");
         field1.setAccessible(true);
         field1.set(r,1);
 
+        Method method1 = Region.class.getDeclaredMethod("overlapPhase", BitVector.class);
+        method1.setAccessible(true);
+        method1.invoke(r,inputvec);
+
+        Method method2 = Region.class.getDeclaredMethod("inhibitionPhase");
+        method2.setAccessible(true);
+        method2.invoke(r);
+
         Method method3 = Region.class.getDeclaredMethod("learningPhase", BitVector.class);
         method3.setAccessible(true);
-        method3.invoke(r,input);
-
-        Field field2=Region.class.getDeclaredField("columns");
-        field2.setAccessible(true);
-        Map<Integer, Column> columns=(Map<Integer, Column>)field2.get(r);
+        method3.invoke(r,inputvec);
 
         Field field3=Column.class.getDeclaredField("proximalSegment");
         field3.setAccessible(true);
 
-        // проверим как изменился boost-фактор и перманентности синапсов проксимального сегмента каждой колонки
-        // TODO P: done it!
+        Field field4=ProximalSegment.class.getDeclaredField("potentialSynapses");
+        field4.setAccessible(true);
+
+        // проверим как изменился boost-фактор и состояние синапсов проксимального сегмента каждой колонки
+        int i=0;
+        for (Column c : r.getColumns().values()) {
+            ProximalSegment ps=(ProximalSegment) field3.get(c);
+            assertTrue(ps.getBoostFactor() ==  trueBoosts[i]);
+
+            Map<Integer, Synapse> psyn=(Map<Integer, Synapse>) field4.get(ps);
+            int j=0;
+            for (Synapse syn : psyn.values()) {
+                assertTrue(syn.isConnected() ==  trueConnected[i][j]);
+                j++;
+            }
+            i++;
+        }
     }
 
 
@@ -186,9 +195,7 @@ public class SpatialPoolerTest  extends TestCase {
                     i++;
                 }
             }
-
         }
-
     }
 
 
