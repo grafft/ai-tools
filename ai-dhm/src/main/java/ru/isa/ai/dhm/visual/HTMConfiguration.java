@@ -124,7 +124,7 @@ public class HTMConfiguration {
 
         contentPane = new ShowVisTree();
         contentPane.setOpaque(true);
-        ActiveColsVisGenView.add(contentPane);
+        ActiveColsVisGenView.add(contentPane); //the results of tree preparation
 
         //text - editors
         Object[] objects = mainPanel.getComponents();
