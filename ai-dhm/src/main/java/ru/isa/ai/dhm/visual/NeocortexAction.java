@@ -48,7 +48,7 @@ public class NeocortexAction implements ActionListener {
 
         Region leaf = neocortex.addRegion(settings[0], null);
         for(int i=1;i<settings.length;i++)
-            leaf = neocortex.addRegion(settings[i], new ArrayList<>(Arrays.asList(leaf)));
+            leaf = neocortex.addRegion(settings[i], null);
 
         neocortex.initialization();
     }

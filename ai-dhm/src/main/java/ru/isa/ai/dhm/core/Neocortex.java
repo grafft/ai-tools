@@ -53,8 +53,6 @@ public class Neocortex {
     }
 */
 
-
-
     public Region addRegion(DHMSettings settings, Region itsParent) {
         Region region = new Region(settings);
         if (itsParent != null) {

@@ -94,6 +94,7 @@ public class HTMConfiguration {
     private String imagePath;
     private String PROPERTY_POSTFIX = ".properties";
     private String path;
+    private ShowVisTree contentPane;
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("HTMConfiguration");
@@ -101,7 +102,7 @@ public class HTMConfiguration {
         frame.setContentPane(panel.mainPanel);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
-        frame.setResizable(false);
+        frame.setResizable(true);
         frame.setVisible(true);
     }
 
@@ -120,6 +121,10 @@ public class HTMConfiguration {
         previousRegSettingsButton.addActionListener(new PreviousRegSettingsButtonListener());
         nextRegSettingsButton.addActionListener(new NextRegSettingsButtonListener());
         savePropertiesToFileButton.addActionListener(new SavePropertiesToFileButtonListener());
+
+        contentPane = new ShowVisTree();
+        contentPane.setOpaque(true);
+        ActiveColsVisGenView.add(contentPane);
 
         //text - editors
         Object[] objects = mainPanel.getComponents();
@@ -273,6 +278,7 @@ public class HTMConfiguration {
     public ImageClass getImg() {
         return img;
     }
+
 
     ////////////////////////////////////Listeners//////////////////////////////////////////
     private class PreviousRegSettingsButtonListener implements ActionListener {
