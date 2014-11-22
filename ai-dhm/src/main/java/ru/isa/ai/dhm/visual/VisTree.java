@@ -21,14 +21,20 @@ public class VisTree extends JPanel {
     protected DefaultTreeModel treeModel;
     protected JTree tree;
     private Toolkit toolkit = Toolkit.getDefaultToolkit();
+    private NewTreeCellRenderer renderer;
 
     public VisTree() {
         super(new GridLayout(1,0));
 
-        rootNode = new DefaultMutableTreeNode("Root Region");
+        rootNode = new DefaultMutableTreeNode("HTM Network");
         treeModel = new DefaultTreeModel(rootNode);
         treeModel.addTreeModelListener(new MyTreeModelListener());
         tree = new JTree(treeModel);
+        tree.setToolTipText("Pink - uninitialized object, Green - initialized object, Yellow - selected one");
+        tree.setEditable(false);
+        renderer = new NewTreeCellRenderer() ; //////////////сделать параметр
+        tree.setCellRenderer(renderer);
+
         tree.setEditable(true);
         tree.getSelectionModel().setSelectionMode
                 (TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -48,9 +54,11 @@ public class VisTree extends JPanel {
         if (currentSelection != null) {
             DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode)
                     (currentSelection.getLastPathComponent());
+
             MutableTreeNode parent = (MutableTreeNode)(currentNode.getParent());
             if (parent != null) {
                 treeModel.removeNodeFromParent(currentNode);
+                if (parent.toString() != "HTM Network" && parent.getChildCount() == 0) addObject((DefaultMutableTreeNode)parent, "Picture", true);
                 return;
             }
         }
@@ -61,15 +69,29 @@ public class VisTree extends JPanel {
     public DefaultMutableTreeNode addObject(Object child) {
         DefaultMutableTreeNode parentNode = null;
         TreePath parentPath = tree.getSelectionPath();
+        DefaultMutableTreeNode newNode = null, newNodePic = null;
 
         if (parentPath == null) {
             parentNode = rootNode;
+
         } else {
             parentNode = (DefaultMutableTreeNode)
                     (parentPath.getLastPathComponent());
-        }
+            if (parentNode.isLeaf()){ //"Picture"
+                parentNode = (DefaultMutableTreeNode)parentNode.getParent();
+                if (parentNode != null) treeModel.removeNodeFromParent(parentNode.getFirstLeaf());
 
-        return addObject(parentNode, child, true);
+            }
+            else{ //"Region"
+                for (int i = 0; i < parentNode.getChildCount(); i++){
+                    if (parentNode.getChildAt(i).isLeaf())
+                        treeModel.removeNodeFromParent(parentNode.getFirstLeaf());
+                }
+
+            }
+        }
+        newNodePic = addObject(newNode = addObject(parentNode, child, true), "Picture", true);
+        return newNode;
     }
 
     public DefaultMutableTreeNode addObject(DefaultMutableTreeNode parent,

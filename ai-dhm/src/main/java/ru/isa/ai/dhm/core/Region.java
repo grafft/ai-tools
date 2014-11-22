@@ -20,6 +20,7 @@ import java.util.Map;
  * Time: 14:24
  */
 public class Region {
+
     private DHMSettings settings;
     private Region parent = null;
     private List<Region> childRegions = new ArrayList<>();

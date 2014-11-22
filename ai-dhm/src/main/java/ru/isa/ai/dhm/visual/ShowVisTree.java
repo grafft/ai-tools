@@ -22,6 +22,7 @@ public class ShowVisTree extends JPanel
         super(new BorderLayout());
 
         treePanel = new VisTree();
+
         populateTree(treePanel);
 
         JButton addButton = new JButton("Add");
@@ -48,7 +49,7 @@ public class ShowVisTree extends JPanel
     }
 
     public void populateTree(VisTree treePanel) {
-        String name = new String("Region");
+       /* String name = new String("Region");
 
         DefaultMutableTreeNode p1, p2;
 
@@ -59,14 +60,14 @@ public class ShowVisTree extends JPanel
         treePanel.addObject(p1, name);
 
         treePanel.addObject(p2, name);
-        treePanel.addObject(p2, name);
+        treePanel.addObject(p2, name);*/
     }
 
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
 
         if (ADD_COMMAND.equals(command)) {
-            treePanel.addObject("Region");// + newNodeSuffix++);
+            treePanel.addObject("Region " + newNodeSuffix++);
         } else if (REMOVE_COMMAND.equals(command)) {
             treePanel.removeCurrentNode();
         } else if (CLEAR_COMMAND.equals(command)) {

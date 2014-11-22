@@ -1,18 +1,20 @@
 package ru.isa.ai.dhm.visual;
 
 import info.monitorenter.gui.chart.Chart2D;
-import org.omg.CORBA.*;
 import ru.isa.ai.dhm.DHMSettings;
 import ru.isa.ai.dhm.RegionSettingsException;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.event.DocumentEvent;
-import javax.swing.text.Document;
-import javax.xml.soap.Text;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.Object;
+import java.util.*;
+import java.util.List;
 
 public class HTMConfiguration {
     //text fields
@@ -95,6 +97,7 @@ public class HTMConfiguration {
     private String PROPERTY_POSTFIX = ".properties";
     private String path;
     private ShowVisTree contentPane;
+    private Map<Integer, Boolean> initedRegs = new HashMap<>();
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("HTMConfiguration");
@@ -104,6 +107,7 @@ public class HTMConfiguration {
         frame.pack();
         frame.setResizable(true);
         frame.setVisible(true);
+
     }
 
     public HTMConfiguration() {
@@ -205,6 +209,27 @@ public class HTMConfiguration {
         potentialRadius = potentialRadius > numInputs ? numInputs : potentialRadius;
     }
     */
+
+    private int getID(String fullName){
+        String textID = fullName.substring(fullName.indexOf(" ")+1);
+        int ID = 0;
+        Boolean isInited = false;
+        try{
+            ID = Integer.valueOf(textID);
+        }
+        catch(Exception ex){System.out.print(ex);}
+        return ID;
+    }
+
+    private Boolean regIsInited(String fullName){
+        String textID = fullName.substring(fullName.indexOf(" ")+1);
+        int ID = getID(fullName);
+        Boolean isInited = false;
+            if (initedRegs.containsKey(ID)){
+                isInited = initedRegs.get(ID);
+            }
+        return isInited;
+    }
 
     private void saveProperties() throws RegionSettingsException {
         int numOfFiles = (Integer) spinnerNumRegs.getValue();
@@ -325,7 +350,29 @@ public class HTMConfiguration {
 
     private class SetSettingsButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+//теперь задает настройки только для региона, который выбран в дереве
 
+            //соотнесение настроек
+
+
+            //выделение зеленым цветом, но надо только, если еще не зеленая
+           /* Object[] objects = contentPane.getComponents();
+            for (int i = 0; i < objects.length; i++) {
+                if (objects[i] instanceof VisTree) {
+                    VisTree vt = (VisTree) objects[i];
+                    TreePath currentSelection = vt.tree.getSelectionPath();
+                    if (currentSelection != null) {
+                        DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode)
+                                (currentSelection.getLastPathComponent());
+                        JLabel l = new JLabel(currentNode.toString()/*имя узла*///);
+                        /*l.setBackground(Color.green);
+                        vt.add(l);
+                    }
+                }
+            }*/
+
+
+            /*
             initCortex();
             makeStepButton.setEnabled(true);
             setSettingsButton.setEnabled(false);
@@ -338,7 +385,7 @@ public class HTMConfiguration {
                     JTextField tf = (JTextField) objects[i];
                     tf.setEditable(false);
                 }
-            }
+            }*/
         }
     }
 
