@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.isa.ai.dhm.DHMSettings;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,8 @@ public class Neocortex {
             region.updateRelations();
         }
         logger.debug("End neocortex iteration");
+
+
     }
 
     public Region addRegion(DHMSettings settings, List<Region> children) {

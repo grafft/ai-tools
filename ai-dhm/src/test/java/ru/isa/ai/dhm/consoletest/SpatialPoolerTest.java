@@ -199,6 +199,52 @@ public class SpatialPoolerTest  extends TestCase {
     }
 
 
+    public void testUpdatePredictiveCells(int[] input, int inputW, int inputH, int colsW, int colsH, boolean[] trueColStates, String[] trueCellStates) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException {
+        LogUtils.Open("cells.csv", "cols.csv");
+
+        SpatialPoolerTest test=new SpatialPoolerTest();
+        test.initCortex(inputW,inputH,colsW,colsH);
+        Region r=test.neocortex.getRegions().get(0);
+
+        BitVector inputvec = new BitVector(input.length);
+        MathUtils.assign(inputvec, input);
+
+        LogUtils.printToCVS(r,"after initialization");
+
+        r.forwardInputProcessing(inputvec);
+        LogUtils.printToCVS(r,"after 1st forwardInputProcessing");
+
+        //проверим, что победила та колонка, которую мы ожидаем
+        Field field=Region.class.getDeclaredField("activeColumns");
+        field.setAccessible(true);
+        BitVector activeColumns=(BitVector)field.get(r);
+
+        boolean[] groundtruth=trueColStates;
+        for (int i = 0; i < groundtruth.length; i++)
+            assertTrue(activeColumns.get(i)==groundtruth[i]);
+
+
+        Method method = Region.class.getDeclaredMethod("updateActiveCells");
+        method.setAccessible(true);
+        method.invoke(r);
+        LogUtils.printToCVS(r,"after 1st updateActiveCells");
+
+        int i=0;
+        //проверка активности клеток
+        for (int colLine = 0; colLine < colsH; colLine++) {
+            // перебор всех слоев клеток
+
+            for (int layer = 0; layer < test.settings.cellsPerColumn; layer++) {
+                for (int col = colLine * colsW; col < (colLine + 1) * colsW; col++) {
+                    String state=r.getColumns().get(col).getCells()[layer].getStateHistory()[0].toString();
+                    assertTrue(trueCellStates[i].equalsIgnoreCase(state));
+                    i++;
+                }
+            }
+        }
+    }
+
+
     private void initCortex(int xInput,int yInput,int xDimension,int yDimension) {
         settings = DHMSettings.getDefaultSettings();
         settings.debug=true; // отключим недетерменированность в алгоритмах для отладки
