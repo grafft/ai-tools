@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class Region {
     private DHMSettings settings;
-
+    private Region parent = null;
     private List<Region> childRegions = new ArrayList<>();
     private Map<Integer, Column> columns = new HashMap<>(); // можно и в виде массива
     private BitVector activeColumns;  // для оптимизации
@@ -208,6 +208,11 @@ public class Region {
 
     public void addChild(Region child) {
         childRegions.add(child);
+        child.parent = this;
+    }
+
+    public Region getParent(){
+        return this.parent;
     }
 
     public List<Region> getChildRegions() {
@@ -221,4 +226,5 @@ public class Region {
     public BitVector getActiveColumns() {
         return activeColumns;
     }
+
 }
