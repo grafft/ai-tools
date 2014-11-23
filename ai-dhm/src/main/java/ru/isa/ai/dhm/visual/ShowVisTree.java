@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 public class ShowVisTree extends JPanel
         implements ActionListener {
@@ -16,7 +15,7 @@ public class ShowVisTree extends JPanel
     private static String REMOVE_COMMAND = "remove";
     private static String CLEAR_COMMAND = "clear";
 
-    private VisTree treePanel;
+    public VisTree treePanel;
 
     public ShowVisTree() {
         super(new BorderLayout());

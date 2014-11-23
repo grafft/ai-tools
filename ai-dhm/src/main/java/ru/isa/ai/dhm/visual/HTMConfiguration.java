@@ -3,18 +3,19 @@ package ru.isa.ai.dhm.visual;
 import info.monitorenter.gui.chart.Chart2D;
 import ru.isa.ai.dhm.DHMSettings;
 import ru.isa.ai.dhm.RegionSettingsException;
-
 import javax.swing.*;
 import javax.swing.Timer;
 import javax.swing.event.DocumentEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.lang.Object;
+import java.lang.reflect.Field;
 import java.util.*;
-import java.util.List;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreePath;
 
 public class HTMConfiguration {
     //text fields
@@ -40,12 +41,7 @@ public class HTMConfiguration {
     private JButton runCortexButton;
     private JButton stopCortexButton;
     private JButton makeStepButton;
-    private JButton loadPropertiesFromFileButton;
     private JButton setSettingsButton;
-    private JButton putNumOfRegionsButton;
-    private JButton previousRegSettingsButton;
-    private JButton nextRegSettingsButton;
-    private JButton savePropertiesToFileButton;
 
     //check boxes
     public JCheckBox showDendritesGraphCheckBox;
@@ -61,14 +57,10 @@ public class HTMConfiguration {
     public JCheckBox inputsGraphicsCheckBox;
     public JCheckBox drawDendritesTimlineCheckBox;
 
-    //labels
-    private JLabel numRegions;
     private JLabel numOfRegToInit;
     private JLabel setVisualizParameters;
     private JLabel ruleTheMainProcess;
-    private JLabel regionNum;
     private JLabel numOfReg;
-    private JLabel regToDraw;
 
     //panels
     private JPanel mainPanel;
@@ -79,24 +71,26 @@ public class HTMConfiguration {
     private Chart2D chart2D1;
     private Chart2D chart2D2;
 
-    //spinners
-    private JSpinner spinnerNumRegs;
     private JPanel ActiveColsVisGenView;
     private JPanel ActiveColsSelectedView;
 
-    private final static int MAX_NUM_OF_REGIONS = 10;
+    private JButton saveButton;
+    private JButton loadButton;
+
 
     //HTM Comfiguration properties
     private int numOfRegions;
-    private DHMSettings[] settings;
+    private Map<Integer,DHMSettings> settings;
+    DHMSettings currentSettings;
     private Timer timer;
     public NeocortexAction neocortexAction;
     public ImageClass img;
+    private int indexOfActiveReg;
 
     private String imagePath;
     private String PROPERTY_POSTFIX = ".properties";
     private String path;
-    private ShowVisTree contentPane;
+    private JFileChooser fc;
     private Map<Integer, Boolean> initedRegs = new HashMap<>();
 
     public static void main(String[] args) {
@@ -109,6 +103,18 @@ public class HTMConfiguration {
         frame.setVisible(true);
 
     }
+    private int getID(String fullName){
+        String textID = fullName.substring(fullName.indexOf(" ")+1);
+        int ID = 0;
+        try{
+            ID = Integer.valueOf(textID);
+        }
+        catch(Exception ex){System.out.print(ex);}
+        return ID;
+    }
+
+
+
 
     public HTMConfiguration() {
         path = HTMConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath();
@@ -118,18 +124,24 @@ public class HTMConfiguration {
         stopCortexButton.addActionListener(new StopCortexButtonListener());
         makeStepButton.addActionListener(new MakeStepButtonListener());
         runCortexButton.addActionListener(new RunCortexButtonListener());
-        //showActiveColumnsButton.addActionListener(new ShowActiveColumnsListener());
-        loadPropertiesFromFileButton.addActionListener(new LoadPropertiesButtonGUIListener());
-        putNumOfRegionsButton.addActionListener(new PutNumOfRegionsButtonListener());
         setSettingsButton.addActionListener(new SetSettingsButtonListener());
-        previousRegSettingsButton.addActionListener(new PreviousRegSettingsButtonListener());
-        nextRegSettingsButton.addActionListener(new NextRegSettingsButtonListener());
-        savePropertiesToFileButton.addActionListener(new SavePropertiesToFileButtonListener());
+        loadButton.addActionListener(new LoadButtonListener());
+        saveButton.addActionListener(new SaveButtonListener());
 
-        contentPane = new ShowVisTree();
+        ShowVisTree contentPane = new ShowVisTree();
         contentPane.setOpaque(true);
+        contentPane.treePanel.tree.addTreeSelectionListener(new TreeSelectionListener() {
+            public void valueChanged(TreeSelectionEvent e) {
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) e
+                        .getPath().getLastPathComponent();
+                if (node.toString().contains("Region"))
+                    numOfReg.setText(String.valueOf(getID(node.toString())));
+            }
+        });
         ActiveColsVisGenView.add(contentPane); //the results of tree preparation
 
+        currentSettings = DHMSettings.getDefaultSettings();
+        settings = new HashMap<>();
         //text - editors
         Object[] objects = mainPanel.getComponents();
         int counter = 0;
@@ -142,11 +154,10 @@ public class HTMConfiguration {
                 counter++;
             }
         }
-        // from 1 to 10, in 1.0 steps start value 1.0
-        SpinnerNumberModel model = new SpinnerNumberModel(1, 1, MAX_NUM_OF_REGIONS, 1);
-        spinnerNumRegs.setModel(model);
 
+        showCurrentSettings();
         loadImage();
+        fc = new JFileChooser();
     }
 
     public void loadImage() {
@@ -155,122 +166,28 @@ public class HTMConfiguration {
     }
 
     public void initCortex() {
-        neocortexAction = new NeocortexAction(settings);
+        VisTree vt = null;
+        Object[] objects = ActiveColsVisGenView.getComponents();
+        for (int i = 0; i < objects.length; i++) {
+            if (objects[i] instanceof VisTree) {
+                vt = (VisTree) objects[i];
+            }
+        }
+        neocortexAction = new NeocortexAction(settings, vt);
         neocortexAction.init(chart2D1, chart2D2, this);
 
         timer = new Timer(1000, neocortexAction);
         runCortexButton.setEnabled(true);
     }
 
-    private void loadProperties() throws RegionSettingsException { //загрузка данных в массив settings[]
-        // TODO P: как-то тут нужно переписать :) На мой взгляд лучше уж в одном файле настройки для всех регионов хранить
-       /* File listFile = new File(path);
-        File exportFiles[] = listFile.listFiles();
-        String[] names = new String[exportFiles.length];
-        int numOfFilesWithSettings = 0;
-        for (int i = 0; i < names.length; i++) {
-            if (exportFiles[i].getName().contains(PROPERTY_POSTFIX)) {
-                names[i] = exportFiles[i].getName();
-                numOfFilesWithSettings++;
-            }
-        }
-
-
-        prepareInterfaceAndValues(numOfFilesWithSettings, true);
-        spinnerNumRegs.setValue(numOfFilesWithSettings);
-
-        if (numOfFilesWithSettings != 0) {
-            for (int i = 0; i < numOfFilesWithSettings; i++) {
-                settings[i].loadFromFile(path + names[i + 1]);
-            }
-        }*/
-
-        settings = new DHMSettings[1];
-        String path = HTMConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        settings[0] = DHMSettings.loadFromFile(path + "\\" + "test16xOnes.properties");
-
-        setSettingsButton.doClick();
-        setSettingsButton.setEnabled(false);
-        savePropertiesToFileButton.setEnabled(true);
-    }
-
-    // TODO P: полезная функция, нужно доработать
-    /*
-    private void checkProperties() throws RegionInitializationException {
-        if (numColumns <= 0)
-            throw new RegionInitializationException("Column dimensions must be non zero positive values");
-        if (numInputs <= 0)
-            throw new RegionInitializationException("Input dimensions must be non zero positive values");
-        if (numActiveColumnsPerInhArea <= 0 && (localAreaDensity <= 0 || localAreaDensity > 0.5))
-            throw new RegionInitializationException("Or numActiveColumnsPerInhArea > 0 or localAreaDensity > 0 " +
-                    "and localAreaDensity <= 0.5");
-        if (potentialPct <= 0 || potentialPct > 1)
-            throw new RegionInitializationException("potentialPct must be > 0 and <= 1");
-        potentialRadius = potentialRadius > numInputs ? numInputs : potentialRadius;
-    }
-    */
-
-    private int getID(String fullName){
-        String textID = fullName.substring(fullName.indexOf(" ")+1);
-        int ID = 0;
-        Boolean isInited = false;
-        try{
-            ID = Integer.valueOf(textID);
-        }
-        catch(Exception ex){System.out.print(ex);}
-        return ID;
-    }
-
-    private Boolean regIsInited(String fullName){
+    private void initReg(String fullName, Boolean fl){
         String textID = fullName.substring(fullName.indexOf(" ")+1);
         int ID = getID(fullName);
         Boolean isInited = false;
-            if (initedRegs.containsKey(ID)){
-                isInited = initedRegs.get(ID);
-            }
-        return isInited;
+        initedRegs.put(ID, fl); //Добавляет ключ и значение к карте. Если такой ключ уже имеется, то новый объект заменяет предыдущий, связанный с этим ключом.
     }
 
-    private void saveProperties() throws RegionSettingsException {
-        int numOfFiles = (Integer) spinnerNumRegs.getValue();
-        for (int i = 0; i < numOfFiles; i++) {
-            settings[i].saveIntoFile(path + "htm" + String.valueOf(i) + PROPERTY_POSTFIX);
-        }
-    }
-
-    private void prepareInterfaceAndValues(int numOfRegions, boolean textFieldsAvailable) {
-        this.numOfRegions = numOfRegions;
-        if (this.numOfRegions > 0) {
-
-            settings = new DHMSettings[this.numOfRegions];
-            for (int i = 0; i < this.numOfRegions; i++) {
-                settings[i] = new DHMSettings();
-            }
-
-            if (textFieldsAvailable) {
-                /////////////////////////////////////////////////////
-                //edits for settings  should be enabled
-                Object[] objects = mainPanel.getComponents();
-                for (int i = 0; i < objects.length; i++) {
-                    if (objects[i] instanceof JTextField) {
-                        JTextField tf = (JTextField) objects[i];
-                        tf.setEnabled(true);
-                    }
-                }
-            }
-            textField1.setEnabled(false);
-            //show settings for 0-region
-            showSettingsForRegion(0);
-
-            //buttons
-            if (this.numOfRegions > 1) nextRegSettingsButton.setEnabled(true);
-            setSettingsButton.setEnabled(true);
-            putNumOfRegionsButton.setEnabled(false);
-            spinnerNumRegs.setEnabled(false);
-        }
-    }
-
-    private void showSettingsForRegion(int regInd) {
+    private void showCurrentSettings() {
 
         Object[] objects = mainPanel.getComponents();
         for (int i = 0; i < objects.length; i++) {
@@ -278,23 +195,23 @@ public class HTMConfiguration {
                 JTextField tf = (JTextField) objects[i];
                 int property_id = (Integer)tf.getDocument().getProperty("property_id");
                 switch(property_id){
-                    case 0: tf.setText(String.valueOf((settings[regInd].debug == false) ? 0 : 1)); break;
-                    case 1: tf.setText(String.valueOf(settings[regInd].xInput)); break;
-                    case 2: tf.setText(String.valueOf(settings[regInd].yInput)); break;
-                    case 3: tf.setText(String.valueOf(settings[regInd].xDimension)); break;
-                    case 4: tf.setText(String.valueOf(settings[regInd].yDimension)); break;
-                    case 5: tf.setText(String.valueOf(settings[regInd].initialInhibitionRadius)); break;
-                    case 6: tf.setText(String.valueOf(settings[regInd].potentialRadius)); break;
-                    case 7: tf.setText(String.valueOf(settings[regInd].cellsPerColumn)); break;
-                    case 8: tf.setText(String.valueOf(settings[regInd].newSynapseCount)); break;
-                    case 9: tf.setText(String.valueOf(settings[regInd].desiredLocalActivity)); break;
-                    case 10: tf.setText(String.valueOf(settings[regInd].minOverlap)); break;
-                    case 11: tf.setText(String.valueOf(settings[regInd].connectedPerm)); break;
-                    case 12: tf.setText(String.valueOf(settings[regInd].permanenceInc)); break;
-                    case 13: tf.setText(String.valueOf(settings[regInd].permanenceDec)); break;
-                    case 14: tf.setText(String.valueOf(settings[regInd].activationThreshold)); break;
-                    case 15: tf.setText(String.valueOf(settings[regInd].initialPerm)); break;
-                    case 16: tf.setText(String.valueOf(settings[regInd].minThreshold)); break;
+                    case 0: tf.setText(String.valueOf((currentSettings.debug == false) ? 0 : 1)); break;
+                    case 1: tf.setText(String.valueOf(currentSettings.xInput)); break;
+                    case 2: tf.setText(String.valueOf(currentSettings.yInput)); break;
+                    case 3: tf.setText(String.valueOf(currentSettings.xDimension)); break;
+                    case 4: tf.setText(String.valueOf(currentSettings.yDimension)); break;
+                    case 5: tf.setText(String.valueOf(currentSettings.initialInhibitionRadius)); break;
+                    case 6: tf.setText(String.valueOf(currentSettings.potentialRadius)); break;
+                    case 7: tf.setText(String.valueOf(currentSettings.cellsPerColumn)); break;
+                    case 8: tf.setText(String.valueOf(currentSettings.newSynapseCount)); break;
+                    case 9: tf.setText(String.valueOf(currentSettings.desiredLocalActivity)); break;
+                    case 10: tf.setText(String.valueOf(currentSettings.minOverlap)); break;
+                    case 11: tf.setText(String.valueOf(currentSettings.connectedPerm)); break;
+                    case 12: tf.setText(String.valueOf(currentSettings.permanenceInc)); break;
+                    case 13: tf.setText(String.valueOf(currentSettings.permanenceDec)); break;
+                    case 14: tf.setText(String.valueOf(currentSettings.activationThreshold)); break;
+                    case 15: tf.setText(String.valueOf(currentSettings.initialPerm)); break;
+                    case 16: tf.setText(String.valueOf(currentSettings.minThreshold)); break;
                 }
             }
         }
@@ -306,141 +223,76 @@ public class HTMConfiguration {
 
 
     ////////////////////////////////////Listeners//////////////////////////////////////////
-    private class PreviousRegSettingsButtonListener implements ActionListener {
+    private class LoadButtonListener  implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            //dec counter of current region
-            int numOfPrevReg = Integer.parseInt(numOfReg.getText()) - 1;
-            if (numOfPrevReg == numOfRegions - 2)
-                nextRegSettingsButton.setEnabled(true);
-            numOfReg.setText(String.valueOf(numOfPrevReg));
-            //show setting for previous region
-            showSettingsForRegion(numOfPrevReg);
-            if (numOfPrevReg == 0)
-                previousRegSettingsButton.setEnabled(false);
+            int returnVal = fc.showOpenDialog(null);
+            try{
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fc.getSelectedFile();
+                if (file.getName().contains(PROPERTY_POSTFIX)){
+                    try {
+                        currentSettings = DHMSettings.loadFromFile(file.getPath());
+                        showCurrentSettings();
+                    }catch (Exception exc){
+                        System.out.print(exc);
+                    }
+                }
+                else System.out.print("File has non appropriate format");
+            }
+        }catch (Exception exc){
+                JOptionPane.showMessageDialog(null, "File could not be loaded, try again.");
+            }
+        }
+
+     }
+
+    private class SaveButtonListener  implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            fc = new JFileChooser();
+            fc.setSelectedFile(new File("Region "+ numOfReg.getText() + PROPERTY_POSTFIX));
+            int status = fc.showSaveDialog(null);
+
+            try {
+                if (status == JFileChooser.APPROVE_OPTION) {
+                    File saveFile = fc.getSelectedFile();
+                    currentSettings.saveIntoFile(saveFile.getPath());
+                } else if (status == JFileChooser.CANCEL_OPTION) {
+                    // User has pressed cancel button
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "File could not be written, try again.");
+            }
         }
     }
-/*
-    private class UPButtonListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            //inc counter of current region
-            int numOfNextReg = Integer.parseInt(regToDraw.getText()) + 1;
-            if (numOfNextReg == 1)
-                DOWNButton.setEnabled(true);
-            regToDraw.setText(String.valueOf(numOfNextReg));
 
-            neocortexAction.drawOnChart(numOfNextReg);
-            if (numOfNextReg == numOfRegions - 1)
-                UPButton.setEnabled(false);
-        }
-    }
-
-    private class DOWNButtonListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            //dec counter of current region
-            int numOfPrevReg = Integer.parseInt(regToDraw.getText()) - 1;
-            if (numOfPrevReg == numOfRegions - 2)
-                UPButton.setEnabled(true);
-            regToDraw.setText(String.valueOf(numOfPrevReg));
-
-            neocortexAction.drawOnChart(numOfPrevReg);
-            if (numOfPrevReg == 0)
-                DOWNButton.setEnabled(false);
-        }
-    }*/
 
     private class SetSettingsButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
 //теперь задает настройки только для региона, который выбран в дереве
 
-            //соотнесение настроек
-
+            int regID = Integer.valueOf(numOfReg.getText());
+            settings.put(regID,currentSettings);
+            initedRegs.put(regID, true);
 
             //выделение зеленым цветом, но надо только, если еще не зеленая
-           /* Object[] objects = contentPane.getComponents();
+
+            Object[] objects = ActiveColsVisGenView.getComponents();
             for (int i = 0; i < objects.length; i++) {
-                if (objects[i] instanceof VisTree) {
-                    VisTree vt = (VisTree) objects[i];
-                    TreePath currentSelection = vt.tree.getSelectionPath();
-                    if (currentSelection != null) {
-                        DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode)
-                                (currentSelection.getLastPathComponent());
-                        JLabel l = new JLabel(currentNode.toString()/*имя узла*///);
-                        /*l.setBackground(Color.green);
-                        vt.add(l);
-                    }
+                if (objects[i] instanceof ShowVisTree ) {
+                    ShowVisTree svt = (ShowVisTree) objects[i];
+                    svt.treePanel.renderer.updateHashMap(initedRegs);
                 }
-            }*/
-
-
-            /*
-            initCortex();
-            makeStepButton.setEnabled(true);
-            setSettingsButton.setEnabled(false);
-            loadPropertiesFromFileButton.setEnabled(false);
-
-            //fields for settings are not available
-            Object[] objects = mainPanel.getComponents();
-            for (int i = 0; i < objects.length; i++) {
-                if (objects[i] instanceof JTextField) {
-                    JTextField tf = (JTextField) objects[i];
-                    tf.setEditable(false);
-                }
-            }*/
-        }
-    }
-
-    private class PutNumOfRegionsButtonListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            prepareInterfaceAndValues((Integer) spinnerNumRegs.getValue(), true);
-            savePropertiesToFileButton.setEnabled(true);
-        }
-    }
-
-    private class NextRegSettingsButtonListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            //inc counter of current region
-            int numOfNextReg = Integer.parseInt(numOfReg.getText()) + 1;
-            if (numOfNextReg == 1)
-                previousRegSettingsButton.setEnabled(true);
-            numOfReg.setText(String.valueOf(numOfNextReg));
-            //show setting for previous region
-            showSettingsForRegion(numOfNextReg);
-            if (numOfNextReg == numOfRegions - 1)
-                nextRegSettingsButton.setEnabled(false);
-        }
-    }
-
-    private class SavePropertiesToFileButtonListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            try {
-                saveProperties();
-            } catch (RegionSettingsException ex) {
-                System.out.println("caught " + ex);
             }
         }
     }
 
-    public class LoadPropertiesButtonGUIListener implements ActionListener {
-        public void actionPerformed(ActionEvent event) {
-            try {
-                loadProperties();
-                numOfReg.setText("0");
-                //showSettingsForRegion(0);
-            } catch (RegionSettingsException e) {
-                System.out.println("caught " + e);
-            }
-        }
-    }
 
     public class RunCortexButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             if (!timer.isRunning()) {
                 timer.start();
-                //((JButton) e.getSource()).setText("Stop");
-                //stepButton.setEnabled(false);
             } else {
                 timer.stop();
-                //((JButton) e.getSource()).setText("Start");
             }
         }
     }
@@ -451,9 +303,31 @@ public class HTMConfiguration {
         }
     }
 
+    private Boolean checkInitialization(DefaultMutableTreeNode root){
+        String nodeName = root.toString();
+        int ID = 0;
+        Boolean fl = false;
+
+
+
+
+
+
+
+        return fl;
+     }
+
     private class MakeStepButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            neocortexAction.makeStep();
+            // проверка на то, что все регионы инициализированы
+            Object[] objects = ActiveColsVisGenView.getComponents();
+            for (int i = 0; i < objects.length; i++) {
+                if (objects[i] instanceof ShowVisTree ) {
+                    ShowVisTree svt = (ShowVisTree) objects[i];
+                    if (checkInitialization(svt.treePanel.rootNode))
+                        neocortexAction.makeStep();
+                }
+            }
             //showActiveColumns();
         }
     }
@@ -536,23 +410,23 @@ public class HTMConfiguration {
                         new_value = tmp;
                     }
                     switch(property_id){
-                        case 0: settings[num_of_reg].debug = (new_value == 1) ? true : false ; break;
-                        case 1: settings[num_of_reg].xInput = (int)new_value; break;
-                        case 2: settings[num_of_reg].yInput = (int )new_value; break;
-                        case 3: settings[num_of_reg].xDimension = (int)new_value ; break;
-                        case 4: settings[num_of_reg].yDimension = (int)new_value; break;
-                        case 5: settings[num_of_reg].initialInhibitionRadius = (int)new_value; break;
-                        case 6: settings[num_of_reg].potentialRadius = (int)new_value; break;
-                        case 7: settings[num_of_reg].cellsPerColumn = (int)new_value; break;
-                        case 8: settings[num_of_reg].newSynapseCount= (int)new_value; break;
-                        case 9: settings[num_of_reg].desiredLocalActivity = (int)new_value ; break;
-                        case 10: settings[num_of_reg].minOverlap = (int)new_value; break;
-                        case 11: settings[num_of_reg].connectedPerm = new_value; break;
-                        case 12: settings[num_of_reg].permanenceInc = new_value; break;
-                        case 13: settings[num_of_reg].permanenceDec = new_value; break;
-                        case 14: settings[num_of_reg].activationThreshold = new_value; break;
-                        case 15: settings[num_of_reg].initialPerm = new_value; break;
-                        case 16: settings[num_of_reg].minThreshold = new_value; break;
+                        case 0: currentSettings.debug = (new_value == 1) ? true : false ; break;
+                        case 1: currentSettings.xInput = (int)new_value; break;
+                        case 2: currentSettings.yInput = (int )new_value; break;
+                        case 3: currentSettings.xDimension = (int)new_value ; break;
+                        case 4: currentSettings.yDimension = (int)new_value; break;
+                        case 5: currentSettings.initialInhibitionRadius = (int)new_value; break;
+                        case 6: currentSettings.potentialRadius = (int)new_value; break;
+                        case 7: currentSettings.cellsPerColumn = (int)new_value; break;
+                        case 8: currentSettings.newSynapseCount= (int)new_value; break;
+                        case 9: currentSettings.desiredLocalActivity = (int)new_value ; break;
+                        case 10: currentSettings.minOverlap = (int)new_value; break;
+                        case 11: currentSettings.connectedPerm = new_value; break;
+                        case 12: currentSettings.permanenceInc = new_value; break;
+                        case 13: currentSettings.permanenceDec = new_value; break;
+                        case 14: currentSettings.activationThreshold = new_value; break;
+                        case 15: currentSettings.initialPerm = new_value; break;
+                        case 16: currentSettings.minThreshold = new_value; break;
                     }
                 }
             });

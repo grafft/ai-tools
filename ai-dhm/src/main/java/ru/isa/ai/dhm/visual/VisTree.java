@@ -5,6 +5,7 @@ package ru.isa.ai.dhm.visual;
  */
 import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -19,9 +20,9 @@ import javax.swing.event.TreeModelListener;
 public class VisTree extends JPanel {
     protected DefaultMutableTreeNode rootNode;
     protected DefaultTreeModel treeModel;
-    protected JTree tree;
+    public JTree tree;
     private Toolkit toolkit = Toolkit.getDefaultToolkit();
-    private NewTreeCellRenderer renderer;
+    public NewTreeCellRenderer renderer;
 
     public VisTree() {
         super(new GridLayout(1,0));
@@ -32,10 +33,10 @@ public class VisTree extends JPanel {
         tree = new JTree(treeModel);
         tree.setToolTipText("Pink - uninitialized object, Green - initialized object, Yellow - selected one");
         tree.setEditable(false);
-        renderer = new NewTreeCellRenderer() ; //////////////сделать параметр
+        renderer = new NewTreeCellRenderer() ;
         tree.setCellRenderer(renderer);
 
-        tree.setEditable(true);
+        tree.setEditable(false);
         tree.getSelectionModel().setSelectionMode
                 (TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.setShowsRootHandles(true);

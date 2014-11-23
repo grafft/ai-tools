@@ -3,31 +3,23 @@ package ru.isa.ai.dhm.visual;
 import cern.colt.matrix.tbit.BitVector;
 import info.monitorenter.gui.chart.Chart2D;
 import ru.isa.ai.dhm.DHMSettings;
-import ru.isa.ai.dhm.RegionSettingsException;
 import ru.isa.ai.dhm.core.Neocortex;
 import ru.isa.ai.dhm.core.Region;
-import ru.isa.ai.dhm.core.Column;
-import ru.isa.ai.dhm.core.Cell;
-import ru.isa.ai.dhm.visual.HTMConfiguration;
-import ru.isa.ai.dhm.visual.ImageClass;
-
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-
-import java.util.Arrays;
-import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
 /**
  * Created by gmdidro on 03.11.2014.
  */
 public class NeocortexAction implements ActionListener {
     public Neocortex neocortex;
-    private DHMSettings[] settings;
+    private Map<Integer,DHMSettings> settings;
+    private VisTree tree = new VisTree();
 
     public ImageClass img;
     public ChartHandler chartHandler;
@@ -38,25 +30,37 @@ public class NeocortexAction implements ActionListener {
     private Boolean makeStep = false;
     private Random rnd = new Random();
 
-    public NeocortexAction(DHMSettings[] settings) {
-        this.numRegions = settings.length;
+    public NeocortexAction(Map<Integer,DHMSettings> settings, VisTree tree_) {
+        this.numRegions = settings.size();
         this.settings=settings;
+        tree = tree_;
+    }
+
+    private void makeRegionHierarchy(DefaultMutableTreeNode root, Region parent){
+        String nodeName = root.toString();
+        int ID = 0;
+        Region r = null;
+        if (!nodeName.contains("Picture")){
+            if (!nodeName.contains("HTMNetwork")) {
+                ID = Integer.valueOf(nodeName.substring(nodeName.indexOf(" ") + 1));
+                r = neocortex.addRegion(settings.get(ID), parent);
+            }
+            for (int i = 0; i < root.getChildCount(); i++){
+                makeRegionHierarchy((DefaultMutableTreeNode)root.getChildAt(i),r);
+            }
+        }
     }
 
     private void initCortex() {
         neocortex = new Neocortex();
-
-        Region leaf = neocortex.addRegion(settings[0], null);
-        for(int i=1;i<settings.length;i++)
-            leaf = neocortex.addRegion(settings[i], null);
-
+        makeRegionHierarchy(tree.rootNode, null);
         neocortex.initialization();
     }
 
     public void actionPerformed(ActionEvent e) {
                 //TODO P: тут все для одного слоя (settings[0])
-                final BitVector input = new BitVector(settings[0].xInput * settings[0].yInput);
-                for (int i = 0; i < settings[0].xInput * settings[0].yInput; i++) {
+                final BitVector input = new BitVector(DHMSettings.getDefaultSettings().xInput * DHMSettings.getDefaultSettings().yInput);
+                for (int i = 0; i < DHMSettings.getDefaultSettings().xInput * DHMSettings.getDefaultSettings().yInput; i++) {
                     //if (Math.random() > 0.3)
                     input.set(i);
                 }
@@ -104,8 +108,8 @@ public class NeocortexAction implements ActionListener {
     public void makeStep()
     {
         //TODO P: тут все для одного слоя (settings[0])
-        final BitVector input = new BitVector(settings[0].xInput * settings[0].yInput);
-        for (int i = 0; i < settings[0].xInput * settings[0].yInput; i++) {
+        final BitVector input = new BitVector(DHMSettings.getDefaultSettings().xInput * DHMSettings.getDefaultSettings().yInput);
+        for (int i = 0; i < DHMSettings.getDefaultSettings().xInput * DHMSettings.getDefaultSettings().yInput; i++) {
             //if (Math.random() > 0.3)
             input.set(i);
         }
