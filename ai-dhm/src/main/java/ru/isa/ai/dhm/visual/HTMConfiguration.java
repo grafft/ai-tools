@@ -1,21 +1,22 @@
 package ru.isa.ai.dhm.visual;
 
+import cern.colt.matrix.tbit.BitMatrix;
 import info.monitorenter.gui.chart.Chart2D;
 import ru.isa.ai.dhm.DHMSettings;
-import ru.isa.ai.dhm.RegionSettingsException;
+
 import javax.swing.*;
 import javax.swing.Timer;
 import javax.swing.event.DocumentEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.lang.Object;
-import java.lang.reflect.Field;
 import java.util.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.TreePath;
 
 public class HTMConfiguration {
     //text fields
@@ -60,7 +61,7 @@ public class HTMConfiguration {
     private JLabel numOfRegToInit;
     private JLabel setVisualizParameters;
     private JLabel ruleTheMainProcess;
-    private JLabel numOfReg;
+    private JLabel numOfCell;
 
     //panels
     private JPanel mainPanel;
@@ -76,22 +77,24 @@ public class HTMConfiguration {
 
     private JButton saveButton;
     private JButton loadButton;
+    private JButton showDefaultSetButton;
 
 
     //HTM Comfiguration properties
     private int numOfRegions;
-    private Map<Integer,DHMSettings> settings;
-    DHMSettings currentSettings;
+    private Map<Integer, DHMSettings> settings;
+    private DHMSettings currentSettings;
     private Timer timer;
     public NeocortexAction neocortexAction;
-    public ImageClass img;
+    private ImageClass img;
     private int indexOfActiveReg;
 
     private String imagePath;
     private String PROPERTY_POSTFIX = ".properties";
     private String path;
     private JFileChooser fc;
-    private Map<Integer, Boolean> initedRegs = new HashMap<>();
+    //private Map<Integer, Boolean> initedRegs = new HashMap<>();
+    private Map<Integer, BitMatrix> picID_input = new HashMap<>();
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("HTMConfiguration");
@@ -103,18 +106,17 @@ public class HTMConfiguration {
         frame.setVisible(true);
 
     }
-    private int getID(String fullName){
-        String textID = fullName.substring(fullName.indexOf(" ")+1);
+
+    private int getID(String fullName) {
+        String textID = fullName.substring(fullName.indexOf(" ") + 1);
         int ID = 0;
-        try{
+        try {
             ID = Integer.valueOf(textID);
+        } catch (Exception ex) {
+            System.out.print(ex);
         }
-        catch(Exception ex){System.out.print(ex);}
         return ID;
     }
-
-
-
 
     public HTMConfiguration() {
         path = HTMConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath();
@@ -127,6 +129,10 @@ public class HTMConfiguration {
         setSettingsButton.addActionListener(new SetSettingsButtonListener());
         loadButton.addActionListener(new LoadButtonListener());
         saveButton.addActionListener(new SaveButtonListener());
+        showDefaultSetButton.addActionListener(new ShowDefaultSetButtonListener());
+
+        currentSettings = DHMSettings.getDefaultSettings();
+        settings = new HashMap<>();
 
         ShowVisTree contentPane = new ShowVisTree();
         contentPane.setOpaque(true);
@@ -134,21 +140,38 @@ public class HTMConfiguration {
             public void valueChanged(TreeSelectionEvent e) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) e
                         .getPath().getLastPathComponent();
-                if (node.toString().contains("Region"))
-                    numOfReg.setText(String.valueOf(getID(node.toString())));
+                int id = 0;
+                if (!node.toString().contains("HTM")) {
+                    id = getID(node.toString());
+                    numOfCell.setText(String.valueOf(id));
+                }
+                if (node.toString().contains("Region")) {
+                    setSettingsButton.setEnabled(true);
+
+                    //проверяем, если инициализировали уже
+
+                    if (!settings.isEmpty() && settings.get(id) != null) {
+                        //высвечиваем настройки
+                        currentSettings = settings.get(id);
+                        showCurrentSettings();
+                    }
+                } else { //picture
+                    setSettingsButton.setEnabled(false);
+
+                }
             }
         });
         ActiveColsVisGenView.add(contentPane); //the results of tree preparation
 
-        currentSettings = DHMSettings.getDefaultSettings();
-        settings = new HashMap<>();
+
         //text - editors
+
         Object[] objects = mainPanel.getComponents();
         int counter = 0;
         for (int i = 0; i < objects.length; i++) {
             if (objects[i] instanceof JTextField) {
                 JTextField tf = (JTextField) objects[i];
-                tf.getDocument().addDocumentListener(new DocumentListenerGeneral());
+                //tf.getDocument().addDocumentListener(new DocumentListenerGeneral());
                 tf.getDocument().putProperty("owner", tf);
                 tf.getDocument().putProperty("property_id", counter);
                 counter++;
@@ -156,16 +179,13 @@ public class HTMConfiguration {
         }
 
         showCurrentSettings();
-        loadImage();
+
+        img = new ImageClass();
+
         fc = new JFileChooser();
     }
 
-    public void loadImage() {
-        img = new ImageClass();
-        img.load(imagePath);
-    }
-
-    public void initCortex() {
+    private void initCortex() {
         VisTree vt = null;
         Object[] objects = ActiveColsVisGenView.getComponents();
         for (int i = 0; i < objects.length; i++) {
@@ -180,112 +200,228 @@ public class HTMConfiguration {
         runCortexButton.setEnabled(true);
     }
 
-    private void initReg(String fullName, Boolean fl){
-        String textID = fullName.substring(fullName.indexOf(" ")+1);
-        int ID = getID(fullName);
-        Boolean isInited = false;
-        initedRegs.put(ID, fl); //Добавляет ключ и значение к карте. Если такой ключ уже имеется, то новый объект заменяет предыдущий, связанный с этим ключом.
-    }
-
     private void showCurrentSettings() {
 
         Object[] objects = mainPanel.getComponents();
         for (int i = 0; i < objects.length; i++) {
             if (objects[i] instanceof JTextField) {
                 JTextField tf = (JTextField) objects[i];
-                int property_id = (Integer)tf.getDocument().getProperty("property_id");
-                switch(property_id){
-                    case 0: tf.setText(String.valueOf((currentSettings.debug == false) ? 0 : 1)); break;
-                    case 1: tf.setText(String.valueOf(currentSettings.xInput)); break;
-                    case 2: tf.setText(String.valueOf(currentSettings.yInput)); break;
-                    case 3: tf.setText(String.valueOf(currentSettings.xDimension)); break;
-                    case 4: tf.setText(String.valueOf(currentSettings.yDimension)); break;
-                    case 5: tf.setText(String.valueOf(currentSettings.initialInhibitionRadius)); break;
-                    case 6: tf.setText(String.valueOf(currentSettings.potentialRadius)); break;
-                    case 7: tf.setText(String.valueOf(currentSettings.cellsPerColumn)); break;
-                    case 8: tf.setText(String.valueOf(currentSettings.newSynapseCount)); break;
-                    case 9: tf.setText(String.valueOf(currentSettings.desiredLocalActivity)); break;
-                    case 10: tf.setText(String.valueOf(currentSettings.minOverlap)); break;
-                    case 11: tf.setText(String.valueOf(currentSettings.connectedPerm)); break;
-                    case 12: tf.setText(String.valueOf(currentSettings.permanenceInc)); break;
-                    case 13: tf.setText(String.valueOf(currentSettings.permanenceDec)); break;
-                    case 14: tf.setText(String.valueOf(currentSettings.activationThreshold)); break;
-                    case 15: tf.setText(String.valueOf(currentSettings.initialPerm)); break;
-                    case 16: tf.setText(String.valueOf(currentSettings.minThreshold)); break;
+                int property_id = (Integer) tf.getDocument().getProperty("property_id");
+                switch (property_id) {
+                    case 0:
+                        tf.setText(String.valueOf((currentSettings.debug == false) ? 0 : 1));
+                        break;
+                    case 1:
+                        tf.setText(String.valueOf(currentSettings.xInput));
+                        break;
+                    case 2:
+                        tf.setText(String.valueOf(currentSettings.yInput));
+                        break;
+                    case 3:
+                        tf.setText(String.valueOf(currentSettings.xDimension));
+                        break;
+                    case 4:
+                        tf.setText(String.valueOf(currentSettings.yDimension));
+                        break;
+                    case 5:
+                        tf.setText(String.valueOf(currentSettings.initialInhibitionRadius));
+                        break;
+                    case 6:
+                        tf.setText(String.valueOf(currentSettings.potentialRadius));
+                        break;
+                    case 7:
+                        tf.setText(String.valueOf(currentSettings.cellsPerColumn));
+                        break;
+                    case 8:
+                        tf.setText(String.valueOf(currentSettings.newSynapseCount));
+                        break;
+                    case 9:
+                        tf.setText(String.valueOf(currentSettings.desiredLocalActivity));
+                        break;
+                    case 10:
+                        tf.setText(String.valueOf(currentSettings.minOverlap));
+                        break;
+                    case 11:
+                        tf.setText(String.valueOf(currentSettings.connectedPerm));
+                        break;
+                    case 12:
+                        tf.setText(String.valueOf(currentSettings.permanenceInc));
+                        break;
+                    case 13:
+                        tf.setText(String.valueOf(currentSettings.permanenceDec));
+                        break;
+                    case 14:
+                        tf.setText(String.valueOf(currentSettings.activationThreshold));
+                        break;
+                    case 15:
+                        tf.setText(String.valueOf(currentSettings.initialPerm));
+                        break;
+                    case 16:
+                        tf.setText(String.valueOf(currentSettings.minThreshold));
+                        break;
                 }
             }
         }
     }
-
-    public ImageClass getImg() {
-        return img;
-    }
-
 
     ////////////////////////////////////Listeners//////////////////////////////////////////
-    private class LoadButtonListener  implements ActionListener {
+    private class LoadButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             int returnVal = fc.showOpenDialog(null);
-            try{
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File file = fc.getSelectedFile();
-                if (file.getName().contains(PROPERTY_POSTFIX)){
-                    try {
-                        currentSettings = DHMSettings.loadFromFile(file.getPath());
-                        showCurrentSettings();
-                    }catch (Exception exc){
-                        System.out.print(exc);
-                    }
+            try {
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File file = fc.getSelectedFile();
+                    if (file.getName().contains(PROPERTY_POSTFIX)) {
+                        try {
+                            currentSettings = DHMSettings.loadFromFile(file.getPath());
+                            showCurrentSettings();
+                        } catch (Exception exc) {
+                            System.out.print(exc);
+                        }
+                    } else if (file.getName().contains(".png")) {
+                        img.load(file.getPath());
+                        BitMatrix matrix = new BitMatrix(img.getW(), img.getH());
+                        matrix = img.getBitMatrix();
+                        final TableSelectionClass frame = new TableSelectionClass(matrix);
+                        frame.addWindowListener(new WindowAdapter() {
+                            public void windowClosing(WindowEvent e) {
+                                BitMatrix regsInput = frame.getReturnData();
+                                picID_input.put(Integer.valueOf(numOfCell.getText()), regsInput);
+                                updateCellsColors(false);
+                                //System.exit(0);
+                            }
+                        });
+                        frame.setSize(400, 240);
+                        frame.setVisible(true);
+                    } else System.out.print("File has non appropriate format \n");
                 }
-                else System.out.print("File has non appropriate format");
-            }
-        }catch (Exception exc){
-                JOptionPane.showMessageDialog(null, "File could not be loaded, try again.");
+            } catch (Exception exc) {
+                JOptionPane.showMessageDialog(null, "File could not be loaded, try again. \n");
             }
         }
 
-     }
+    }
 
-    private class SaveButtonListener  implements ActionListener {
+    private class ShowDefaultSetButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            currentSettings = DHMSettings.getDefaultSettings();
+            showCurrentSettings();
+        }
+    }
+
+    private class SaveButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             fc = new JFileChooser();
-            fc.setSelectedFile(new File("Region "+ numOfReg.getText() + PROPERTY_POSTFIX));
+            fc.setSelectedFile(new File("Region " + numOfCell.getText() + PROPERTY_POSTFIX));
             int status = fc.showSaveDialog(null);
 
             try {
                 if (status == JFileChooser.APPROVE_OPTION) {
                     File saveFile = fc.getSelectedFile();
+                    currentSettings = getNewCurrentSettings();
                     currentSettings.saveIntoFile(saveFile.getPath());
                 } else if (status == JFileChooser.CANCEL_OPTION) {
                     // User has pressed cancel button
                 }
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "File could not be written, try again.");
+                JOptionPane.showMessageDialog(null, "File could not be written, try again. \n");
             }
         }
     }
 
+
+    private void updateCellsColors(Boolean htmNet) {
+        Object[] objects = ActiveColsVisGenView.getComponents();
+        for (int i = 0; i < objects.length; i++) {
+            if (objects[i] instanceof ShowVisTree) {
+                ShowVisTree svt = (ShowVisTree) objects[i];
+                Set<Integer> initedCells = new HashSet<Integer>();
+                if (!settings.isEmpty())
+                    initedCells.addAll(settings.keySet());
+                if (!picID_input.isEmpty())
+                    initedCells.addAll(picID_input.keySet());
+                if (htmNet) initedCells.add(0);
+                svt.treePanel.renderer.updateHashMap(initedCells);
+            }
+        }
+    }
 
     private class SetSettingsButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-//теперь задает настройки только для региона, который выбран в дереве
+            int regID = Integer.valueOf(numOfCell.getText());
+            settings.put(regID, getNewCurrentSettings());
+            updateCellsColors(false);
 
-            int regID = Integer.valueOf(numOfReg.getText());
-            settings.put(regID,currentSettings);
-            initedRegs.put(regID, true);
-
-            //выделение зеленым цветом, но надо только, если еще не зеленая
-
-            Object[] objects = ActiveColsVisGenView.getComponents();
-            for (int i = 0; i < objects.length; i++) {
-                if (objects[i] instanceof ShowVisTree ) {
-                    ShowVisTree svt = (ShowVisTree) objects[i];
-                    svt.treePanel.renderer.updateHashMap(initedRegs);
-                }
-            }
         }
     }
 
+    private DHMSettings getNewCurrentSettings() {
+        DHMSettings dhmSettings = new DHMSettings();
+        Object[] objects = mainPanel.getComponents();
+        int counter = 0;
+        for (int i = 0; i < objects.length; i++) {
+            if (objects[i] instanceof JTextField) {
+                JTextField tf = (JTextField) objects[i];
+                double new_value = Double.parseDouble(tf.getText());
+                int property_id = (Integer) tf.getDocument().getProperty("property_id");
+                switch (property_id) {
+                    case 0:
+                        dhmSettings.debug = ( new_value == 1) ? true : false;
+                        break;
+                    case 1:
+                        dhmSettings.xInput = (int) new_value;
+                        break;
+                    case 2:
+                        dhmSettings.yInput = (int) new_value;
+                        break;
+                    case 3:
+                        dhmSettings.xDimension = (int) new_value;
+                        break;
+                    case 4:
+                        dhmSettings.yDimension = (int) new_value;
+                        break;
+                    case 5:
+                        dhmSettings.initialInhibitionRadius = (int) new_value;
+                        break;
+                    case 6:
+                        dhmSettings.potentialRadius = (int) new_value;
+                        break;
+                    case 7:
+                        dhmSettings.cellsPerColumn = (int) new_value;
+                        break;
+                    case 8:
+                        dhmSettings.newSynapseCount = (int) new_value;
+                        break;
+                    case 9:
+                        dhmSettings.desiredLocalActivity = (int) new_value;
+                        break;
+                    case 10:
+                        dhmSettings.minOverlap = (int) new_value;
+                        break;
+                    case 11:
+                        dhmSettings.connectedPerm = new_value;
+                        break;
+                    case 12:
+                        dhmSettings.permanenceInc = new_value;
+                        break;
+                    case 13:
+                        dhmSettings.permanenceDec = new_value;
+                        break;
+                    case 14:
+                        dhmSettings.activationThreshold = new_value;
+                        break;
+                    case 15:
+                        dhmSettings.initialPerm = new_value;
+                        break;
+                    case 16:
+                        dhmSettings.minThreshold = new_value;
+                        break;
+                }
+
+            }
+        }
+        return dhmSettings;
+    }
 
     public class RunCortexButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
@@ -303,18 +439,13 @@ public class HTMConfiguration {
         }
     }
 
-    private Boolean checkInitialization(DefaultMutableTreeNode root){
-        String nodeName = root.toString();
-        int ID = 0;
-        Boolean fl = false;
-
-
-
-
-
-
-
-        return fl;
+    private int checkInitialization(DefaultMutableTreeNode root, int f){
+        int ID = (root.toString().contains("HTM")) ? 0 : getID(root.toString());
+        int fl = (settings.containsKey(ID) || picID_input.containsKey(ID) || root.toString().contains("HTM")) == true ? 1: 0;
+        for (int i = 0; i < root.getChildCount(); i++){
+            f =f * fl * checkInitialization((DefaultMutableTreeNode)root.getChildAt(i),f);
+        }
+        return f;
      }
 
     private class MakeStepButtonListener implements ActionListener {
@@ -324,11 +455,22 @@ public class HTMConfiguration {
             for (int i = 0; i < objects.length; i++) {
                 if (objects[i] instanceof ShowVisTree ) {
                     ShowVisTree svt = (ShowVisTree) objects[i];
-                    if (checkInitialization(svt.treePanel.rootNode))
-                        neocortexAction.makeStep();
+                    if (checkInitialization(svt.treePanel.rootNode,1) == 1) {
+                        System.out.print("Initialazation completed successfully \n");
+                        updateCellsColors(true);
+                        setSettingsButton.setEnabled(false);
+                        saveButton.setEnabled(false);
+                        loadButton.setEnabled(false);
+                        showDefaultSetButton.setEnabled(false);
+
+                        //neocortexAction.makeStep();
+                        //showActiveColumns();
+                    }
+                    else
+                        System.out.print("Initialization failed \n");
                 }
             }
-            //showActiveColumns();
+
         }
     }
 
@@ -352,7 +494,7 @@ public class HTMConfiguration {
     }
 */
     /////////////////////////////////Property listeners/////////////////////////////////////////////
-    private class DocumentListenerGeneral implements javax.swing.event.DocumentListener {
+    /*private class DocumentListenerGeneral implements javax.swing.event.DocumentListener {
 
         @Override
         public void changedUpdate(DocumentEvent e) {
@@ -378,13 +520,13 @@ public class HTMConfiguration {
                     JTextField tf = (JTextField) owner;
                     int property_id = (Integer)tf.getDocument().getProperty("property_id");
 
-                    int num_of_reg = Integer.parseInt(numOfReg.getText());
+                    int num_of_reg = Integer.parseInt(numOfCell.getText());
                     double new_value = 0.0;
 
                     try {
                            new_value = Double.parseDouble(tf.getText());
                     } catch (NumberFormatException ex) {
-                        System.out.print("Wrong properties for region " + num_of_reg);
+                        if (num_of_reg != 0 ) System.out.print("Wrong properties for region " + num_of_reg + "\n");
                         DHMSettings default_settings = DHMSettings.getDefaultSettings();
                         double tmp = 0.0;
                         switch(property_id){
@@ -431,5 +573,5 @@ public class HTMConfiguration {
                 }
             });
         }
-    }
+    }*/
 }

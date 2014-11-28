@@ -1,15 +1,10 @@
 package ru.isa.ai.dhm.visual;
 
-import cern.colt.matrix.tint.IntMatrix1D;
-import com.sun.java.util.jar.pack.*;
-import ru.isa.ai.dhm.core.Region;
-
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
 import javax.swing.*;
 import javax.swing.tree.*;
-import java.lang.reflect.Field;
+import java.util.HashSet;
+import java.util.Set;
 
 public class NewTreeCellRenderer extends JPanel implements TreeCellRenderer{
     protected Color background;
@@ -21,14 +16,14 @@ public class NewTreeCellRenderer extends JPanel implements TreeCellRenderer{
     protected Color f_Color = (Color) UIManager.get("Tree.Foreground");
     protected JTree tree;
     protected Component c;
-    private Map<Integer, Boolean> initedRegs = new HashMap<>();
+    private Set<Integer> initedCells = new HashSet<Integer>();
 
     public NewTreeCellRenderer() {
         this.setLayout(new BorderLayout());
     }
 
-    public void updateHashMap(Map<Integer, Boolean> initedRegs_){
-        initedRegs = initedRegs_;
+    public void updateHashMap(Set<Integer> initedCells_){
+        initedCells = initedCells_;
     }
 
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel,
@@ -44,11 +39,16 @@ public class NewTreeCellRenderer extends JPanel implements TreeCellRenderer{
             foreground = f_focusColor;
         } else {
             Boolean inited = false;
-            if (!initedRegs.isEmpty() && val !="Picture" && val != "HTM Network") {
-                String sub = val.substring(val.indexOf(" ") + 1);
-                Object obj = initedRegs.get(Integer.valueOf(sub));
-                if (obj != null)
-                    inited = true;
+            if (!initedCells.isEmpty()){
+                if (val != "HTM Network") {
+                    String sub = val.substring(val.indexOf(" ") + 1);
+                    if (initedCells.contains(Integer.valueOf(sub)))
+                        inited = true;
+                }
+                else{
+                    if (initedCells.contains(0))
+                        inited = true;
+                }
             }
             background = (inited == true) ? b_Color_with_settings : b_Color_without_settings;
             foreground = f_Color;

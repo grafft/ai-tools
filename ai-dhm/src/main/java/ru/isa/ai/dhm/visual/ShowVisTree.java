@@ -8,9 +8,6 @@ import javax.swing.JPanel;
 
 public class ShowVisTree extends JPanel
         implements ActionListener {
-
-
-    private int newNodeSuffix = 1;
     private static String ADD_COMMAND = "add";
     private static String REMOVE_COMMAND = "remove";
     private static String CLEAR_COMMAND = "clear";
@@ -21,8 +18,6 @@ public class ShowVisTree extends JPanel
         super(new BorderLayout());
 
         treePanel = new VisTree();
-
-        populateTree(treePanel);
 
         JButton addButton = new JButton("Add");
         addButton.setActionCommand(ADD_COMMAND);
@@ -47,26 +42,11 @@ public class ShowVisTree extends JPanel
         add(panel, BorderLayout.SOUTH);
     }
 
-    public void populateTree(VisTree treePanel) {
-       /* String name = new String("Region");
-
-        DefaultMutableTreeNode p1, p2;
-
-        p1 = treePanel.addObject(null, name);
-        p2 = treePanel.addObject(null, name);
-
-        treePanel.addObject(p1, name);
-        treePanel.addObject(p1, name);
-
-        treePanel.addObject(p2, name);
-        treePanel.addObject(p2, name);*/
-    }
-
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
 
         if (ADD_COMMAND.equals(command)) {
-            treePanel.addObject("Region " + newNodeSuffix++);
+            treePanel.addObject();
         } else if (REMOVE_COMMAND.equals(command)) {
             treePanel.removeCurrentNode();
         } else if (CLEAR_COMMAND.equals(command)) {

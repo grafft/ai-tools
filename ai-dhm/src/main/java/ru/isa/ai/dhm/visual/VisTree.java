@@ -23,6 +23,7 @@ public class VisTree extends JPanel {
     public JTree tree;
     private Toolkit toolkit = Toolkit.getDefaultToolkit();
     public NewTreeCellRenderer renderer;
+    private int id = 1;
 
     public VisTree() {
         super(new GridLayout(1,0));
@@ -59,7 +60,7 @@ public class VisTree extends JPanel {
             MutableTreeNode parent = (MutableTreeNode)(currentNode.getParent());
             if (parent != null) {
                 treeModel.removeNodeFromParent(currentNode);
-                if (parent.toString() != "HTM Network" && parent.getChildCount() == 0) addObject((DefaultMutableTreeNode)parent, "Picture", true);
+                if (parent.toString() != "HTM Network" && parent.getChildCount() == 0) addObject((DefaultMutableTreeNode)parent, "Picture "+String.valueOf(id++), true);
                 return;
             }
         }
@@ -67,7 +68,7 @@ public class VisTree extends JPanel {
         toolkit.beep();
     }
 
-    public DefaultMutableTreeNode addObject(Object child) {
+    public DefaultMutableTreeNode addObject() {
         DefaultMutableTreeNode parentNode = null;
         TreePath parentPath = tree.getSelectionPath();
         DefaultMutableTreeNode newNode = null, newNodePic = null;
@@ -91,7 +92,7 @@ public class VisTree extends JPanel {
 
             }
         }
-        newNodePic = addObject(newNode = addObject(parentNode, child, true), "Picture", true);
+        newNodePic = addObject(newNode = addObject(parentNode, "Region "+ String.valueOf(id++), true), "Picture "+String.valueOf(id++), true);
         return newNode;
     }
 

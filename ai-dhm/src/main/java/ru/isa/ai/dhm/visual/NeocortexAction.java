@@ -72,7 +72,7 @@ public class NeocortexAction implements ActionListener {
 
     public void init(Chart2D chart1, Chart2D chart2, HTMConfiguration configuration) {
         initCortex();
-        img = configuration.getImg();
+        //img = configuration.getImg();
         chartHandler = new ChartHandler(chart1, chart2, configuration);
     }
 
