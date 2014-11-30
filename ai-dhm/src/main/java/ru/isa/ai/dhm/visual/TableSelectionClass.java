@@ -81,11 +81,11 @@ public class TableSelectionClass extends JFrame {
         for (int i=0; i < table.getColumnCount(); i++) {
             TableColumn tc = table.getColumnModel().getColumn(i);
             // tc.setCellRenderer(new MyImageRenderer());
-            tc.setPreferredWidth(30);
+            tc.setPreferredWidth(15);
 
         }
         for (int i=0; i < table.getRowCount(); i++) {
-            table.setRowHeight(i, 30);
+            table.setRowHeight(i, 15);
         }
 
         JScrollPane scroll = new JScrollPane(table);

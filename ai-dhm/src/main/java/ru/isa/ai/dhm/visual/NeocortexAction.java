@@ -1,5 +1,6 @@
 package ru.isa.ai.dhm.visual;
 
+import cern.colt.matrix.tbit.BitMatrix;
 import cern.colt.matrix.tbit.BitVector;
 import info.monitorenter.gui.chart.Chart2D;
 import ru.isa.ai.dhm.DHMSettings;
@@ -7,11 +8,10 @@ import ru.isa.ai.dhm.core.Neocortex;
 import ru.isa.ai.dhm.core.Region;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
 
 /**
  * Created by gmdidro on 03.11.2014.
@@ -19,9 +19,10 @@ import javax.swing.tree.TreePath;
 public class NeocortexAction implements ActionListener {
     public Neocortex neocortex;
     private Map<Integer,DHMSettings> settings;
+    private Map<Integer, BitMatrix> picID_input = new HashMap<>();
     private VisTree tree = new VisTree();
 
-    public ImageClass img;
+    //public ImageClass img;
     public ChartHandler chartHandler;
     private int numRegions;
 
@@ -30,9 +31,10 @@ public class NeocortexAction implements ActionListener {
     private Boolean makeStep = false;
     private Random rnd = new Random();
 
-    public NeocortexAction(Map<Integer,DHMSettings> settings, VisTree tree_) {
-        this.numRegions = settings.size();
-        this.settings=settings;
+    public NeocortexAction(final Map<Integer,DHMSettings> settings_, final Map<Integer, BitMatrix> picID_input_ ,final VisTree tree_) {
+        this.numRegions = settings_.size();
+        this.settings = settings_;
+        this.picID_input = picID_input_;
         tree = tree_;
     }
 
@@ -41,15 +43,29 @@ public class NeocortexAction implements ActionListener {
         int ID = 0;
         Region r = null;
         if (!nodeName.contains("Picture")){
-            if (!nodeName.contains("HTMNetwork")) {
+            if (!nodeName.contains("HTM")) {
                 ID = Integer.valueOf(nodeName.substring(nodeName.indexOf(" ") + 1));
-                r = neocortex.addRegion(settings.get(ID), parent);
+                r = neocortex.addRegion(ID, settings.get(ID), parent);
             }
             for (int i = 0; i < root.getChildCount(); i++){
                 makeRegionHierarchy((DefaultMutableTreeNode)root.getChildAt(i),r);
             }
         }
     }
+
+    public Region getSelectedRegion(int ID){
+        boolean fl = false;
+        int i = 0;
+        while (!fl && i < neocortex.getRegions().size()){
+            if (neocortex.getRegions().get(i).getID() == ID){
+                fl = true;
+                return  neocortex.getRegions().get(i);
+            }
+            i++;
+        }
+        return null;
+    }
+
 
     private void initCortex() {
         neocortex = new Neocortex();
@@ -59,12 +75,15 @@ public class NeocortexAction implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
                 //TODO P: тут все для одного слоя (settings[0])
+
+                final BitVector input = picID_input.get(neocortex.getRegions().get(0).getID()).toBitVector();
+                /*
                 final BitVector input = new BitVector(DHMSettings.getDefaultSettings().xInput * DHMSettings.getDefaultSettings().yInput);
                 for (int i = 0; i < DHMSettings.getDefaultSettings().xInput * DHMSettings.getDefaultSettings().yInput; i++) {
                     //if (Math.random() > 0.3)
                     input.set(i);
                 }
-
+*/
                 neocortex.iterate(input);
                // TODO P: make changes
                // chartHandler.collectData(0);
@@ -73,7 +92,7 @@ public class NeocortexAction implements ActionListener {
     public void init(Chart2D chart1, Chart2D chart2, HTMConfiguration configuration) {
         initCortex();
         //img = configuration.getImg();
-        chartHandler = new ChartHandler(chart1, chart2, configuration);
+        //chartHandler = new ChartHandler(chart1, chart2, configuration);
     }
 
     public int getNumOfRegions() {

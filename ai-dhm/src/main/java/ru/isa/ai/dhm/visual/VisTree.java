@@ -56,15 +56,16 @@ public class VisTree extends JPanel {
         if (currentSelection != null) {
             DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode)
                     (currentSelection.getLastPathComponent());
-
-            MutableTreeNode parent = (MutableTreeNode)(currentNode.getParent());
-            if (parent != null) {
-                treeModel.removeNodeFromParent(currentNode);
-                if (parent.toString() != "HTM Network" && parent.getChildCount() == 0) addObject((DefaultMutableTreeNode)parent, "Picture "+String.valueOf(id++), true);
-                return;
+            if (!currentNode.toString().contains("Picture")) {
+                MutableTreeNode parent = (MutableTreeNode) (currentNode.getParent());
+                if (parent != null) {
+                    treeModel.removeNodeFromParent(currentNode);
+                    if (parent.toString() != "HTM Network" && parent.getChildCount() == 0)
+                        addObject((DefaultMutableTreeNode) parent, "Picture " + String.valueOf(id++), true);
+                    return;
+                }
             }
         }
-
         toolkit.beep();
     }
 

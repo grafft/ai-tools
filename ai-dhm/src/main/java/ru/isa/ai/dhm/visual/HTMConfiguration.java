@@ -6,8 +6,8 @@ import ru.isa.ai.dhm.DHMSettings;
 
 import javax.swing.*;
 import javax.swing.Timer;
-import javax.swing.event.DocumentEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -17,6 +17,7 @@ import java.lang.Object;
 import java.util.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreePath;
 
 public class HTMConfiguration {
     //text fields
@@ -93,8 +94,8 @@ public class HTMConfiguration {
     private String PROPERTY_POSTFIX = ".properties";
     private String path;
     private JFileChooser fc;
-    //private Map<Integer, Boolean> initedRegs = new HashMap<>();
     private Map<Integer, BitMatrix> picID_input = new HashMap<>();
+    private boolean work_mode = false;
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("HTMConfiguration");
@@ -140,25 +141,41 @@ public class HTMConfiguration {
             public void valueChanged(TreeSelectionEvent e) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) e
                         .getPath().getLastPathComponent();
-                int id = 0;
-                if (!node.toString().contains("HTM")) {
-                    id = getID(node.toString());
-                    numOfCell.setText(String.valueOf(id));
-                }
-                if (node.toString().contains("Region")) {
-                    setSettingsButton.setEnabled(true);
-
-                    //проверяем, если инициализировали уже
-
-                    if (!settings.isEmpty() && settings.get(id) != null) {
-                        //высвечиваем настройки
-                        currentSettings = settings.get(id);
-                        showCurrentSettings();
+                    int id = 0;
+                    if (!node.toString().contains("HTM")) {
+                        id = getID(node.toString());
+                        numOfCell.setText(String.valueOf(id));
                     }
-                } else { //picture
-                    setSettingsButton.setEnabled(false);
+                    if (node.toString().contains("Region")) {
+                        if (!work_mode) setSettingsButton.setEnabled(true);
+                        //проверяем, если инициализировали уже
+                        if (!settings.isEmpty() && settings.get(id) != null) {
+                            //высвечиваем настройки
+                            currentSettings = settings.get(id);
+                            showCurrentSettings();
+                        }
 
-                }
+                    } else { //picture
+                        if (!work_mode) setSettingsButton.setEnabled(false);
+                    }
+                    if (work_mode){
+                        if (node.getParent() != null && !node.getParent().toString().contains("HTM")){
+                            int parentID = getID(node.getParent().toString());
+                            Object obj = null;
+                            if (node.toString().contains("Picture")) {
+                                obj = picID_input.get(id);
+
+                            }
+                            else {
+                                obj = neocortexAction.getSelectedRegion(id);
+                            }
+                            ActColsVisClass actCols = new ActColsVisClass(neocortexAction.getSelectedRegion(parentID), obj);
+                            actCols.setOpaque(true);
+                            ActiveColsSelectedView.removeAll();
+                            ActiveColsSelectedView.add(actCols, BorderLayout.CENTER);
+                        }
+                    }
+
             }
         });
         ActiveColsVisGenView.add(contentPane); //the results of tree preparation
@@ -183,21 +200,6 @@ public class HTMConfiguration {
         img = new ImageClass();
 
         fc = new JFileChooser();
-    }
-
-    private void initCortex() {
-        VisTree vt = null;
-        Object[] objects = ActiveColsVisGenView.getComponents();
-        for (int i = 0; i < objects.length; i++) {
-            if (objects[i] instanceof VisTree) {
-                vt = (VisTree) objects[i];
-            }
-        }
-        neocortexAction = new NeocortexAction(settings, vt);
-        neocortexAction.init(chart2D1, chart2D2, this);
-
-        timer = new Timer(1000, neocortexAction);
-        runCortexButton.setEnabled(true);
     }
 
     private void showCurrentSettings() {
@@ -439,6 +441,18 @@ public class HTMConfiguration {
         }
     }
 
+    private TreePath find(DefaultMutableTreeNode root, String s) {
+        @SuppressWarnings("unchecked")
+        Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+        while (e.hasMoreElements()) {
+            DefaultMutableTreeNode node = e.nextElement();
+            if (node.toString().equalsIgnoreCase(s)) {
+                return new TreePath(node.getPath());
+            }
+        }
+        return null;
+    }
+
     private int checkInitialization(DefaultMutableTreeNode root, int f){
         int ID = (root.toString().contains("HTM")) ? 0 : getID(root.toString());
         int fl = (settings.containsKey(ID) || picID_input.containsKey(ID) || root.toString().contains("HTM")) == true ? 1: 0;
@@ -447,6 +461,21 @@ public class HTMConfiguration {
         }
         return f;
      }
+
+    private void optimizeStructures(DefaultMutableTreeNode root){
+        Integer[] a = new Integer[settings.size()];
+        settings.keySet().toArray(a);
+        for (int i = 0; i < a.length; i++){
+            if (find(root,"Region "+String.valueOf(a[i])) == null)
+                settings.remove(a[i]);
+        }
+        a = new Integer[picID_input.size()];
+        picID_input.keySet().toArray(a);
+        for (int i = 0; i < a.length; i++){
+            if (find(root,"Picture "+String.valueOf(a[i])) == null)
+                picID_input.remove(a[i]);
+        }
+    }
 
     private class MakeStepButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -458,13 +487,17 @@ public class HTMConfiguration {
                     if (checkInitialization(svt.treePanel.rootNode,1) == 1) {
                         System.out.print("Initialazation completed successfully \n");
                         updateCellsColors(true);
+                        optimizeStructures(svt.treePanel.rootNode);
                         setSettingsButton.setEnabled(false);
                         saveButton.setEnabled(false);
                         loadButton.setEnabled(false);
                         showDefaultSetButton.setEnabled(false);
+                        work_mode = true;
 
-                        //neocortexAction.makeStep();
-                        //showActiveColumns();
+                        initCortex();
+                        neocortexAction.makeStep();
+
+
                     }
                     else
                         System.out.print("Initialization failed \n");
@@ -474,11 +507,21 @@ public class HTMConfiguration {
         }
     }
 
-    private void showActiveColumns(){
-        ActiveColumnsVisualization cl = new ActiveColumnsVisualization(ActiveColsVisGenView);
-        cl.setSettings(neocortexAction);
-        cl.draw(0, -1);
+    private void initCortex() {
+        VisTree vt = null;
+        Object[] objects = ActiveColsVisGenView.getComponents();
+        for (int i = 0; i < objects.length; i++) {
+            if (objects[i] instanceof ShowVisTree) {
+                vt = ((ShowVisTree)objects[i]).treePanel;
+            }
+        }
+        neocortexAction = new NeocortexAction(settings, picID_input, vt);
+        neocortexAction.init(chart2D1, chart2D2, this);
+
+        timer = new Timer(1000, neocortexAction);
+        //runCortexButton.setEnabled(true);
     }
+
     /*
     private class ShowActiveColumnsListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {

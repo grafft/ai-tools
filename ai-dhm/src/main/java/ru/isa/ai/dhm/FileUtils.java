@@ -20,7 +20,7 @@ public class FileUtils {
                 if (file.getName().contains(PROPERTY_POSTFIX)) {
                     try {
                         DHMSettings settings = DHMSettings.loadFromFile(file.getPath());
-                        cortex.addRegion(settings, null);
+                        cortex.addRegion(0,settings, null);
                     } catch (RegionSettingsException e) {
                         e.printStackTrace();
                     }
