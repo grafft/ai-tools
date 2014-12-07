@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
 import java.util.*;
 
 public class ActiveColumnsVisualization extends JPanel {
-
+/*
     private JPanel activeColsPanel;
     private HighlightableArea ha;
     private NeocortexAction crtx;
@@ -30,7 +30,7 @@ public class ActiveColumnsVisualization extends JPanel {
                 activeColumnsPanel_main.setVisible(false);
                 activeColumnsPanel_main.setVisible(true);
      */
-
+/*
     private void AreaHighlightTest() {
         activeColsPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(5, 5, 5, 5),
@@ -105,7 +105,7 @@ class HighlightableArea extends JPanel {
             this.down_squaresNumPerW = crtx.cr.regions[0].getInputXDim();
             this.down_squaresNumPerH = crtx.cr.regions[0].getInputYDim();
         }
-        */
+
         addMouseListener(new MouseHandler());
         addMouseMotionListener(new MouseMotionHandler());
     }
@@ -147,7 +147,7 @@ class HighlightableArea extends JPanel {
         p.y = -(int)(ch_y / zn);
         return p;
     }
-    */
+
 
     private void drawFilledRectangle(Graphics2D g2, int hx, int hy, double dx, double dy, Color color, int colInd) {
         g2.setColor(color);
@@ -189,7 +189,7 @@ class HighlightableArea extends JPanel {
 
                 g2.fillOval((up_right_for_input_x - up_left_for_input_x)/2 + up_left_for_input_x , (down_left_for_input_y - up_left_for_input_y) /2 + up_left_for_input_y , 4,4);
 
-            } */
+            }
         }
     }
 
@@ -219,7 +219,7 @@ class HighlightableArea extends JPanel {
                 c = (m.get(i, j) == false) ?  Color.gray : Color.lightGray;
                 drawFilledRectangle(g2, i, j, dx, dy, c , -1);
             }
-             */
+
         g2.setColor(Color.darkGray);
         if (up_squaresNumPerW * up_squaresNumPerH != 0){
 
@@ -306,6 +306,6 @@ class HighlightableArea extends JPanel {
             hy = -1;
             paintGrid();
         }
-    }
+    }*/
 }
 

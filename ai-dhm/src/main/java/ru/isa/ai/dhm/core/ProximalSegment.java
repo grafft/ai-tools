@@ -79,7 +79,7 @@ public class ProximalSegment {
     }
 
     //Подмножество потенциальных синапсов potentialSynapses(c) у которых значение перманентности больше чем connectedPerm.
-    private List<Integer> connectedSynapses()
+    public List<Integer> connectedSynapses()
     {
         List<Integer> indices = new ArrayList<>();
         for (Synapse s : potentialSynapses.values())

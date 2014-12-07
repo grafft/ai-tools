@@ -5,6 +5,7 @@ package ru.isa.ai.dhm.visual;
  */
 import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -19,17 +20,24 @@ import javax.swing.event.TreeModelListener;
 public class VisTree extends JPanel {
     protected DefaultMutableTreeNode rootNode;
     protected DefaultTreeModel treeModel;
-    protected JTree tree;
+    public JTree tree;
     private Toolkit toolkit = Toolkit.getDefaultToolkit();
+    public NewTreeCellRenderer renderer;
+    private int id = 1;
 
     public VisTree() {
         super(new GridLayout(1,0));
 
-        rootNode = new DefaultMutableTreeNode("Root Region");
+        rootNode = new DefaultMutableTreeNode("HTM Network");
         treeModel = new DefaultTreeModel(rootNode);
         treeModel.addTreeModelListener(new MyTreeModelListener());
         tree = new JTree(treeModel);
-        tree.setEditable(true);
+        tree.setToolTipText("Pink - uninitialized object, Green - initialized object, Yellow - selected one");
+        tree.setEditable(false);
+        renderer = new NewTreeCellRenderer() ;
+        tree.setCellRenderer(renderer);
+
+        tree.setEditable(false);
         tree.getSelectionModel().setSelectionMode
                 (TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.setShowsRootHandles(true);
@@ -48,28 +56,45 @@ public class VisTree extends JPanel {
         if (currentSelection != null) {
             DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode)
                     (currentSelection.getLastPathComponent());
-            MutableTreeNode parent = (MutableTreeNode)(currentNode.getParent());
-            if (parent != null) {
-                treeModel.removeNodeFromParent(currentNode);
-                return;
+            if (!currentNode.toString().contains("Picture")) {
+                MutableTreeNode parent = (MutableTreeNode) (currentNode.getParent());
+                if (parent != null) {
+                    treeModel.removeNodeFromParent(currentNode);
+                    if (parent.toString() != "HTM Network" && parent.getChildCount() == 0)
+                        addObject((DefaultMutableTreeNode) parent, "Picture " + String.valueOf(id++), true);
+                    return;
+                }
             }
         }
-
         toolkit.beep();
     }
 
-    public DefaultMutableTreeNode addObject(Object child) {
+    public DefaultMutableTreeNode addObject() {
         DefaultMutableTreeNode parentNode = null;
         TreePath parentPath = tree.getSelectionPath();
+        DefaultMutableTreeNode newNode = null, newNodePic = null;
 
         if (parentPath == null) {
             parentNode = rootNode;
+
         } else {
             parentNode = (DefaultMutableTreeNode)
                     (parentPath.getLastPathComponent());
-        }
+            if (parentNode.isLeaf()){ //"Picture"
+                parentNode = (DefaultMutableTreeNode)parentNode.getParent();
+                if (parentNode != null) treeModel.removeNodeFromParent(parentNode.getFirstLeaf());
 
-        return addObject(parentNode, child, true);
+            }
+            else{ //"Region"
+                for (int i = 0; i < parentNode.getChildCount(); i++){
+                    if (parentNode.getChildAt(i).isLeaf())
+                        treeModel.removeNodeFromParent(parentNode.getFirstLeaf());
+                }
+
+            }
+        }
+        newNodePic = addObject(newNode = addObject(parentNode, "Region "+ String.valueOf(id++), true), "Picture "+String.valueOf(id++), true);
+        return newNode;
     }
 
     public DefaultMutableTreeNode addObject(DefaultMutableTreeNode parent,

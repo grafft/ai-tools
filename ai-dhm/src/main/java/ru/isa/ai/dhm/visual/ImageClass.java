@@ -122,6 +122,8 @@ public class ImageClass extends JPanel {
             value = false;
         else if (red == 0 && green == 0 && blue == 0)
             value = true;
+        else
+            System.out.print("Non 0| 1 element in picture");
         return value;
     }
 

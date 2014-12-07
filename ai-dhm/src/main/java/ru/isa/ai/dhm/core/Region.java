@@ -26,17 +26,20 @@ import ru.isa.ai.dhm.RegionSettings;
 
 >>>>>>> Stashed changes
 public class Region {
+
     private DHMSettings settings;
     private Region parent = null;
     private List<Region> childRegions = new ArrayList<>();
     private Map<Integer, Column> columns = new HashMap<>(); // можно и в виде массива
     private BitVector activeColumns;  // для оптимизации
     private IntMatrix1D overlaps;
+    private int id = 0;
 
     private int iterationNum = 0;
 
-    public Region(DHMSettings settings) {
+    public Region(int ID, DHMSettings settings) {
         this.settings = settings;
+        this.id = ID;
 
         Map<Integer, Cell> allCells = new HashMap<>();
         for (int i = 0; i < settings.xDimension; i++) {
@@ -295,5 +298,7 @@ public class Region {
     public BitVector getActiveColumns() {
         return activeColumns;
     }
+
+    public int getID() {return this.id; }
 
 }

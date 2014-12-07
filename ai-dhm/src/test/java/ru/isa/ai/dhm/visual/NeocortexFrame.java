@@ -141,7 +141,7 @@ public class NeocortexFrame extends JFrame {
             e.printStackTrace();
         }
         neocortex = new Neocortex();
-        Region region1 = neocortex.addRegion(settings, null);
+        Region region1 = neocortex.addRegion(0,settings, null);
         // TODO P: когда более 1 слоя, то возникает исключение выхода за границы массива - связано с тем что как-то не так заданы настройки слоя (размеры в клетках и колонках)
        /* java.util.List<Region> children = new ArrayList<>();
         children.add(region1);
