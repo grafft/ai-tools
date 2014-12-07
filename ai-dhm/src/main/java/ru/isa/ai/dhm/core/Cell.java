@@ -33,6 +33,7 @@ public class Cell {
             stateHistory[i] = State.passive;
             learnHistory[i] = false;
         }
+
     }
 
     /**

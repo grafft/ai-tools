@@ -43,6 +43,11 @@ public class SpatialPoolerTest  extends TestCase {
         testUpdateActiveCells(new int[]{0,0,0,0, 1,1,1,1, 1,1,1,1, 1,1,1,1}, 4,4,2,2, new boolean[]{false,false,true,false},
                 new String[]{"passive", "passive","passive", "passive", "passive", "passive","passive", "passive",
                              "active", "passive","active", "passive",   "active", "passive","active", "passive",});
+
+        testUpdatePredictiveCells(new int[]{0,0,0,0, 1,1,1,1, 1,1,1,1, 1,1,1,1}, new int[]{0,0,0,1, 1,1,1,1, 1,1,1,1, 1,1,1,1},
+                                  4,4,2,2, new boolean[]{false,false,true,false},
+                                  new String[]{"passive", "passive","passive", "passive", "passive", "passive","passive", "passive",
+                                               "active", "passive","active", "passive",   "active", "passive","active", "passive",});
     }
 
     public static void main(String[] args) {
@@ -199,7 +204,7 @@ public class SpatialPoolerTest  extends TestCase {
     }
 
 
-    public void testUpdatePredictiveCells(int[] input, int inputW, int inputH, int colsW, int colsH, boolean[] trueColStates, String[] trueCellStates) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException {
+    public void testUpdatePredictiveCells(int[] input, int[] input2, int inputW, int inputH, int colsW, int colsH, boolean[] trueColStates, String[] trueCellStates) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException {
         LogUtils.Open("cells.csv", "cols.csv");
 
         SpatialPoolerTest test=new SpatialPoolerTest();
@@ -209,39 +214,23 @@ public class SpatialPoolerTest  extends TestCase {
         BitVector inputvec = new BitVector(input.length);
         MathUtils.assign(inputvec, input);
 
+        BitVector inputvec2 = new BitVector(input2.length);
+        MathUtils.assign(inputvec2, input2);
+
         LogUtils.printToCVS(r,"after initialization");
 
-        r.forwardInputProcessing(inputvec);
+        test.neocortex.iterate(inputvec);
         LogUtils.printToCVS(r,"after 1st forwardInputProcessing");
 
-        //проверим, что победила та колонка, которую мы ожидаем
-        Field field=Region.class.getDeclaredField("activeColumns");
-        field.setAccessible(true);
-        BitVector activeColumns=(BitVector)field.get(r);
+        test.neocortex.iterate(inputvec2);
+        LogUtils.printToCVS(r,"after 2nd forwardInputProcessing");
 
-        boolean[] groundtruth=trueColStates;
-        for (int i = 0; i < groundtruth.length; i++)
-            assertTrue(activeColumns.get(i)==groundtruth[i]);
+        test.neocortex.iterate(inputvec);
+        LogUtils.printToCVS(r,"after 1st forwardInputProcessing");
 
+        test.neocortex.iterate(inputvec2);
+        LogUtils.printToCVS(r,"after 2nd forwardInputProcessing");
 
-        Method method = Region.class.getDeclaredMethod("updateActiveCells");
-        method.setAccessible(true);
-        method.invoke(r);
-        LogUtils.printToCVS(r,"after 1st updateActiveCells");
-
-        int i=0;
-        //проверка активности клеток
-        for (int colLine = 0; colLine < colsH; colLine++) {
-            // перебор всех слоев клеток
-
-            for (int layer = 0; layer < test.settings.cellsPerColumn; layer++) {
-                for (int col = colLine * colsW; col < (colLine + 1) * colsW; col++) {
-                    String state=r.getColumns().get(col).getCells()[layer].getStateHistory()[0].toString();
-                    assertTrue(trueCellStates[i].equalsIgnoreCase(state));
-                    i++;
-                }
-            }
-        }
     }
 
 

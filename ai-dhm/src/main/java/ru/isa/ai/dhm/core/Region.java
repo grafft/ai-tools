@@ -3,6 +3,7 @@ package ru.isa.ai.dhm.core;
 import cern.colt.function.tint.IntProcedure;
 import cern.colt.matrix.tbit.BitVector;
 import cern.colt.matrix.tint.IntMatrix1D;
+<<<<<<< Updated upstream
 import cern.colt.matrix.tint.impl.DenseIntMatrix1D;
 import com.google.common.primitives.Ints;
 import ru.isa.ai.dhm.DHMSettings;
@@ -19,6 +20,11 @@ import java.util.Map;
  * Date: 28.08.2014
  * Time: 14:24
  */
+=======
+import cern.colt.matrix.tint.IntMatrix2D;
+import ru.isa.ai.dhm.RegionSettings;
+
+>>>>>>> Stashed changes
 public class Region {
     private DHMSettings settings;
     private Region parent = null;
@@ -60,12 +66,75 @@ public class Region {
     /**
      * Инициализация региона, для каждой колнки создается начальный список потенцильаных синапсов
      */
+<<<<<<< Updated upstream
     public void initialization() {
         for (Column column : columns.values()) {
             int inputCenterX = (column.getCoords()[0] + 1) * (settings.xInput / (settings.xDimension + 1));
             int inputCenterY = (column.getCoords()[1] + 1) * (settings.yInput / (settings.yDimension + 1));
             column.initialization(inputCenterX, inputCenterY);
         }
+=======
+    public int minOverlap;
+    /*
+    Параметр контролирующий число колонок победителей
+    после шага подавления.
+    */
+    public int desiredLocalActivity;
+
+    /*
+    Если значение перманентности синапса больше данного параметра, то он считается подключенным (действующим).
+     */
+    public double connectedPerm;
+    /*
+    Количество значений перманентности синапсов, которые
+    были увеличены при обучении.
+     */
+    public double permanenceInc;
+    /*
+    Количество значений перманентности синапсов, которые
+    были уменьшены при обучении.
+    */
+    public double permanenceDec;
+    /*
+    Порог активации для сегмента. Если число активных
+    подключенных синапсов в сегменте больше чем
+    activationThreshold, данный сегмент считается активным.
+     */
+    public int activationThreshold;
+
+    /*
+   Начальное значение перманентности для синапсов
+    */
+    public double initialPerm;
+    /*
+    Минимальная активность в сегменте для обучения.
+     */
+    public int minThreshold;
+    /*
+    Максимальное число синапсов добавляемых сегменту при
+    обучении.
+     */
+    public int newSynapseCount;
+
+    //////////////////////////////////////////////////////////
+    final private int NUM_MEMORY_CELLS = 1000;
+
+    public Region(RegionSettings settings) {
+        this.desiredLocalActivity = settings.desiredLocalActivity;
+        this.minOverlap = settings.minOverlap;
+        this.connectedPerm = settings.connectedPerm;
+        this.permanenceInc = settings.permanenceInc;
+        this.permanenceDec = settings.permanenceDec;
+        this.cellsPerColumn = settings.cellsPerColumn;
+        this.activationThreshold = settings.activationThreshold;
+        this.initialPerm = settings.initialPerm;
+        this.minThreshold = settings.minThreshold;
+        this.newSynapseCount =settings.newSynapseCount;
+        this.xDimension = settings.numInputs;
+        this.yDimension = settings.numColumns;
+
+        addColumns();
+>>>>>>> Stashed changes
     }
 
     /**
