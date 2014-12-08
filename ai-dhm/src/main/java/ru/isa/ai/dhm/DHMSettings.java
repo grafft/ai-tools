@@ -15,8 +15,8 @@ public final class DHMSettings {
     public boolean debug=false;
     public int xDimension = 30; // ширина региона (в колонках)
     public int yDimension = 30; // высота региона (в колонках)
-    public int xInput = 100; // ширина входного слоя (в сигналах)
-    public int yInput = 100; // высота входного слоя (в сигналах)
+    public int xInput = 20;//100; // ширина входного слоя (в сигналах)
+    public int yInput = 10;//100; // высота входного слоя (в сигналах)
 
     /**
      * Число клеток в каждой из колонок.
@@ -32,7 +32,7 @@ public final class DHMSettings {
      */
     public int desiredLocalActivity = 10;
     /**
-     * Минимальнео число активных входов колонки для ее участия в шаге подавления.
+     * Минимальное число активных входов колонки для ее участия в шаге подавления.
      */
     public int minOverlap = 0;
     /**
@@ -96,8 +96,14 @@ public final class DHMSettings {
     public void saveIntoFile(String filePropName) throws RegionSettingsException {
         Properties properties = new Properties();
         try {
+            properties.setProperty("debug", String.valueOf(debug));
+            properties.setProperty("xInput", String.valueOf(xInput));
+            properties.setProperty("yInput", String.valueOf(yInput));
             properties.setProperty("xDimension", String.valueOf(xDimension));
             properties.setProperty("yDimension", String.valueOf(yDimension));
+            properties.setProperty("initialInhibitionRadius", String.valueOf(initialInhibitionRadius));
+            properties.setProperty("potentialRadius", String.valueOf(potentialRadius));
+
             properties.setProperty("cellsPerColumn", String.valueOf(cellsPerColumn));
             properties.setProperty("newSynapseCount", String.valueOf(newSynapseCount));
 
@@ -127,12 +133,28 @@ public final class DHMSettings {
             properties.load(input);
             for (String name : properties.stringPropertyNames()) {
                 switch (name) {
+                    case "debug":
+                        settings.debug = Boolean.parseBoolean(properties.getProperty(name));
+                        break;
+                    case "xInput":
+                        settings.xInput = Integer.parseInt(properties.getProperty(name));
+                        break;
+                    case "yInput":
+                        settings.yInput = Integer.parseInt(properties.getProperty(name));
+                        break;
                     case "xDimension":
                         settings.xDimension = Integer.parseInt(properties.getProperty(name));
                         break;
                     case "yDimension":
                         settings.yDimension = Integer.parseInt(properties.getProperty(name));
                         break;
+                    case "initialInhibitionRadius":
+                        settings.initialInhibitionRadius = Integer.parseInt(properties.getProperty(name));
+                        break;
+                    case "potentialRadius":
+                        settings.potentialRadius = Integer.parseInt(properties.getProperty(name));
+                        break;
+
                     case "cellsPerColumn":
                         settings.cellsPerColumn = Integer.parseInt(properties.getProperty(name));
                         break;

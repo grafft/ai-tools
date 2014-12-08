@@ -119,23 +119,13 @@ public class ChartHandler {
         }
     }
 
+   /*
     public void collectData(int regInd) {
         for (ITrace2D trace2D : chart2D1.getTraces()) {
             trace2D.removeAllPoints();
         }
         Integer time = cfg.crtx.cr.time - 1 > 0 ? cfg.crtx.cr.time - 1 : 0;
-        if (inp) {
-            /*
-            for (int i = 0; i < cfg.crtx.cr.regions[regInd].xDimension; i++) {
-                for (int j = 0; j < cfg.crtx.cr.regions[regInd].xDimension; j++) {           ///////////////////////?????????
-                    traceINP.addPoint(i + j, (cfg.crtx.cr.input(i,j) == true) ? 1 : 0);
-                }*/
-                for (int j = 0; j < cfg.crtx.cr.regions[regInd].getYDim(); j++) {
-                    for (int i = 0; i < cfg.crtx.cr.regions[regInd].getXDim(); i++) {           ///////////////////////?????????
-                        //traceINP.addPoint(i + j, (cfg.crtx.cr.input(i,j) == true) ? 1 : 0); // TODO AP: comment by refactoring!
-                }
-            }
-        }
+
         String buf = "";
         int overalDSCount = 0;
         buf += "Cells Activity: \r\n" + "Timestep: " + cfg.crtx.cr.totalTime + "\r\n";
@@ -197,5 +187,5 @@ public class ChartHandler {
             traceTMLN.addPoint(cfg.crtx.cr.totalTime, overalDSCount);
         buf += "Overall Dendrite Segments Count: " + overalDSCount + "\r\n";
         cfg.textPane1.setText(buf);
-    }
+    }         */
 }

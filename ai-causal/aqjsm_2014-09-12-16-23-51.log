@@ -1,6 +1,0 @@
-16:23:52.128 [main] ERROR GAAQJSM - Weka exception: null
-java.lang.NullPointerException
-	at weka.core.Capabilities.test(Capabilities.java:1022) ~[weka-dev-3.7.9.jar:?]
-	at weka.core.Capabilities.testWithFail(Capabilities.java:1301) ~[weka-dev-3.7.9.jar:?]
-	at ru.isa.ai.causal.classifiers.ga.GAAQClassifier.buildClassifier(GAAQClassifier.java:55) ~[classes/:?]
-	at ru.isa.ai.causal.GAAQJSM.main(GAAQJSM.java:107) [classes/:?]

@@ -1,9 +1,0 @@
-16:15:36.529 [main] ERROR GAAQJSM - Weka exception: ru.isa.ai.causal.classifiers.ga.GAAQClassifier: Cannot handle string attributes!
-weka.core.UnsupportedAttributeTypeException: ru.isa.ai.causal.classifiers.ga.GAAQClassifier: Cannot handle string attributes!
-	at weka.core.Capabilities.test(Capabilities.java:979) ~[weka-dev-3.7.9.jar:?]
-	at weka.core.Capabilities.test(Capabilities.java:868) ~[weka-dev-3.7.9.jar:?]
-	at weka.core.Capabilities.test(Capabilities.java:1084) ~[weka-dev-3.7.9.jar:?]
-	at weka.core.Capabilities.test(Capabilities.java:1022) ~[weka-dev-3.7.9.jar:?]
-	at weka.core.Capabilities.testWithFail(Capabilities.java:1301) ~[weka-dev-3.7.9.jar:?]
-	at ru.isa.ai.causal.classifiers.ga.GAAQClassifier.buildClassifier(GAAQClassifier.java:55) ~[classes/:?]
-	at ru.isa.ai.causal.GAAQJSM.main(GAAQJSM.java:107) [classes/:?]

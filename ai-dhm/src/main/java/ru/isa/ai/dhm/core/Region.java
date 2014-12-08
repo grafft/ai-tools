@@ -6,6 +6,7 @@ import cern.colt.matrix.tint.IntMatrix1D;
 import cern.colt.matrix.tint.impl.DenseIntMatrix1D;
 import com.google.common.primitives.Ints;
 import ru.isa.ai.dhm.DHMSettings;
+import ru.isa.ai.dhm.LogUtils;
 import ru.isa.ai.dhm.MathUtils;
 
 import java.util.ArrayList;
@@ -19,17 +20,20 @@ import java.util.Map;
  * Time: 14:24
  */
 public class Region {
-    private DHMSettings settings;
 
+    private DHMSettings settings;
+    private Region parent = null;
     private List<Region> childRegions = new ArrayList<>();
     private Map<Integer, Column> columns = new HashMap<>(); // можно и в виде массива
     private BitVector activeColumns;  // для оптимизации
     private IntMatrix1D overlaps;
+    private int id = 0;
 
     private int iterationNum = 0;
 
-    public Region(DHMSettings settings) {
+    public Region(int ID, DHMSettings settings) {
         this.settings = settings;
+        this.id = ID;
 
         Map<Integer, Cell> allCells = new HashMap<>();
         for (int i = 0; i < settings.xDimension; i++) {
@@ -49,7 +53,15 @@ public class Region {
     }
 
     /**
-     * Иниуиализация региона, для каждой колнки создается начальный список потенцильаных синапсов
+     * @return Возвращает 3 числа: W,H колонок, N клеток у каждой колонки
+     */
+    public int[] getDimensions()
+    {
+        return new int[]{settings.xDimension, settings.yDimension,settings.cellsPerColumn};
+    }
+
+    /**
+     * Инициализация региона, для каждой колнки создается начальный список потенцильаных синапсов
      */
     public void initialization() {
         for (Column column : columns.values()) {
@@ -68,6 +80,7 @@ public class Region {
     public BitVector forwardInputProcessing(BitVector input) {
         iterationNum++;
         overlapPhase(input);
+
         inhibitionPhase();
         learningPhase(input);
 
@@ -198,6 +211,11 @@ public class Region {
 
     public void addChild(Region child) {
         childRegions.add(child);
+        child.parent = this;
+    }
+
+    public Region getParent(){
+        return this.parent;
     }
 
     public List<Region> getChildRegions() {
@@ -211,4 +229,7 @@ public class Region {
     public BitVector getActiveColumns() {
         return activeColumns;
     }
+
+    public int getID() {return this.id; }
+
 }

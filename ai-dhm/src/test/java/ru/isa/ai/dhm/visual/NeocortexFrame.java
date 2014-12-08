@@ -2,6 +2,7 @@ package ru.isa.ai.dhm.visual;
 
 import cern.colt.matrix.tbit.BitVector;
 import ru.isa.ai.dhm.DHMSettings;
+import ru.isa.ai.dhm.RegionSettingsException;
 import ru.isa.ai.dhm.core.Column;
 import ru.isa.ai.dhm.core.Neocortex;
 import ru.isa.ai.dhm.core.Region;
@@ -65,7 +66,7 @@ public class NeocortexFrame extends JFrame {
                 stButton.setEnabled(false);
                 final BitVector input = new BitVector(settings.xInput * settings.yInput);
                 for (int i = 0; i < settings.xInput * settings.yInput; i++) {
-                    if (Math.random() > 0.3)
+                    //if (Math.random() > 0.3)
                         input.set(i);
                 }
                 new Runnable() {
@@ -89,7 +90,7 @@ public class NeocortexFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 BitVector input = new BitVector(settings.xInput * settings.yInput);
                 for (int i = 0; i < settings.xInput * settings.yInput; i++) {
-                    if (Math.random() > 0.3)
+                   // if (Math.random() > 0.3)
                         input.set(i);
                 }
                 neocortex.iterate(input);
@@ -131,9 +132,16 @@ public class NeocortexFrame extends JFrame {
     }
 
     private void initCortex() {
-        settings = DHMSettings.getDefaultSettings();
+        //settings = DHMSettings.getDefaultSettings();
+        try {
+            String path = HTMConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+            settings = DHMSettings.loadFromFile(path+"\\"+"test16xOnes.properties");
+
+        } catch (RegionSettingsException e) {
+            e.printStackTrace();
+        }
         neocortex = new Neocortex();
-        Region region1 = neocortex.addRegion(settings, null);
+        Region region1 = neocortex.addRegion(0,settings, null);
         // TODO P: когда более 1 слоя, то возникает исключение выхода за границы массива - связано с тем что как-то не так заданы настройки слоя (размеры в клетках и колонках)
        /* java.util.List<Region> children = new ArrayList<>();
         children.add(region1);

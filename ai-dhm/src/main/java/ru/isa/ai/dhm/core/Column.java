@@ -123,7 +123,7 @@ public class Column {
         boolean wasPredicted = false; // активность всей колонки была предсказана ранее
         boolean toLearn = false; // колонка в состоянии обучения
         for (Cell cell : cells) {
-            if (cell.getStateHistory()[1] == Cell.State.predictive) {
+            if (cell.getStateHistory()[1] == Cell.State.predictive) {   // если клетка была в состоянии предсказания
                 DistalSegment s = cell.getMostActiveSegment(false, 1); // TODO: избыточно - возвращает лишние сегменты (активные сегменты, которые isSequenceSegment()==false)
                 if (s.isSequenceSegment()) { // клетка была активна за счет предсказания последовательности
                     wasPredicted = true;
@@ -250,13 +250,13 @@ public class Column {
             }
 
             // к некоторым клеткам добавляем новые синапсы
-            for (int i = 0; i < settings.newSynapseCount - su.synapses.size(); i++) {
-                if(cellsToLearn.size()>0)
-                {
+            if(cellsToLearn.size()>0) {
+                for (int i = 0; i < settings.newSynapseCount - su.synapses.size(); i++) {
                     int index = (int) (cellsToLearn.size() * Math.random());
                     Synapse synapse = new Synapse(settings, cellsToLearn.get(index).getIndex(), settings.initialPerm);
                     su.synapses.add(cellsToLearn.get(index).getIndex());
                     su.segment.addSynapse(synapse);
+
                 }
             }
         }
@@ -326,6 +326,8 @@ public class Column {
     public void setActive(boolean isActive) {
         this.isActive = isActive;
     }
+
+    public ProximalSegment getProximalSegment() {return proximalSegment; }
 
     private class SegmentUpdate {
         DistalSegment segment = null;

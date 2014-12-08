@@ -22,6 +22,7 @@ import java.util.*;
 public class GAAQClassifier extends AbstractClassifier {
 
     private static final Logger logger = LogManager.getLogger(GAAQClassifier.class.getSimpleName());
+    private static final int RESTART_NUMBER = 2;
 
     private List<String> classes;
     private Map<String, AQClassDescription> classMapDescriptions = new HashMap<>();
@@ -206,7 +207,7 @@ public class GAAQClassifier extends AbstractClassifier {
             ++sizeBestPop;
             BestPop[sizeBestPop - 1] = new Population(1, numgen, sizegen, tobj0, tobj, fobj);
             while (tobj.length != 0) {
-                for (int restart = 0; restart < 2; ++restart) {
+                for (int restart = 0; restart < RESTART_NUMBER; ++restart) {
                     Coevolution mainCpop = new Coevolution(cn, n, numgen, sizegen, ngen, nadapt, socialcard, socialfine,
                             typega, typesel, sizetur, typerec, mutation, mutadapt,
                             truthvalue, tobj0, tobj, fobj);
