@@ -63,13 +63,13 @@ public class GAAQJSM {
 
                 Collection<AQClassDescription> classDescriptions;
                 if(line.hasOption("d")) {
+                    classDescriptions = loadDescription();
+                }else{
                     GAAQClassifier classifier = new GAAQClassifier(classes);
                     classifier.setMaximumDescriptionSize(maxUniverseSize);
                     classifier.buildClassifier(data);
                     classDescriptions = classifier.getDescriptions();
                     saveDescription(classDescriptions);
-                }else{
-                    classDescriptions = loadDescription();
                 }
 
                 for (AQClassDescription description : classDescriptions) {
