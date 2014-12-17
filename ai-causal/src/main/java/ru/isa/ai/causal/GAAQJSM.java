@@ -64,6 +64,14 @@ public class GAAQJSM {
                 Collection<AQClassDescription> classDescriptions;
                 if(line.hasOption("d")) {
                     classDescriptions = loadDescription();
+
+                    for (AQClassDescription description : classDescriptions) {
+                        if (classes.isEmpty() || classes.contains(description.getClassName())) {
+                            AbstractJSMAnalyzer analyzer = new NorrisJSMAnalyzer(description, data);
+                            analyzer.setMaxHypothesisLength(maxHypothesisLength);
+                            List<JSMHypothesis> hypothesises = analyzer.evaluateCauses();
+                        }
+                    }
                 }else{
                     GAAQClassifier classifier = new GAAQClassifier(classes);
                     classifier.setMaximumDescriptionSize(maxUniverseSize);
@@ -72,13 +80,7 @@ public class GAAQJSM {
                     saveDescription(classDescriptions);
                 }
 
-                for (AQClassDescription description : classDescriptions) {
-                    if (classes.isEmpty() || classes.contains(description.getClassName())) {
-                        AbstractJSMAnalyzer analyzer = new NorrisJSMAnalyzer(description, data);
-                        analyzer.setMaxHypothesisLength(maxHypothesisLength);
-                        List<JSMHypothesis> hypothesises = analyzer.evaluateCauses();
-                    }
-                }
+
             }
         } catch (ParseException e) {
             logger.error("Error during parse command line", e);
