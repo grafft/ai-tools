@@ -7,6 +7,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.isa.ai.causal.utils.DataUtils;
 import weka.classifiers.AbstractClassifier;
 import weka.core.*;
 import weka.filters.Filter;
@@ -48,6 +49,7 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
         // attributes
         result.enable(Capabilities.Capability.NOMINAL_ATTRIBUTES);
         result.enable(Capabilities.Capability.NUMERIC_ATTRIBUTES);
+        result.enable(Capabilities.Capability.MISSING_VALUES);
 
         // class
         result.enable(Capabilities.Capability.NOMINAL_CLASS);
@@ -306,13 +308,17 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
             int counter = 0;
             while (attrEventEnu.hasMoreElements()) {
                 Attribute attr = attrEventEnu.nextElement();
-                switch (attr.type()) {
-                    case Attribute.NOMINAL:
-                        builder.append(attr.value((int) instance.value(attr.index())));
-                        break;
-                    case Attribute.NUMERIC:
-                        builder.append(instance.value(attr.index()));
-                        break;
+                if (!instance.isMissing(attr)) {
+                    switch (attr.type()) {
+                        case Attribute.NOMINAL:
+                            builder.append(attr.value((int) instance.value(attr.index())));
+                            break;
+                        case Attribute.NUMERIC:
+                            builder.append(instance.value(attr.index()));
+                            break;
+                    }
+                } else {
+                    builder.append("?");
                 }
                 if (counter < testData.numAttributes() - 2) {
                     builder.append(",");
@@ -608,10 +614,14 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
         }
     }
 
-    public static void main(String[] argv) {
-        runClassifier(new AQ21ExternalClassifier(),
-                new String[]{"-t",
-                        AQ21ExternalClassifier.class.getClassLoader().getResource("ru/isa/ai/causal/classifiers/diabetes.arff").getPath()}
-        );
+    public static void main(String[] argv) throws Exception {
+        Instances data = DataUtils.loadData(argv[0]);
+        AQ21ExternalClassifier classifier = new AQ21ExternalClassifier();
+        classifier.buildClassifier(data);
+        DataUtils.saveDescription(classifier.getDescriptions());
+//        runClassifier(new AQ21ExternalClassifier(),
+//                new String[]{"-t",
+//                        AQ21ExternalClassifier.class.getClassLoader().getResource("ru/isa/ai/causal/classifiers/diabetes.arff").getPath()}
+//        );
     }
 }
