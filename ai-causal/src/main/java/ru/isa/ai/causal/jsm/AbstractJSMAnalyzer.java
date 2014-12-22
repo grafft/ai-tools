@@ -53,6 +53,10 @@ public abstract class AbstractJSMAnalyzer {
 
             factBaseAnalyze(factBase, property, causes, otherProps);
         }
+        int totalCauses = 0;
+        for (JSMHypothesis hyp : causes)
+            totalCauses += hyp.size();
+        logger.info("Total amount of causes relations = " + totalCauses);
         return causes;
     }
 
@@ -73,7 +77,7 @@ public abstract class AbstractJSMAnalyzer {
                 if (causeProps.size() > 0)
                     cause.addValue(intersection.generators.size(), causeProps);
             }
-            if (cause.getValue().size() > 0) {
+            if (cause.size() > 0) {
                 causes.add(cause);
                 logger.info(cause.toString());
             }
@@ -85,5 +89,4 @@ public abstract class AbstractJSMAnalyzer {
     public void setMaxHypothesisLength(int maxHypothesisLength) {
         this.maxHypothesisLength = maxHypothesisLength;
     }
-
 }

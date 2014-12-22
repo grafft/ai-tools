@@ -25,7 +25,7 @@ public class JSMFactBase {
         for (Instance event : data) {
             BitSet objectVector = createObjectSet(event, properties);
 
-            if (event.classIndex() == classIndex) {
+            if (data.classAttribute().indexOfValue(event.stringValue(data.classIndex())) == classIndex) {
                 if (!factBase.plusExamples.containsValue(objectVector))
                     factBase.plusExamples.put(data.indexOf(event), objectVector);
             } else {
