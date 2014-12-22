@@ -22,9 +22,7 @@ import java.util.List;
  * Time: 10:52
  */
 public class GAAQJSM {
-
     private static final Logger logger = LogManager.getLogger(GAAQJSM.class.getSimpleName());
-    private static int classIndex;
 
     public static void main(String[] args) {
         Options options = new Options();
@@ -46,7 +44,7 @@ public class GAAQJSM {
             } else {
                 final String dataFile = line.getOptionValue("f");
                 int maxHypothesisLength = Integer.parseInt(line.getOptionValue("l", "3"));
-                int maxUniverseSize = Integer.parseInt(line.getOptionValue("u", "10"));
+                int maxUniverseSize = Integer.parseInt(line.getOptionValue("u", "30"));
                 List<String> classes = new ArrayList<>();
                 if (line.hasOption("c"))
                     Collections.addAll(classes, line.getOptionValues("c"));

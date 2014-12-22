@@ -39,7 +39,7 @@ public class AQ21ExternalClassifier extends AbstractClassifier {
     private boolean tryToMinimize = false;
     private boolean isCumulative = false;
     private int numIterations = 100;
-    private int maximumDescriptionSize = 100;
+    private int maximumDescriptionSize = 30;
     private double cumulativeThreshold = 0.25;
 
     @Override
