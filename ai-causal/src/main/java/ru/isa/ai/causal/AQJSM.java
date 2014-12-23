@@ -192,30 +192,4 @@ public class AQJSM {
 
     }
 
-    @XmlRootElement
-    @XmlAccessorType(XmlAccessType.FIELD)
-    private static class ClassDescriptionList {
-        @XmlElementWrapper
-        @XmlElement
-        private List<AQClassDescription> classDescriptions = new ArrayList<>();
-
-        ClassDescriptionList() {
-        }
-
-        ClassDescriptionList(List<AQClassDescription> classDescriptions) {
-            this.classDescriptions = classDescriptions;
-        }
-
-        ClassDescriptionList(Collection<AQClassDescription> classDescriptions) {
-            this.classDescriptions.addAll(classDescriptions);
-        }
-
-        List<AQClassDescription> getClassDescriptions() {
-            return classDescriptions;
-        }
-
-        void setClassDescriptions(List<AQClassDescription> classDescriptions) {
-            this.classDescriptions = classDescriptions;
-        }
-    }
 }

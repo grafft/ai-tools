@@ -1,9 +1,7 @@
 package ru.isa.ai.causal.classifiers;
 
 import javax.xml.bind.annotation.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by GraffT on 01.05.2014.
@@ -34,18 +32,22 @@ public class AQClassDescription {
 
     public static AQClassDescription createFromRules(List<AQRule> rules, int maximumDescriptionSize, String className) {
         List<CRProperty> rawDescription = new ArrayList<>();
-        over:
         for (AQRule rule : rules) {
             // добавялем каждое свойство из правила с проверкой
             for (Map.Entry<CRFeature, List<Integer>> ruleEntry : rule.getTokens().entrySet()) {
-                if (rawDescription.size() >= maximumDescriptionSize)
-                    break over;
                 CRProperty prop = new CRProperty(ruleEntry.getKey(), ruleEntry.getValue());
                 prop.setPopularity(rule.getCoveredInstances().size());
                 if (!rawDescription.contains(prop))
                     rawDescription.add(prop);
             }
         }
+        Collections.sort(rawDescription, new Comparator<CRProperty>() {
+            @Override
+            public int compare(CRProperty o1, CRProperty o2) {
+                return -Integer.compare(o1.getPopularity(), o2.getPopularity());
+            }
+        });
+        rawDescription = rawDescription.subList(0, maximumDescriptionSize);
         return createFromProperties(rawDescription, className);
     }
 

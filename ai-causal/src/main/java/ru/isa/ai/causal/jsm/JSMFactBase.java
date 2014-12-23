@@ -18,6 +18,24 @@ public class JSMFactBase {
     public Map<Integer, BitSet> minusExamples = new HashMap<>();
     public List<CRProperty> universe;
 
+    public static JSMFactBase buildClassFactBase(Instances data, int classIndex, List<CRProperty> properties) {
+        JSMFactBase factBase = new JSMFactBase();
+        factBase.universe = properties;
+
+        for (Instance event : data) {
+            BitSet objectVector = createObjectSet(event, properties);
+
+            if (data.classAttribute().indexOfValue(event.stringValue(data.classIndex())) == classIndex) {
+                if (!factBase.plusExamples.containsValue(objectVector))
+                    factBase.plusExamples.put(data.indexOf(event), objectVector);
+            } else {
+                if (!factBase.minusExamples.containsValue(objectVector))
+                    factBase.minusExamples.put(data.indexOf(event), objectVector);
+            }
+        }
+        return factBase;
+    }
+
     public static JSMFactBase buildFactBase(Instances data, CRProperty keyProperty, List<CRProperty> properties) {
         JSMFactBase factBase = new JSMFactBase();
         factBase.universe = properties;
@@ -27,24 +45,7 @@ public class JSMFactBase {
             double keyVal = event.value(keyAttr.index());
             if (!Utils.isMissingValue(keyVal)) {
                 boolean isCover = false;
-                BitSet objectVector = new BitSet(properties.size());
-                for (int i = 0; i < properties.size(); i++) {
-                    Attribute attr = data.attribute(properties.get(i).getFeature().getName());
-                    double val = event.value(attr.index());
-                    if (Utils.isMissingValue(val)) {
-                        objectVector.set(i, false);
-                    } else {
-                        switch (attr.type()) {
-                            case Attribute.NOMINAL:
-                                String value = attr.value((int) val);
-                                objectVector.set(i, properties.get(i).coverNominal(value));
-                                break;
-                            case Attribute.NUMERIC:
-                                objectVector.set(i, properties.get(i).cover(val));
-                                break;
-                        }
-                    }
-                }
+                BitSet objectVector = createObjectSet(event, properties);
                 switch (keyAttr.type()) {
                     case Attribute.NOMINAL:
                         String value = keyAttr.value((int) keyVal);
@@ -64,6 +65,29 @@ public class JSMFactBase {
             }
         }
         return factBase;
+    }
+
+    private static BitSet createObjectSet(Instance event, List<CRProperty> properties) {
+        BitSet objectVector = new BitSet(properties.size());
+        for (int i = 0; i < properties.size(); i++) {
+            Attribute attr = event.dataset().attribute(properties.get(i).getFeature().getName());
+            double val = event.value(attr.index());
+            if (Utils.isMissingValue(val)) {
+                objectVector.set(i, false);
+            } else {
+                switch (attr.type()) {
+                    case Attribute.NOMINAL:
+                        String value = attr.value((int) val);
+                        objectVector.set(i, properties.get(i).coverNominal(value));
+                        break;
+                    case Attribute.NUMERIC:
+                        objectVector.set(i, properties.get(i).cover(val));
+                        break;
+                }
+            }
+        }
+
+        return objectVector;
     }
 
     public void reduceEquals() {

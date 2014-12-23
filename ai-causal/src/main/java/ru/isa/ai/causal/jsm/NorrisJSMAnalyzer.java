@@ -47,7 +47,6 @@ public class NorrisJSMAnalyzer extends AbstractJSMAnalyzer {
     public List<JSMIntersection> searchIntersection(Map<Integer, BitSet> examples) {
         // Relation R=AxB, A - objects, B - features, Mk - maximal rectangles (maximal intersections)
         List<JSMIntersection> hypotheses = new ArrayList<>();
-        Map<Integer, BitSet> viewedExamples = new HashMap<>();
         for (Map.Entry<Integer, BitSet> example : examples.entrySet()) {  // find object xkR
             // compute collection Tk={Ax(B intersect xkR): AxB in Mk-1}
             List<JSMIntersection> tempInter = new ArrayList<>();
