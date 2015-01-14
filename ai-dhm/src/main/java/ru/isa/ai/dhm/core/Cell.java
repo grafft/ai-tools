@@ -21,7 +21,7 @@ public class Cell {
     private int minThreshold = 5;
     private int historyDeep = 2;
 
-    private List<DistalSegment> distalSegments = new ArrayList<>(); // TODO P: нигде не обновляется, всегда пуст
+    private List<LateralSegment> distalSegments = new ArrayList<>(); // TODO P: нигде не обновляется, всегда пуст
     private State[] stateHistory; // история состояний клетки
     private boolean[] learnHistory;
 
@@ -43,9 +43,9 @@ public class Cell {
      * @param inLearning
      * @return
      */
-    public DistalSegment getMostActiveSegment(boolean inLearning, int historyLevel) {
-        DistalSegment segment = null;
-        for (DistalSegment s : distalSegments) {
+    public LateralSegment getMostActiveSegment(boolean inLearning, int historyLevel) {
+        LateralSegment segment = null;
+        for (LateralSegment s : distalSegments) {
             if (segment == null) {
                 segment = s;
             } else if (s.isSequenceSegment() && !segment.isSequenceSegment()) {
@@ -65,9 +65,9 @@ public class Cell {
      * @param historyLevel
      * @return
      */
-    public DistalSegment getBestMatchingSegment(int historyLevel) {
-        DistalSegment bestSegment = null;
-        for (DistalSegment s : distalSegments) {
+    public LateralSegment getBestMatchingSegment(int historyLevel) {
+        LateralSegment bestSegment = null;
+        for (LateralSegment s : distalSegments) {
             if (bestSegment != null) {
                 int connected = s.getActiveSynapses(historyLevel).size();
                 int bestConnected = bestSegment.getActiveSynapses(historyLevel).size();
@@ -80,17 +80,25 @@ public class Cell {
         return bestSegment;
     }
 
+    /// Advances this cell to the next time step.
+    ///
+    /// The current state of this cell (active, learning, predicting) will be set as the
+    /// previous state and the current state will be reset to no cell activity by
+    /// default until it can be determined.
     public void updateHistory(Map<Integer, Cell> cells) {
-        for (DistalSegment segment : distalSegments) {
+        for (LateralSegment segment : distalSegments) {
             segment.updateHistory(cells);
         }
         for (int i = historyDeep - 1; i > 0; i--) {
             stateHistory[i] = stateHistory[i - 1];
             learnHistory[i] = learnHistory[i - 1];
         }
+
+        stateHistory[0] = State.passive;
+        learnHistory[0] = false;
     }
 
-    public List<DistalSegment> getDistalSegments() {
+    public List<LateralSegment> getLateralSegments() {
         return distalSegments;
     }
 

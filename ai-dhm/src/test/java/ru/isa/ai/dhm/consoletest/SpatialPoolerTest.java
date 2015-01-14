@@ -4,9 +4,11 @@ import cern.colt.matrix.tbit.BitVector;
 import cern.colt.matrix.tint.IntMatrix1D;
 import junit.framework.TestCase;
 import ru.isa.ai.dhm.DHMSettings;
-import ru.isa.ai.dhm.LogUtils;
+import ru.isa.ai.dhm.util.ConsecutivePatternMachine;
+import ru.isa.ai.dhm.util.LogUtils;
 import ru.isa.ai.dhm.RegionSettingsException;
 import ru.isa.ai.dhm.core.*;
+import ru.isa.ai.dhm.util.PatternMachine;
 import ru.isa.ai.dhm.visual.HTMConfiguration;
 import ru.isa.ai.olddhm.MathUtils;
 
@@ -14,9 +16,14 @@ import ru.isa.ai.olddhm.MathUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static junit.framework.Assert.assertTrue;
+
+import ru.isa.ai.dhm.util.SequenceMachine;
 
 
 /**
@@ -28,8 +35,13 @@ public class SpatialPoolerTest  extends TestCase {
     private DHMSettings settings;
 
 
+
+
     public void testRun() throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException, InvocationTargetException {
-        testOverlapPhase(new int[]{1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1}, 4,4,2,2, new int[]{3,2,3,2});
+
+
+
+        testOverlapPhase(new int[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, 4, 4, 2, 2, new int[]{3, 2, 3, 2});
         testOverlapPhase(new int[]{0,0,0,0, 1,1,1,1, 1,1,1,1, 1,1,1,1}, 4,4,2,2, new int[]{1,1,3,2});
         testInhibitionPhase(new int[]{1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1}, 4,4,2,2, new boolean[]{true,false,true,false});
         testInhibitionPhase(new int[]{0,0,0,0, 1,1,1,1, 1,1,1,1, 1,1,1,1}, 4,4,2,2, new boolean[]{false,false,true,false});

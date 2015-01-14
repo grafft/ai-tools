@@ -1,4 +1,4 @@
-package ru.isa.ai.dhm;
+package ru.isa.ai.dhm.util;
 
 import au.com.bytecode.opencsv.CSV;
 import au.com.bytecode.opencsv.CSVWriteProc;
