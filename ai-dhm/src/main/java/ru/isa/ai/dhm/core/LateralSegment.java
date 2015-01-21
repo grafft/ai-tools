@@ -18,7 +18,7 @@ public class LateralSegment {
     // Integer - определенный момент в прошлом // List<Synapse> - список подключенных синапсов в сегменте
     private Map<Integer, List<Synapse>> activeHistory = new HashMap<>();
     private Map<Integer, List<Synapse>> learnHistory = new HashMap<>(); // массив клеток, использующихся во время обучения
-    private Map<Integer, List<Synapse>> connectedHistory = new HashMap<>(); // TODO: возможно не используется!
+    private Map<Integer, List<Synapse>> connectedHistory = new HashMap<>(); // история присоединенных синапсов
 
     /**
      * Порог активации для сегмента. Если число активных подключенных синапсов в сегменте больше чем
@@ -47,8 +47,10 @@ public class LateralSegment {
         for (int i = historyDeep - 1; i > 0; i--) {
             activeHistory.get(i).clear();
             learnHistory.get(i).clear();
+            connectedHistory.get(i).clear();
             activeHistory.get(i).addAll(activeHistory.get(i - 1));
             learnHistory.get(i).addAll(learnHistory.get(i - 1));
+            connectedHistory.get(i).addAll(connectedHistory.get(i - 1));
         }
         activeHistory.get(0).clear();
         learnHistory.get(0).clear();
@@ -58,9 +60,11 @@ public class LateralSegment {
             if (entry.getValue().isConnected()) {
                 if (cells.get(entry.getKey()).getStateHistory()[0] == Cell.State.active) {
                     activeHistory.get(0).add(entry.getValue());
-                } if (cells.get(entry.getKey()).getLearnHistory()[0]) {
+                }
+                if (cells.get(entry.getKey()).getLearnHistory()[0]) {
                     learnHistory.get(0).add(entry.getValue());
                 }
+                connectedHistory.get(0).add(entry.getValue());
             }
         }
     }
