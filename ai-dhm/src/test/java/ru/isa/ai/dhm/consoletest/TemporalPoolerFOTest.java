@@ -45,7 +45,7 @@ public class TemporalPoolerFOTest extends TestCase {
 
     private List<Set<Integer>> getSeqs(int M, int N) {
         SequenceMachine sequenceMachine = new SequenceMachine(new ConsecutivePatternMachine(33, 3));
-        List<Integer> input = Arrays.asList(new Integer[]{0, 1, 2, 3, 7, 10, -1});
+        List<Integer> input = Arrays.asList(new Integer[]{0, 1, 2, 3, 4, 5,4,3,2,1,0, -1});
         List<Set<Integer>> sequence = sequenceMachine.generateFromNumbers(input);
         sequence = sequenceMachine.generateFromNumbers(input);
 
@@ -60,16 +60,28 @@ public class TemporalPoolerFOTest extends TestCase {
     }
 
     public void testRun() throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException, InvocationTargetException {
+        List<Set<Integer>> sequence =getSeqs(0,0);
+        for (Set<Integer> patt : sequence) {
+            int arr[] = toIntArray(patt);
+            BitVector inputvec = new BitVector(arr.length);
+            System.out.print(inputvec);
+        }
 
-
-
-         }
+    }
 
     public static void main(String[] args) {
 
 
     }
-    /*Test that a rst order sequence can be learned with M=1, N=100, P=1.*/
+
+    /*Test that a 1st order (of steps) can be learned (sample - http://floybix.github.io/assets/2014-07-11/simple_steps.html)*/
+    public void testSimpleSteps()  throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException {
+        TemporalPoolerFOTest test = new TemporalPoolerFOTest();
+        test.initCortex(10, 10, 10, 10, 1);
+    }
+
+
+    /*Test that a 1st order sequence can be learned with M=1, N=100, P=1.*/
     public void testF1(int M, int N) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException {
 
         TemporalPoolerFOTest test = new TemporalPoolerFOTest();
