@@ -43,30 +43,19 @@ public class TemporalPoolerFOTest extends TestCase {
         return retVal;
     }
 
-    private List<Set<Integer>> getSeqs(int M, int N) {
-        SequenceMachine sequenceMachine = new SequenceMachine(new ConsecutivePatternMachine(33, 3));
-        List<Integer> input = Arrays.asList(new Integer[]{0, 1, 2, 3, 4, 5,4,3,2,1,0, -1});
-        List<Set<Integer>> sequence = sequenceMachine.generateFromNumbers(input);
-        sequence = sequenceMachine.generateFromNumbers(input);
-
-        for (Set<Integer> s : sequence) {
-            for (int i : s)
-                System.out.print(" : " + i);
-            System.out.println();
-        }
-        String sequenceText = sequenceMachine.prettyPrintSequence(sequence, 4);
-        System.out.println("Feeding sequence " + sequenceText);
-        return sequence;
+    private BitVector toBitVector(Set<Integer> pattern, int outLen) {
+        BitVector bv=new BitVector(outLen);
+        for(int i:pattern)
+            bv.set(i);
+        return bv;
     }
 
-    public void testRun() throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException, InvocationTargetException {
-        List<Set<Integer>> sequence =getSeqs(0,0);
-        for (Set<Integer> patt : sequence) {
-            int arr[] = toIntArray(patt);
-            BitVector inputvec = new BitVector(arr.length);
-            System.out.print(inputvec);
-        }
 
+
+
+    public void testRun() throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException, InvocationTargetException {
+
+        testSimpleSteps();
     }
 
     public static void main(String[] args) {
@@ -77,7 +66,19 @@ public class TemporalPoolerFOTest extends TestCase {
     /*Test that a 1st order (of steps) can be learned (sample - http://floybix.github.io/assets/2014-07-11/simple_steps.html)*/
     public void testSimpleSteps()  throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException {
         TemporalPoolerFOTest test = new TemporalPoolerFOTest();
-        test.initCortex(10, 10, 10, 10, 1);
+        test.initCortex(300, 1, 300, 1, 1);
+
+        SequenceMachine sequenceMachine = new SequenceMachine(new ConsecutivePatternMachine(33, 3));
+        List<Integer> input = Arrays.asList(new Integer[]{0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0, -1});
+        List<Set<Integer>> sequence = sequenceMachine.generateFromNumbers(input);
+        sequence = sequenceMachine.generateFromNumbers(input);
+
+        for (Set<Integer> patt : sequence) {
+            BitVector inputvec = toBitVector(patt,33);
+            test.neocortex.iterate(inputvec);
+
+        }
+
     }
 
 
@@ -88,7 +89,10 @@ public class TemporalPoolerFOTest extends TestCase {
         test.initCortex(10, 10, 10, 10, 1);
         Region r = test.neocortex.getRegions().get(0);
 
-        List<Set<Integer>> sequence = getSeqs(M,N);
+        SequenceMachine sequenceMachine = new SequenceMachine(new ConsecutivePatternMachine(33, 3));
+        List<Integer> input = Arrays.asList(new Integer[]{0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0, -1});
+        List<Set<Integer>> sequence = sequenceMachine.generateFromNumbers(input);
+        sequence = sequenceMachine.generateFromNumbers(input);
 
 
            /* for (Set<Integer> patt : sequence) {
@@ -123,7 +127,10 @@ segments are learned during the second pass.*/
         test.initCortex(10, 10, 10, 10, 1);
         Region r = test.neocortex.getRegions().get(0);
 
-        List<Set<Integer>> sequence = getSeqs(M,N);
+        SequenceMachine sequenceMachine = new SequenceMachine(new ConsecutivePatternMachine(33, 3));
+        List<Integer> input = Arrays.asList(new Integer[]{0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0, -1});
+        List<Set<Integer>> sequence = sequenceMachine.generateFromNumbers(input);
+        sequence = sequenceMachine.generateFromNumbers(input);
 
        /* for(int i=0;i<P) {
             for (Set<Integer> patt : sequence) {
