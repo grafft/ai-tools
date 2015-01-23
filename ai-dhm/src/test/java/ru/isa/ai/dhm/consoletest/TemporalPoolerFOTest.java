@@ -59,8 +59,7 @@ public class TemporalPoolerFOTest extends TestCase {
     public void testRun() throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException, InvocationTargetException {
 
 
-
-         }
+    }
 
     public static void main(String[] args) {
 
@@ -76,7 +75,7 @@ public class TemporalPoolerFOTest extends TestCase {
         List<Set<Integer>> sequence = getSeqs(M,N);
 
 
-            for (Set<Integer> patt : sequence) {
+        /*    for (Set<Integer> patt : sequence) {
                 int arr[] = toIntArray(patt);
                 BitVector inputvec = new BitVector(arr.length);
                 MathUtils.assign(inputvec, arr);
@@ -94,7 +93,7 @@ public class TemporalPoolerFOTest extends TestCase {
                 for (int i = 0; i < groundtruth.length; i++)
                     assertTrue(overlaps[i] == groundtruth[i]);
             }
-
+*/
     }
 
 
@@ -110,7 +109,7 @@ segments are learned during the second pass.*/
 
         List<Set<Integer>> sequence = getSeqs(M,N);
 
-        for(int i=0;i<P) {
+      /*  for(int i=0;i<P) {
             for (Set<Integer> patt : sequence) {
                 int arr[] = toIntArray(patt);
                 BitVector inputvec = new BitVector(arr.length);
@@ -129,7 +128,7 @@ segments are learned during the second pass.*/
                 for (int i = 0; i < groundtruth.length; i++)
                     assertTrue(overlaps[i] == groundtruth[i]);
             }
-        }
+        }*/
     }
 
 
