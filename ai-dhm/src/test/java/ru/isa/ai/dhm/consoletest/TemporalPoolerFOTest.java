@@ -66,7 +66,7 @@ public class TemporalPoolerFOTest extends TestCase {
     /*Test that a 1st order (of steps) can be learned (sample - http://floybix.github.io/assets/2014-07-11/simple_steps.html)*/
     public void testSimpleSteps()  throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException {
         TemporalPoolerFOTest test = new TemporalPoolerFOTest();
-        test.initCortex(300, 1, 300, 1, 1);
+        test.initCortex(300, 2, 33, 1, 1);
 
         SequenceMachine sequenceMachine = new SequenceMachine(new ConsecutivePatternMachine(33, 3));
         List<Integer> input = Arrays.asList(new Integer[]{0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0, -1});
