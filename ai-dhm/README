@@ -4,3 +4,5 @@ Related works
 3) https://github.com/breznak/htm-cla - Java (03.2013)
 4) https://github.com/numenta/htm.java - Numenta port
 5) https://github.com/numenta/nupic.research - Numenta image
+
+Reference Code: https://github.com/MichaelFerrier/HTMCLA/blob/master/htm/Region.cpp

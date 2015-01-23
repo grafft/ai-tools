@@ -6,8 +6,7 @@ import cern.colt.matrix.tint.IntMatrix1D;
 import cern.colt.matrix.tint.impl.DenseIntMatrix1D;
 import com.google.common.primitives.Ints;
 import ru.isa.ai.dhm.DHMSettings;
-import ru.isa.ai.dhm.LogUtils;
-import ru.isa.ai.dhm.MathUtils;
+import ru.isa.ai.dhm.util.MathUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

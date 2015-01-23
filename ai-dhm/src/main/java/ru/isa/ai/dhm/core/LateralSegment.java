@@ -11,7 +11,7 @@ import java.util.Map;
  * Time: 12:16
  */
 /*Дистальный дендритный сегмент (между разными удаленными клетками одного региона)*/
-public class DistalSegment {
+public class LateralSegment {
     private int historyDeep = 2; // глубина истории обучения
     // Integer - индекс клетки в том же слое, с которой потенциально может быть связан данный дистальный дендрит с помошью синапса Synapse
     private Map<Integer, Synapse> synapses = new HashMap<>(); // синапсы дендрита
@@ -28,7 +28,7 @@ public class DistalSegment {
     // предсказывает ли данный сегмент активацию своей клетки от прямого входа в следующий момент времени.
     private boolean isSequenceSegment = false;
 
-    public DistalSegment() {
+    public LateralSegment() {
         for (int i = 0; i < historyDeep; i++) {
             activeHistory.put(i, new ArrayList<Synapse>());
             learnHistory.put(i, new ArrayList<Synapse>());

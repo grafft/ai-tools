@@ -1,5 +1,7 @@
-package ru.isa.ai.dhm;
+package ru.isa.ai.dhm.util;
 
+import ru.isa.ai.dhm.DHMSettings;
+import ru.isa.ai.dhm.RegionSettingsException;
 import ru.isa.ai.dhm.core.Neocortex;
 
 import java.io.File;

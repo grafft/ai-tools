@@ -124,7 +124,7 @@ public class Column {
         boolean toLearn = false; // колонка в состоянии обучения
         for (Cell cell : cells) {
             if (cell.getStateHistory()[1] == Cell.State.predictive) {   // если клетка была в состоянии предсказания
-                DistalSegment s = cell.getMostActiveSegment(false, 1); // TODO: избыточно - возвращает лишние сегменты (активные сегменты, которые isSequenceSegment()==false)
+                LateralSegment s = cell.getMostActiveSegment(false, 1); // TODO: избыточно - возвращает лишние сегменты (активные сегменты, которые isSequenceSegment()==false)
                 if (s.isSequenceSegment()) { // клетка была активна за счет предсказания последовательности
                     wasPredicted = true;
                     cell.getStateHistory()[0] = Cell.State.active;
@@ -157,7 +157,7 @@ public class Column {
     public void updatePredictiveCells() {
         for (Cell cell : cells) {
             boolean toUpdate = false;
-            for (DistalSegment s : cell.getDistalSegments()) {
+            for (LateralSegment s : cell.getLateralSegments()) {
                 if (s.isActiveInState(false, 0)) { // сегмент достаточным количетсвом активных синапсов и не в состоянии обучения
                     cell.getStateHistory()[0] = Cell.State.predictive;
                     SegmentUpdate sUpdate = createSegmentUpdate(otherCells, s, 0, false);
@@ -166,7 +166,7 @@ public class Column {
                 }
             }
             if (toUpdate) {
-                DistalSegment predS = cell.getBestMatchingSegment(1);
+                LateralSegment predS = cell.getBestMatchingSegment(1);
                 SegmentUpdate predSUpdate = createSegmentUpdate(otherCells, predS, 1, true);
                 addToUpdate(cell, predSUpdate);
             }
@@ -182,7 +182,6 @@ public class Column {
         list.add(predSUpdate);
     }
 
-    // TODO P: где-то нужно сделать так, чтобы состяние клетки стало passive
     // применение обновлений дистальных сегментов
     public void predictiveLearning() {
        if(toUpdate.size()>0) {
@@ -231,7 +230,7 @@ public class Column {
      * @param addNewSynapses - добавлять ли новые синапсы
      * @return - список изменений
      */
-    private SegmentUpdate createSegmentUpdate(Map<Integer, Cell> cells, DistalSegment s, int historyLevel, boolean addNewSynapses) {
+    private SegmentUpdate createSegmentUpdate(Map<Integer, Cell> cells, LateralSegment s, int historyLevel, boolean addNewSynapses) {
         final SegmentUpdate su = new SegmentUpdate();
         if (s != null) {
             su.segment = s;
@@ -239,7 +238,7 @@ public class Column {
                 su.synapses.add(synapse.getInputSource());
             }
         } else {
-            su.segment = new DistalSegment();
+            su.segment = new LateralSegment();
         }
         if (addNewSynapses) {
             // клетки которые находятся в состоянии обучения
@@ -272,15 +271,15 @@ public class Column {
     private Cell getBestMatchingCell(int historyLevel) {
         Cell bestMatching = null;
         Cell withMinSegments = null;
-        DistalSegment bestSegment = null;
+        LateralSegment bestSegment = null;
         for (Cell cell : cells) {
-            DistalSegment s = cell.getBestMatchingSegment(historyLevel);
+            LateralSegment s = cell.getBestMatchingSegment(historyLevel);
             // TODO: возможно этот код никогда не исполняется, т.к. countConnected всегда равно 0.
             if (s != null && (bestSegment == null || bestSegment.countConnected(historyLevel) < s.countConnected(historyLevel))) {
                 bestSegment = s;
                 bestMatching = cell;
             }
-            if (withMinSegments == null || (withMinSegments.getDistalSegments().size() > cell.getDistalSegments().size())) {
+            if (withMinSegments == null || (withMinSegments.getLateralSegments().size() > cell.getLateralSegments().size())) {
                 withMinSegments = cell;
             }
         }
@@ -330,8 +329,18 @@ public class Column {
     public ProximalSegment getProximalSegment() {return proximalSegment; }
 
     private class SegmentUpdate {
-        DistalSegment segment = null;
+        LateralSegment segment = null;
         List<Integer> synapses = new ArrayList<>();
+        /*
+         A sequence segment is a segment that predicts bottom-up activation in the very next time step, while
+         a non-sequence segment predicts bottom-up activity at a later time step.
+         So if the cell was predictive due to a non-sequence segment in the previous time step, and is active
+         in the current time step, then that prediction did not "come true" -- the prediction was for activity
+         at a later time step instead. Only a prediction in the previous time step that is due to a sequence segment
+         would be fulfilled by activation in the current time step, and so only in that case is the predicted cell
+         activated rather than having the whole column burst
+         Deprecated in newer version of HTM
+         */
         boolean isSequenceSegment = false;
     }
 }

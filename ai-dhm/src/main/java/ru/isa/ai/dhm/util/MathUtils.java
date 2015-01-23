@@ -1,4 +1,4 @@
-package ru.isa.ai.dhm;
+package ru.isa.ai.dhm.util;
 
 import cern.colt.matrix.tbit.BitMatrix;
 import cern.colt.matrix.tbit.BitVector;
