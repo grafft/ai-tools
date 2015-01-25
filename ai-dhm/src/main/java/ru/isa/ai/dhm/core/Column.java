@@ -274,7 +274,6 @@ public class Column {
         LateralSegment bestSegment = null;
         for (Cell cell : cells) {
             LateralSegment s = cell.getBestMatchingSegment(historyLevel);
-            // TODO: возможно этот код никогда не исполняется, т.к. countConnected всегда равно 0.
             if (s != null && (bestSegment == null || bestSegment.countConnected(historyLevel) < s.countConnected(historyLevel))) {
                 bestSegment = s;
                 bestMatching = cell;

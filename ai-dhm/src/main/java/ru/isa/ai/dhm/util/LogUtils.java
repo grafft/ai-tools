@@ -44,7 +44,7 @@ public class LogUtils {
     }
 
     /**
-     * Выводит в 2 файла текущие параметры клеток и колонок одного (первого) региона неокортекса
+     * Выводит в 2 файла текущие параметры клеток и колонок одного региона неокортекса
      * Для большего числа регионов нужно дописывать
      * @param r
      */
@@ -107,6 +107,7 @@ public class LogUtils {
                     int cellsPerCol = dim[2];
                     final int params = 5;
 
+                    // перебор всех колонок
                     for (int colLine = 0; colLine < ColsH; colLine++) {
                         String s[] = new String[ColsW * params + params * 2];
                         int i = 0;

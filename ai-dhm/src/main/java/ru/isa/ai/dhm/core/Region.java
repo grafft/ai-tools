@@ -63,9 +63,14 @@ public class Region {
      * Инициализация региона, для каждой колнки создается начальный список потенцильаных синапсов
      */
     public void initialization() {
+        int inputW = settings.xInput-2;// ширина входного массива данных за исключением границ
+        inputW = inputW <= 0 ? 0:inputW;
+        int inputH = settings.yInput-2;
+        inputH = inputH <= 0 ? 0:inputH;
+
         for (Column column : columns.values()) {
-            int inputCenterX = (column.getCoords()[0] + 1) * (settings.xInput / (settings.xDimension + 1));
-            int inputCenterY = (column.getCoords()[1] + 1) * (settings.yInput / (settings.yDimension + 1));
+            int inputCenterX = inputW ==0? 0 :(int) Math.ceil(((double)(column.getCoords()[0] ))/(settings.xDimension/ inputW))+1;
+            int inputCenterY = inputH ==0? 0 :(int) Math.ceil(((double)(column.getCoords()[1] ))/(settings.yDimension/ inputH))+1;
             column.initialization(inputCenterX, inputCenterY);
         }
     }
@@ -103,17 +108,19 @@ public class Region {
      */
     private void inhibitionPhase() {
         for (Column column : columns.values()) {
-            // выборка перекрытий колонок, соседних с данной
-            IntMatrix1D neighborOverlaps = overlaps.viewSelection(Ints.toArray(column.getNeighbors()));
-            // определить порог перекрытия
-            double minLocalOverlap = MathUtils.kthScore(neighborOverlaps, settings.desiredLocalActivity);
-            // если колонка имеет перекрытие большее, чем у соседей, то она становиться активной
-            if (column.getOverlap() > 0 && column.getOverlap() >= minLocalOverlap) {
-                column.setActive(true);
-                activeColumns.set(column.getIndex());
-            } else {
-                column.setActive(false);
-                activeColumns.clear(column.getIndex());
+            if (column.getNeighbors().size() > 0) {
+                // выборка перекрытий колонок, соседних с данной
+                IntMatrix1D neighborOverlaps = overlaps.viewSelection(Ints.toArray(column.getNeighbors()));
+                // определить порог перекрытия
+                double minLocalOverlap = MathUtils.kthScore(neighborOverlaps, settings.desiredLocalActivity);
+                // если колонка имеет перекрытие большее, чем у соседей, то она становиться активной
+                if (column.getOverlap() > 0 && column.getOverlap() >= minLocalOverlap) {
+                    column.setActive(true);
+                    activeColumns.set(column.getIndex());
+                } else {
+                    column.setActive(false);
+                    activeColumns.clear(column.getIndex());
+                }
             }
         }
     }
