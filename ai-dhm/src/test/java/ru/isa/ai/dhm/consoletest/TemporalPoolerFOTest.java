@@ -34,21 +34,7 @@ public class TemporalPoolerFOTest extends TestCase {
     private DHMSettings settings;
 
 
-    private int[] toIntArray(Set<Integer> pattern) {
-        int[] retVal = new int[pattern.size()];
-        int idx = 0;
-        for(int i : pattern) {
-            retVal[idx++] = i;
-        }
-        return retVal;
-    }
 
-    private BitVector toBitVector(Set<Integer> pattern, int outLen) {
-        BitVector bv=new BitVector(outLen);
-        for(int i:pattern)
-            bv.set(i);
-        return bv;
-    }
 
 
 
@@ -72,10 +58,9 @@ public class TemporalPoolerFOTest extends TestCase {
         SequenceMachine sequenceMachine = new SequenceMachine(new ConsecutivePatternMachine(32, 3));
         List<Integer> input = Arrays.asList(new Integer[]{0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0, -1});
         List<Set<Integer>> sequence = sequenceMachine.generateFromNumbers(input);
-        sequence = sequenceMachine.generateFromNumbers(input);
 
         for (Set<Integer> patt : sequence) {
-            BitVector inputvec = toBitVector(patt,32);
+            BitVector inputvec = SequenceMachine.toBitVector(patt,32);
             System.out.println(inputvec);
             test.neocortex.iterate(inputvec);
             LogUtils.printToCVS(test.neocortex.getRegions().get(0),"after iteration");

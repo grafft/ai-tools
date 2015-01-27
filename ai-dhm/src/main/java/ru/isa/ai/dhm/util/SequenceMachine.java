@@ -3,6 +3,8 @@ package ru.isa.ai.dhm.util;
 /**
  * Created by gmdidro on 14.01.2015.
  */
+import cern.colt.matrix.tbit.BitVector;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -79,5 +81,21 @@ public class SequenceMachine {
             }
         }
         return text;
+    }
+
+    static public int[] toIntArray(Set<Integer> pattern) {
+        int[] retVal = new int[pattern.size()];
+        int idx = 0;
+        for(int i : pattern) {
+            retVal[idx++] = i;
+        }
+        return retVal;
+    }
+
+    static public BitVector toBitVector(Set<Integer> pattern, int outLen) {
+        BitVector bv=new BitVector(outLen);
+        for(int i:pattern)
+            bv.set(i);
+        return bv;
     }
 }
