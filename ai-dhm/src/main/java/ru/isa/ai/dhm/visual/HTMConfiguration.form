@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="ru.isa.ai.dhm.visual.HTMConfiguration">
-  <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="26" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="27" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
       <xy x="20" y="20" width="740" height="982"/>
@@ -13,7 +13,7 @@
     <children>
       <tabbedpane id="64424" binding="tabbedPane1" default-binding="true">
         <constraints>
-          <grid row="1" column="4" row-span="25" col-span="2" vsize-policy="3" hsize-policy="7" anchor="8" fill="2" indent="0" use-parent-layout="false">
+          <grid row="1" column="4" row-span="26" col-span="1" vsize-policy="3" hsize-policy="7" anchor="8" fill="2" indent="0" use-parent-layout="false">
             <minimum-size width="150" height="150"/>
             <preferred-size width="700" height="400"/>
           </grid>
@@ -412,29 +412,18 @@
       </component>
       <component id="66060" class="javax.swing.JLabel" binding="ruleTheMainProcess">
         <constraints>
-          <grid row="20" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="21" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="166" height="16"/>
+          </grid>
         </constraints>
         <properties>
           <text value="Manage the HTM "/>
         </properties>
       </component>
-      <component id="27065" class="javax.swing.JButton" binding="makeStepButton" default-binding="true">
-        <constraints>
-          <grid row="21" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
-            <preferred-size width="191" height="26"/>
-            <maximum-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties>
-          <background awt-color="white"/>
-          <enabled value="true"/>
-          <text value="Make Step"/>
-        </properties>
-      </component>
       <component id="f3536" class="javax.swing.JButton" binding="runCortexButton" default-binding="true">
         <constraints>
-          <grid row="22" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
-            <preferred-size width="191" height="26"/>
+          <grid row="23" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="166" height="26"/>
             <maximum-size width="150" height="-1"/>
           </grid>
         </constraints>
@@ -446,8 +435,8 @@
       </component>
       <component id="24d43" class="javax.swing.JButton" binding="stopCortexButton" default-binding="true">
         <constraints>
-          <grid row="23" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
-            <preferred-size width="191" height="26"/>
+          <grid row="24" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="166" height="26"/>
             <maximum-size width="150" height="-1"/>
           </grid>
         </constraints>
@@ -457,20 +446,9 @@
           <text value="Stop Cortex"/>
         </properties>
       </component>
-      <component id="36c09" class="javax.swing.JCheckBox" binding="showSynapsesPermanenceCheckBox" default-binding="true">
-        <constraints>
-          <grid row="20" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
-            <maximum-size width="200" height="-1"/>
-          </grid>
-        </constraints>
-        <properties>
-          <selected value="true"/>
-          <text value="Show Synapses Permanence"/>
-        </properties>
-      </component>
       <component id="35ef7" class="javax.swing.JCheckBox" binding="showPredictiveCellsCheckBox" default-binding="true">
         <constraints>
-          <grid row="21" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
+          <grid row="22" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
             <maximum-size width="200" height="-1"/>
           </grid>
         </constraints>
@@ -481,7 +459,7 @@
       </component>
       <component id="2a92a" class="javax.swing.JCheckBox" binding="showOverlapsCheckBox" default-binding="true">
         <constraints>
-          <grid row="22" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
+          <grid row="23" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
             <maximum-size width="200" height="-1"/>
           </grid>
         </constraints>
@@ -492,7 +470,7 @@
       </component>
       <component id="d678a" class="javax.swing.JCheckBox" binding="showMinDutyCycleCheckBox" default-binding="true">
         <constraints>
-          <grid row="23" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
+          <grid row="24" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
             <maximum-size width="200" height="-1"/>
           </grid>
         </constraints>
@@ -503,7 +481,7 @@
       </component>
       <component id="4a66" class="javax.swing.JCheckBox" binding="showBoostCheckBox" default-binding="true">
         <constraints>
-          <grid row="24" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
+          <grid row="25" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
             <maximum-size width="200" height="-1"/>
           </grid>
         </constraints>
@@ -514,7 +492,7 @@
       </component>
       <component id="7258e" class="javax.swing.JCheckBox" binding="drawDendritesTimlineCheckBox" default-binding="true">
         <constraints>
-          <grid row="25" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="26" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Draw Dendrites Timline"/>
@@ -522,7 +500,7 @@
       </component>
       <component id="deb00" class="javax.swing.JLabel" binding="setVisualizParameters">
         <constraints>
-          <grid row="20" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="21" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Set visualization parameters"/>
@@ -530,7 +508,7 @@
       </component>
       <component id="b2c6e" class="javax.swing.JCheckBox" binding="showDendritesGraphCheckBox" default-binding="true">
         <constraints>
-          <grid row="21" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
+          <grid row="22" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
             <maximum-size width="200" height="-1"/>
           </grid>
         </constraints>
@@ -541,7 +519,7 @@
       </component>
       <component id="38da9" class="javax.swing.JCheckBox" binding="showActiveCellsCheckBox" default-binding="true">
         <constraints>
-          <grid row="22" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
+          <grid row="23" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
             <maximum-size width="200" height="-1"/>
           </grid>
         </constraints>
@@ -552,7 +530,7 @@
       </component>
       <component id="8ab7a" class="javax.swing.JCheckBox" binding="showLearningCellsCheckBox" default-binding="true">
         <constraints>
-          <grid row="23" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
+          <grid row="24" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
             <maximum-size width="200" height="-1"/>
           </grid>
         </constraints>
@@ -563,7 +541,7 @@
       </component>
       <component id="c58b8" class="javax.swing.JCheckBox" binding="showActiveDutyCycleCheckBox" default-binding="true">
         <constraints>
-          <grid row="24" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
+          <grid row="25" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
             <maximum-size width="200" height="-1"/>
           </grid>
         </constraints>
@@ -574,7 +552,7 @@
       </component>
       <component id="a9ee1" class="javax.swing.JCheckBox" binding="showOverlapsDutyCycleCheckBox" default-binding="true">
         <constraints>
-          <grid row="25" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
+          <grid row="26" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
             <maximum-size width="200" height="-1"/>
           </grid>
         </constraints>
@@ -585,23 +563,14 @@
       </component>
       <component id="f456b" class="javax.swing.JCheckBox" binding="inputsGraphicsCheckBox" default-binding="true">
         <constraints>
-          <grid row="25" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
-            <preferred-size width="191" height="24"/>
+          <grid row="26" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="166" height="24"/>
             <maximum-size width="150" height="-1"/>
           </grid>
         </constraints>
         <properties>
           <background color="-986896"/>
           <text value="Inputs Graphics"/>
-        </properties>
-      </component>
-      <component id="89c19" class="javax.swing.JButton" binding="setSettingsButton">
-        <constraints>
-          <grid row="18" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <enabled value="true"/>
-          <text value="Set settings"/>
         </properties>
       </component>
       <component id="5193e" class="javax.swing.JButton" binding="saveButton">
@@ -612,9 +581,22 @@
           <text value="Save properties"/>
         </properties>
       </component>
+      <component id="27065" class="javax.swing.JButton" binding="makeStepButton" default-binding="true">
+        <constraints>
+          <grid row="22" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="166" height="26"/>
+            <maximum-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties>
+          <background awt-color="white"/>
+          <enabled value="true"/>
+          <text value="Make Step"/>
+        </properties>
+      </component>
       <component id="da7ca" class="javax.swing.JButton" binding="loadButton">
         <constraints>
-          <grid row="19" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="20" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Load Properties"/>
@@ -626,6 +608,48 @@
         </constraints>
         <properties>
           <text value="Default Sts"/>
+        </properties>
+      </component>
+      <component id="89c19" class="javax.swing.JButton" binding="setSettingsButton">
+        <constraints>
+          <grid row="18" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <enabled value="true"/>
+          <text value="Set settings"/>
+        </properties>
+      </component>
+      <component id="36c09" class="javax.swing.JCheckBox" binding="showSynapsesPermanenceCheckBox" default-binding="true">
+        <constraints>
+          <grid row="21" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <maximum-size width="200" height="-1"/>
+          </grid>
+        </constraints>
+        <properties>
+          <selected value="true"/>
+          <text value="Show Synapses Permanence"/>
+        </properties>
+      </component>
+      <component id="724bb" class="javax.swing.JButton" binding="setInputSourceButton" default-binding="true">
+        <constraints>
+          <grid row="20" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="166" height="32"/>
+          </grid>
+        </constraints>
+        <properties>
+          <text value="Set Input Source"/>
+        </properties>
+      </component>
+      <component id="fdef5" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
+        <constraints>
+          <grid row="19" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <model>
+            <item value="Ступенька"/>
+            <item value="Картинки"/>
+            <item value="Картинка"/>
+          </model>
         </properties>
       </component>
     </children>

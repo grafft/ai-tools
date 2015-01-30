@@ -1,6 +1,7 @@
 package ru.isa.ai.dhm.visual;
 
 import cern.colt.matrix.tbit.BitMatrix;
+import cern.colt.matrix.tbit.BitVector;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -23,4 +24,8 @@ public class ImageSeqLoader implements IInputLoader {
             images[i].load(files[i]);
     }
 
+    @Override
+    public BitVector getNextInput() {
+        return null;
+    }
 }

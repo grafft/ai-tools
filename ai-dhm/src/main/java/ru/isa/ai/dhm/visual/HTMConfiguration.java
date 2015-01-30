@@ -79,6 +79,8 @@ public class HTMConfiguration {
     private JButton saveButton;
     private JButton loadButton;
     private JButton showDefaultSetButton;
+    private JButton setInputSourceButton;
+    private JComboBox comboBox1;
 
 
     //HTM Comfiguration properties
@@ -96,6 +98,8 @@ public class HTMConfiguration {
     private JFileChooser fc;
     private Map<Integer, BitMatrix> picID_input = new HashMap<>();
     private boolean work_mode = false;
+
+    IInputLoader inputLoader;
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("HTMConfiguration");
@@ -200,6 +204,7 @@ public class HTMConfiguration {
         img = new ImageClass();
 
         fc = new JFileChooser();
+        setInputSourceButton.addActionListener(new SetInputSourceButtonListener());
     }
 
     private void showCurrentSettings() {
@@ -267,7 +272,16 @@ public class HTMConfiguration {
     }
 
     ////////////////////////////////////Listeners//////////////////////////////////////////
+    private class SetInputSourceButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            inputLoader = new BitVectorSeqLoader();
+        }
+
+    }
+
     private class LoadButtonListener implements ActionListener {
+        @Override
         public void actionPerformed(ActionEvent e) {
             int returnVal = fc.showOpenDialog(null);
             try {
