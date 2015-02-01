@@ -99,6 +99,8 @@ public class HTMConfiguration {
     private Map<Integer, BitMatrix> picID_input = new HashMap<>();
     private boolean work_mode = false;
 
+    ShowVisTree htmTreeView;
+
     IInputLoader inputLoader;
 
     public static void main(String[] args) {
@@ -139,9 +141,9 @@ public class HTMConfiguration {
         currentSettings = DHMSettings.getDefaultSettings();
         settings = new HashMap<>();
 
-        ShowVisTree contentPane = new ShowVisTree();
-        contentPane.setOpaque(true);
-        contentPane.treePanel.tree.addTreeSelectionListener(new TreeSelectionListener() {
+        htmTreeView = new ShowVisTree();
+        htmTreeView.setOpaque(true);
+        htmTreeView.treePanel.tree.addTreeSelectionListener(new TreeSelectionListener() {
             public void valueChanged(TreeSelectionEvent e) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) e
                         .getPath().getLastPathComponent();
@@ -182,7 +184,7 @@ public class HTMConfiguration {
 
             }
         });
-        ActiveColsVisGenView.add(contentPane); //the results of tree preparation
+        ActiveColsVisGenView.add(htmTreeView); //the results of tree preparation
 
 
         //text - editors
@@ -347,19 +349,14 @@ public class HTMConfiguration {
 
 
     private void updateCellsColors(Boolean htmNet) {
-        Object[] objects = ActiveColsVisGenView.getComponents();
-        for (int i = 0; i < objects.length; i++) {
-            if (objects[i] instanceof ShowVisTree) {
-                ShowVisTree svt = (ShowVisTree) objects[i];
-                Set<Integer> initedCells = new HashSet<Integer>();
-                if (!settings.isEmpty())
-                    initedCells.addAll(settings.keySet());
-                if (!picID_input.isEmpty())
-                    initedCells.addAll(picID_input.keySet());
-                if (htmNet) initedCells.add(0);
-                svt.treePanel.renderer.updateHashMap(initedCells);
-            }
-        }
+        Set<Integer> initedCells = new HashSet<Integer>();
+        if (!settings.isEmpty())
+            initedCells.addAll(settings.keySet());
+        if (!picID_input.isEmpty())
+            initedCells.addAll(picID_input.keySet());
+        if (htmNet) initedCells.add(0);
+        htmTreeView.treePanel.renderer.updateHashMap(initedCells);
+
     }
 
     private class SetSettingsButtonListener implements ActionListener {
@@ -467,6 +464,7 @@ public class HTMConfiguration {
         return null;
     }
 
+    // проверяем все ли узлы дерева (регионы HTM и входные данные) имеют настройки заданными
     private int checkInitialization(DefaultMutableTreeNode root, int f){
         int ID = (root.toString().contains("HTM")) ? 0 : getID(root.toString());
         int fl = (settings.containsKey(ID) || picID_input.containsKey(ID) || root.toString().contains("HTM")) == true ? 1: 0;
@@ -490,145 +488,40 @@ public class HTMConfiguration {
                 picID_input.remove(a[i]);
         }
     }
-
     private class MakeStepButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             // проверка на то, что все регионы инициализированы
-            Object[] objects = ActiveColsVisGenView.getComponents();
-            for (int i = 0; i < objects.length; i++) {
-                if (objects[i] instanceof ShowVisTree ) {
-                    ShowVisTree svt = (ShowVisTree) objects[i];
-                    if (checkInitialization(svt.treePanel.rootNode,1) == 1) {
-                        System.out.print("Initialazation completed successfully \n");
-                        updateCellsColors(true);
-                        optimizeStructures(svt.treePanel.rootNode);
-                        setSettingsButton.setEnabled(false);
-                        saveButton.setEnabled(false);
-                        loadButton.setEnabled(false);
-                        showDefaultSetButton.setEnabled(false);
-                        work_mode = true;
+            if (checkInitialization(htmTreeView.treePanel.rootNode, 1) == 1) {
+                updateCellsColors(true);
+                optimizeStructures(htmTreeView.treePanel.rootNode);
 
-                        initCortex();
-                        neocortexAction.makeStep();
+                if (neocortexAction == null) {
+                    initCortex();
+                    System.out.print("Initialazation completed successfully \n");
+                    setSettingsButton.setEnabled(false);
+                    saveButton.setEnabled(false);
+                    loadButton.setEnabled(false);
+                    showDefaultSetButton.setEnabled(false);
+                    work_mode = true;
 
-
-                    }
-                    else
-                        System.out.print("Initialization failed \n");
                 }
-            }
+
+                neocortexAction.makeStep();
+            } else
+
+                System.out.print("Some htm tree elements non initialized \n");
+
 
         }
     }
 
     private void initCortex() {
-        VisTree vt = null;
-        Object[] objects = ActiveColsVisGenView.getComponents();
-        for (int i = 0; i < objects.length; i++) {
-            if (objects[i] instanceof ShowVisTree) {
-                vt = ((ShowVisTree)objects[i]).treePanel;
-            }
-        }
-        neocortexAction = new NeocortexAction(settings, picID_input, vt);
+        neocortexAction = new NeocortexAction(settings, picID_input, htmTreeView.treePanel);
         neocortexAction.init(chart2D1, chart2D2, this);
 
         timer = new Timer(1000, neocortexAction);
         //runCortexButton.setEnabled(true);
     }
 
-    /*
-    private class ShowActiveColumnsListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            JFrame f = new JFrame("Active Columns Visualization");
-            ActiveColumnsVisualization cl = new ActiveColumnsVisualization();
-            f.setContentPane(cl.activeColumnsPanel_main);
-            f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-            f.pack();
-            cl.setSettings(neocortexAction);
-            cl.draw(0, -1);
-            f.setVisible(true);
-        }
-    }
-*/
-    /////////////////////////////////Property listeners/////////////////////////////////////////////
-    /*private class DocumentListenerGeneral implements javax.swing.event.DocumentListener {
 
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            updateLabel(e);
-        }
-
-        private void updateLabel(final DocumentEvent e) {
-            java.awt.EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    Object owner = e.getDocument().getProperty("owner");
-                    JTextField tf = (JTextField) owner;
-                    int property_id = (Integer)tf.getDocument().getProperty("property_id");
-
-                    int num_of_reg = Integer.parseInt(numOfCell.getText());
-                    double new_value = 0.0;
-
-                    try {
-                           new_value = Double.parseDouble(tf.getText());
-                    } catch (NumberFormatException ex) {
-                        if (num_of_reg != 0 ) System.out.print("Wrong properties for region " + num_of_reg + "\n");
-                        DHMSettings default_settings = DHMSettings.getDefaultSettings();
-                        double tmp = 0.0;
-                        switch(property_id){
-                            case 0: tmp = (default_settings.debug == true) ? 1 : 0 ; break;
-                            case 1: tmp = default_settings.xInput; break;
-                            case 2: tmp = default_settings.yInput; break;
-                            case 3: tmp = default_settings.xDimension; break;
-                            case 4: tmp = default_settings.yDimension; break;
-                            case 5: tmp = default_settings.initialInhibitionRadius; break;
-                            case 6: tmp = default_settings.potentialRadius; break;
-                            case 7: tmp = default_settings.cellsPerColumn; break;
-                            case 8: tmp = default_settings.newSynapseCount; break;
-                            case 9: tmp = default_settings.desiredLocalActivity; break;
-                            case 10: tmp = default_settings.minOverlap; break;
-                            case 11: tmp = default_settings.connectedPerm; break;
-                            case 12: tmp = default_settings.permanenceInc; break;
-                            case 13: tmp = default_settings.permanenceDec; break;
-                            case 14: tmp = default_settings.activationThreshold; break;
-                            case 15: tmp = default_settings.initialPerm; break;
-                            case 16: tmp =  default_settings.minThreshold; break;
-                        }
-                        tf.setText(String.valueOf(tmp));
-                        new_value = tmp;
-                    }
-                    switch(property_id){
-                        case 0: currentSettings.debug = (new_value == 1) ? true : false ; break;
-                        case 1: currentSettings.xInput = (int)new_value; break;
-                        case 2: currentSettings.yInput = (int )new_value; break;
-                        case 3: currentSettings.xDimension = (int)new_value ; break;
-                        case 4: currentSettings.yDimension = (int)new_value; break;
-                        case 5: currentSettings.initialInhibitionRadius = (int)new_value; break;
-                        case 6: currentSettings.potentialRadius = (int)new_value; break;
-                        case 7: currentSettings.cellsPerColumn = (int)new_value; break;
-                        case 8: currentSettings.newSynapseCount= (int)new_value; break;
-                        case 9: currentSettings.desiredLocalActivity = (int)new_value ; break;
-                        case 10: currentSettings.minOverlap = (int)new_value; break;
-                        case 11: currentSettings.connectedPerm = new_value; break;
-                        case 12: currentSettings.permanenceInc = new_value; break;
-                        case 13: currentSettings.permanenceDec = new_value; break;
-                        case 14: currentSettings.activationThreshold = new_value; break;
-                        case 15: currentSettings.initialPerm = new_value; break;
-                        case 16: currentSettings.minThreshold = new_value; break;
-                    }
-                }
-            });
-        }
-    }*/
 }
