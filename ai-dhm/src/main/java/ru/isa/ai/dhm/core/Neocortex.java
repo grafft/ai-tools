@@ -21,6 +21,8 @@ public class Neocortex {
     private static final Logger logger = LogManager.getLogger(Neocortex.class);
     private List<Region> regions = new ArrayList<>();
 
+
+
     public void initialization() {
         logger.debug("Initialization");
         for (Region region : regions) {

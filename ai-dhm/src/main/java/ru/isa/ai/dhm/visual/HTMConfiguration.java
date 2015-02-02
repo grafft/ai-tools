@@ -496,7 +496,11 @@ public class HTMConfiguration {
                 optimizeStructures(htmTreeView.treePanel.rootNode);
 
                 if (neocortexAction == null) {
-                    initCortex();
+                    neocortexAction = new NeocortexAction(settings, inputLoader, htmTreeView.treePanel);
+
+                    neocortexAction.init(chart2D1, chart2D2, HTMConfiguration.this);
+
+                    timer = new Timer(1000, neocortexAction);
                     System.out.print("Initialazation completed successfully \n");
                     setSettingsButton.setEnabled(false);
                     saveButton.setEnabled(false);
@@ -514,14 +518,5 @@ public class HTMConfiguration {
 
         }
     }
-
-    private void initCortex() {
-        neocortexAction = new NeocortexAction(settings, picID_input, htmTreeView.treePanel);
-        neocortexAction.init(chart2D1, chart2D2, this);
-
-        timer = new Timer(1000, neocortexAction);
-        //runCortexButton.setEnabled(true);
-    }
-
 
 }

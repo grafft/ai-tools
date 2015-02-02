@@ -19,8 +19,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 public class NeocortexAction implements ActionListener {
     public Neocortex neocortex;
     private Map<Integer,DHMSettings> settings;
-    private Map<Integer, BitMatrix> picID_input = new HashMap<>();
+    private IInputLoader input;
     private VisTree tree = new VisTree();
+
+    int stepNum=0;
 
     //public ImageClass img;
     public ChartHandler chartHandler;
@@ -31,10 +33,10 @@ public class NeocortexAction implements ActionListener {
     private Boolean makeStep = false;
     private Random rnd = new Random();
 
-    public NeocortexAction(final Map<Integer,DHMSettings> settings_, final Map<Integer, BitMatrix> picID_input_ ,final VisTree tree_) {
+    public NeocortexAction(final Map<Integer,DHMSettings> settings_, final IInputLoader input ,final VisTree tree_) {
         this.numRegions = settings_.size();
         this.settings = settings_;
-        this.picID_input = picID_input_;
+        this.input = input;
         tree = tree_;
     }
 
@@ -76,7 +78,7 @@ public class NeocortexAction implements ActionListener {
     public void actionPerformed(ActionEvent e) {
                 //TODO P: тут все для одного слоя (settings[0])
 
-                final BitVector input = picID_input.get(neocortex.getRegions().get(0).getID()).toBitVector();
+                final BitVector ivec = input.getNext();
                 /*
                 final BitVector input = new BitVector(DHMSettings.getDefaultSettings().xInput * DHMSettings.getDefaultSettings().yInput);
                 for (int i = 0; i < DHMSettings.getDefaultSettings().xInput * DHMSettings.getDefaultSettings().yInput; i++) {
@@ -84,7 +86,8 @@ public class NeocortexAction implements ActionListener {
                     input.set(i);
                 }
 */
-                neocortex.iterate(input);
+                neocortex.iterate(ivec);
+                stepNum++;
                // TODO P: make changes
                // chartHandler.collectData(0);
     }
@@ -126,17 +129,13 @@ public class NeocortexAction implements ActionListener {
 
     public void makeStep()
     {
-        //TODO P: тут все для одного слоя (settings[0])
-        final BitVector input = new BitVector(DHMSettings.getDefaultSettings().xInput * DHMSettings.getDefaultSettings().yInput);
-        for (int i = 0; i < DHMSettings.getDefaultSettings().xInput * DHMSettings.getDefaultSettings().yInput; i++) {
-            //if (Math.random() > 0.3)
-            input.set(i);
-        }
+
         new Runnable() {
             @Override
             public void run() {
                 //try {
-                neocortex.iterate(input);
+                neocortex.iterate(input.getNext());
+                stepNum++;
 
                         /*} catch (Exception e) {
                             e.printStackTrace();

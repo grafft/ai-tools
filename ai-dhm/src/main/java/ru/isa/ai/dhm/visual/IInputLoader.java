@@ -7,4 +7,6 @@ import cern.colt.matrix.tbit.BitVector;
  */
 public interface IInputLoader {
     BitVector getNextInput();
+
+    BitVector getNext();
 }
