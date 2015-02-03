@@ -12,21 +12,40 @@ import java.util.Set;
  * Created by gmdidro on 27.01.2015.
  */
 public class BitVectorSeqLoader implements IInputLoader {
+    public BitVectorSeqLoader()
+    {
+        start();
+    }
+
     List<Set<Integer>> sequence;
     int currPattIndx=0;
+    BitVector current;
     public void start()
     {
         currPattIndx=0;
         SequenceMachine sequenceMachine = new SequenceMachine(new ConsecutivePatternMachine(32, 3));
-        List<Integer> input = Arrays.asList(new Integer[]{0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0, -1});
+        List<Integer> input = Arrays.asList(0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0, -1);
         sequence = sequenceMachine.generateFromNumbers(input);
     }
 
+
+
     @Override
-    public BitVector getNextInput() {
+    public BitVector getNext() {
         if(currPattIndx<sequence.size())
-            return SequenceMachine.toBitVector(sequence.get(currPattIndx++),32);
+            current= SequenceMachine.toBitVector(sequence.get(currPattIndx++),32);
         else
-            return null;
+            current= null;
+        return current;
+    }
+
+    @Override
+    public BitVector getCurrent() {
+        return current;
+    }
+
+    @Override
+    public int[] getDim() {
+        return new int[]{current.size(),1};
     }
 }

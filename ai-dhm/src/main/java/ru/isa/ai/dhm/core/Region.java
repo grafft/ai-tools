@@ -64,13 +64,18 @@ public class Region {
      */
     public void initialization() {
         int inputW = settings.xInput-2;// ширина входного массива данных за исключением границ
-        inputW = inputW <= 0 ? 0:inputW;
+        inputW = inputW <= 0 ? 1:inputW;
         int inputH = settings.yInput-2;
-        inputH = inputH <= 0 ? 0:inputH;
+        inputH = inputH <= 0 ? 1:inputH;
 
         for (Column column : columns.values()) {
-            int inputCenterX = inputW ==0? 0 :(int) Math.ceil(((double)(column.getCoords()[0] ))/(settings.xDimension/ inputW))+1;
-            int inputCenterY = inputH ==0? 0 :(int) Math.ceil(((double)(column.getCoords()[1] ))/(settings.yDimension/ inputH))+1;
+           // int inputCenterX = inputW ==1? 1 :(int) Math.ceil(((double)(column.getCoords()[0] ))/(settings.xDimension/ inputW))+1;
+           // int inputCenterY = inputH ==1? 1 :(int) Math.ceil(((double)(column.getCoords()[1] ))/(settings.yDimension/ inputH))+1;
+
+            //  floor(i*N/2) + 2^(i-1)
+            int inputCenterX = inputW ==1? 1 :(int) Math.ceil(((double)(column.getCoords()[0] ))/(settings.xDimension/ inputW))+1;
+            int inputCenterY = inputH ==1? 1 :(int) Math.ceil(((double)(column.getCoords()[1] ))/(settings.yDimension/ inputH))+1;
+
             column.initialization(inputCenterX, inputCenterY);
         }
     }

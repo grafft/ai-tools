@@ -6,7 +6,8 @@ import cern.colt.matrix.tbit.BitVector;
  * Created by gmdidro on 24.01.2015.
  */
 public interface IInputLoader {
-    BitVector getNextInput();
-
     BitVector getNext();
+
+    BitVector getCurrent();
+    int[] getDim();
 }

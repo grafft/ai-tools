@@ -1,12 +1,15 @@
-before iterate
+after initialization
 false;false;;;0;0;;;1.0;1.0;;;3;3;;;0, 2, 4, ;2, 6, ;;
 false;false;;;0;0;;;1.0;1.0;;;3;3;;;4, 6, 8, ;6, 10, ;;
-after iterate
-true;false;;;3;2;;;1.0;1.0;;;3;3;;;0, 1, 2, 4, 5, ;2, 6, ;;
+after 1st forwardInputProcessing
+false;false;;;1;1;;;1.0;1.0;;;3;3;;;0, 2, 4, ;2, 6, ;;
 true;false;;;3;2;;;1.0;1.0;;;3;3;;;4, 5, 6, 8, 9, ;6, 10, ;;
-after forwardInputProcessing
-true;false;;;5;2;;;1.0;10.0;;;3;3;;;0, 1, 2, 4, 5, ;2, 6, ;;
+after 2nd forwardInputProcessing
+false;false;;;1;1;;;10.0;10.0;;;3;3;;;0, 2, 4, ;2, 6, ;;
 true;false;;;5;2;;;1.0;10.0;;;3;3;;;4, 5, 6, 8, 9, ;6, 10, ;;
-after updateActiveCells
-true;false;;;5;2;;;1.0;10.0;;;3;3;;;0, 1, 2, 4, 5, ;2, 6, ;;
-true;false;;;5;2;;;1.0;10.0;;;3;3;;;4, 5, 6, 8, 9, ;6, 10, ;;
+after 1st forwardInputProcessing
+false;false;;;10;10;;;10.0;10.0;;;3;3;;;0, 2, 4, ;2, 6, ;;
+false;true;;;5;20;;;1.0;10.0;;;3;3;;;4, 5, 6, 8, 9, ;5, 6, 7, 9, 10, ;;
+after 2nd forwardInputProcessing
+false;false;;;10;10;;;1.0;1.0;;;3;3;;;0, 2, 4, ;2, 6, ;;
+false;true;;;5;50;;;1.0;1.0;;;3;3;;;4, 5, 6, 8, 9, ;5, 6, 7, 9, 10, ;;
