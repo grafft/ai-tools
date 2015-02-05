@@ -1,6 +1,7 @@
 package ru.isa.ai.dhm.visual;
 
 import cern.colt.matrix.tbit.BitMatrix;
+import cern.colt.matrix.tbit.BitVector;
 import info.monitorenter.gui.chart.Chart2D;
 import ru.isa.ai.dhm.DHMSettings;
 
@@ -169,8 +170,14 @@ public class HTMConfiguration {
                             int parentID = getID(node.getParent().toString());
                             Object obj = null;
                             if (node.toString().contains("Picture")) {
-                                obj = picID_input.get(id);
-
+                                BitVector vec = inputLoader.getCurrent();
+                                int w=inputLoader.getDim()[0];
+                                int h=inputLoader.getDim()[1];
+                                BitMatrix bmp=new BitMatrix(w,h);
+                                for(int i=0;i<w;i++)
+                                    for(int j=0;j<h;j++)
+                                        bmp.put(i,j,vec.get(j*w+i));
+                                obj=bmp;
                             }
                             else {
                                 obj = neocortexAction.getSelectedRegion(id);
@@ -181,7 +188,6 @@ public class HTMConfiguration {
                             ActiveColsSelectedView.add(actCols, BorderLayout.CENTER);
                         }
                     }
-
             }
         });
         ActiveColsVisGenView.add(htmTreeView); //the results of tree preparation
@@ -207,6 +213,10 @@ public class HTMConfiguration {
 
         fc = new JFileChooser();
         setInputSourceButton.addActionListener(new SetInputSourceButtonListener());
+
+
+        /*For testing*/
+        inputLoader = new BitVectorSeqLoader();
     }
 
     private void showCurrentSettings() {
@@ -474,6 +484,9 @@ public class HTMConfiguration {
         return f;
      }
 
+    // чтобы отследить реальное число узлов,
+    // т.е. пользователь, например, насоздавал узлы, появились для них хранимые настройки, потом наудалял чего-то, ...
+    // за этим никто не следит, но в конце, перед передачей структур уже в кортех удаляем инф-ю, которач не нужна
     private void optimizeStructures(DefaultMutableTreeNode root){
         Integer[] a = new Integer[settings.size()];
         settings.keySet().toArray(a);
@@ -511,6 +524,26 @@ public class HTMConfiguration {
                 }
 
                 neocortexAction.makeStep();
+
+                /*Перерисуем регион и входные данные*/
+
+
+                BitVector vec = inputLoader.getCurrent();
+                int w=inputLoader.getDim()[0];
+                int h=inputLoader.getDim()[1];
+                BitMatrix bmp=new BitMatrix(w,h);
+                for(int i=0;i<w;i++)
+                    for(int j=0;j<h;j++)
+                        bmp.put(i,j,vec.get(j*w+i));
+
+
+                ActColsVisClass actCols = new ActColsVisClass(neocortexAction.getSelectedRegion(1), bmp);
+                actCols.setOpaque(true);
+                ActiveColsSelectedView.removeAll();
+                ActiveColsSelectedView.add(actCols, BorderLayout.CENTER);
+
+
+
             } else
 
                 System.out.print("Some htm tree elements non initialized \n");
