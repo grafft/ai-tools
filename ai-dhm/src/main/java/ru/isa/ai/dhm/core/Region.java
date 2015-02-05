@@ -63,18 +63,11 @@ public class Region {
      * Инициализация региона, для каждой колнки создается начальный список потенцильаных синапсов
      */
     public void initialization() {
-        int inputW = settings.xInput-2;// ширина входного массива данных за исключением границ
-        inputW = inputW <= 0 ? 1:inputW;
-        int inputH = settings.yInput-2;
-        inputH = inputH <= 0 ? 1:inputH;
 
         for (Column column : columns.values()) {
-           // int inputCenterX = inputW ==1? 1 :(int) Math.ceil(((double)(column.getCoords()[0] ))/(settings.xDimension/ inputW))+1;
-           // int inputCenterY = inputH ==1? 1 :(int) Math.ceil(((double)(column.getCoords()[1] ))/(settings.yDimension/ inputH))+1;
 
-            //  floor(i*N/2) + 2^(i-1)
-            int inputCenterX = inputW ==1? 1 :(int) Math.ceil(((double)(column.getCoords()[0] ))/(settings.xDimension/ inputW))+1;
-            int inputCenterY = inputH ==1? 1 :(int) Math.ceil(((double)(column.getCoords()[1] ))/(settings.yDimension/ inputH))+1;
+            int inputCenterX = (int) Math.floor((column.getCoords()[0]+1-0.5)*settings.xInput/settings.xDimension);
+            int inputCenterY = (int) Math.floor((column.getCoords()[1]+1-0.5)*settings.yInput/settings.yDimension);
 
             column.initialization(inputCenterX, inputCenterY);
         }

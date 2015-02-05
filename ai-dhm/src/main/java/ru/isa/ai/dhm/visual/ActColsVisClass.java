@@ -118,11 +118,11 @@ class CellRenderer extends JLabel implements TableCellRenderer {
                 v = (dataUp.get(column, row) == false) ? Color.white : Color.black;
                 sel_down_cells = new Vector<Point>();
                 java.util.List<Integer> indices = new ArrayList<>();
-                indices = up.getColumns().get((row-1)*dataUp.columns()+column).getProximalSegment().connectedSynapses();
+                indices = up.getColumns().get((row)*dataUp.columns()+column).getProximalSegment().connectedSynapses();
                 for (int i = 0; i < indices.size(); i++) {
                     Point p = new Point();
                     int tmp = indices.get(i) % dataDown.columns();
-                    p.x = (indices.get(i) - tmp) / dataDown.columns() + 1; //ряд
+                    p.x = (indices.get(i) - tmp) / dataDown.columns(); //ряд
                     p.y = tmp;
                     sel_down_cells.add(p);
                 }

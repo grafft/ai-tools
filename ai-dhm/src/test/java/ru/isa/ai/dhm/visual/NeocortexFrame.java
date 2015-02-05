@@ -2,7 +2,6 @@ package ru.isa.ai.dhm.visual;
 
 import cern.colt.matrix.tbit.BitVector;
 import ru.isa.ai.dhm.DHMSettings;
-import ru.isa.ai.dhm.RegionSettingsException;
 import ru.isa.ai.dhm.core.Column;
 import ru.isa.ai.dhm.core.Neocortex;
 import ru.isa.ai.dhm.core.Region;
@@ -15,7 +14,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
 
 /**
  * Author: Aleksandr Panov
@@ -137,7 +135,7 @@ public class NeocortexFrame extends JFrame {
             String path = HTMConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath();
             settings = DHMSettings.loadFromFile(path+"\\"+"test16xOnes.properties");
 
-        } catch (RegionSettingsException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         neocortex = new Neocortex();

@@ -17,7 +17,18 @@ public final class DHMSettings {
     public int yDimension = 30; // высота региона (в колонках)
     public int xInput = 20;//100; // ширина входного слоя (в сигналах)
     public int yInput = 10;//100; // высота входного слоя (в сигналах)
-
+    /**
+     * This parameter deteremines the extent of the
+     * input that each column can potentially be connected to. This
+     * can be thought of as the input bits that are visible to each
+     * column, or a 'receptive field' of the field of vision. A large
+     * enough value will result in global coverage, meaning
+     * that each column can potentially be connected to every input
+     * bit. This parameter defines a square (or hyper square) area: a
+     * column will have a max square potential pool with sides of
+     * length (2 * potentialRadius + 1).
+     */
+    public int potentialRadius = 16;      // TODO: сделать в зависимотси от размеров? InputWidth / ColonNumsOnXAxis
     /**
      * Число клеток в каждой из колонок.
      */
@@ -60,18 +71,7 @@ public final class DHMSettings {
      * Минимальное число активных синапсов для сегмент при поиске лучшего
      */
     public double minThreshold = 4.0;
-    /**
-     * This parameter deteremines the extent of the
-     * input that each column can potentially be connected to. This
-     * can be thought of as the input bits that are visible to each
-     * column, or a 'receptive field' of the field of vision. A large
-     * enough value will result in global coverage, meaning
-     * that each column can potentially be connected to every input
-     * bit. This parameter defines a square (or hyper square) area: a
-     * column will have a max square potential pool with sides of
-     * length (2 * potentialRadius + 1).
-     */
-    public int potentialRadius = 16;      // TODO: сделать в зависимотси от размеров? InputWidth / ColonNumsOnXAxis
+
     /**
      * The percent of the inputs, within a column's
      * potential radius, that a column can be connected to. If set to
@@ -93,7 +93,7 @@ public final class DHMSettings {
     public double stimulusInc;                  //TODO: негде не загружается!
     public int initialInhibitionRadius = 10;
 
-    public void saveIntoFile(String filePropName) throws RegionSettingsException {
+    public void saveIntoFile(String filePropName) throws Exception {
         Properties properties = new Properties();
         try {
             properties.setProperty("debug", String.valueOf(debug));
@@ -121,11 +121,11 @@ public final class DHMSettings {
             output.close();
 
         } catch (IOException e) {
-            throw new RegionSettingsException("Cannot save properties file " + filePropName, e);
+            throw new Exception("Cannot save properties file " + filePropName, e);
         }
     }
 
-    public static DHMSettings loadFromFile(String filePropName) throws RegionSettingsException {
+    public static DHMSettings loadFromFile(String filePropName) throws Exception {
         Properties properties = new Properties();
         DHMSettings settings = new DHMSettings();
         try {
@@ -187,15 +187,15 @@ public final class DHMSettings {
                         settings.minThreshold = Double.parseDouble(properties.getProperty(name));
                         break;
                     default:
-                        throw new RegionSettingsException("Cannot load properties file " + filePropName);
+                        throw new Exception("Cannot load properties file " + filePropName);
                 }
             }
             input.close();
             return settings;
         } catch (IOException e) {
-            throw new RegionSettingsException("Cannot load properties file " + filePropName, e);
+            throw new Exception("Cannot load properties file " + filePropName, e);
         } catch (NumberFormatException nfe) {
-            throw new RegionSettingsException("Wrong property value in property file " + filePropName, nfe);
+            throw new Exception("Wrong property value in property file " + filePropName, nfe);
         }
     }
 

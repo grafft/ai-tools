@@ -4,11 +4,8 @@ import cern.colt.matrix.tbit.BitVector;
 import cern.colt.matrix.tint.IntMatrix1D;
 import junit.framework.TestCase;
 import ru.isa.ai.dhm.DHMSettings;
-import ru.isa.ai.dhm.util.ConsecutivePatternMachine;
 import ru.isa.ai.dhm.util.LogUtils;
-import ru.isa.ai.dhm.RegionSettingsException;
 import ru.isa.ai.dhm.core.*;
-import ru.isa.ai.dhm.util.PatternMachine;
 import ru.isa.ai.dhm.visual.HTMConfiguration;
 import ru.isa.ai.olddhm.MathUtils;
 
@@ -16,14 +13,9 @@ import ru.isa.ai.olddhm.MathUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static junit.framework.Assert.assertTrue;
-
-import ru.isa.ai.dhm.util.SequenceMachine;
 
 
 /**
@@ -261,7 +253,7 @@ public class SpatialPoolerTest  extends TestCase {
         String path = HTMConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         try{
         settings.saveIntoFile(path+"\\"+"test16xOnes.properties");
-        } catch (RegionSettingsException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         neocortex = new Neocortex();

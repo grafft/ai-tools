@@ -63,7 +63,7 @@ public class HTMConfiguration {
     private JLabel numOfRegToInit;
     private JLabel setVisualizParameters;
     private JLabel ruleTheMainProcess;
-    private JLabel numOfCell;
+    private JLabel htmNodeId;
 
     //panels
     private JPanel mainPanel;
@@ -151,7 +151,7 @@ public class HTMConfiguration {
                     int id = 0;
                     if (!node.toString().contains("HTM")) {
                         id = getID(node.toString());
-                        numOfCell.setText(String.valueOf(id));
+                        htmNodeId.setText(String.valueOf(id));
                     }
                     if (node.toString().contains("Region")) {
                         if (!work_mode) setSettingsButton.setEnabled(true);
@@ -295,6 +295,8 @@ public class HTMConfiguration {
     private class LoadButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+
+            fc.setCurrentDirectory(new File(HTMConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath()));
             int returnVal = fc.showOpenDialog(null);
             try {
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -314,7 +316,7 @@ public class HTMConfiguration {
                         frame.addWindowListener(new WindowAdapter() {
                             public void windowClosing(WindowEvent e) {
                                 BitMatrix regsInput = frame.getReturnData();
-                                picID_input.put(Integer.valueOf(numOfCell.getText()), regsInput);
+                                picID_input.put(Integer.valueOf(htmNodeId.getText()), regsInput);
                                 updateCellsColors(false);
                                 //System.exit(0);
                             }
@@ -339,8 +341,9 @@ public class HTMConfiguration {
 
     private class SaveButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            fc.setCurrentDirectory(new File(HTMConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath()));
             fc = new JFileChooser();
-            fc.setSelectedFile(new File("Region " + numOfCell.getText() + PROPERTY_POSTFIX));
+            fc.setSelectedFile(new File("Region " + htmNodeId + PROPERTY_POSTFIX));
             int status = fc.showSaveDialog(null);
 
             try {
@@ -371,7 +374,7 @@ public class HTMConfiguration {
 
     private class SetSettingsButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            int regID = Integer.valueOf(numOfCell.getText());
+            int regID = Integer.valueOf(htmNodeId.getText());
             settings.put(regID, getNewCurrentSettings());
             updateCellsColors(false);
 
