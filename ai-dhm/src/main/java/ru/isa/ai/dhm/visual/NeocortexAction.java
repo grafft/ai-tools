@@ -78,7 +78,7 @@ public class NeocortexAction implements ActionListener {
     public void actionPerformed(ActionEvent e) {
                 //TODO P: тут все для одного слоя (settings[0])
 
-                final BitVector ivec = input.getNext();
+
                 /*
                 final BitVector input = new BitVector(DHMSettings.getDefaultSettings().xInput * DHMSettings.getDefaultSettings().yInput);
                 for (int i = 0; i < DHMSettings.getDefaultSettings().xInput * DHMSettings.getDefaultSettings().yInput; i++) {
@@ -86,7 +86,7 @@ public class NeocortexAction implements ActionListener {
                     input.set(i);
                 }
 */
-                neocortex.iterate(ivec);
+                neocortex.iterate(input.getNext());
                 stepNum++;
                // TODO P: make changes
                // chartHandler.collectData(0);

@@ -93,7 +93,7 @@ public class HTMConfiguration {
     private ImageClass img;
     private int indexOfActiveReg;
 
-    private String imagePath;
+
     private String PROPERTY_POSTFIX = ".properties";
     private String path;
     private JFileChooser fc;
@@ -128,7 +128,7 @@ public class HTMConfiguration {
 
     public HTMConfiguration() {
         path = HTMConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        imagePath = path + "image1.png";
+
 
         //buttons
         stopCortexButton.addActionListener(new StopCortexButtonListener());
@@ -215,9 +215,7 @@ public class HTMConfiguration {
         setInputSourceButton.addActionListener(new SetInputSourceButtonListener());
 
 
-        /*For testing*/
-        inputLoader = new BitVectorSeqLoader();
-    }
+      }
 
     private void showCurrentSettings() {
 
@@ -287,7 +285,7 @@ public class HTMConfiguration {
     private class SetInputSourceButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            inputLoader = new BitVectorSeqLoader();
+            inputLoader = new BitVectorSeqLoader(new int[]{settings.get(1).xInput});
         }
 
     }

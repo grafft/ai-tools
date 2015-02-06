@@ -1,8 +1,11 @@
 package ru.isa.ai.dhm.visual;
 
 import cern.colt.matrix.tbit.BitMatrix;
+import ru.isa.ai.dhm.core.ProximalSegment;
 import ru.isa.ai.dhm.core.Region;
 import cern.colt.matrix.tbit.BitVector;
+import ru.isa.ai.dhm.core.Synapse;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -15,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.lang.reflect.Field;
 import java.util.*;
 
 public class ActColsVisClass extends JPanel {
@@ -105,6 +109,7 @@ class CellRenderer extends JLabel implements TableCellRenderer {
     }
 
     private Vector<Point> sel_down_cells = new Vector<Point>();
+    private Vector<Point> selBorder_down_cells = new Vector<Point>();
     private Region up;
 
     public Component getTableCellRendererComponent(JTable table, Object value,
@@ -117,12 +122,37 @@ class CellRenderer extends JLabel implements TableCellRenderer {
             if (table.getClientProperty("owner") == "up") {
                 v = (dataUp.get(column, row) == false) ? Color.white : Color.black;
                 sel_down_cells = new Vector<Point>();
-                java.util.List<Integer> indices = new ArrayList<>();
-                indices = up.getColumns().get((row)*dataUp.columns()+column).getProximalSegment().connectedSynapses();
-                for (int i = 0; i < indices.size(); i++) {
+               /* java.util.List<Integer> indices1 = new ArrayList<>();
+                indices1 = up.getColumns().get((row)*dataUp.columns()+column).getProximalSegment().connectedSynapses();
+
+                for (int i=0;i<indices1.size();i++) {
                     Point p = new Point();
-                    int tmp = indices.get(i) % dataDown.columns();
-                    p.x = (indices.get(i) - tmp) / dataDown.columns(); //ряд
+                    int tmp = indices1.get(i) % dataDown.columns();
+                    p.x = (indices1.get(i) - tmp) / dataDown.columns(); //ряд
+                    p.y = tmp;
+                    sel_down_cells.add(p);
+                } */
+
+
+                Map<Integer, Synapse> indices2=null;
+                Field field= null;
+                try {
+                    field = ProximalSegment.class.getDeclaredField("potentialSynapses");
+                 field.setAccessible(true);
+
+                    indices2 =( Map<Integer, Synapse> )field.get(up.getColumns().get((row)*dataUp.columns()+column).getProximalSegment());
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                catch (NoSuchFieldException e) {
+                    e.printStackTrace();
+                }
+
+
+                for (Synapse syn : indices2.values()) {
+                    Point p = new Point();
+                    int tmp = syn.getInputSource() % dataDown.columns();
+                    p.x = (syn.getInputSource() - tmp) / dataDown.columns(); //ряд
                     p.y = tmp;
                     sel_down_cells.add(p);
                 }

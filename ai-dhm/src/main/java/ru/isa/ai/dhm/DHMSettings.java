@@ -82,7 +82,7 @@ public final class DHMSettings {
      * ((2*potentialRadius + 1)^(# inputDimensions) * connectedPct)
      * input bits to comprise the column's potential pool.
      */
-    public double connectedPct = 0.5;
+    public double connectedPct = 1;
 
     /**
      * Длина периода подсчета рабочих циклов
