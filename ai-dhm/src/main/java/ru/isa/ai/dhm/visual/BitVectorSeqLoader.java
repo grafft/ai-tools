@@ -34,10 +34,12 @@ public class BitVectorSeqLoader implements IInputLoader {
 
     @Override
     public BitVector getNext() {
-        if(currPattIndx<sequence.size())
-            current= SequenceMachine.toBitVector(sequence.get(currPattIndx++),len);
+        if(currPattIndx<sequence.size()) {
+            current = SequenceMachine.toBitVector(sequence.get(currPattIndx), len);
+            currPattIndx = currPattIndx + 1;
+        }
         else
-            current= null;
+            current = null;
         return current;
     }
 

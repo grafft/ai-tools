@@ -341,7 +341,7 @@ public class HTMConfiguration {
         public void actionPerformed(ActionEvent e) {
             fc.setCurrentDirectory(new File(HTMConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath()));
             fc = new JFileChooser();
-            fc.setSelectedFile(new File("Region " + htmNodeId + PROPERTY_POSTFIX));
+            fc.setSelectedFile(new File("Region " + htmNodeId.getText() + PROPERTY_POSTFIX));
             int status = fc.showSaveDialog(null);
 
             try {

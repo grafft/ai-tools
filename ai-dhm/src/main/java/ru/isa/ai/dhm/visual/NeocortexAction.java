@@ -86,8 +86,11 @@ public class NeocortexAction implements ActionListener {
                     input.set(i);
                 }
 */
-                neocortex.iterate(input.getNext());
-                stepNum++;
+                BitVector vec= input.getNext();
+                if (vec!=null) {
+                    neocortex.iterate(vec);
+                    stepNum++;
+                }
                // TODO P: make changes
                // chartHandler.collectData(0);
     }
@@ -134,8 +137,11 @@ public class NeocortexAction implements ActionListener {
             @Override
             public void run() {
                 //try {
-                neocortex.iterate(input.getNext());
-                stepNum++;
+                BitVector vec= input.getNext();
+                if (vec!=null) {
+                    neocortex.iterate(vec);
+                    stepNum++;
+                }
 
                         /*} catch (Exception e) {
                             e.printStackTrace();
