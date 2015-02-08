@@ -144,6 +144,7 @@ public class HTMConfiguration {
 
         htmTreeView = new ShowVisTree();
         htmTreeView.setOpaque(true);
+
         htmTreeView.treePanel.tree.addTreeSelectionListener(new TreeSelectionListener() {
             public void valueChanged(TreeSelectionEvent e) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) e
@@ -478,7 +479,7 @@ public class HTMConfiguration {
     // проверяем все ли узлы дерева (регионы HTM и входные данные) имеют настройки заданными
     private int checkInitialization(DefaultMutableTreeNode root, int f){
         int ID = (root.toString().contains("HTM")) ? 0 : getID(root.toString());
-        int fl = (settings.containsKey(ID) || picID_input.containsKey(ID) || root.toString().contains("HTM")) == true ? 1: 0;
+        int fl = (settings.containsKey(ID)|| root.toString().contains("HTM")) == true ? 1: 0;
         for (int i = 0; i < root.getChildCount(); i++){
             f =f * fl * checkInitialization((DefaultMutableTreeNode)root.getChildAt(i),f);
         }
@@ -495,12 +496,13 @@ public class HTMConfiguration {
             if (find(root,"Region "+String.valueOf(a[i])) == null)
                 settings.remove(a[i]);
         }
-        a = new Integer[picID_input.size()];
+
+      /*  a = new Integer[picID_input.size()];
         picID_input.keySet().toArray(a);
         for (int i = 0; i < a.length; i++){
             if (find(root,"Picture "+String.valueOf(a[i])) == null)
                 picID_input.remove(a[i]);
-        }
+        }*/
     }
     private class MakeStepButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -542,6 +544,8 @@ public class HTMConfiguration {
                 actCols.setOpaque(true);
                 ActiveColsSelectedView.removeAll();
                 ActiveColsSelectedView.add(actCols, BorderLayout.CENTER);
+                ActiveColsSelectedView.validate();
+                ActiveColsSelectedView.repaint();
 
 
 
