@@ -26,7 +26,7 @@ public class BitVectorSeqLoader implements IInputLoader {
     {
         currPattIndx=0;
         SequenceMachine sequenceMachine = new SequenceMachine(new ConsecutivePatternMachine(len, 3));
-        List<Integer> input = Arrays.asList(0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0, -1);
+        List<Integer> input = Arrays.asList(0, 1, 1, 0, -1);
         sequence = sequenceMachine.generateFromNumbers(input);
     }
 
@@ -50,6 +50,9 @@ public class BitVectorSeqLoader implements IInputLoader {
 
     @Override
     public int[] getDim() {
-        return new int[]{current.size(),1};
+        if(current!=null)
+            return new int[]{current.size(),1};
+        else
+            return new int[]{0,0};
     }
 }

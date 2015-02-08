@@ -41,7 +41,7 @@ public final class DHMSettings {
     /**
      *  Параметр, контролирующий число колонок победителей.
      */
-    public int desiredLocalActivity = 10;
+    public int desiredLocalActivity = 2; // TODO должен быть меньше чем число колонок
     /**
      * Минимальное число активных входов колонки для ее участия в шаге подавления.
      */

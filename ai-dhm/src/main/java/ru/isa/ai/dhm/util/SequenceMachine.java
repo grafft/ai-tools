@@ -52,7 +52,9 @@ public class SequenceMachine {
                 sequence.add(NONE);
             }else{
                 Set<Integer> pattern = patternMachine.get(i);
+                if(pattern==null) throw new NullPointerException();
                 sequence.add(pattern);
+
             }
         }
 
