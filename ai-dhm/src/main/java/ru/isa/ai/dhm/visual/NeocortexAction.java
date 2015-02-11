@@ -1,14 +1,14 @@
 package ru.isa.ai.dhm.visual;
 
-import cern.colt.matrix.tbit.BitMatrix;
 import cern.colt.matrix.tbit.BitVector;
 import info.monitorenter.gui.chart.Chart2D;
 import ru.isa.ai.dhm.DHMSettings;
 import ru.isa.ai.dhm.core.Neocortex;
 import ru.isa.ai.dhm.core.Region;
+import ru.isa.ai.dhm.inputgens.IInputLoader;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import javax.swing.tree.DefaultMutableTreeNode;

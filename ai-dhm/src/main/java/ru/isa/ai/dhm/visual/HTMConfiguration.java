@@ -4,6 +4,8 @@ import cern.colt.matrix.tbit.BitMatrix;
 import cern.colt.matrix.tbit.BitVector;
 import info.monitorenter.gui.chart.Chart2D;
 import ru.isa.ai.dhm.DHMSettings;
+import ru.isa.ai.dhm.inputgens.BitVectorSeqLoader;
+import ru.isa.ai.dhm.inputgens.IInputLoader;
 
 import javax.swing.*;
 import javax.swing.Timer;

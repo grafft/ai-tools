@@ -1,6 +1,7 @@
-package ru.isa.ai.dhm.visual;
+package ru.isa.ai.dhm.inputgens;
 
 import cern.colt.matrix.tbit.BitVector;
+import ru.isa.ai.dhm.inputgens.IInputLoader;
 import ru.isa.ai.dhm.util.ConsecutivePatternMachine;
 import ru.isa.ai.dhm.util.SequenceMachine;
 
