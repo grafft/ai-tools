@@ -1,5 +1,7 @@
 package ru.isa.ai.olddhm.poolers;
 
+import org.simpleframework.xml.Element;
+
 /**
  * Author: Aleksandr Panov
  * Date: 08.05.2014
@@ -7,10 +9,13 @@ package ru.isa.ai.olddhm.poolers;
  */
 public class Pair<L, R> {
 
+    @Element
     private final L left;
+
+    @Element
     private final R right;
 
-    public Pair(L left, R right) {
+    public Pair(@Element(name="left") L left, @Element(name="right") R right) {
         this.left = left;
         this.right = right;
     }

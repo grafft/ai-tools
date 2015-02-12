@@ -4,6 +4,7 @@ import cern.colt.matrix.tbit.BitMatrix;
 import cern.colt.matrix.tbit.BitVector;
 import info.monitorenter.gui.chart.Chart2D;
 import ru.isa.ai.dhm.DHMSettings;
+import ru.isa.ai.dhm.HTMNetworkSettings;
 import ru.isa.ai.dhm.inputgens.BitVectorSeqLoader;
 import ru.isa.ai.dhm.inputgens.IInputLoader;
 
@@ -107,14 +108,17 @@ public class HTMConfiguration {
     IInputLoader inputLoader;
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("HTMConfiguration");
+
+       // HTMNetworkSettings.save();
+        HTMNetworkSettings.load();
+        /*JFrame frame = new JFrame("HTMConfiguration");
         HTMConfiguration panel = new HTMConfiguration();
         frame.setContentPane(panel.mainPanel);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setResizable(true);
         frame.setVisible(true);
-
+         */
     }
 
     private int getID(String fullName) {
