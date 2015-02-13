@@ -12,7 +12,9 @@ import java.util.Properties;
  */
 // настройки региона
 public final class DHMSettings {
-    public boolean debug=false;
+
+    public int id;
+
     public int xDimension = 30; // ширина региона (в колонках)
     public int yDimension = 30; // высота региона (в колонках)
     public int xInput = 20;//100; // ширина входного слоя (в сигналах)
@@ -93,111 +95,6 @@ public final class DHMSettings {
     public double stimulusInc;                  //TODO: негде не загружается!
     public int initialInhibitionRadius = 10;
 
-    public void saveIntoFile(String filePropName) throws Exception {
-        Properties properties = new Properties();
-        try {
-            properties.setProperty("debug", String.valueOf(debug));
-            properties.setProperty("xInput", String.valueOf(xInput));
-            properties.setProperty("yInput", String.valueOf(yInput));
-            properties.setProperty("xDimension", String.valueOf(xDimension));
-            properties.setProperty("yDimension", String.valueOf(yDimension));
-            properties.setProperty("initialInhibitionRadius", String.valueOf(initialInhibitionRadius));
-            properties.setProperty("potentialRadius", String.valueOf(potentialRadius));
-
-            properties.setProperty("cellsPerColumn", String.valueOf(cellsPerColumn));
-            properties.setProperty("newSynapseCount", String.valueOf(newSynapseCount));
-
-            properties.setProperty("desiredLocalActivity", String.valueOf(desiredLocalActivity));
-            properties.setProperty("minOverlap", String.valueOf(minOverlap));
-            properties.setProperty("connectedPerm", String.valueOf(connectedPerm));
-            properties.setProperty("permanenceInc", String.valueOf(permanenceInc));
-            properties.setProperty("permanenceDec", String.valueOf(permanenceDec));
-            properties.setProperty("activationThreshold", String.valueOf(activationThreshold));
-            properties.setProperty("initialPerm", String.valueOf(initialPerm));
-            properties.setProperty("minThreshold", String.valueOf(minThreshold));
-
-            FileOutputStream output = new FileOutputStream(filePropName);
-            properties.store(output, "Saved settings");
-            output.close();
-
-        } catch (IOException e) {
-            throw new Exception("Cannot save properties file " + filePropName, e);
-        }
-    }
-
-    public static DHMSettings loadFromFile(String filePropName) throws Exception {
-        Properties properties = new Properties();
-        DHMSettings settings = new DHMSettings();
-        try {
-            FileInputStream input = new FileInputStream(filePropName);
-            properties.load(input);
-            for (String name : properties.stringPropertyNames()) {
-                switch (name) {
-                    case "debug":
-                        settings.debug = Boolean.parseBoolean(properties.getProperty(name));
-                        break;
-                    case "xInput":
-                        settings.xInput = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "yInput":
-                        settings.yInput = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "xDimension":
-                        settings.xDimension = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "yDimension":
-                        settings.yDimension = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "initialInhibitionRadius":
-                        settings.initialInhibitionRadius = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "potentialRadius":
-                        settings.potentialRadius = Integer.parseInt(properties.getProperty(name));
-                        break;
-
-                    case "cellsPerColumn":
-                        settings.cellsPerColumn = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "newSynapseCount":
-                        settings.newSynapseCount = Integer.parseInt(properties.getProperty(name));
-                        break;
-
-                    case "desiredLocalActivity":
-                        settings.desiredLocalActivity = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "minOverlap":
-                        settings.minOverlap = Integer.parseInt(properties.getProperty(name));
-                        break;
-                    case "connectedPerm":
-                        settings.connectedPerm = Double.parseDouble(properties.getProperty(name));
-                        break;
-                    case "permanenceInc":
-                        settings.permanenceInc = Double.parseDouble(properties.getProperty(name));
-                        break;
-                    case "permanenceDec":
-                        settings.permanenceDec = Double.parseDouble(properties.getProperty(name));
-                        break;
-                    case "activationThreshold":
-                        settings.activationThreshold = Double.parseDouble(properties.getProperty(name));
-                        break;
-                    case "initialPerm":
-                        settings.initialPerm = Double.parseDouble(properties.getProperty(name));
-                        break;
-                    case "minThreshold":
-                        settings.minThreshold = Double.parseDouble(properties.getProperty(name));
-                        break;
-                    default:
-                        throw new Exception("Cannot load properties file " + filePropName);
-                }
-            }
-            input.close();
-            return settings;
-        } catch (IOException e) {
-            throw new Exception("Cannot load properties file " + filePropName, e);
-        } catch (NumberFormatException nfe) {
-            throw new Exception("Wrong property value in property file " + filePropName, nfe);
-        }
-    }
 
     public static DHMSettings getDefaultSettings(){
         return new DHMSettings();

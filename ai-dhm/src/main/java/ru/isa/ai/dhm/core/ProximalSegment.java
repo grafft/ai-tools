@@ -48,7 +48,7 @@ public class ProximalSegment {
             }
         }
 
-        if(settings.debug==false)
+       // if(settings.debug==false)
             Collections.shuffle(indices, random);
 
         int numPotential = (int) Math.round(indices.size() * settings.connectedPct);

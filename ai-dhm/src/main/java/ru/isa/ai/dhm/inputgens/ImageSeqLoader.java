@@ -1,8 +1,7 @@
-package ru.isa.ai.dhm.visual;
+package ru.isa.ai.dhm.inputgens;
 
 import cern.colt.matrix.tbit.BitMatrix;
 import cern.colt.matrix.tbit.BitVector;
-import ru.isa.ai.dhm.inputgens.IInputLoader;
 
 /**
  * Created by gmdidro on 24.01.2015.

@@ -1,4 +1,4 @@
-package ru.isa.ai.dhm.visual;
+package ru.isa.ai.dhm.inputgens;
 
 import cern.colt.matrix.tbit.BitMatrix;
 

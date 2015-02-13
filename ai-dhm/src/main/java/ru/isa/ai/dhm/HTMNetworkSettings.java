@@ -7,45 +7,65 @@ import ru.isa.ai.olddhm.poolers.Pair;
 
 import java.io.File;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * Created by gmdidro on 11.02.2015.
  */
 public class HTMNetworkSettings {
-    public class RegionSettings {}
-    //public class RegionSettings {}
+    public boolean debug=false;
 
-    public ArrayList<RegionSettings> regions;
-    public ArrayList<Pair<Integer,Integer>> regionConnection=new ArrayList<Pair<Integer, Integer>>();
-    //public
+    public ArrayList<DHMSettings> regions;
+    public ArrayList<Pair<Integer,Integer>> nodeConnection;
+    public ArrayList<String> inputSources;
 
-    //String field1="123";
-    public static void save(){
+    private ArrayList<Pair<Integer,Integer>> getPairsWithId(final Integer id,final boolean first)
+    {
+        final ArrayList<Pair<Integer,Integer>> res=new ArrayList<>();
+
+        nodeConnection.forEach(new Consumer<Pair<Integer, Integer>>() {
+                                          @Override
+                                          public void accept(Pair<Integer, Integer> pair) {
+                                              if(id == (first ? pair.getLeft():pair.getRight()))
+                                                res.add(pair);
+                                          }
+                                      }
+        );
+        return res;
+    }
+
+    public ArrayList<Pair<Integer,Integer>> getPairsWithFirstId(Integer id)  {
+        return getPairsWithId(id, true);
+    }
+
+    public ArrayList<Pair<Integer,Integer>> getPairsWithSecondId(Integer id)  {
+        return getPairsWithId(id, false);
+    }
+
+    public void save(String filepath){
 
         Serializer serializer = new Persister();
-        HTMNetworkSettings example = new HTMNetworkSettings();
-        example.regionConnection.add(new Pair<Integer, Integer>(1,1));
-        File result = new File("example.xml");
+
+        File result = new File(filepath);
 
         try {
-            serializer.write(example, result);
+            serializer.write(this, result);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void load()  {
+    public static HTMNetworkSettings load(String filepath)  {
 
         Serializer serializer = new Persister();
-        File source = new File("example.xml");
+        File source = new File(filepath);
 
-        HTMNetworkSettings example = null;
+        HTMNetworkSettings settings = null;
         try {
-            example = serializer.read(HTMNetworkSettings.class, source);
+            settings = serializer.read(HTMNetworkSettings.class, source);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        for(Pair p : example.regionConnection)
-            System.out.println(p.getLeft()+" "+p.getRight());
+        return settings;
     }
 }
