@@ -2,7 +2,7 @@ package ru.isa.ai.dhm.consoletest;
 
 import cern.colt.matrix.tbit.BitVector;
 import junit.framework.TestCase;
-import ru.isa.ai.dhm.DHMSettings;
+import ru.isa.ai.dhm.HTMRegionSettings;
 import ru.isa.ai.dhm.core.*;
 import ru.isa.ai.dhm.util.ConsecutivePatternMachine;
 import ru.isa.ai.dhm.util.LogUtils;
@@ -25,7 +25,7 @@ import java.util.Set;
 public class TemporalPoolerFOTest extends TestCase {
 
     private Neocortex neocortex;
-    private DHMSettings settings;
+    private HTMRegionSettings settings;
 
 
 
@@ -136,8 +136,8 @@ segments are learned during the second pass.*/
 
 
     private void initCortex(int xInput,int yInput,int xDimension,int yDimension, int cellPerClmn) {
-        settings = DHMSettings.getDefaultSettings();
-        settings.debug=true; // отключим недетерменированность в алгоритмах для отладки
+        settings = HTMRegionSettings.getDefaultSettings();
+      //  settings.debug=true; // отключим недетерменированность в алгоритмах для отладки
         settings.xInput=xInput; // ширина входного слоя (в сигналах)
         settings.yInput=yInput; // высота входного слоя (в сигналах)
         settings.xDimension=xDimension; // ширина региона (в колонках)
@@ -150,7 +150,7 @@ segments are learned during the second pass.*/
 
         String path = HTMConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         try{
-            settings.saveIntoFile(path+"\\"+"test16xOnes.properties");
+         //  settings.saveIntoFile(path+"\\"+"test16xOnes.properties");
         } catch (Exception e) {
             e.printStackTrace();
         }

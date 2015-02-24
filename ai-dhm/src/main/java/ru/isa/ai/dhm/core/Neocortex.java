@@ -1,16 +1,12 @@
 package ru.isa.ai.dhm.core;
 
 import cern.colt.matrix.tbit.BitVector;
-import cern.colt.matrix.tint.IntMatrix1D;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.isa.ai.dhm.DHMSettings;
+import ru.isa.ai.dhm.HTMRegionSettings;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.lang.reflect.Method;
 
 /**
  * Author: Aleksandr Panov
@@ -55,7 +51,7 @@ public class Neocortex {
     }
 */
 
-    public Region addRegion(int ID, DHMSettings settings, Region itsParent) {
+    public Region addRegion(int ID, HTMRegionSettings settings, Region itsParent) {
         Region region = new Region(ID, settings);
         if (itsParent != null) {
            itsParent.addChild(region);

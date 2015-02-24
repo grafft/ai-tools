@@ -1,19 +1,18 @@
 package ru.isa.ai.dhm;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Properties;
-
 /**
  * Author: Aleksandr Panov
  * Date: 28.08.2014
  * Time: 12:02
  */
 // настройки региона
-public final class DHMSettings {
+public final class HTMRegionSettings {
 
-    public int id;
+    public HTMRegionSettings(int id)
+    {
+        this.id=id;
+    }
+    final public int id;
 
     public int xDimension = 30; // ширина региона (в колонках)
     public int yDimension = 30; // высота региона (в колонках)
@@ -96,7 +95,5 @@ public final class DHMSettings {
     public int initialInhibitionRadius = 10;
 
 
-    public static DHMSettings getDefaultSettings(){
-        return new DHMSettings();
-    }
+
 }

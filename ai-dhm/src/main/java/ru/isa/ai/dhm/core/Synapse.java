@@ -1,6 +1,6 @@
 package ru.isa.ai.dhm.core;
 
-import ru.isa.ai.dhm.DHMSettings;
+import ru.isa.ai.dhm.HTMRegionSettings;
 
 import java.util.Random;
 
@@ -10,19 +10,19 @@ import java.util.Random;
  * Time: 14:24
  */
 public class Synapse {
-    private DHMSettings settings;
+    private HTMRegionSettings settings;
     private int inputSource;
     private double permanence;
 
     private Random random = new Random();
 
 
-    public Synapse(DHMSettings settings, int sourceIndex) {
+    public Synapse(HTMRegionSettings settings, int sourceIndex) {
         this.settings = settings;
         this.inputSource = sourceIndex;
     }
 
-    public Synapse(DHMSettings settings, int sourceIndex, double initPermanence) {
+    public Synapse(HTMRegionSettings settings, int sourceIndex, double initPermanence) {
         this(settings, sourceIndex);
         this.permanence = initPermanence;
     }

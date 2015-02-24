@@ -1,7 +1,7 @@
 package ru.isa.ai.dhm.core;
 
 import cern.colt.matrix.tbit.BitVector;
-import ru.isa.ai.dhm.DHMSettings;
+import ru.isa.ai.dhm.HTMRegionSettings;
 
 import java.util.*;
 
@@ -12,7 +12,7 @@ import java.util.*;
  */
 /*Проксимальный дендритный сегмент (один для колонки)*/
 public class ProximalSegment {
-    private DHMSettings settings;
+    private HTMRegionSettings settings;
 
     private int overlap; // вычисленное перекрытие данного дендрита (=колонки)
     private double boostFactor=1.0; // вычисленный фактор ускорения дендрита (=колонки)
@@ -22,7 +22,7 @@ public class ProximalSegment {
 
     private Random random = new Random();
 
-    public ProximalSegment(DHMSettings settings) {
+    public ProximalSegment(HTMRegionSettings settings) {
         this.settings = settings;
     }
 

@@ -1,7 +1,7 @@
 package ru.isa.ai.dhm.visual;
 
 import cern.colt.matrix.tbit.BitVector;
-import ru.isa.ai.dhm.DHMSettings;
+import ru.isa.ai.dhm.HTMRegionSettings;
 import ru.isa.ai.dhm.core.Column;
 import ru.isa.ai.dhm.core.Neocortex;
 import ru.isa.ai.dhm.core.Region;
@@ -22,7 +22,7 @@ import java.awt.geom.Rectangle2D;
  */
 public class NeocortexFrame extends JFrame {
     private Neocortex neocortex;
-    private DHMSettings settings;
+    private HTMRegionSettings settings;
     private BasicStroke regionStroke = new BasicStroke(2.0f);
     private BasicStroke columnStroke = new BasicStroke(1.0f);
     private Color activeColor = Color.RED;
@@ -133,7 +133,7 @@ public class NeocortexFrame extends JFrame {
         //settings = DHMSettings.getDefaultSettings();
         try {
             String path = HTMConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-            settings = DHMSettings.loadFromFile(path+"\\"+"test16xOnes.properties");
+            //settings = DHMSettings.loadFromFile(path+"\\"+"test16xOnes.properties");
 
         } catch (Exception e) {
             e.printStackTrace();
