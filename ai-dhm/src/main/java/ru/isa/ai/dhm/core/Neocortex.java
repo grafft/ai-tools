@@ -3,6 +3,8 @@ package ru.isa.ai.dhm.core;
 import cern.colt.matrix.tbit.BitVector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jgrapht.*;
+import org.jgrapht.graph.*;
 import ru.isa.ai.dhm.HTMRegionSettings;
 
 import java.util.ArrayList;
@@ -15,11 +17,11 @@ import java.util.List;
  */
 public class Neocortex {
     private static final Logger logger = LogManager.getLogger(Neocortex.class);
-    private List<Region> regions = new ArrayList<>();
+    private DirectedGraph<Region, DefaultEdge> net=new SimpleDirectedGraph<Region, DefaultEdge>(DefaultEdge.class);
 
     public void initialization() {
         logger.debug("Initialization");
-        for (Region region : regions) {
+        for (Region region : net.vertexSet()) {
             region.initialization();
         }
     }
@@ -51,7 +53,7 @@ public class Neocortex {
     }
 */
 
-    public Region addRegion(int ID, HTMRegionSettings settings, Region itsParent) {
+    public Region addRegion(HTMRegionSettings settings) {
         Region region = new Region(ID, settings);
         if (itsParent != null) {
            itsParent.addChild(region);

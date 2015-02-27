@@ -94,6 +94,19 @@ public final class HTMRegionSettings {
     public double stimulusInc;                  //TODO: негде не загружается!
     public int initialInhibitionRadius = 10;
 
+    @Override
+    public int hashCode() {
+        return  id;
+    }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof HTMRegionSettings))
+            return false;
+        if (obj == this)
+            return true;
+
+        return this.id==((HTMRegionSettings)obj).id;
+    }
 
 }

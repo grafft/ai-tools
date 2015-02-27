@@ -16,14 +16,15 @@ public class HTMConsole{
         public String htmConfigPath;
     }
 
-    public static void main(String[] args)
-    {
-        HTMNetworkSettings s=new HTMNetworkSettings();
+    public static void main(String[] args) throws Exception {
+        /*HTMNetworkSettings s=new HTMNetworkSettings();
         s.regions.add(new HTMRegionSettings(1));
-        s.nodeConnection.add(new Pair<Integer, Integer>(1,2));
+        s.regions.add(new HTMRegionSettings(2));
+        s.setRegionsConnection(1,2);
         s.save("asd.xml");
-        //HTMNetworkSettings.load();
-        /*
+        HTMNetworkSettings.load();
+        */
+
 
         HTMConsole con=new HTMConsole();
         ConsoleParams params=con.commandLineArgsProcessing(args);
@@ -32,8 +33,8 @@ public class HTMConsole{
 
         Neocortex neocortex=con.neocortexConstruction(settings);
         neocortex.initialization();
-*/
-    }
+
+        }
 
     private Neocortex neocortexConstruction(HTMNetworkSettings netset) {
         Neocortex neocortex=new Neocortex();
@@ -43,7 +44,7 @@ public class HTMConsole{
             ArrayList<Pair<Integer,Integer>> arr=netset.getPairsWithFirstId(regset.id);
 
             //TODO P: add multiparent region ability to neocortex
-            //neocortex.addRegion(regset,netset.regions.get(arr.get(0).getRight()));
+            neocortex.addRegion(regset,netset.regions.get(arr.get(0).getRight()));
 
         }
         return null;
@@ -54,4 +55,5 @@ public class HTMConsole{
         return new ConsoleParams(args[0]);
 
     }
+
 }

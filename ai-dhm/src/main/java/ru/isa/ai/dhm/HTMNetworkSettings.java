@@ -5,12 +5,13 @@ import org.simpleframework.xml.core.Persister;
 import ru.isa.ai.olddhm.poolers.Pair;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 /**
  * Created by gmdidro on 11.02.2015.
  */
+// jgrapht and jung looks like redundant in our case
 public class HTMNetworkSettings {
     public boolean debug=false;
 
@@ -25,8 +26,8 @@ public class HTMNetworkSettings {
         regions.forEach(new Consumer<HTMRegionSettings>() {
             @Override
             public void accept(HTMRegionSettings htmRegionSettings) {
-                regionExistenceFlag[0] = htmRegionSettings.id==id1;
-                regionExistenceFlag[1] = htmRegionSettings.id==id2;
+                regionExistenceFlag[0] = regionExistenceFlag[0]||htmRegionSettings.id==id1;
+                regionExistenceFlag[1] = regionExistenceFlag[1]||htmRegionSettings.id==id2;
             }
         });
 
@@ -54,12 +55,12 @@ public class HTMNetworkSettings {
         final ArrayList<Pair<Integer,Integer>> res=new ArrayList<>();
 
         nodeConnection.forEach(new Consumer<Pair<Integer, Integer>>() {
-                                          @Override
-                                          public void accept(Pair<Integer, Integer> pair) {
-                                              if(id == (first ? pair.getLeft():pair.getRight()))
-                                                res.add(pair);
-                                          }
-                                      }
+                                   @Override
+                                   public void accept(Pair<Integer, Integer> pair) {
+                                       if(id == (first ? pair.getLeft():pair.getRight()))
+                                           res.add(pair);
+                                   }
+                               }
         );
         return res;
     }
