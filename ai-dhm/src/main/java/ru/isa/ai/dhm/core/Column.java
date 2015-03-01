@@ -1,7 +1,7 @@
 package ru.isa.ai.dhm.core;
 
 import cern.colt.matrix.tbit.BitVector;
-import ru.isa.ai.dhm.DHMSettings;
+import ru.isa.ai.dhm.HTMRegionSettings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import java.util.Map;
  * Time: 14:24
  */
 public class Column {
-    private DHMSettings settings;
+    private HTMRegionSettings settings;
 
     private int index; // линеаризированные координаты колонки в слое
     private int[] coords; // координаты колотки в слое X,Y
@@ -31,7 +31,7 @@ public class Column {
     private int activeDutyCycle = 0;
     private int overlapDutyCycle = 0;
 
-    public Column(int index, int[] coords, DHMSettings settings) {
+    public Column(int index, int[] coords, HTMRegionSettings settings) {
         this.settings = settings;
         this.index = index;
         this.coords = coords;

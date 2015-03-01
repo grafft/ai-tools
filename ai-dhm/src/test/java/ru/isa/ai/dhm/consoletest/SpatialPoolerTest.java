@@ -3,7 +3,7 @@ package ru.isa.ai.dhm.consoletest;
 import cern.colt.matrix.tbit.BitVector;
 import cern.colt.matrix.tint.IntMatrix1D;
 import junit.framework.TestCase;
-import ru.isa.ai.dhm.DHMSettings;
+import ru.isa.ai.dhm.HTMRegionSettings;
 import ru.isa.ai.dhm.util.LogUtils;
 import ru.isa.ai.dhm.core.*;
 import ru.isa.ai.dhm.visual.HTMConfiguration;
@@ -24,7 +24,7 @@ import static junit.framework.Assert.assertTrue;
 public class SpatialPoolerTest  extends TestCase {
 
     private Neocortex neocortex;
-    private DHMSettings settings;
+    private HTMRegionSettings settings;
 
 
 
@@ -239,8 +239,8 @@ public class SpatialPoolerTest  extends TestCase {
 
 
     private void initCortex(int xInput,int yInput,int xDimension,int yDimension) {
-        settings = DHMSettings.getDefaultSettings();
-        settings.debug=true; // отключим недетерменированность в алгоритмах для отладки
+        settings = HTMRegionSettings.getDefaultSettings();
+       // settings.debug=true; // отключим недетерменированность в алгоритмах для отладки
         settings.xInput=xInput; // ширина входного слоя (в сигналах)
         settings.yInput=yInput; // высота входного слоя (в сигналах)
         settings.xDimension=xDimension; // ширина региона (в колонках)
@@ -252,7 +252,7 @@ public class SpatialPoolerTest  extends TestCase {
 
         String path = HTMConfiguration.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         try{
-        settings.saveIntoFile(path+"\\"+"test16xOnes.properties");
+        //settings.saveIntoFile(path+"\\"+"test16xOnes.properties");
         } catch (Exception e) {
             e.printStackTrace();
         }

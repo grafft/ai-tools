@@ -5,7 +5,7 @@ import cern.colt.matrix.tbit.BitVector;
 import cern.colt.matrix.tint.IntMatrix1D;
 import cern.colt.matrix.tint.impl.DenseIntMatrix1D;
 import com.google.common.primitives.Ints;
-import ru.isa.ai.dhm.DHMSettings;
+import ru.isa.ai.dhm.HTMRegionSettings;
 import ru.isa.ai.dhm.util.MathUtils;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class Region {
 
-    private DHMSettings settings;
+    private HTMRegionSettings settings;
     private Region parent = null;
     private List<Region> childRegions = new ArrayList<>();
     private Map<Integer, Column> columns = new HashMap<>(); // можно и в виде массива
@@ -30,7 +30,7 @@ public class Region {
 
     private int iterationNum = 0;
 
-    public Region(int ID, DHMSettings settings) {
+    public Region(int ID, HTMRegionSettings settings) {
         this.settings = settings;
         this.id = ID;
 

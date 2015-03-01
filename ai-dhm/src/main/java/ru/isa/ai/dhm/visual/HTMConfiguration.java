@@ -3,7 +3,7 @@ package ru.isa.ai.dhm.visual;
 import cern.colt.matrix.tbit.BitMatrix;
 import cern.colt.matrix.tbit.BitVector;
 import info.monitorenter.gui.chart.Chart2D;
-import ru.isa.ai.dhm.DHMSettings;
+import ru.isa.ai.dhm.HTMRegionSettings;
 import ru.isa.ai.dhm.inputgens.BitVectorSeqLoader;
 import ru.isa.ai.dhm.inputgens.IInputLoader;
 import ru.isa.ai.dhm.inputgens.ImageClass;
@@ -89,8 +89,8 @@ public class HTMConfiguration {
 
     //HTM Comfiguration properties
     private int numOfRegions;
-    private Map<Integer, DHMSettings> settings;
-    private DHMSettings currentSettings;
+    private Map<Integer, HTMRegionSettings> settings;
+    private HTMRegionSettings currentSettings;
     private Timer timer;
     public NeocortexAction neocortexAction;
     private ImageClass img;
@@ -144,7 +144,7 @@ public class HTMConfiguration {
         saveButton.addActionListener(new SaveButtonListener());
         showDefaultSetButton.addActionListener(new ShowDefaultSetButtonListener());
 
-        currentSettings = DHMSettings.getDefaultSettings();
+        currentSettings = HTMRegionSettings.getDefaultSettings();
         settings = new HashMap<>();
 
         htmTreeView = new ShowVisTree();
@@ -231,9 +231,9 @@ public class HTMConfiguration {
                 JTextField tf = (JTextField) objects[i];
                 int property_id = (Integer) tf.getDocument().getProperty("property_id");
                 switch (property_id) {
-                    case 0:
+                   /* case 0:
                         tf.setText(String.valueOf((currentSettings.debug == false) ? 0 : 1));
-                        break;
+                        break;*/
                     case 1:
                         tf.setText(String.valueOf(currentSettings.xInput));
                         break;
@@ -307,7 +307,7 @@ public class HTMConfiguration {
                     File file = fc.getSelectedFile();
                     if (file.getName().contains(PROPERTY_POSTFIX)) {
                         try {
-                            currentSettings = DHMSettings.loadFromFile(file.getPath());
+                            //currentSettings = DHMSettings.loadFromFile(file.getPath());
                             showCurrentSettings();
                         } catch (Exception exc) {
                             System.out.print(exc);
@@ -338,7 +338,7 @@ public class HTMConfiguration {
 
     private class ShowDefaultSetButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            currentSettings = DHMSettings.getDefaultSettings();
+            currentSettings = HTMRegionSettings.getDefaultSettings();
             showCurrentSettings();
         }
     }
@@ -354,7 +354,7 @@ public class HTMConfiguration {
                 if (status == JFileChooser.APPROVE_OPTION) {
                     File saveFile = fc.getSelectedFile();
                     currentSettings = getNewCurrentSettings();
-                    currentSettings.saveIntoFile(saveFile.getPath());
+                    //currentSettings.saveIntoFile(saveFile.getPath());
                 } else if (status == JFileChooser.CANCEL_OPTION) {
                     // User has pressed cancel button
                 }
@@ -385,8 +385,8 @@ public class HTMConfiguration {
         }
     }
 
-    private DHMSettings getNewCurrentSettings() {
-        DHMSettings dhmSettings = new DHMSettings();
+    private HTMRegionSettings getNewCurrentSettings() {
+        HTMRegionSettings HTMRegionSettings = new HTMRegionSettings();
         Object[] objects = mainPanel.getComponents();
         int counter = 0;
         for (int i = 0; i < objects.length; i++) {
@@ -395,62 +395,62 @@ public class HTMConfiguration {
                 double new_value = Double.parseDouble(tf.getText());
                 int property_id = (Integer) tf.getDocument().getProperty("property_id");
                 switch (property_id) {
-                    case 0:
+                   /* case 0:
                         dhmSettings.debug = ( new_value == 1) ? true : false;
-                        break;
+                        break;*/
                     case 1:
-                        dhmSettings.xInput = (int) new_value;
+                        HTMRegionSettings.xInput = (int) new_value;
                         break;
                     case 2:
-                        dhmSettings.yInput = (int) new_value;
+                        HTMRegionSettings.yInput = (int) new_value;
                         break;
                     case 3:
-                        dhmSettings.xDimension = (int) new_value;
+                        HTMRegionSettings.xDimension = (int) new_value;
                         break;
                     case 4:
-                        dhmSettings.yDimension = (int) new_value;
+                        HTMRegionSettings.yDimension = (int) new_value;
                         break;
                     case 5:
-                        dhmSettings.initialInhibitionRadius = (int) new_value;
+                        HTMRegionSettings.initialInhibitionRadius = (int) new_value;
                         break;
                     case 6:
-                        dhmSettings.potentialRadius = (int) new_value;
+                        HTMRegionSettings.potentialRadius = (int) new_value;
                         break;
                     case 7:
-                        dhmSettings.cellsPerColumn = (int) new_value;
+                        HTMRegionSettings.cellsPerColumn = (int) new_value;
                         break;
                     case 8:
-                        dhmSettings.newSynapseCount = (int) new_value;
+                        HTMRegionSettings.newSynapseCount = (int) new_value;
                         break;
                     case 9:
-                        dhmSettings.desiredLocalActivity = (int) new_value;
+                        HTMRegionSettings.desiredLocalActivity = (int) new_value;
                         break;
                     case 10:
-                        dhmSettings.minOverlap = (int) new_value;
+                        HTMRegionSettings.minOverlap = (int) new_value;
                         break;
                     case 11:
-                        dhmSettings.connectedPerm = new_value;
+                        HTMRegionSettings.connectedPerm = new_value;
                         break;
                     case 12:
-                        dhmSettings.permanenceInc = new_value;
+                        HTMRegionSettings.permanenceInc = new_value;
                         break;
                     case 13:
-                        dhmSettings.permanenceDec = new_value;
+                        HTMRegionSettings.permanenceDec = new_value;
                         break;
                     case 14:
-                        dhmSettings.activationThreshold = new_value;
+                        HTMRegionSettings.activationThreshold = new_value;
                         break;
                     case 15:
-                        dhmSettings.initialPerm = new_value;
+                        HTMRegionSettings.initialPerm = new_value;
                         break;
                     case 16:
-                        dhmSettings.minThreshold = new_value;
+                        HTMRegionSettings.minThreshold = new_value;
                         break;
                 }
 
             }
         }
-        return dhmSettings;
+        return HTMRegionSettings;
     }
 
     public class RunCortexButtonListener implements ActionListener {

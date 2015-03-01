@@ -2,7 +2,7 @@ package ru.isa.ai.dhm.visual;
 
 import cern.colt.matrix.tbit.BitVector;
 import info.monitorenter.gui.chart.Chart2D;
-import ru.isa.ai.dhm.DHMSettings;
+import ru.isa.ai.dhm.HTMRegionSettings;
 import ru.isa.ai.dhm.core.Neocortex;
 import ru.isa.ai.dhm.core.Region;
 import ru.isa.ai.dhm.inputgens.IInputLoader;
@@ -18,7 +18,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  */
 public class NeocortexAction implements ActionListener {
     public Neocortex neocortex;
-    private Map<Integer,DHMSettings> settings;
+    private Map<Integer,HTMRegionSettings> settings;
     private IInputLoader input;
     private VisTree tree = new VisTree();
 
@@ -33,7 +33,7 @@ public class NeocortexAction implements ActionListener {
     private Boolean makeStep = false;
     private Random rnd = new Random();
 
-    public NeocortexAction(final Map<Integer,DHMSettings> settings_, final IInputLoader input ,final VisTree tree_) {
+    public NeocortexAction(final Map<Integer,HTMRegionSettings> settings_, final IInputLoader input ,final VisTree tree_) {
         this.numRegions = settings_.size();
         this.settings = settings_;
         this.input = input;
