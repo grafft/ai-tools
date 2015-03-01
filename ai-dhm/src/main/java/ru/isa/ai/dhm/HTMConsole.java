@@ -39,7 +39,6 @@ public class HTMConsole{
             neocortex.addRegion(regset,netset.regions.get(arr.get(0).getRight()));
 
         }
-
     }
 
     private ConsoleParams commandLineArgsProcessing(String[] args) {
