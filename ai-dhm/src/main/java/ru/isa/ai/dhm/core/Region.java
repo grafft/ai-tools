@@ -1,6 +1,7 @@
 package ru.isa.ai.dhm.core;
 
 import cern.colt.function.tint.IntProcedure;
+import cern.colt.matrix.tbit.BitMatrix;
 import cern.colt.matrix.tbit.BitVector;
 import cern.colt.matrix.tint.IntMatrix1D;
 import cern.colt.matrix.tint.impl.DenseIntMatrix1D;
@@ -8,6 +9,7 @@ import com.google.common.primitives.Ints;
 import ru.isa.ai.dhm.DHMSettings;
 import ru.isa.ai.dhm.util.MathUtils;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -233,6 +235,42 @@ public class Region {
     public BitVector getActiveColumns() {
         return activeColumns;
     }
+
+    public BitVector getColumnsWithPredictedCells() {
+        BitVector res=new BitVector(columns.values().size());
+        for(Column col: columns.values())
+        {
+            for(Cell cell: col.getCells())
+            {
+                if(cell.getStateHistory()[0]== Cell.State.predictive) {
+                   res.set(col.getIndex());
+
+                    break;
+                }
+            }
+        }
+        return res;
+    }
+
+    public BitMatrix getPredictedInput() {
+        BitMatrix res=new BitMatrix(settings.xInput,settings.yInput);
+        for(Column col: columns.values())
+        {
+            for(Cell cell: col.getCells())
+            {
+                if(cell.getStateHistory()[0]== Cell.State.predictive) {
+                    for(int i:col.getProximalSegment().connectedSynapses())
+                    {
+                        res.put(i,1,true);
+                    }
+
+                    break;
+                }
+            }
+        }
+        return res;
+    }
+
 
     public int getID() {return this.id; }
 

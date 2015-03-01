@@ -25,7 +25,9 @@ public class ActColsVisClass extends JPanel {
     private JTable tableUp;
     private JTable tableDown;
     private BitMatrix dataUp;
+    private BitMatrix dataUpPredicted;
     private BitMatrix dataDown;
+    private BitMatrix dataDownPredicted;
 
     private BitMatrix getDataForRegion(Region r){
 
@@ -33,6 +35,20 @@ public class ActColsVisClass extends JPanel {
         BitMatrix m = new BitMatrix(dims[0], dims[1]);
 
         BitVector v = r.getActiveColumns();
+        for (int i = 0; i < dims[0]; i++){
+            for (int j = 0 ; j < dims[1]; j++){
+                m.put(i,j,v.get(i*dims[1]+j));
+            }
+        }
+        return m;
+    }
+
+    private BitMatrix getPredictDataForRegion(Region r){
+
+        int[] dims = r.getDimensions();
+        BitMatrix m = new BitMatrix(dims[0], dims[1]);
+
+        BitVector v = r.getColumnsWithPredictedCells();
         for (int i = 0; i < dims[0]; i++){
             for (int j = 0 ; j < dims[1]; j++){
                 m.put(i,j,v.get(i*dims[1]+j));
@@ -60,11 +76,14 @@ public class ActColsVisClass extends JPanel {
 
     public ActColsVisClass(Region up, Object down) {
         dataUp = getDataForRegion(up);
+        dataUpPredicted = getPredictDataForRegion(up);
 
         if (down instanceof Region)
             dataDown= getDataForRegion((Region) down);
-        else
-            dataDown = (BitMatrix)down;
+        else {
+            dataDown = (BitMatrix) down;
+            dataDownPredicted=up.getPredictedInput();
+        }
 
         DefaultTableModel dmUp = new DefaultTableModel(dataUp.rows(), dataUp.columns()) {
         };
@@ -167,10 +186,19 @@ class CellRenderer extends JLabel implements TableCellRenderer {
             f = table.getForeground();
             v = table.getSelectionBackground();
             setForeground(f);
-            if (table.getClientProperty("owner") == "up")
+            if (table.getClientProperty("owner") == "up") {
                 b = (dataUp.get(column, row) == false) ? Color.white : Color.black;
+                if(b==Color.black)
+                    b = (dataUpPredicted.get(column, row) == false)? Color.black : Color.blue;
+                else
+                    b = (dataUpPredicted.get(column, row) == false)? Color.white : Color.red;
+            }
             else {
                 b = (dataDown.get(column, row) == false) ? Color.white : Color.black;
+                if(b==Color.black)
+                    b = (dataDownPredicted.get(column, row) == false)? Color.black : Color.blue;
+                else
+                    b = (dataDownPredicted.get(column, row) == false)? Color.white : Color.red;
                 if (!sel_down_cells.isEmpty() && sel_down_cells.contains(new Point(row,column)))
                     b = new Color((b.getRed() + v.getRed()) / 2, (b.getGreen() + v.getGreen()) / 2, (b.getBlue() + v.getBlue()) / 2);
             }
