@@ -210,6 +210,13 @@ public class Region {
         }
     }
 
+    public void updateHistory()
+    {
+        for (Column c:columns.values()) {
+            c.updateHistory();
+        }
+    }
+
     public void updateRelations() {
         for (Column column : columns.values()) {
             column.predictiveLearning();
@@ -244,9 +251,12 @@ public class Region {
             for(Cell cell: col.getCells())
             {
                 if(cell.getStateHistory()[historyLevel]== Cell.State.predictive) {
-                   res.set(col.getIndex());
+                    //if(cell.getLearnHistory()[historyLevel])
+                    {
+                        res.set(col.getIndex());
 
-                    break;
+                        break;
+                    }
                 }
             }
         }
@@ -260,12 +270,13 @@ public class Region {
             for(Cell cell: col.getCells())
             {
                 if(cell.getStateHistory()[historyLevel]== Cell.State.predictive) {
-                    for(int i:col.getProximalSegment().connectedSynapses())
-                    {
-                        res.put(i,0,true); // TODO P: переделать для 2хмерного случая
-                    }
+                    if(!cell.getLearnHistory()[historyLevel]) {
+                        for (int i : col.getProximalSegment().connectedSynapses()) {
+                            res.put(i, 0, true); // TODO P: переделать для 2хмерного случая
+                        }
 
-                    break;
+                        break;
+                    }
                 }
             }
         }

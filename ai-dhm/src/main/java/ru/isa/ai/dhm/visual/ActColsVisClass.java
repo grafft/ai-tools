@@ -49,7 +49,7 @@ public class ActColsVisClass extends JPanel {
         BitMatrix m = new BitMatrix(dims[0], dims[1]);
 
         // смотрим на состояние сети в предыдущий момент (до обновления истории вконце neocortex.iterate)
-        BitVector v = r.getColumnsWithPredictedCells(1);
+        BitVector v = r.getColumnsWithPredictedCells(0);
         for (int i = 0; i < dims[0]; i++){
             for (int j = 0 ; j < dims[1]; j++){
                 m.put(i,j,v.get(i*dims[1]+j));
@@ -83,7 +83,7 @@ public class ActColsVisClass extends JPanel {
             dataDown= getDataForRegion((Region) down);
         else {
             dataDown = (BitMatrix) down;
-            dataDownPredicted=up.getPredictedInput(1); // смотрим на состояние сети в предыдущий момент (до обновления истории вконце neocortex.iterate)
+            dataDownPredicted=up.getPredictedInput(0); // смотрим на состояние сети в предыдущий момент (до обновления истории вконце neocortex.iterate)
         }
 
         DefaultTableModel dmUp = new DefaultTableModel(dataUp.rows(), dataUp.columns()) {

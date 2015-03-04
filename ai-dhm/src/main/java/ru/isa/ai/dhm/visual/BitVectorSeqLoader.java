@@ -4,6 +4,7 @@ import cern.colt.matrix.tbit.BitVector;
 import ru.isa.ai.dhm.util.ConsecutivePatternMachine;
 import ru.isa.ai.dhm.util.SequenceMachine;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -25,8 +26,15 @@ public class BitVectorSeqLoader implements IInputLoader {
     public void start(int len)
     {
         currPattIndx=0;
-        SequenceMachine sequenceMachine = new SequenceMachine(new ConsecutivePatternMachine(len, 3));
-        List<Integer> input = Arrays.asList(0, 1,2,3,4,3,2, 1, 0,1,2,3,4,3,2, 1, 0,1,2,3,4,3,2, 1, 0,1,2,3,4,3,2, 1, 0,1,2,3,4,3,2, 1, 0, -1);
+        SequenceMachine sequenceMachine = new SequenceMachine(new ConsecutivePatternMachine(len, 2));
+        List<Integer> input=new ArrayList<>();
+        for(int i=0;i<40;i++)
+        {
+            input.addAll(Arrays.asList(0, 1,2,3,4,3,2, 1));
+        }
+
+        //List<Integer> input = Arrays.asList(0, 1,2,3,4,3,2, 1, 0,1,2,3,4,3,2, 1, 0,1,2,3,4,3,2, 1, 0,1,2,3,4,3,2, 1, 0,1,2,3,4,3,2, 1, 0, -1);
+        //List<Integer> input = Arrays.asList(0, 1,2,3,4,5,4,3,2, 1, 0,1,2,3,4,5,4,3,2, 1, 0,1,2,3,4,5,4,3,2, 1, 0,1,2,3,4,5,4,3,2, 1, 0,1,2,3,4,5,4,3,2, 1, 0, -1);
         sequence = sequenceMachine.generateFromNumbers(input);
     }
 

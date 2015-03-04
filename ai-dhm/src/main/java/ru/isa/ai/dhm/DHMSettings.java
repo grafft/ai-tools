@@ -98,6 +98,7 @@ public final class DHMSettings {
         Properties properties = new Properties();
         try {
 
+            properties.setProperty("connectedPct", String.valueOf(connectedPct));
             properties.setProperty("historyDeep", String.valueOf(historyDeep));
             properties.setProperty("debug", String.valueOf(debug));
             properties.setProperty("xInput", String.valueOf(xInput));
@@ -136,6 +137,10 @@ public final class DHMSettings {
             properties.load(input);
             for (String name : properties.stringPropertyNames()) {
                 switch (name) {
+
+                    case "connectedPct":
+                        settings.connectedPct = Double.parseDouble(properties.getProperty(name));
+                        break;
                     case "historyDeep":
                         settings.historyDeep = Integer.parseInt(properties.getProperty(name));
                         break;
@@ -201,7 +206,7 @@ public final class DHMSettings {
         } catch (IOException e) {
             throw new Exception("Cannot load properties file " + filePropName, e);
         } catch (NumberFormatException nfe) {
-            throw new Exception("Wrong property value in property file " + filePropName, nfe);
+            throw new Exception("Wrong property value in property file " + filePropName+". "+nfe.getLocalizedMessage(), nfe);
         }
     }
 

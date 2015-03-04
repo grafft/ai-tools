@@ -38,8 +38,10 @@ public class Neocortex {
             region.updateActiveCells();
 
             // TODO P: Добавить вызов UpdateHistory?
+
             region.updatePredictiveCells();
             region.updateRelations();
+
         }
         logger.debug("End neocortex iteration");
 

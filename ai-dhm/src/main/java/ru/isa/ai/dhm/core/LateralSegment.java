@@ -16,8 +16,8 @@ public class LateralSegment {
     // Integer - индекс клетки в том же слое, с которой потенциально может быть связан данный дистальный дендрит с помошью синапса Synapse
     private Map<Integer, Synapse> synapses = new HashMap<>(); // синапсы дендрита
     // Integer - определенный момент в прошлом // List<Synapse> - список подключенных синапсов в сегменте
-    private Map<Integer, List<Synapse>> activeHistory = new HashMap<>();
-    private Map<Integer, List<Synapse>> learnHistory = new HashMap<>(); // массив клеток, использующихся во время обучения
+    private Map<Integer, List<Synapse>> activeHistory = new HashMap<>(); // массив синапсов, ведущих к клеткам в активном состоянии
+    private Map<Integer, List<Synapse>> learnHistory = new HashMap<>(); // массив синапсов, ведущих к клеткам в состоянии обучения
     private Map<Integer, List<Synapse>> connectedHistory = new HashMap<>(); // история присоединенных синапсов
 
     /**
@@ -38,6 +38,7 @@ public class LateralSegment {
     }
 
     public boolean isActiveInState(boolean inLearning, int historyLevel) {
+
         return inLearning ? learnHistory.get(historyLevel).size() > activationThreshold :
                 activeHistory.get(historyLevel).size() > activationThreshold;
     }
@@ -55,6 +56,7 @@ public class LateralSegment {
         }
         activeHistory.get(0).clear();
         learnHistory.get(0).clear();
+        connectedHistory.get(0).clear();
 
         // обновление истории состояния синапсов
         for (Map.Entry<Integer, Synapse> entry : synapses.entrySet()) {

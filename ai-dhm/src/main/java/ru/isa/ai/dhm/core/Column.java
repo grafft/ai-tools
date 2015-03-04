@@ -124,11 +124,13 @@ public class Column {
         boolean toLearn = false; // колонка в состоянии обучения
         for (Cell cell : cells) {
             if (cell.getStateHistory()[1] == Cell.State.predictive) {   // если клетка была в состоянии предсказания
+                // выберем латеральный сегмент, у которого шаг назад было наибольшее количество синапсов к клеткам в активном состоянии
                 LateralSegment s = cell.getMostActiveSegment(false, 1); // TODO: избыточно - возвращает лишние сегменты (активные сегменты, которые isSequenceSegment()==false)
-                if (s.isSequenceSegment()) { // клетка была активна за счет предсказания последовательности
+                if (s.isSequenceSegment()) { // сегмент, который предсказал ситуацию ровно на шаг назад
                     wasPredicted = true;
+                    // предсказание клетки подтвердилось! (шаг назад была predictive, а стала на этом шаге active)
                     cell.getStateHistory()[0] = Cell.State.active;
-                    if (s.isActiveInState(true, 1)) { // сегмент находился в состоянии обучения
+                    if (s.isActiveInState(true, 1)) { // было ли шаг назад количество синапсов к клеткам в состоянии обучения выше порога
                         toLearn = true; // обучение колонки нужно продолжить
                         cell.getLearnHistory()[0] = true; // обучение клетки нужно продолжить
                     }
@@ -141,9 +143,10 @@ public class Column {
             }
         }
         if (!toLearn) {  // нужно выбрать клетку для обучения
+            // выбираем клетку с латеральным сегментом таким, что шаг назад у него было больше всего синапсов
             Cell bestCell = getBestMatchingCell(1);
             bestCell.getLearnHistory()[0] = true;
-            SegmentUpdate sUpdate = createSegmentUpdate(bestCell,otherCells, null, 1, true);
+            SegmentUpdate sUpdate = createSegmentUpdate(bestCell,otherCells, bestCell.getBestMatchingSegment(1), 1, true);
             sUpdate.isSequenceSegment = true;
             addToUpdate(sUpdate);
         }
@@ -158,7 +161,7 @@ public class Column {
         for (Cell cell : cells) {
             boolean toUpdate = false;
             for (LateralSegment s : cell.getLateralSegments()) {
-                if (s.isActiveInState(false, 0)) { // сегмент достаточным количетсвом активных синапсов и не в состоянии обучения
+                if (s.isActiveInState(false, 0)) { // сегмент с количеством синапсов к клеткам в активном состоянии выше порога
                     cell.getStateHistory()[0] = Cell.State.predictive;
                     SegmentUpdate sUpdate = createSegmentUpdate(cell,otherCells, s, 0, false);
                     addToUpdate(sUpdate);
@@ -218,6 +221,13 @@ public class Column {
         }
     }
 
+    public void updateHistory()
+    {
+        for (Cell cell : cells) {
+            cell.updateHistory(otherCells);
+        }
+    }
+
     /**
      * Создание списка изменений для сегмента s. Если s != null, то на обноваление выставляются активные синапсы
      * у исходны клеток которых было активное состояние в прердыдущий (historyLevel = 1) или в текущий момент времени.
@@ -265,7 +275,7 @@ public class Column {
     }
 
     /**
-     * Возвращается клетка с самым соответсвующим входу сегментом. Если такой клетки нет, то возвращается клетка с
+     * Возвращается клетка с самым соответсвующим ситуации сегментом. Если такой клетки нет, то возвращается клетка с
      * минимальным количеством сегментов.
      *
      * @return - лучше всего подходящая клетка
