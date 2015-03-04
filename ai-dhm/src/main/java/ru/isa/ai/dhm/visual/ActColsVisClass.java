@@ -187,19 +187,25 @@ class CellRenderer extends JLabel implements TableCellRenderer {
             f = table.getForeground();
             v = table.getSelectionBackground();
             setForeground(f);
+            boolean showPredict=true;
             if (table.getClientProperty("owner") == "up") {
                 b = (dataUp.get(column, row) == false) ? Color.white : Color.black;
-                if(b==Color.black)
-                    b = (dataUpPredicted.get(column, row) == false)? Color.black : Color.blue; // blue = predicted&activated
-                else
-                    b = (dataUpPredicted.get(column, row) == false)? Color.white : Color.red; // red = predicted&nonactivated
+                if(showPredict) {
+                    if (b == Color.black)
+                        b = (dataUpPredicted.get(column, row) == false) ? Color.black : Color.blue; // blue = predicted&activated
+                    else
+                        b = (dataUpPredicted.get(column, row) == false) ? Color.white : Color.red; // red = predicted&nonactivated
+                }
             }
             else {
                 b = (dataDown.get(column, row) == false) ? Color.white : Color.black;
-                if(b==Color.black)
-                    b = (dataDownPredicted.get(column, row) == false)? Color.black : Color.blue; // blue = predicted&haceOneInInputVec
-                else
-                    b = (dataDownPredicted.get(column, row) == false)? Color.white : Color.red; // red = predicted&haceZeroInInputVec
+
+                if(showPredict) {
+                    if (b == Color.black)
+                        b = (dataDownPredicted.get(column, row) == false) ? Color.black : Color.blue; // blue = predicted&haceOneInInputVec
+                    else
+                        b = (dataDownPredicted.get(column, row) == false) ? Color.white : Color.red; // red = predicted&haceZeroInInputVec
+                }
                 if (!sel_down_cells.isEmpty() && sel_down_cells.contains(new Point(row,column)))
                     b = new Color((b.getRed() + v.getRed()) / 2, (b.getGreen() + v.getGreen()) / 2, (b.getBlue() + v.getBlue()) / 2);
             }

@@ -97,6 +97,7 @@ public class Region {
      * @param input - входной сигнал
      */
     private void overlapPhase(BitVector input) {
+        overlaps.assign(0);
         for (Column column : columns.values()) {
             int overlap = column.overlapCalculating(input);
             overlaps.setQuick(column.getIndex(), overlap);
