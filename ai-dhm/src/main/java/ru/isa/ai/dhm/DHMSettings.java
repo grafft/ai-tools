@@ -13,6 +13,7 @@ import java.util.Properties;
 // настройки региона
 public final class DHMSettings {
     public boolean debug=true;
+    public int historyDeep=2;
     public int xDimension = 30; // ширина региона (в колонках)
     public int yDimension = 30; // высота региона (в колонках)
     public int xInput = 20;//100; // ширина входного слоя (в сигналах)
@@ -96,6 +97,8 @@ public final class DHMSettings {
     public void saveIntoFile(String filePropName) throws Exception {
         Properties properties = new Properties();
         try {
+
+            properties.setProperty("historyDeep", String.valueOf(historyDeep));
             properties.setProperty("debug", String.valueOf(debug));
             properties.setProperty("xInput", String.valueOf(xInput));
             properties.setProperty("yInput", String.valueOf(yInput));
@@ -133,6 +136,9 @@ public final class DHMSettings {
             properties.load(input);
             for (String name : properties.stringPropertyNames()) {
                 switch (name) {
+                    case "historyDeep":
+                        settings.historyDeep = Integer.parseInt(properties.getProperty(name));
+                        break;
                     case "debug":
                         settings.debug = Boolean.parseBoolean(properties.getProperty(name));
                         break;

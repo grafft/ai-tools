@@ -37,7 +37,7 @@ public class Column {
         this.coords = coords;
         cells = new Cell[settings.cellsPerColumn];
         for (int i = 0; i < cells.length; i++) {
-            cells[i] = new Cell(index * settings.cellsPerColumn + i);
+            cells[i] = new Cell(index * settings.cellsPerColumn + i, settings.minThreshold,settings.historyDeep);
         }
         proximalSegment = new ProximalSegment(settings);
     }
@@ -143,9 +143,9 @@ public class Column {
         if (!toLearn) {  // нужно выбрать клетку для обучения
             Cell bestCell = getBestMatchingCell(1);
             bestCell.getLearnHistory()[0] = true;
-            SegmentUpdate sUpdate = createSegmentUpdate(otherCells, null, 1, true);
+            SegmentUpdate sUpdate = createSegmentUpdate(bestCell,otherCells, null, 1, true);
             sUpdate.isSequenceSegment = true;
-            addToUpdate(bestCell, sUpdate);
+            addToUpdate(sUpdate);
         }
     }
 
@@ -160,24 +160,24 @@ public class Column {
             for (LateralSegment s : cell.getLateralSegments()) {
                 if (s.isActiveInState(false, 0)) { // сегмент достаточным количетсвом активных синапсов и не в состоянии обучения
                     cell.getStateHistory()[0] = Cell.State.predictive;
-                    SegmentUpdate sUpdate = createSegmentUpdate(otherCells, s, 0, false);
-                    addToUpdate(cell, sUpdate);
+                    SegmentUpdate sUpdate = createSegmentUpdate(cell,otherCells, s, 0, false);
+                    addToUpdate(sUpdate);
                     toUpdate = true;
                 }
             }
             if (toUpdate) {
                 LateralSegment predS = cell.getBestMatchingSegment(1);
-                SegmentUpdate predSUpdate = createSegmentUpdate(otherCells, predS, 1, true);
-                addToUpdate(cell, predSUpdate);
+                SegmentUpdate predSUpdate = createSegmentUpdate(cell, otherCells, predS, 1, true);
+                addToUpdate(predSUpdate);
             }
         }
     }
 
-    private void addToUpdate(Cell cell, SegmentUpdate predSUpdate) {
-        List<SegmentUpdate> list = toUpdate.get(cell.getIndex());
+    private void addToUpdate(SegmentUpdate predSUpdate) {
+        List<SegmentUpdate> list = toUpdate.get(predSUpdate.cell.getIndex());
         if (list == null) {
             list = new ArrayList<>();
-            toUpdate.put(cell.getIndex(), list);
+            toUpdate.put(predSUpdate.cell.getIndex(), list);
         }
         list.add(predSUpdate);
     }
@@ -186,6 +186,7 @@ public class Column {
     public void predictiveLearning() {
        if(toUpdate.size()>0) {
            for (Cell cell : cells) {
+               // клетка в состоянии обучения
                if (cell.getLearnHistory()[0]) {
                    adaptSegments(toUpdate.get(cell.getIndex()), true);
                    toUpdate.remove(cell.getIndex());
@@ -224,26 +225,28 @@ public class Column {
      * Такие синапсы случайно выбираются из числа клеток, которые были назначены для обучения в текущий момент времени
      * или в предыдущий (historyLevel = 1).
      *
-     * @param cells          - все окружающие клетки
+     * @param otherCells          - все окружающие клетки
      * @param s              - сегмент на обновление (null ели новый)
      * @param historyLevel   - время
      * @param addNewSynapses - добавлять ли новые синапсы
      * @return - список изменений
      */
-    private SegmentUpdate createSegmentUpdate(Map<Integer, Cell> cells, LateralSegment s, int historyLevel, boolean addNewSynapses) {
+    private SegmentUpdate createSegmentUpdate(Cell updatingCell, Map<Integer, Cell> otherCells, LateralSegment s, int historyLevel, boolean addNewSynapses) {
         final SegmentUpdate su = new SegmentUpdate();
+        su.cell=updatingCell;
         if (s != null) {
             su.segment = s;
             for (Synapse synapse : s.getActiveSynapses(historyLevel)) {
                 su.synapses.add(synapse.getInputSource());
             }
         } else {
-            su.segment = new LateralSegment();
+            su.segment = new LateralSegment(settings.activationThreshold);
+            su.cell.getLateralSegments().add(su.segment);
         }
         if (addNewSynapses) {
             // клетки которые находятся в состоянии обучения
             List<Cell> cellsToLearn = new ArrayList<>();
-            for (Cell cell : cells.values()) {
+            for (Cell cell : otherCells.values()) {
                 if (cell.getLearnHistory()[historyLevel])
                     cellsToLearn.add(cell);
             }
@@ -255,7 +258,6 @@ public class Column {
                     Synapse synapse = new Synapse(settings, cellsToLearn.get(index).getIndex(), settings.initialPerm);
                     su.synapses.add(cellsToLearn.get(index).getIndex());
                     su.segment.addSynapse(synapse);
-
                 }
             }
         }
@@ -328,6 +330,7 @@ public class Column {
     public ProximalSegment getProximalSegment() {return proximalSegment; }
 
     private class SegmentUpdate {
+        Cell cell; // cell with updating segment or cell to which new segment will be added
         LateralSegment segment = null;
         List<Integer> synapses = new ArrayList<>();
         /*
@@ -338,6 +341,11 @@ public class Column {
          at a later time step instead. Only a prediction in the previous time step that is due to a sequence segment
          would be fulfilled by activation in the current time step, and so only in that case is the predicted cell
          activated rather than having the whole column burst
+         ...
+         If this is a “sequence segment”, i. e., this is a segment that is predicting the next
+            step in the future (we will see that can exist segments pointing to more steps in the past),
+            then set the cell as active (activeState(c, i, t) = 1).
+         ...
          Deprecated in newer version of HTM
          */
         boolean isSequenceSegment = false;

@@ -48,7 +48,8 @@ public class ActColsVisClass extends JPanel {
         int[] dims = r.getDimensions();
         BitMatrix m = new BitMatrix(dims[0], dims[1]);
 
-        BitVector v = r.getColumnsWithPredictedCells();
+        // смотрим на состояние сети в предыдущий момент (до обновления истории вконце neocortex.iterate)
+        BitVector v = r.getColumnsWithPredictedCells(1);
         for (int i = 0; i < dims[0]; i++){
             for (int j = 0 ; j < dims[1]; j++){
                 m.put(i,j,v.get(i*dims[1]+j));
@@ -82,7 +83,7 @@ public class ActColsVisClass extends JPanel {
             dataDown= getDataForRegion((Region) down);
         else {
             dataDown = (BitMatrix) down;
-            dataDownPredicted=up.getPredictedInput();
+            dataDownPredicted=up.getPredictedInput(1); // смотрим на состояние сети в предыдущий момент (до обновления истории вконце neocortex.iterate)
         }
 
         DefaultTableModel dmUp = new DefaultTableModel(dataUp.rows(), dataUp.columns()) {
@@ -189,16 +190,16 @@ class CellRenderer extends JLabel implements TableCellRenderer {
             if (table.getClientProperty("owner") == "up") {
                 b = (dataUp.get(column, row) == false) ? Color.white : Color.black;
                 if(b==Color.black)
-                    b = (dataUpPredicted.get(column, row) == false)? Color.black : Color.blue;
+                    b = (dataUpPredicted.get(column, row) == false)? Color.black : Color.blue; // blue = predicted&activated
                 else
-                    b = (dataUpPredicted.get(column, row) == false)? Color.white : Color.red;
+                    b = (dataUpPredicted.get(column, row) == false)? Color.white : Color.red; // red = predicted&nonactivated
             }
             else {
                 b = (dataDown.get(column, row) == false) ? Color.white : Color.black;
                 if(b==Color.black)
-                    b = (dataDownPredicted.get(column, row) == false)? Color.black : Color.blue;
+                    b = (dataDownPredicted.get(column, row) == false)? Color.black : Color.blue; // blue = predicted&haceOneInInputVec
                 else
-                    b = (dataDownPredicted.get(column, row) == false)? Color.white : Color.red;
+                    b = (dataDownPredicted.get(column, row) == false)? Color.white : Color.red; // red = predicted&haceZeroInInputVec
                 if (!sel_down_cells.isEmpty() && sel_down_cells.contains(new Point(row,column)))
                     b = new Color((b.getRed() + v.getRed()) / 2, (b.getGreen() + v.getGreen()) / 2, (b.getBlue() + v.getBlue()) / 2);
             }

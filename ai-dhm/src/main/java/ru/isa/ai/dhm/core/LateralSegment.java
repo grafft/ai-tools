@@ -24,11 +24,12 @@ public class LateralSegment {
      * Порог активации для сегмента. Если число активных подключенных синапсов в сегменте больше чем
      * activationThreshold, данный сегмент считается активным.
      */
-    private int activationThreshold = 20;
+    private double activationThreshold = 20.0;
     // предсказывает ли данный сегмент активацию своей клетки от прямого входа в следующий момент времени.
     private boolean isSequenceSegment = false;
 
-    public LateralSegment() {
+    public LateralSegment(double activationThreshold) {
+        this.activationThreshold=activationThreshold;
         for (int i = 0; i < historyDeep; i++) {
             activeHistory.put(i, new ArrayList<Synapse>());
             learnHistory.put(i, new ArrayList<Synapse>());

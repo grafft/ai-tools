@@ -236,13 +236,13 @@ public class Region {
         return activeColumns;
     }
 
-    public BitVector getColumnsWithPredictedCells() {
+    public BitVector getColumnsWithPredictedCells(int historyLevel) {
         BitVector res=new BitVector(columns.values().size());
         for(Column col: columns.values())
         {
             for(Cell cell: col.getCells())
             {
-                if(cell.getStateHistory()[0]== Cell.State.predictive) {
+                if(cell.getStateHistory()[historyLevel]== Cell.State.predictive) {
                    res.set(col.getIndex());
 
                     break;
@@ -252,16 +252,16 @@ public class Region {
         return res;
     }
 
-    public BitMatrix getPredictedInput() {
+    public BitMatrix getPredictedInput(int historyLevel) {
         BitMatrix res=new BitMatrix(settings.xInput,settings.yInput);
         for(Column col: columns.values())
         {
             for(Cell cell: col.getCells())
             {
-                if(cell.getStateHistory()[0]== Cell.State.predictive) {
+                if(cell.getStateHistory()[historyLevel]== Cell.State.predictive) {
                     for(int i:col.getProximalSegment().connectedSynapses())
                     {
-                        res.put(i,1,true);
+                        res.put(i,0,true); // TODO P: переделать для 2хмерного случая
                     }
 
                     break;

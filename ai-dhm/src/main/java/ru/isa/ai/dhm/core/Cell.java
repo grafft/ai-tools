@@ -18,15 +18,18 @@ public class Cell {
     }
 
     private int index;
-    private int minThreshold = 5;
+    private double minThreshold = 5.0;
     private int historyDeep = 2;
 
-    private List<LateralSegment> distalSegments = new ArrayList<>(); // TODO P: нигде не обновляется, всегда пуст
+    private List<LateralSegment> distalSegments = new ArrayList<>();
     private State[] stateHistory; // история состояний клетки
     private boolean[] learnHistory;
 
-    public Cell(int index) {
+    public Cell(int index, double minThreshold, int historyDeep) {
         this.index = index;
+        this.minThreshold = minThreshold;
+        this.historyDeep = historyDeep;
+
         stateHistory = new State[historyDeep];
         learnHistory = new boolean[historyDeep];
         for (int i = 0; i < historyDeep; i++) {
