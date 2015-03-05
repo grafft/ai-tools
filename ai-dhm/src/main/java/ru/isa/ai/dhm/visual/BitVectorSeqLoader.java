@@ -26,11 +26,11 @@ public class BitVectorSeqLoader implements IInputLoader {
     public void start(int len)
     {
         currPattIndx=0;
-        SequenceMachine sequenceMachine = new SequenceMachine(new ConsecutivePatternMachine(len, 2));
+        SequenceMachine sequenceMachine = new SequenceMachine(new ConsecutivePatternMachine(len, 4));
         List<Integer> input=new ArrayList<>();
         for(int i=0;i<40;i++)
         {
-            input.addAll(Arrays.asList(0, 1,2,3,4,3,2, 1));
+            input.addAll(Arrays.asList(0, 1,2,3,2, 1));
         }
 
         //List<Integer> input = Arrays.asList(0, 1,2,3,4,3,2, 1, 0,1,2,3,4,3,2, 1, 0,1,2,3,4,3,2, 1, 0,1,2,3,4,3,2, 1, 0,1,2,3,4,3,2, 1, 0, -1);

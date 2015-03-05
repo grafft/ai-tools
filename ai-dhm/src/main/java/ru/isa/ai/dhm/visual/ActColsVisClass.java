@@ -192,9 +192,9 @@ class CellRenderer extends JLabel implements TableCellRenderer {
                 b = (dataUp.get(column, row) == false) ? Color.white : Color.black;
                 if(showPredict) {
                     if (b == Color.black)
-                        b = (dataUpPredicted.get(column, row) == false) ? Color.black : Color.blue; // blue = predicted&activated
+                        b = (dataUpPredicted.get(column, row) == false) ? Color.black : Color.red; // blue = predicted&activated
                     else
-                        b = (dataUpPredicted.get(column, row) == false) ? Color.white : Color.red; // red = predicted&nonactivated
+                        b = (dataUpPredicted.get(column, row) == false) ? Color.white : Color.blue; // red = predicted&nonactivated
                 }
             }
             else {
@@ -202,9 +202,9 @@ class CellRenderer extends JLabel implements TableCellRenderer {
 
                 if(showPredict) {
                     if (b == Color.black)
-                        b = (dataDownPredicted.get(column, row) == false) ? Color.black : Color.blue; // blue = predicted&haceOneInInputVec
+                        b = (dataDownPredicted.get(column, row) == false) ? Color.black : Color.red; // blue = predicted&haceOneInInputVec
                     else
-                        b = (dataDownPredicted.get(column, row) == false) ? Color.white : Color.red; // red = predicted&haceZeroInInputVec
+                        b = (dataDownPredicted.get(column, row) == false) ? Color.white : Color.blue; // red = predicted&haceZeroInInputVec
                 }
                 if (!sel_down_cells.isEmpty() && sel_down_cells.contains(new Point(row,column)))
                     b = new Color((b.getRed() + v.getRed()) / 2, (b.getGreen() + v.getGreen()) / 2, (b.getBlue() + v.getBlue()) / 2);

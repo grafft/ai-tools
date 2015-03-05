@@ -267,15 +267,18 @@ public class Region {
         BitMatrix res=new BitMatrix(settings.xInput,settings.yInput);
         for(Column col: columns.values())
         {
-            for(Cell cell: col.getCells())
+            //if(col.isActive())
             {
-                if(cell.getStateHistory()[historyLevel]== Cell.State.predictive) {
-                    if(!cell.getLearnHistory()[historyLevel]) {
-                        for (int i : col.getProximalSegment().connectedSynapses()) {
-                            res.put(i, 0, true); // TODO P: переделать для 2хмерного случая
-                        }
+                for (Cell cell : col.getCells()) {
+                    if (cell.getStateHistory()[historyLevel] == Cell.State.predictive) {
+                        //if(!cell.getLearnHistory()[historyLevel])
+                        {
+                            for (int i : col.getProximalSegment().connectedSynapses()) {
+                                res.put(i, 0, true); // TODO P: переделать для 2хмерного случая
+                            }
 
-                        break;
+                            break;
+                        }
                     }
                 }
             }

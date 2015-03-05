@@ -146,7 +146,8 @@ public class Column {
             // выбираем клетку с латеральным сегментом таким, что шаг назад у него было больше всего синапсов
             Cell bestCell = getBestMatchingCell(1);
             bestCell.getLearnHistory()[0] = true;
-            SegmentUpdate sUpdate = createSegmentUpdate(bestCell,otherCells, bestCell.getBestMatchingSegment(1), 1, true);
+            //SegmentUpdate sUpdate = createSegmentUpdate(bestCell,otherCells, bestCell.getBestMatchingSegment(1), 1, true);
+            SegmentUpdate sUpdate = createSegmentUpdate(bestCell,otherCells, null, 1, true);
             sUpdate.isSequenceSegment = true;
             addToUpdate(sUpdate);
         }
@@ -216,9 +217,9 @@ public class Column {
             su.segment.updateSynapses(su.synapses, reinforcement);
             su.segment.setSequenceSegment(su.isSequenceSegment);
         }
-        for (Cell cell : cells) {
+        /*for (Cell cell : cells) {
             cell.updateHistory(otherCells);
-        }
+        }*/
     }
 
     public void updateHistory()
@@ -264,7 +265,13 @@ public class Column {
             // к некоторым клеткам добавляем новые синапсы
             if(cellsToLearn.size()>0) {
                 for (int i = 0; i < settings.newSynapseCount - su.synapses.size(); i++) {
-                    int index = (int) (cellsToLearn.size() * Math.random());
+                    int index;
+                    if(settings.debug) {
+                        index = (int) (cellsToLearn.size() / 2 + i);
+                        index=index<cellsToLearn.size() ? index:cellsToLearn.size()/2;
+                    }
+                    else index=(int) (cellsToLearn.size() * Math.random());
+
                     Synapse synapse = new Synapse(settings, cellsToLearn.get(index).getIndex(), settings.initialPerm);
                     su.synapses.add(cellsToLearn.get(index).getIndex());
                     su.segment.addSynapse(synapse);
