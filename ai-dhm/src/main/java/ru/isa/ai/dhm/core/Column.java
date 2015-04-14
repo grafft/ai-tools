@@ -262,7 +262,7 @@ public class Column {
                     cellsToLearn.add(cell);
             }
 
-            // к некоторым клеткам добавляем новые синапсы
+            // к некоторым клеткам, находящимся в состоянии обучения, добавляем новые синапсы
             if(cellsToLearn.size()>0) {
                 for (int i = 0; i < settings.newSynapseCount - su.synapses.size(); i++) {
                     int index;

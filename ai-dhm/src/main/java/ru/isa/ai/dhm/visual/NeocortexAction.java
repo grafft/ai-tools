@@ -6,6 +6,8 @@ import info.monitorenter.gui.chart.Chart2D;
 import ru.isa.ai.dhm.DHMSettings;
 import ru.isa.ai.dhm.core.Neocortex;
 import ru.isa.ai.dhm.core.Region;
+import ru.isa.ai.dhm.util.LogUtils;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -73,6 +75,8 @@ public class NeocortexAction implements ActionListener {
         neocortex = new Neocortex();
         makeRegionHierarchy(tree.rootNode, null);
         neocortex.initialization();
+
+        LogUtils.Open("cells.csv", "cols.csv");
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -89,6 +93,7 @@ public class NeocortexAction implements ActionListener {
                 BitVector vec= input.getNext();
                 if (vec!=null) {
                     neocortex.iterate(vec);
+
                     stepNum++;
                 }
                // TODO P: make changes
@@ -140,6 +145,7 @@ public class NeocortexAction implements ActionListener {
                 BitVector vec= input.getNext();
                 if (vec!=null) {
                     neocortex.iterate(vec);
+                    LogUtils.printToCVS(neocortex.getRegions().get(0),"after iteration");
                     stepNum++;
                 }
 

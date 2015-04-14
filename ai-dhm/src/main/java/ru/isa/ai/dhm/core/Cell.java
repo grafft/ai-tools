@@ -24,11 +24,12 @@ public class Cell {
     private List<LateralSegment> distalSegments = new ArrayList<>();
     private State[] stateHistory; // история состояний клетки
     private boolean[] learnHistory; // история состояния обучения клетки (когда клетка была в состоянии обучения)
-    // клетка в состоянии обучения - когда ей добавляют новый латеральный сегмент
+    // если клетка в состоянии обучения, то к ней могут быть добавлены новые синапсы при создании нового латерального сегмента
     /*
     Note that even with all the cells in the column in the active state, only
-    one will be in the learn state. It is an important trick. Throughout the process of choose anactive distal dendrite segment, only synapses connected to cells in the learn state are
-    considered. This avoids overrepresenting a fully active column in dendritic segments.
+    one will be in the learn state. It is an important trick. Throughout the process of choose an active distal dendrite segment,
+    only synapses connected to cells in the learn state are considered.
+    This avoids overrepresenting a fully active column in dendritic segments.
     */
 
     public Cell(int index, double minThreshold, int historyDeep) {
