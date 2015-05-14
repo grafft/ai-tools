@@ -30,13 +30,14 @@ public class BitVectorSeqLoader implements IInputLoader {
         List<Integer> input=new ArrayList<>();
         for(int i=0;i<40;i++)
         {
-            input.addAll(Arrays.asList(0, 1,2,3,2, 1));
+            input.addAll(Arrays.asList(0,1,2));
         }
 
         //List<Integer> input = Arrays.asList(0, 1,2,3,4,3,2, 1, 0,1,2,3,4,3,2, 1, 0,1,2,3,4,3,2, 1, 0,1,2,3,4,3,2, 1, 0,1,2,3,4,3,2, 1, 0, -1);
         //List<Integer> input = Arrays.asList(0, 1,2,3,4,5,4,3,2, 1, 0,1,2,3,4,5,4,3,2, 1, 0,1,2,3,4,5,4,3,2, 1, 0,1,2,3,4,5,4,3,2, 1, 0,1,2,3,4,5,4,3,2, 1, 0, -1);
         //input = Arrays.asList(0,1,2,3, 0,1,2,3, 0,1,2,3, 0,1,2,3, 0,1,2,3, 0,1,2,3, 0,1,2,3, 0,1,2,3, 0,1,2,3, 0,1,2,3, 0,1,2,3, -1);
-        input = Arrays.asList(0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1, -1);
+        //input = Arrays.asList(0,0,0,1,2,0,0,0,1,2,0,0,0,1,2,0,0,0,1,2,0,0,0,1,2,0,0,0,1,2, -1);
+
         sequence = sequenceMachine.generateFromNumbers(input);
     }
 

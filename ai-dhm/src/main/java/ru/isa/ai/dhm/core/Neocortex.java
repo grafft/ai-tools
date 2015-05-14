@@ -18,33 +18,31 @@ import java.lang.reflect.Method;
  * Time: 14:23
  */
 public class Neocortex {
-    private static final Logger logger = LogManager.getLogger(Neocortex.class);
+   /// private static final Logger logger = LogManager.getLogger(Neocortex.class);
     private List<Region> regions = new ArrayList<>();
 
 
 
     public void initialization() {
-        logger.debug("Initialization");
+       /// logger.debug("Initialization");
         for (Region region : regions) {
             region.initialization();
         }
     }
 
     public void iterate(BitVector input) {
-        logger.debug("Start neocortex iteration");
+       /// logger.debug("Start neocortex iteration");
         BitVector newInput = input;
         for (Region region : regions) {
+            region.updateHistory();
             region.forwardInputProcessing(newInput);
             region.updateActiveCells();
-            region.updateHistory();
-            // TODO P: Добавить вызов UpdateHistory?
-
             region.updatePredictiveCells();
             region.updateRelations();
 
 
         }
-        logger.debug("End neocortex iteration");
+        ///logger.debug("End neocortex iteration");
 
 
     }

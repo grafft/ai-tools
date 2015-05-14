@@ -121,34 +121,33 @@ public class Column {
      */
     public void updateActiveCells() {
         boolean wasPredicted = false; // активность всей колонки была предсказана ранее
-        boolean toLearn = false; // колонка в состоянии обучения
+        boolean needCellToLearn = true; // колонка в состоянии обучения
         for (Cell cell : cells) {
             if (cell.getStateHistory()[1] == Cell.State.predictive) {   // если клетка была в состоянии предсказания
                 // выберем латеральный сегмент, у которого шаг назад было наибольшее количество синапсов к клеткам в активном состоянии
                 LateralSegment s = cell.getMostActiveSegment(false, 1); // TODO: избыточно - возвращает лишние сегменты (активные сегменты, которые isSequenceSegment()==false)
-                if (s.isSequenceSegment()) { // сегмент, который предсказал ситуацию ровно на шаг назад
+               /// if (s.isSequenceSegment()) { // сегмент, который предсказал ситуацию ровно на шаг вперед
                     wasPredicted = true;
                     // предсказание клетки подтвердилось! (шаг назад была predictive, а стала на этом шаге active)
                     cell.getStateHistory()[0] = Cell.State.active;
                     if (s.isActiveInState(true, 1)) { // было ли шаг назад количество синапсов к клеткам в состоянии обучения выше порога
-                        toLearn = true; // обучение колонки нужно продолжить
+                        needCellToLearn = false; // не нужно выбирать новую клетку для обучения
                         cell.getLearnHistory()[0] = true; // обучение клетки нужно продолжить
                     }
-                }
+               /// }
             }
         }
-        if (!wasPredicted) {  // текущий вход не был предсказан
+        if (wasPredicted==false) {  // текущий вход не был предсказан
             for (Cell cell : cells) {
                 cell.getStateHistory()[0] = Cell.State.active;
             }
         }
-        if (!toLearn) {  // нужно выбрать клетку для обучения
+        if (needCellToLearn) {  // нужно выбрать клетку для обучения
             // выбираем клетку с латеральным сегментом таким, что шаг назад у него было больше всего синапсов
             Cell bestCell = getBestMatchingCell(1);
             bestCell.getLearnHistory()[0] = true;
-            //SegmentUpdate sUpdate = createSegmentUpdate(bestCell,otherCells, bestCell.getBestMatchingSegment(1), 1, true);
             SegmentUpdate sUpdate = createSegmentUpdate(bestCell,otherCells, null, 1, true);
-            sUpdate.isSequenceSegment = true;
+            ///sUpdate.isSequenceSegment = true;
             addToUpdate(sUpdate);
         }
     }
@@ -169,6 +168,10 @@ public class Column {
                     toUpdate = true;
                 }
             }
+
+            // усиление сегментов, которые могли бы предсказать данную активацию,
+            // т.е.  сегментов,  которые  соответствуют (возможно,  пока  слабо)  активности  на
+            // предыдущем временном шаге
             if (toUpdate) {
                 LateralSegment predS = cell.getBestMatchingSegment(1);
                 SegmentUpdate predSUpdate = createSegmentUpdate(cell, otherCells, predS, 1, true);
@@ -256,6 +259,7 @@ public class Column {
         }
         if (addNewSynapses) {
             // клетки которые находятся в состоянии обучения
+            // TODO P: Похоже, что нет защиты от того, чтобы не добавить синапс к самому обновляемому элементу (updatingCell)
             List<Cell> cellsToLearn = new ArrayList<>();
             for (Cell cell : otherCells.values()) {
                 if (cell.getLearnHistory()[historyLevel])
