@@ -15,7 +15,9 @@ import java.util.ArrayList;
  */
 public class SpatialPooler {
     HTMSettings settings;
-    public void updateOverlaps(BitVector input, ArrayList<Column> cols) {
+    public int[] updateOverlaps(BitVector input, ArrayList<Column> cols) {
+        int[] overlaps=new int[cols.size()];
+        int i=0;
         for (Column c : cols) {
             ProximalDendrite pd = c.getProximalDendrite();
             for (Synapse s : pd.getConnectedSynapses()) {
@@ -25,6 +27,9 @@ public class SpatialPooler {
                 pd.setOverlap(0);
             else
                 pd.setOverlap(pd.getOverlap() * (int) pd.getBoostFactor());
+            overlaps[i]=pd.getOverlap();
+            i++;
         }
+        return overlaps;
     }
 }
