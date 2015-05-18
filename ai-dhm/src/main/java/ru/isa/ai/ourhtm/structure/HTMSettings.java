@@ -9,7 +9,7 @@ import java.util.Properties;
  * Created by APetrov on 14.05.2015.
  */
 public class HTMSettings {
-    public boolean debug=true;
+    static public boolean debug=true;
     public int historyDeep=2;
     public int xDimension = 30; // ширина региона (в колонках)
     public int yDimension = 30; // высота региона (в колонках)
@@ -208,6 +208,7 @@ public class HTMSettings {
     }
 
     public static HTMSettings getDefaultSettings(){
+        HTMSettings.debug=false;
         return new HTMSettings();
     }
 }

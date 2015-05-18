@@ -1,11 +1,8 @@
 package ru.isa.ai.ourhtm.algorithms;
 
-import cern.colt.matrix.tint.IntMatrix1D;
-import cern.colt.matrix.tint.impl.DenseIntMatrix1D;
 import ru.isa.ai.ourhtm.structure.Column;
 import cern.colt.matrix.tbit.BitVector;
 import ru.isa.ai.ourhtm.structure.HTMSettings;
-import ru.isa.ai.ourhtm.structure.ProximalDendrite;
 import ru.isa.ai.ourhtm.structure.Synapse;
 
 import java.util.ArrayList;
@@ -19,7 +16,7 @@ public class SpatialPooler {
         int[] overlaps=new int[cols.size()];
         int i=0;
         for (Column c : cols) {
-            ProximalDendrite pd = c.getProximalDendrite();
+            Column.ProximalDendrite pd = c.getProximalDendrite();
             for (Synapse s : pd.getConnectedSynapses()) {
                 pd.setOverlap(pd.getOverlap() + (input.get(s.getSourceIndex()) ? 1 : 0));
             }

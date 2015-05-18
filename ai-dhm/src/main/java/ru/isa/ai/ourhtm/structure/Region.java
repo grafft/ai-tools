@@ -7,13 +7,17 @@ import java.util.ArrayList;
  */
 public class Region {
     ArrayList<Column> columns;
-
-    public Region(int w, int h, int cellPerCol)
+    HTMSettings settings;
+    public Region(HTMSettings set)
     {
-        columns=new ArrayList<>(w*h);
-        for(int i=0;i<w*h;i++)
-        {
-            columns.add(new Column(cellPerCol));
+        settings=set;
+        columns=new ArrayList<>(set.xDimension*set.yDimension);
+        for (int i = 0; i < set.xDimension; i++) {
+            for (int j = 0; j < set.yDimension; j++) {
+                int inputCenterX = (int) Math.floor((i + 1 - 0.5) * settings.xInput / settings.xDimension);
+                int inputCenterY = (int) Math.floor((j + 1 - 0.5) * settings.yInput / settings.yDimension);
+                columns.add(new Column(new int[]{i, j}, new int[]{inputCenterX, inputCenterY}, set.potentialRadius, set.connectedPct, set.cellsPerColumn, this));
+            }
         }
     }
 
@@ -21,4 +25,7 @@ public class Region {
     {
         return columns;
     }
+
+    public int getInputW(){ return settings.xInput;}
+    public int getInputH(){return settings.yInput;}
 }

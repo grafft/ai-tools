@@ -26,19 +26,22 @@ public class Synapse {
     /**
      * Случайные значения преманентности должны быть из малого диапазона около connectedPerm
      */
-    public void initPermanence() {
+    public void initPermanence(double k) {
         if(settings.debug==true) {
             if(sourceIndex %2==0)
                 permanence = settings.connectedPerm + 0.5*settings.permanenceInc / 4.0;
             else
                 permanence = settings.connectedPerm - 0.5*settings.permanenceInc / 4.0;
-            return;
-        }
+            permanence=permanence*k;
 
-        if (random.nextDouble() <= settings.initConnectedPct)
-            permanence = settings.connectedPerm + random.nextDouble() * settings.permanenceInc / 4.0;
-        else
-            permanence = settings.connectedPerm - random.nextDouble() * settings.permanenceInc / 4.0;
+        }
+        else {
+            if (random.nextDouble() <= settings.initConnectedPct)
+                permanence = settings.connectedPerm + random.nextDouble() * settings.permanenceInc / 4.0;
+            else
+                permanence = settings.connectedPerm - random.nextDouble() * settings.permanenceInc / 4.0;
+            permanence = permanence * k;
+        }
     }
 
     public void stimulatePermanence() {
