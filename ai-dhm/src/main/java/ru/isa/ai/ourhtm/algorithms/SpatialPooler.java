@@ -11,6 +11,10 @@ import java.util.ArrayList;
  * Created by APetrov on 13.05.2015.
  */
 public class SpatialPooler {
+    public SpatialPooler(HTMSettings settings)
+    {
+        this.settings=settings;
+    }
     HTMSettings settings;
     public int[] updateOverlaps(BitVector input, ArrayList<Column> cols) {
         int[] overlaps=new int[cols.size()];

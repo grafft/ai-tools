@@ -3,21 +3,22 @@ package ru.isa.ai.ourhtm.structure;
 
 
 import casmi.matrix.Vector2D;
+import ru.isa.ai.dhm.util.MathUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by APetrov on 13.05.2015.
  */
 public class Column {
 
-    public Column(int[] coords,int[] receptorFieldCenter, int potentialRadius, double connectedPct, int cellNum, Region region)
+    HTMSettings settings;
+    public Column(int[] coords,int[] receptorFieldCenter, int potentialRadius, double connectedPct, int cellNum, Region region, HTMSettings settings)
     {
+        this.settings=settings;
         this.receptorFieldCenter=receptorFieldCenter;
-        this.coords=coords;
+        this.potentialRadius=potentialRadius;
+        this.connectedPct=connectedPct;
         r=region;
         cells=new Cell[cellNum];
         proximalDendrite.initSynapses();
@@ -32,23 +33,23 @@ public class Column {
 
 
     private int[] receptorFieldCenter;
-    private int[] coords;
     private int potentialRadius;
     private double connectedPct;
 
 
     public class ProximalDendrite {
 
-        ArrayList<Synapse> potentialSynapses =new ArrayList<>(1);;
+        // хэш синапсов: индекс элемента с которым соединение и сам синапс
+        HashMap<Integer,Synapse> potentialSynapses =new HashMap<>();
         private int overlap;
         private double boostFactor;
         private Random random = new Random();
-        HTMSettings settings;
+
 
         public ArrayList<Synapse> getConnectedSynapses()
         {
             ArrayList<Synapse> conn_syn=new ArrayList<>(10);
-            for(Synapse s : potentialSynapses)
+            for(Synapse s : potentialSynapses.values())
                 if(s.isConnected())
                     conn_syn.add(s);
             return  conn_syn;
@@ -77,7 +78,7 @@ public class Column {
             for (int i = receptorFieldCenter[0] - Column.this.potentialRadius; i <= receptorFieldCenter[0] + Column.this.potentialRadius; i++) {
                 if (i >= 0 && i < r.getInputW()) {
                     for (int j = receptorFieldCenter[1] - Column.this.potentialRadius; j <= receptorFieldCenter[1] + Column.this.potentialRadius; j++) {
-                        if (j >= 0 && j < r.getInputW())
+                        if (j >= 0 && j < r.getInputH())
                             indices.add(i * r.getInputH()+ j);
                     }
                 }
@@ -92,14 +93,12 @@ public class Column {
             for (int i = 0; i < numPotential; i++) {
                 int index = indices.get(i);
                 Synapse synapse = new Synapse(settings, index);
-                synapse.initPermanence(Vector2D.getDistance(new Vector2D(1, 1), new Vector2D(2, 2)));
-                potentialSynapses.add(index, synapse);
+                //радиальное затухание перманентности от центра рецептивного поля колонки
+                synapse.initPermanence(Vector2D.getDistance(MathUtils.delinear(index, Column.this.potentialRadius * 2), MathUtils.delinear((int) Math.pow((double) Column.this.potentialRadius, 2.0) / 2, Column.this.potentialRadius * 2)));
+                potentialSynapses.put(index,synapse);
             }
         }
 
-        public Vector2D delinear(int index,int w)
-        {
-            return new Vector2D(Math.ceil(index/w)+1,index-w*Math.ceil(index/w)+1);
-        }
+
     }
 }

@@ -1,5 +1,6 @@
 package ru.isa.ai.dhm.util;
 
+import casmi.matrix.Vector2D;
 import cern.colt.matrix.tbit.BitMatrix;
 import cern.colt.matrix.tbit.BitVector;
 import cern.colt.matrix.tdouble.DoubleMatrix1D;
@@ -124,5 +125,10 @@ public final class MathUtils {
 
     public static int kthScore(IntMatrix1D overlaps, int k) {
         return overlaps.viewSorted().getQuick((int) overlaps.size() - k);
+    }
+
+    public static Vector2D delinear(int index,int w)
+    {
+        return new Vector2D(Math.ceil(index/w)+1,index-w*Math.ceil(index/w)+1);
     }
 }
