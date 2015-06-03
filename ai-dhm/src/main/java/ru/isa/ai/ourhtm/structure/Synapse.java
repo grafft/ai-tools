@@ -7,19 +7,19 @@ import java.util.Random;
  */
 public class Synapse {
     private HTMSettings settings;
-    private int sourceIndex;
+    private int connectToIndex;
     private double permanence;
 
     private Random random = new Random();
 
 
-    public Synapse(HTMSettings settings, int sourceIndex) {
+    public Synapse(HTMSettings settings, int connectToIndex) {
         this.settings = settings;
-        this.sourceIndex = sourceIndex;
+        this.connectToIndex = connectToIndex;
     }
 
-    public Synapse(HTMSettings settings, int sourceIndex, double initPermanence) {
-        this(settings, sourceIndex);
+    public Synapse(HTMSettings settings, int connectToIndex, double initPermanence) {
+        this(settings, connectToIndex);
         this.permanence = initPermanence;
     }
 
@@ -28,7 +28,7 @@ public class Synapse {
      */
     public void initPermanence(double k) {
         if(settings.debug==true) {
-            if(sourceIndex %2==0)
+            if(connectToIndex %2==0)
                 permanence = settings.connectedPerm + 0.5*settings.permanenceInc / 4.0;
             else
                 permanence = settings.connectedPerm - 0.5*settings.permanenceInc / 4.0;
@@ -44,10 +44,7 @@ public class Synapse {
         }
     }
 
-    public void stimulatePermanence() {
-        permanence += settings.stimulusInc;
-        permanence = permanence > 1 ? 1 : permanence;
-    }
+
 
     public void increasePermanence() {
         permanence += settings.permanenceInc;
@@ -63,9 +60,9 @@ public class Synapse {
         return permanence > settings.connectedPerm;
     }
 
-    /* sourceIndex - это либо номер бита из сигнала снизу, либо номер клетки (аксон) при латеральной связи */
-    public int getSourceIndex() {
-        return sourceIndex;
+    /* connectToIndex - это либо номер бита из сигнала снизу, либо номер клетки (аксон) при латеральной связи */
+    public int getConnectToIndex() {
+        return connectToIndex;
     }
 
     /* Получить степени связанности между аксоном и дендритом. */

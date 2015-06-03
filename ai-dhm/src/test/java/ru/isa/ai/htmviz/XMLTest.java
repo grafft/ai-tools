@@ -16,29 +16,24 @@ public class XMLTest extends TestCase {
 
 
 
-    public void testRun()
-    {
-       HTMSerialization fe = new HTMSerialization();
-        HTMSerialization.Region r=fe.new Region();
-        r.height=1;
-        r.width=1;
-        HTMSerialization.Column c=fe.new Column();
-        c.cells.add(fe.new Cell());
-        r.cols.add(c)                                 ;
+    public void testRun() {
+        HTMSerialization hs = new HTMSerialization();
+        HTMSerialization.Region r = hs.new Region(0);
+        r.height = 2;
+        r.width = 2;
+        for (int i = 0; i < r.height * r.width; i++) {
+            HTMSerialization.Column c = hs.new Column(i);
+            c.cells.add(hs.new Cell(0));
+            r.cols.add(c);
+        }
 
+        r.cols.get(0).cells.get(0).synapces.add(hs.new Synapse(1,0));
+        r.cols.get(0).potentialSynapses.put(0,hs.new Synapse(1,0));
 
-        HTMSerialization.Region r2=fe.new Region();
-        r2.height=2;
-        r2.width=2;
-
-        fe.regions.add(r);
-
-
-
-
+        hs.regions.add(r);
 
         Gson gson = new Gson();
-        String json = gson.toJson(fe);
+        String json = gson.toJson(hs);
         System.out.print(json);
 
        /* FileOutputStream fos1 = null;

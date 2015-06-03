@@ -22,7 +22,7 @@ public class SpatialPooler {
         for (Column c : cols) {
             Column.ProximalDendrite pd = c.getProximalDendrite();
             for (Synapse s : pd.getConnectedSynapses()) {
-                pd.setOverlap(pd.getOverlap() + (input.get(s.getSourceIndex()) ? 1 : 0));
+                pd.setOverlap(pd.getOverlap() + (input.get(s.getConnectToIndex()) ? 1 : 0));
             }
             if (pd.getOverlap() < settings.minOverlap)
                 pd.setOverlap(0);

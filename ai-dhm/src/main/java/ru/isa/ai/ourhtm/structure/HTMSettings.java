@@ -88,7 +88,6 @@ public class HTMSettings {
     public int dutyCyclePeriod = 1000;
     public double maxBoost = 10.0;
     public double initConnectedPct = 0.5;
-    public double stimulusInc;                  //TODO: негде не загружается!
     public int initialInhibitionRadius = 10;
 
     public void saveIntoFile(String filePropName) throws Exception {

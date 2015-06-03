@@ -42,7 +42,7 @@ public class Column {
         // хэш синапсов: индекс элемента с которым соединение и сам синапс
         HashMap<Integer,Synapse> potentialSynapses =new HashMap<>();
         private int overlap;
-        private double boostFactor;
+        private double boostFactor = 1;
         private Random random = new Random();
 
 
@@ -69,7 +69,7 @@ public class Column {
         }
 
         public void setBoostFactor(double boostFactor) {
-            this.boostFactor = boostFactor;
+            this.boostFactor = 1;
         }
 
         private void initSynapses()

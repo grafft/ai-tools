@@ -39,9 +39,9 @@ public class ProximalSegment {
         // индексы колонок из прямоугольника на нижнем слое вокруг проекции
         // данной колонки с верхнего слоя на нижний (которой принадлежит данный проксимальный сегмент)
         List<Integer> indices = new ArrayList<>();
-        for (int i = xCenter - settings.potentialRadius; i <= xCenter + settings.potentialRadius; i++) {
+        for (int i = xCenter - settings.potentialRadius; i < xCenter + settings.potentialRadius; i++) {
             if (i >= 0 && i < settings.xInput) {
-                for (int j = yCenter - settings.potentialRadius; j <= yCenter + settings.potentialRadius; j++) {
+                for (int j = yCenter - settings.potentialRadius; j < yCenter + settings.potentialRadius; j++) {
                     if (j >= 0 && j < settings.yInput)
                         indices.add(i * settings.yInput + j);
                 }

@@ -20,6 +20,15 @@ public class SpatialPoolerTest extends TestCase {
         MathUtils.assign(input, in);
 
         HTMSettings settings=HTMSettings.getDefaultSettings();
+        HTMSettings.debug=true;
+
+        settings.activationThreshold = 1;
+        settings.minOverlap = 1;
+        settings.historyDeep = 2;
+        settings.dutyCyclePeriod = 2;
+        settings.desiredLocalActivity = 1;
+        settings.cellsPerColumn = 1;
+        settings.connectedPct=1;
         settings.xInput=input.size();
         settings.yInput=1;
         settings.potentialRadius=2;
@@ -34,5 +43,30 @@ public class SpatialPoolerTest extends TestCase {
         for (int i = 0; i < groundtruth.length; i++)
             assertTrue(overlaps[i]==groundtruth[i]);
 
+    }
+
+    public void testHTMConstructuion()
+    {
+        HTMSettings settings=HTMSettings.getDefaultSettings();
+        HTMSettings.debug=true;
+
+        settings.activationThreshold = 1;
+        settings.minOverlap = 1;
+        settings.historyDeep = 2;
+        settings.dutyCyclePeriod = 2;
+        settings.desiredLocalActivity = 1;
+        settings.cellsPerColumn = 1;
+        settings.connectedPct=1;
+        settings.xInput=1;
+        settings.yInput=1;
+        settings.potentialRadius=2;
+        settings.xDimension=4;
+        settings.yDimension=1;
+
+        Region r=new Region(settings);
+
+        assertTrue(r.getColumns().size()==settings.xDimension*settings.yDimension);
+        assertTrue(r.getInputH()==settings.yInput);
+        assertTrue(r.getInputW()==settings.xInput);
     }
 }
