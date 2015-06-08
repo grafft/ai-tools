@@ -1,9 +1,9 @@
 package ru.isa.ai.htmviz;
 
-import ru.isa.ai.dhm.DHMSettings;
-import ru.isa.ai.dhm.core.Cell;
-import ru.isa.ai.dhm.core.Column;
-import ru.isa.ai.dhm.core.Region;
+//import ru.isa.ai.dhm.DHMSettings;
+//import ru.isa.ai.dhm.core.Cell;
+//import ru.isa.ai.dhm.core.Column;
+//import ru.isa.ai.dhm.core.Region;
 import ru.isa.ai.ourhtm.structure.HTMSettings;
 import ru.isa.ai.ourhtm.structure.Synapse;
 
