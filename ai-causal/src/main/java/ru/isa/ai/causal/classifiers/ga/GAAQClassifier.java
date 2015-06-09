@@ -2,9 +2,9 @@ package ru.isa.ai.causal.classifiers.ga;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.isa.ai.causal.classifiers.AQClassDescription;
-import ru.isa.ai.causal.classifiers.AQRule;
-import ru.isa.ai.causal.classifiers.CRFeature;
+import ru.isa.ai.causal.classifiers.aq.AQClassDescription;
+import ru.isa.ai.causal.classifiers.aq.AQRule;
+import ru.isa.ai.causal.classifiers.aq.CRFeature;
 import weka.classifiers.AbstractClassifier;
 import weka.core.Attribute;
 import weka.core.Capabilities;

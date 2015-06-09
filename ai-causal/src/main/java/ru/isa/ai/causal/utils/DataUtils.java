@@ -2,7 +2,7 @@ package ru.isa.ai.causal.utils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.isa.ai.causal.classifiers.*;
+import ru.isa.ai.causal.classifiers.aq.*;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
 

@@ -1,6 +1,6 @@
 package ru.isa.ai.causal.jsm;
 
-import ru.isa.ai.causal.classifiers.CRProperty;
+import ru.isa.ai.causal.classifiers.aq.CRProperty;
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;

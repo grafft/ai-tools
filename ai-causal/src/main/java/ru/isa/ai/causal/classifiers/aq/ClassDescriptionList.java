@@ -1,4 +1,4 @@
-package ru.isa.ai.causal.classifiers;
+package ru.isa.ai.causal.classifiers.aq;
 
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;

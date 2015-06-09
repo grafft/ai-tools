@@ -3,7 +3,7 @@ package ru.isa.ai.causal;
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.isa.ai.causal.classifiers.AQClassDescription;
+import ru.isa.ai.causal.classifiers.aq.AQClassDescription;
 import ru.isa.ai.causal.classifiers.ga.GAAQClassifier;
 import ru.isa.ai.causal.jsm.AbstractJSMAnalyzer;
 import ru.isa.ai.causal.jsm.JSMHypothesis;
