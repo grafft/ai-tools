@@ -1,5 +1,7 @@
 package ru.isa.ai.causal.classifiers;
 
+import ru.isa.ai.causal.classifiers.aq.AQ21ExternalClassifier;
+import ru.isa.ai.causal.classifiers.aq.AQClassDescription;
 import ru.isa.ai.causal.jsm.AnshakovJSMAnalyzer;
 import ru.isa.ai.causal.jsm.JSMHypothesis;
 import weka.core.Instances;

@@ -2,9 +2,9 @@ package ru.isa.ai.causal.jsm;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.isa.ai.causal.classifiers.AQClassDescription;
-import ru.isa.ai.causal.classifiers.CRFeature;
-import ru.isa.ai.causal.classifiers.CRProperty;
+import ru.isa.ai.causal.classifiers.aq.AQClassDescription;
+import ru.isa.ai.causal.classifiers.aq.CRFeature;
+import ru.isa.ai.causal.classifiers.aq.CRProperty;
 import weka.core.Instances;
 
 import java.util.*;

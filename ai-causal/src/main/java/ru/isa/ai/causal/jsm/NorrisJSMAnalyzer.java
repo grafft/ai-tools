@@ -1,6 +1,6 @@
 package ru.isa.ai.causal.jsm;
 
-import ru.isa.ai.causal.classifiers.AQClassDescription;
+import ru.isa.ai.causal.classifiers.aq.AQClassDescription;
 import weka.core.Instances;
 
 import java.util.*;
