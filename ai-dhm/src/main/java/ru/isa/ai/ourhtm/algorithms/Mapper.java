@@ -10,7 +10,8 @@ import java.util.List;
  */
 public class Mapper {
 
-    // возвращает список колонок, для каждой колонки указывает индексы связанных с ней элементов входного вектора
+    // возвращает список колонок, для каждой колонки координаты верхнего левого и правого нижнего углов прямоугольника,
+    // который задает область входного вектора, связанную с данной колонкой
     static public ArrayList<int[]> map(int[] inputWH, int[] colsWH)
     {
         /*Пусть n - количество элементов массива, m - на сколько частей надо поделить.
@@ -23,8 +24,8 @@ public class Mapper {
         int iH1size = inputWH[1]/colsWH[1];
 
         int iW2parts = inputWH[0]%colsWH[0]; // число массивов по iW2size элементов
-        int iW2size = inputWH[0]/colsWH[0]+1;
-        int iH2parts = inputWH[1]%colsWH[1] == 0 ? 1: inputWH[1]%colsWH[1]; // число массивов по iH2size элементов
+        int iW2size = inputWH[0]/colsWH[0];
+        int iH2parts = inputWH[1]%colsWH[1]; // число массивов по iH2size элементов
         int iH2size = inputWH[1]/colsWH[1];
 
 
@@ -35,12 +36,12 @@ public class Mapper {
             for (int j = 0; j < iH1parts; j++) {
                 int[] rect=new int[4];
                 rect[0]=iW1size*i;
-                rect[1]=rect[0]+iW1size-1;
-                rect[2]=iH1size*j;
-                rect[3]=rect[2]+iH1size-1;
+                rect[1]=iH1size*j;
+                rect[2]=rect[0]+iW1size-1;
+                rect[3]=rect[1]+iH1size-1;
                 rect[0]= rect[0] >= inputWH[0] ? inputWH[0]-1 : rect[0];
-                rect[1]= rect[1] >= inputWH[0] ? inputWH[0]-1 : rect[1];
-                rect[2]= rect[2] >= inputWH[1] ? inputWH[1]-1 : rect[2];
+                rect[1]= rect[1] >= inputWH[1] ? inputWH[1]-1 : rect[1];
+                rect[2]= rect[2] >= inputWH[0] ? inputWH[0]-1 : rect[2];
                 rect[3]= rect[3] >= inputWH[1] ? inputWH[1]-1 : rect[3];
                 cols_map_input.add(rect);
             }
@@ -53,13 +54,13 @@ public class Mapper {
             for (int j = 0; j < iH2parts; j++) {
                 int[] rect=new int[4];
                 rect[0]=deltaX+iW2size*i;
-                rect[1]=rect[0]+iW2size-1;
-                rect[2]=deltaY+iH2size*j;
-                rect[3]=rect[2]+iH2size-1;
+                rect[1]=deltaY+iH2size*j;
+                rect[2]=rect[0]+iW2size-1;
+                rect[3]=rect[1]+iH2size-1;
 
                 rect[0]= rect[0] >= inputWH[0] ? inputWH[0]-1 : rect[0];
-                rect[1]= rect[1] >= inputWH[0] ? inputWH[0]-1 : rect[1];
-                rect[2]= rect[2] >= inputWH[1] ? inputWH[1]-1 : rect[2];
+                rect[1]= rect[1] >= inputWH[1] ? inputWH[1]-1 : rect[1];
+                rect[2]= rect[2] >= inputWH[0] ? inputWH[0]-1 : rect[2];
                 rect[3]= rect[3] >= inputWH[1] ? inputWH[1]-1 : rect[3];
 
                 cols_map_input.add(rect);
