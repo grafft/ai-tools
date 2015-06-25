@@ -14,14 +14,12 @@ import java.util.*;
 public class Column {
 
     HTMSettings settings;
-    public Column(int[] coords,int[] receptorFieldCenter, int potentialRadius, double connectedPct, int cellNum, Region region, HTMSettings settings)
+    public Column(int[] coords, ArrayList<Integer[]> bottomIndices, Region region, HTMSettings settings)
     {
         this.settings=settings;
-        this.receptorFieldCenter=receptorFieldCenter;
-        this.potentialRadius=potentialRadius;
-        this.connectedPct=connectedPct;
+        this.bottomIndices=bottomIndices;
         r=region;
-        cells=new Cell[cellNum];
+        cells=new Cell[settings.cellsPerColumn];
         proximalDendrite.initSynapses();
     }
 
@@ -31,7 +29,7 @@ public class Column {
     private Region r;
     private Cell[] cells; // клетки данной колонки
     private ProximalDendrite proximalDendrite=new ProximalDendrite();;
-
+    private ArrayList<Integer[]> bottomIndices;
 
     private int[] receptorFieldCenter;
     private int potentialRadius;
@@ -75,16 +73,15 @@ public class Column {
 
         private void initSynapses()
         {
-            List<Integer[]> indices = SimpleMapper.map(new int[]{r.getInputH(),r.getInputW()}, receptorFieldCenter,Column.this.potentialRadius);
 
             if(HTMSettings.debug==false)
-                Collections.shuffle(indices, random);
+                Collections.shuffle(bottomIndices, random);
 
             // выберем только часть синапсов для данной колонки (если settings.connectedPct<1)
             // предполагается, что settings.connectedPct<1, в том случае, если рецептивные поля различных колонок пересекаются
-            int numPotential = (int) Math.round(indices.size() * Column.this.connectedPct);
+            int numPotential = (int) Math.round(bottomIndices.size() * Column.this.connectedPct);
             for (int i = 0; i < numPotential; i++) {
-                Integer[] coord = indices.get(i);
+                Integer[] coord = bottomIndices.get(i);
                 int index=coord[0]*Column.this.settings.yDimension+coord[1];
                 Synapse synapse = new Synapse(settings, index);
                 //радиальное затухание перманентности от центра рецептивного поля колонки

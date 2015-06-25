@@ -10,11 +10,11 @@ import java.util.List;
  */
 public class SimpleMapper {
 
-    // возвращает массив индексов входного поля inputWH, которые отнесены к колонке с координатами colCoord
+    // возвращает массив кортежей координат элементов входного поля inputWH, которые отнесены к колонке с координатами colCoord
     // inputWH - размеры входного поля
     // colCoord - координаты колонки в поле колонок (подразумевается, что размерность входного поля и поля колонок одинакова)
     // radius - половина стороны квадрата с центром в колонке
-    static public ArrayList<Integer[]> map(int[] inputWH, int[] colCoord, int radius)
+    static public ArrayList<Integer[]> mapOne(int[] inputWH, int[] colCoord, int radius)
     {
         ArrayList<Integer[]> indices = new ArrayList<>();
         for (int i = colCoord[0] - radius; i <= colCoord[0] + radius; i++) {
@@ -26,5 +26,21 @@ public class SimpleMapper {
             }
         }
         return indices;
+    }
+
+    // возвращает список, в котором для каждой колонки указаны индексы связанных с ней элементов нижлежащего слоя
+    static public ArrayList<ArrayList<Integer[]>> mapAll(int[] inputWH, int[] colsWH, int radius)
+    {
+        ArrayList<ArrayList<Integer[]>> cols_map_input= new ArrayList<ArrayList<Integer[]>>();
+
+        for (int i = 0; i < colsWH[0]; i++) {
+            for (int j = 0; j < colsWH[1]; j++) {
+                int inputCenterX = i+Math.abs((int) Math.floor((inputWH[0] - colsWH[0]) / 2));
+                int inputCenterY = j+Math.abs((int) Math.floor((inputWH[1] - colsWH[1]) / 2));
+                ArrayList<Integer[]> indices = SimpleMapper.mapOne(inputWH, new int[]{inputCenterX, inputCenterY}, radius);
+                cols_map_input.add(indices);
+            }
+        }
+        return cols_map_input;
     }
 }
