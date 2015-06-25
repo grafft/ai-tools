@@ -4,6 +4,7 @@ package ru.isa.ai.ourhtm.structure;
 
 import casmi.matrix.Vector2D;
 import ru.isa.ai.dhm.util.MathUtils;
+import ru.isa.ai.ourhtm.algorithms.SimpleMapper;
 
 import java.util.*;
 
@@ -74,15 +75,7 @@ public class Column {
 
         private void initSynapses()
         {
-            List<Integer> indices = new ArrayList<>();
-            for (int i = receptorFieldCenter[0] - Column.this.potentialRadius; i <= receptorFieldCenter[0] + Column.this.potentialRadius; i++) {
-                if (i >= 0 && i < r.getInputW()) {
-                    for (int j = receptorFieldCenter[1] - Column.this.potentialRadius; j <= receptorFieldCenter[1] + Column.this.potentialRadius; j++) {
-                        if (j >= 0 && j < r.getInputH())
-                            indices.add(i * r.getInputH()+ j);
-                    }
-                }
-            }
+            List<Integer[]> indices = SimpleMapper.map(new int[]{r.getInputH(),r.getInputW()}, receptorFieldCenter,Column.this.potentialRadius);
 
             if(HTMSettings.debug==false)
                 Collections.shuffle(indices, random);
@@ -91,14 +84,13 @@ public class Column {
             // предполагается, что settings.connectedPct<1, в том случае, если рецептивные поля различных колонок пересекаются
             int numPotential = (int) Math.round(indices.size() * Column.this.connectedPct);
             for (int i = 0; i < numPotential; i++) {
-                int index = indices.get(i);
+                Integer[] coord = indices.get(i);
+                int index=coord[0]*Column.this.settings.yDimension+coord[1];
                 Synapse synapse = new Synapse(settings, index);
                 //радиальное затухание перманентности от центра рецептивного поля колонки
                 synapse.initPermanence(Vector2D.getDistance(MathUtils.delinear(index, Column.this.potentialRadius * 2), MathUtils.delinear((int) Math.pow((double) Column.this.potentialRadius, 2.0) / 2, Column.this.potentialRadius * 2)));
                 potentialSynapses.put(index,synapse);
             }
         }
-
-
     }
 }

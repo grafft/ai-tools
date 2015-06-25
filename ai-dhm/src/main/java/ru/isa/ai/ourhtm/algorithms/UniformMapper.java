@@ -8,7 +8,9 @@ import java.util.List;
 /**
  * Created by APetrov on 29.05.2015.
  */
-public class Mapper {
+public class UniformMapper {
+
+    // ЭТО ЧЕРНОВИК!!
 
     // возвращает список колонок, для каждой колонки координаты верхнего левого и правого нижнего углов прямоугольника,
     // который задает область входного вектора, связанную с данной колонкой
@@ -24,9 +26,9 @@ public class Mapper {
         int iH1size = inputWH[1]/colsWH[1];
 
         int iW2parts = inputWH[0]%colsWH[0]; // число массивов по iW2size элементов
-        int iW2size = inputWH[0]/colsWH[0];
+        int iW2size = inputWH[0]/colsWH[0]+1;
         int iH2parts = inputWH[1]%colsWH[1]; // число массивов по iH2size элементов
-        int iH2size = inputWH[1]/colsWH[1];
+        int iH2size = inputWH[1]/colsWH[1]+1;
 
 
 
