@@ -29,14 +29,17 @@ public class SimpleMapper {
     }
 
     // возвращает список, в котором для каждой колонки указаны индексы связанных с ней элементов нижлежащего слоя
-    static public ArrayList<ArrayList<Integer[]>> mapAll(int[] inputWH, int[] colsWH, int radius)
+    static public ArrayList<ArrayList<Integer[]>> mapAll(int[] inputWH, int[] colsWH, int radius) throws Exception
     {
+        if((inputWH[0] < colsWH[0])||(inputWH[1] < colsWH[1]))
+            throw new Exception("Колонок как минимум по одному из измерений больше, чем элементов нижлежащего слоя по соответствующему измерению.");
+
         ArrayList<ArrayList<Integer[]>> cols_map_input= new ArrayList<ArrayList<Integer[]>>();
 
         for (int i = 0; i < colsWH[0]; i++) {
             for (int j = 0; j < colsWH[1]; j++) {
-                int inputCenterX = i+Math.abs((int) Math.floor((inputWH[0] - colsWH[0]) / 2));
-                int inputCenterY = j+Math.abs((int) Math.floor((inputWH[1] - colsWH[1]) / 2));
+                int inputCenterX = i + (int) Math.floor((inputWH[0] - colsWH[0]) / 2);
+                int inputCenterY = j + (int) Math.floor((inputWH[1] - colsWH[1]) / 2);
                 ArrayList<Integer[]> indices = SimpleMapper.mapOne(inputWH, new int[]{inputCenterX, inputCenterY}, radius);
                 cols_map_input.add(indices);
             }

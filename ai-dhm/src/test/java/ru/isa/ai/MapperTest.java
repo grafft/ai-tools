@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * Created by APetrov on 08.06.2015.
  */
 public class MapperTest  extends TestCase {
-    public void testRun() {
+    public void testRun() throws Exception {
 
         SimpleMapperTest();
 
@@ -25,7 +25,7 @@ public class MapperTest  extends TestCase {
         assertTrue(colsMap.get(3)[0]==2 && colsMap.get(3)[1]==2 && colsMap.get(3)[2]==3 && colsMap.get(3)[3]==3);*/
     }
 
-    private void SimpleMapperTest() {
+    private void SimpleMapperTest() throws Exception{
 
         mapOneTest();
 
@@ -53,6 +53,23 @@ public class MapperTest  extends TestCase {
 
         assertTrue(colsMap.get(3).get(0)[0]==1 && colsMap.get(3).get(0)[1]==0 &&
                 colsMap.get(3).get(8)[0]==3 && colsMap.get(3).get(8)[1]==2);
+
+        colsMap = SimpleMapper.mapAll(new int[]{2, 2}, new int[]{2, 2}, 1);
+        assertTrue(colsMap.size()==4);
+        assertTrue(colsMap.get(0).size()==4);
+        assertTrue(colsMap.get(1).size()==4);
+        assertTrue(colsMap.get(2).size()==4);
+        assertTrue(colsMap.get(3).size()==4);
+
+        try {
+            colsMap = SimpleMapper.mapAll(new int[]{2, 2}, new int[]{4, 4}, 1);
+            assertTrue(false);
+        }
+        catch (Exception e)
+        {
+            assertTrue(true);
+        }
+
 
 
     }
