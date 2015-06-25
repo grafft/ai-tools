@@ -127,8 +127,26 @@ public final class MathUtils {
         return overlaps.viewSorted().getQuick((int) overlaps.size() - k);
     }
 
+    // делинеаризация индекса в координаты элемента матрицы
+    // index - индекс начинается с 0.
+    // w - ширина матрицы
+    // result: вектор с координатами, начинающимися с 0
     public static Vector2D delinear(int index,int w)
     {
-        return new Vector2D(Math.ceil(index/w)+1,index-w*Math.ceil(index/w)+1);
+        return new Vector2D(Math.ceil(index/w),index-w*Math.ceil(index/w));
+    }
+
+    // расстояние от элемента матрицы до центра матрицы.
+    // index - линейный индекс элемента в матрице
+    // radius - размер стороны квадратной матрицы
+    // w, h - ограничения размеры соотв. сторон итоговой матрицы
+    public static double distFromCenter(int index, int radius, int w, int h) {
+        int d = radius * 2 + 1;
+        Vector2D index2D = MathUtils.delinear(index, d);
+        // +1 - для того чтобы если диаметр равен 5 и ограничение 5, то 5%(5+1) = 5
+        Vector2D center = MathUtils.delinear((int) ((d % (w+1)) * (d % (h+1))) / 2,d);
+
+        double k = Vector2D.getDistance(index2D, center);
+        return k;
     }
 }

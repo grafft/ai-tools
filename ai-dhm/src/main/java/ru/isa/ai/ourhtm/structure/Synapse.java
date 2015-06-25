@@ -28,11 +28,12 @@ public class Synapse {
      */
     public void initPermanence(double k) {
         if(settings.debug==true) {
-            if(connectToIndex %2==0)
-                permanence = settings.connectedPerm + 0.5*settings.permanenceInc / 4.0;
-            else
-                permanence = settings.connectedPerm - 0.5*settings.permanenceInc / 4.0;
-            permanence=permanence*k;
+            permanence = settings.connectedPerm;
+           // if(connectToIndex %2==0)
+           //     permanence = settings.connectedPerm + 0.5*settings.permanenceInc / 4.0;
+           // else
+           //     permanence = settings.connectedPerm - 0.5*settings.permanenceInc / 4.0;
+            permanence=permanence*(1/(k==0?0.5:k));
 
         }
         else {
@@ -40,7 +41,7 @@ public class Synapse {
                 permanence = settings.connectedPerm + random.nextDouble() * settings.permanenceInc / 4.0;
             else
                 permanence = settings.connectedPerm - random.nextDouble() * settings.permanenceInc / 4.0;
-            permanence = permanence * k;
+            permanence = permanence *(1/(k==0?0.5:k));
         }
     }
 

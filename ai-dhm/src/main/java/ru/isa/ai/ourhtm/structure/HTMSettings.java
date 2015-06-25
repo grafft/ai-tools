@@ -117,7 +117,7 @@ public class HTMSettings {
             properties.setProperty("minThreshold", String.valueOf(minThreshold));
 
             FileOutputStream output = new FileOutputStream(filePropName);
-            properties.store(output, "Saved settings");
+            properties.store(output, "Saved set");
             output.close();
 
         } catch (IOException e) {
