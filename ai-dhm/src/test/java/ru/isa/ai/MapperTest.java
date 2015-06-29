@@ -79,6 +79,23 @@ public class MapperTest  extends TestCase {
         assertTrue(colsMap.get(3).size()==5);
 
 
+        colsMap = SimpleMapper.mapAll(new int[]{2, 2}, new int[]{2, 2}, 1);
+        assertTrue(colsMap.size()==4);
+        assertTrue(colsMap.get(0).size()==4);
+        assertTrue(colsMap.get(1).size()==4);
+        assertTrue(colsMap.get(2).size()==4);
+        assertTrue(colsMap.get(3).size()==4);
+
+        try {
+            colsMap = SimpleMapper.mapAll(new int[]{2, 2}, new int[]{4, 4}, 1);
+            assertTrue(false);
+        }
+        catch (Exception e)
+        {
+            assertTrue(true);
+        }
+
+
 
     }
 
