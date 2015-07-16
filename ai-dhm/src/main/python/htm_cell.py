@@ -1,5 +1,5 @@
 from util import PASSIVE, ACTIVE
-
+from random import randrange
 
 class Cell:
     def __init__(self, _id):
@@ -7,20 +7,19 @@ class Cell:
         self.dendrites = []
         self.state = PASSIVE
         self.new_state = PASSIVE
-        self.state_mem = []
         self.passive_time = 0
         self.was_active = False
+        self.error_impulse = 0
 
     def update_new_state(self, state):
         self.new_state = state
 
     def apply_new_state(self):
-        self.state_mem.append(self.state)
         self.state = self.new_state
-        self.passive_time += 1
+        # очень важно
+        self.passive_time += 40 + randrange(0, 10)
         if self.state == ACTIVE:
             self.passive_time = 0
         self.new_state = PASSIVE
-
 
 
