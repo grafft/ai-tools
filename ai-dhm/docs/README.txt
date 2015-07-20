@@ -1,1 +1,0 @@
-1. Differences between our HTM implementation and SpatialPooler.java (port of Numenta C++ implementation):1.1 C++ implementation have globalInhibition mode
