@@ -52,6 +52,8 @@ class Region:
         return True
 
     def step_forward(self, a):
+        self.t = 0
+        self.cell_count = 0
         self.a = a
         active_cells = self.get_active_cells()
         self.ok = 0
@@ -60,6 +62,7 @@ class Region:
                 current_column = self.columns[i][j]
 
                 ololo = False
+
 
                 for cell in current_column.cells:
                     active_den = None
@@ -138,11 +141,12 @@ class Region:
 
 
                     # ВАЖНО
-
-                    for I in current_column.cells:
-                        if randrange(3) == 2:
-                            I.update_new_state(ACTIVE)
-
+                    ok = False
+                    while not ok:
+                        for I in current_column.cells:
+                            if randrange(3) == 2:
+                                I.update_new_state(ACTIVE)
+                                ok = True
                     # выберем клетку с максимальным временем простоя, назначим ее активной,
                 if ololo:
                     for cell1 in current_column.cells:
@@ -206,6 +210,20 @@ class Region:
             for j in range(self.region_size):
                 for cell in self.columns[i][j].cells:
                     cell.apply_new_state()
+    def out_prediction_to_file(self, f):
+        for i in range(self.region_size):
+            for j in range(self.region_size):
+                current_column = self.columns[i][j]
+                active = False
+                for cell in current_column.cells:
+                    if cell.state == PREDICTION:
+                        active = True
+                if active:
+                    f.write("1 ")
+                else:
+                    f.write("0 ")
+            f.write("\n")
+        f.write("\n")
 
     def out_prediction(self):
         # отображение информации
@@ -225,7 +243,7 @@ class Region:
                         res[i][j] += "O" + str(cnt)
                         cell.ololo = False
 
-
+        # print("Процент предыдущего правильного предсказания: ", self.t * 1.0 / self.cell_count)
         print("Правильно предсказано раз: ", self.very_ok_times)
         print("Максимально правильно предсказано раз: ", self.max_ok_times)
         for i in res:
