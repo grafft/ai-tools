@@ -66,7 +66,8 @@ public class SpatialPoolerImageTest extends TestCase {
 
 
 
-        final int W=image.width(), H=image.height();
+        final int W=image.height();
+        final int H=image.width();
         System.out.println("W="+W);
         System.out.println("H="+H);
 
@@ -75,15 +76,15 @@ public class SpatialPoolerImageTest extends TestCase {
 
         settings.activationThreshold = 1;
         settings.minOverlap = 1;
-        settings.desiredLocalActivity = 3;
+        settings.desiredLocalActivity = 5;
         settings.connectedPct=1;
         settings.connectedPerm=0.01;
         settings.xInput=W;
         settings.yInput=H;
-        settings.potentialRadius=2;
-        settings.xDimension=40;
-        settings.yDimension=40;
-        settings.initialInhibitionRadius=1;
+        settings.potentialRadius=3;
+        settings.xDimension=48;
+        settings.yDimension=57;
+        settings.initialInhibitionRadius=5;
 
 
 
@@ -104,8 +105,8 @@ public class SpatialPoolerImageTest extends TestCase {
 
         Mat out=new Mat(settings.xDimension,settings.yDimension, CvType.CV_8UC1);
 
-        for(int i=0;i<settings.yDimension;i++)
-            for(int j=0;j<settings.xDimension;j++) {
+        for(int i=0;i<settings.xDimension;i++)
+            for(int j=0;j<settings.yDimension;j++) {
                 if (cols.get(i*settings.yDimension+j).isActive())
                     out.put(i,j,255);
                 else
