@@ -31,32 +31,7 @@ public class SpatialPoolerImageTest extends TestCase {
 
     public void testImage() throws IOException {
         Mat image = Highgui.imread("binary.jpg");
-        int[] input = new int[image.width()*image.height()];
-
-
-        for(int i=0;i<image.height();i++)
-            for(int j=0;j<image.width();j++) {
-                if (image.get(i, j)[0] > 125) {
-
-                    input[i * image.width() + j] = 1;
-                }
-                else
-                    input[i * image.width() + j] = 0;
-            }
-
-       /*
-        Mat out2=new Mat(image.height(),image.width(), CvType.CV_8UC1);
-
-        for(int i=0;i<image.height();i++)
-            for(int j=0;j<image.width();j++) {
-                if (input[i*image.width()+j]==1)
-                    out2.put(i,j,255);
-                else
-                    out2.put(i,j,0);
-
-            }
-        Highgui.imwrite("out2.jpg", out2);
-*/
+        int[] input = imageToVector(image);
 
 
 
@@ -86,9 +61,6 @@ public class SpatialPoolerImageTest extends TestCase {
         settings.yDimension=57;
         settings.initialInhibitionRadius=5;
 
-
-
-
         Region r=new Region(settings,new VerySimpleMapper());
 
         SpatialPooler sp=new SpatialPooler(settings);
@@ -103,6 +75,12 @@ public class SpatialPoolerImageTest extends TestCase {
 //            System.out.println("COLS:");
         ArrayList<Column> cols=r.getColumns();
 
+        printColToBitmap(settings, cols, "out.jpg");
+
+        return;
+    }
+
+    private void printColToBitmap(HTMSettings settings, ArrayList<Column> cols, String filename) {
         Mat out=new Mat(settings.xDimension,settings.yDimension, CvType.CV_8UC1);
 
         for(int i=0;i<settings.xDimension;i++)
@@ -113,9 +91,22 @@ public class SpatialPoolerImageTest extends TestCase {
                     out.put(i,j,0);
 
             }
-        Highgui.imwrite("out.jpg",out);
+        Highgui.imwrite(filename, out);
+    }
+
+    private int[] imageToVector(Mat image) {
+        int[] input = new int[image.width()*image.height()];
 
 
-        return;
+        for(int i=0;i<image.height();i++)
+            for(int j=0;j<image.width();j++) {
+                if (image.get(i, j)[0] > 125) {
+
+                    input[i * image.width() + j] = 1;
+                }
+                else
+                    input[i * image.width() + j] = 0;
+            }
+        return input;
     }
 }
