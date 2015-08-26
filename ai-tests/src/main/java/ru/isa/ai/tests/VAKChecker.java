@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class VAKChecker implements Runnable {
     private static final Logger logger = LogManager.getLogger(VAKChecker.class.getSimpleName());
-    private ScheduledExecutorService scheduler;
     private final ScheduledFuture<?> beeperHandle;
 
     public VAKChecker(){
@@ -41,9 +40,9 @@ public class VAKChecker implements Runnable {
             Elements divs = doc.select("#layout-column_column-2  .journal-content-article");
             Element element = divs.get(0);
             String value = element.html();
-            System.out.println(value);
+
             if (!value.contains("24 июля 2015")) {
-                System.out.println("!!!");
+                logger.info("!!!");
                 Email email = new SimpleEmail();
                 email.setHostName("smtp.yandex.com");
                 email.setSmtpPort(465);
