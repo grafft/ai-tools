@@ -40,7 +40,8 @@ public class VAKChecker implements Runnable {
             Elements divs = doc.select("#layout-column_column-2  .journal-content-article");
             Element element = divs.get(0);
             String value = element.html();
-            String text = element.select("a").get(0).html();
+            Elements as = element.select("a");
+            String text = as.last().html();
 
             if (!text.contains(checkString)) {
                 logger.info("New files are detected:\n" + text);
