@@ -22,27 +22,28 @@ import java.util.concurrent.TimeUnit;
  */
 public class VAKChecker implements Runnable {
     private static final Logger logger = LogManager.getLogger(VAKChecker.class.getSimpleName());
-    private final ScheduledFuture<?> beeperHandle;
+    private String checkString = "24 июля 2015";
 
-    public VAKChecker(){
+    public VAKChecker() {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        beeperHandle= scheduler.scheduleAtFixedRate(this, 1, 10, TimeUnit.SECONDS);
+        ScheduledFuture<?> beeperHandle = scheduler.scheduleAtFixedRate(this, 1, 10, TimeUnit.SECONDS);
     }
+
     public static void main(String[] args) throws IOException, EmailException {
         new VAKChecker();
     }
 
     @Override
     public void run() {
-        logger.info("Check");
         try {
             Document doc = Jsoup.connect("http://vak.ed.gov.ru/121").get();
             Elements divs = doc.select("#layout-column_column-2  .journal-content-article");
             Element element = divs.get(0);
             String value = element.html();
+            String text = element.select("a").get(0).html();
 
-            if (!value.contains("24 июля 2015")) {
-                logger.info("!!!");
+            if (!text.contains(checkString)) {
+                logger.info("New files are detected:\n" + text);
                 Email email = new SimpleEmail();
                 email.setHostName("smtp.yandex.com");
                 email.setSmtpPort(465);
@@ -50,11 +51,11 @@ public class VAKChecker implements Runnable {
                 email.setSSLOnConnect(true);
                 email.setFrom("panov.ai@ya.ru");
                 email.setSubject("Приказ ВАК");
-                email.setMsg("Вышел приказ ВАК:\n" + element.html());
+                email.setMsg("Вышел приказ ВАК:\n" + value);
                 email.addTo("panov.ai@ya.ru");
                 email.send();
 
-                beeperHandle.cancel(true);
+                checkString = text;
             }
         } catch (Exception e) {
             e.printStackTrace();
