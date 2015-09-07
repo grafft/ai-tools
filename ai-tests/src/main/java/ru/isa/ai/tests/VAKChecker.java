@@ -26,7 +26,7 @@ public class VAKChecker implements Runnable {
 
     public VAKChecker() {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        ScheduledFuture<?> beeperHandle = scheduler.scheduleAtFixedRate(this, 1, 10, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this, 1, 10, TimeUnit.SECONDS);
     }
 
     public static void main(String[] args) throws IOException, EmailException {
@@ -59,7 +59,7 @@ public class VAKChecker implements Runnable {
                 checkString = text;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 }
