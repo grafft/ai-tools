@@ -23,9 +23,11 @@ import java.util.concurrent.TimeUnit;
 public class VAKChecker implements Runnable {
     private static final Logger logger = LogManager.getLogger(VAKChecker.class.getSimpleName());
     private String checkString = "24 июля 2015";
+    private ScheduledExecutorService scheduler;
+    private boolean toExit = false;
 
     public VAKChecker() {
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(this, 1, 10, TimeUnit.SECONDS);
     }
 
@@ -36,15 +38,9 @@ public class VAKChecker implements Runnable {
     @Override
     public void run() {
         try {
-            Document doc = Jsoup.connect("http://vak.ed.gov.ru/121").get();
-            Elements divs = doc.select("#layout-column_column-2  .journal-content-article");
-            Element element = divs.get(0);
-            String value = element.html();
-            Elements as = element.select("a");
-            String text = as.last().html();
-
-            if (!text.contains(checkString)) {
-                logger.info("New files are detected:\n" + text);
+            String value = checkReady();
+            //String value = checkOrder();
+            if (value != null) {
                 Email email = new SimpleEmail();
                 email.setHostName("smtp.yandex.com");
                 email.setSmtpPort(465);
@@ -52,14 +48,50 @@ public class VAKChecker implements Runnable {
                 email.setSSLOnConnect(true);
                 email.setFrom("panov.ai@ya.ru");
                 email.setSubject("Приказ ВАК");
-                email.setMsg("Вышел приказ ВАК:\n" + value);
+                email.setMsg("Вышел приказ или сведение о готовности ВАК:\n" + value);
                 email.addTo("panov.ai@ya.ru");
                 email.send();
 
-                checkString = text;
+                if(toExit)
+                    scheduler.shutdownNow();
             }
         } catch (Exception e) {
             logger.error(e);
+        }
+    }
+
+    private String checkReady() throws IOException {
+        Document doc = Jsoup.connect("http://vak.ed.gov.ru/119").get();
+        Elements tables = doc.select(".table_diplom");
+        Elements spans = doc.select(".datelabel");
+        Element table = tables.get(0);
+        Element span = spans.get(0);
+
+        String value = span.html();
+        String text = table.html();
+        if(text.contains("846")){
+            toExit = true;
+            return value;
+        }else{
+            return null;
+        }
+    }
+
+    private String checkOrder() throws IOException {
+        Document doc = Jsoup.connect("http://vak.ed.gov.ru/121").get();
+        Elements divs = doc.select("#layout-column_column-2  .journal-content-article");
+        Element element = divs.get(0);
+        String value = element.html();
+        Elements as = element.select("a");
+        String text = as.last().html();
+
+        if(!text.contains(checkString)){
+            logger.info("New files are detected:\n" + text);
+
+            checkString = text;
+            return value;
+        }else{
+            return null;
         }
     }
 }
