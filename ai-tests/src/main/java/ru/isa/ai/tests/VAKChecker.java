@@ -69,7 +69,7 @@ public class VAKChecker implements Runnable {
 
         String value = span.html();
         String text = table.html();
-        if(value.contains(checkString)){
+        if(!value.contains(checkString)){
             checkString = value;
             return text;
         }else{
