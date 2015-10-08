@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class VAKChecker implements Runnable {
     private static final Logger logger = LogManager.getLogger(VAKChecker.class.getSimpleName());
-    private String checkString = "24 июля 2015";
+    private String checkString = "21 сентября 2015";
     private ScheduledExecutorService scheduler;
     private boolean toExit = false;
 
@@ -69,9 +69,9 @@ public class VAKChecker implements Runnable {
 
         String value = span.html();
         String text = table.html();
-        if(text.contains("846")){
-            toExit = true;
-            return value;
+        if(value.contains(checkString)){
+            checkString = value;
+            return text;
         }else{
             return null;
         }
