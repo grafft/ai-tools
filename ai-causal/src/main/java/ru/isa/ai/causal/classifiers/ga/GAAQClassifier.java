@@ -99,7 +99,7 @@ public class GAAQClassifier extends AbstractClassifier {
             cn = 5;
             n = 500;
             numgen = numAttr;//data 13, data2 31
-            sizegen = 3;
+            sizegen = 4;
             ngen = 50;
             nadapt = 8;
             socialcard = (int) (0.05 * (n));//социальная карта
@@ -206,6 +206,7 @@ public class GAAQClassifier extends AbstractClassifier {
             int[][] tobj0 = tobj;
             ++sizeBestPop;
             BestPop[sizeBestPop - 1] = new Population(1, numgen, sizegen, tobj0, tobj, fobj);
+            int without_result=0;
             while (tobj.length != 0) {
                 for (int restart = 0; restart < RESTART_NUMBER; ++restart) {
                     Coevolution mainCpop = new Coevolution(cn, n, numgen, sizegen, ngen, nadapt, socialcard, socialfine,
@@ -265,7 +266,11 @@ public class GAAQClassifier extends AbstractClassifier {
     			}
     			if(found){
     				logger.info("Decision is not appropriate. Negative examples have been covered");
-    				continue;
+                    ++without_result;
+                    if(without_result==5)
+                        break;
+                    else
+    				    continue;
     			}
                 
                 
@@ -353,7 +358,8 @@ public class GAAQClassifier extends AbstractClassifier {
                 BestPop[sizeBestPop - 1] = new Population(1, numgen, sizegen, tobj0, tobj, fobj);
             }
 
-            Integer[][] map_atr = new Integer[8][];
+            //Integer[][] map_atr = new Integer[8][];
+            Integer[][] map_atr = new Integer[16][];
             map_atr[0] = new Integer[]{0};
             map_atr[1] = new Integer[]{1};
             map_atr[2] = new Integer[]{2};
@@ -362,6 +368,16 @@ public class GAAQClassifier extends AbstractClassifier {
             map_atr[5] = new Integer[]{1, 3};
             map_atr[6] = new Integer[]{2, 3};
             map_atr[7] = new Integer[]{1, 2, 3};
+
+            map_atr[8] = new Integer[]{4};
+            map_atr[9] = new Integer[]{1, 4};
+            map_atr[10] = new Integer[]{2, 4};
+            map_atr[11] = new Integer[]{1, 2, 4};
+            map_atr[12] = new Integer[]{3, 4};
+            map_atr[13] = new Integer[]{1, 3, 4};
+            map_atr[14] = new Integer[]{2, 3, 4};
+            map_atr[15] = new Integer[]{1, 2, 3, 4};
+
 
             StringBuilder result = new StringBuilder();
             List<AQRule> classRules = new ArrayList<>();
